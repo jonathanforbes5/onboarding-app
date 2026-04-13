@@ -126,10 +126,7 @@ async function configureAuth(managementToken: string, siteUrl: string) {
     },
     body: JSON.stringify({
       site_url: siteUrl,
-      uri_allow_list: `${siteUrl},${siteUrl}/**`,
       mailer_otp_enabled: true,
-      email_otp_length: 6,
-      mailer_otp_exp: 3600,
     }),
   });
   return { ok: res.ok, status: res.status, body: await res.text() };

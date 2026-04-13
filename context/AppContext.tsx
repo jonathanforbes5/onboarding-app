@@ -1,5 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/lib/supabase';
+import { UserProfile, signOut as authSignOut, getUserProfileByEmail } from '@/lib/auth';
 import {
   fetchUserData,
   pushChecklistItem,
@@ -8,7 +10,7 @@ import {
   pushQuizScore,
 } from '@/lib/syncService';
 
-export type UserName = 'sam' | 'patrick' | 'jonathan';
+export type { UserProfile };
 export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'admin';
 
 export interface Note {
@@ -17,24 +19,41 @@ export interface Note {
 }
 
 export interface AppState {
+  // Auth
+  currentUser: UserProfile | null;
+  authLoading: boolean;       // true while checking initial session
+  accessDenied: boolean;      // true when email not in allowed_users
+  deniedEmail: string;        // email that was denied
+  syncStatus: 'idle' | 'syncing' | 'synced' | 'offline';
+
+  // Navigation
+  activeTab: ActiveTab;
   currentSection: number;
+  sidebarOpen: boolean;
+
+  // Worksheet
+  currentDay: number;
+  checklistItems: Record<string, boolean>;
+
+  // Training sections
   completedSections: number[];
+  quizScores: Record<number, number>;
   bookmarks: number[];
   notes: Record<number, Note>;
-  quizScores: Record<number, number>;
+
+  // UI overlays
   searchQuery: string;
   showSearch: boolean;
   showNotes: boolean;
-  sidebarOpen: boolean;
-  currentUser: UserName | null;
-  activeTab: ActiveTab;
-  currentDay: number;
-  checklistItems: Record<string, boolean>;
-  syncStatus: 'idle' | 'syncing' | 'synced' | 'offline';
 }
 
 interface AppContextType extends AppState {
+  logout: () => void;
+  setActiveTab: (tab: ActiveTab) => void;
   setCurrentSection: (id: number) => void;
+  setSidebarOpen: (v: boolean) => void;
+  setCurrentDay: (day: number) => void;
+  toggleChecklistItem: (groupId: string, index: number) => void;
   markSectionComplete: (id: number) => void;
   toggleBookmark: (id: number) => void;
   saveNote: (sectionId: number, text: string) => void;
@@ -42,43 +61,42 @@ interface AppContextType extends AppState {
   setSearchQuery: (q: string) => void;
   setShowSearch: (v: boolean) => void;
   setShowNotes: (v: boolean) => void;
-  setSidebarOpen: (v: boolean) => void;
   progressPercent: number;
   isBookmarked: (id: number) => boolean;
   isCompleted: (id: number) => boolean;
-  login: (user: UserName) => void;
-  logout: () => void;
-  setActiveTab: (tab: ActiveTab) => void;
-  setCurrentDay: (day: number) => void;
-  toggleChecklistItem: (groupId: string, index: number) => void;
 }
 
-const STORAGE_KEY = 'ri_onboarding_v1';
+const SECTIONS_STORAGE_KEY = 'ri_onboarding_v1';
 const TOTAL_SECTIONS = 11;
 
 const defaultState: AppState = {
+  currentUser: null,
+  authLoading: true,
+  accessDenied: false,
+  deniedEmail: '',
+  syncStatus: 'idle',
+  activeTab: 'overview',
   currentSection: 1,
+  sidebarOpen: true,
+  currentDay: 1,
+  checklistItems: {},
   completedSections: [],
+  quizScores: {},
   bookmarks: [],
   notes: {},
-  quizScores: {},
   searchQuery: '',
   showSearch: false,
   showNotes: false,
-  sidebarOpen: true,
-  currentUser: null,
-  activeTab: 'overview',
-  currentDay: 1,
-  checklistItems: {},
-  syncStatus: 'idle',
 };
 
 const AppContext = createContext<AppContextType | null>(null);
 
-function loadChecklistLocal(user: UserName): Record<string, boolean> {
+// ── localStorage helpers ──────────────────────────────────────
+
+function loadChecklistLocal(userKey: string): Record<string, boolean> {
   const items: Record<string, boolean> = {};
   try {
-    const prefix = `ri_${user}_`;
+    const prefix = `ri_${userKey}_`;
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith(prefix) && !key.endsWith('_day')) {
@@ -89,10 +107,24 @@ function loadChecklistLocal(user: UserName): Record<string, boolean> {
   return items;
 }
 
-function persistChecklistLocal(user: UserName, items: Record<string, boolean>) {
+function loadSectionsLocal(): Partial<AppState> {
+  try {
+    const saved = localStorage.getItem(SECTIONS_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {};
+  } catch { return {}; }
+}
+
+function persistSectionsLocal(state: AppState) {
+  try {
+    const { completedSections, bookmarks, notes, quizScores, currentSection } = state;
+    localStorage.setItem(SECTIONS_STORAGE_KEY, JSON.stringify({ completedSections, bookmarks, notes, quizScores, currentSection }));
+  } catch {}
+}
+
+function persistChecklistLocal(userKey: string, items: Record<string, boolean>) {
   try {
     Object.entries(items).forEach(([k, v]) => {
-      localStorage.setItem(`ri_${user}_${k}`, v ? '1' : '0');
+      localStorage.setItem(`ri_${userKey}_${k}`, v ? '1' : '0');
     });
   } catch {}
 }
@@ -100,82 +132,159 @@ function persistChecklistLocal(user: UserName, items: Record<string, boolean>) {
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AppState>(defaultState);
 
-  // ── Boot: restore from localStorage ──────────────────────
+  // ── Load sections state from localStorage on boot ────────
   useEffect(() => {
-    try {
-      const savedUser = localStorage.getItem('ri_user') as UserName | null;
-      const savedDay  = savedUser ? parseInt(localStorage.getItem(`ri_${savedUser}_day`) || '1', 10) : 1;
-      const saved     = localStorage.getItem(STORAGE_KEY);
-      const parsed    = saved ? JSON.parse(saved) : {};
-      const checklist = savedUser ? loadChecklistLocal(savedUser) : {};
+    const saved = loadSectionsLocal();
+    setState((prev) => ({ ...prev, ...saved }));
+  }, []);
 
+  // ── Supabase Auth listener ────────────────────────────────
+  useEffect(() => {
+    if (!supabase) {
+      setState((prev) => ({ ...prev, authLoading: false }));
+      return;
+    }
+
+    // Check existing session first
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user?.email) {
+        handleAuthUser(session.user.email);
+      } else {
+        setState((prev) => ({ ...prev, authLoading: false }));
+      }
+    });
+
+    // Listen for sign-in / sign-out events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session?.user?.email) {
+        handleAuthUser(session.user.email);
+      } else if (event === 'SIGNED_OUT') {
+        setState((prev) => ({
+          ...defaultState,
+          ...loadSectionsLocal(),
+          authLoading: false,
+        }));
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function handleAuthUser(email: string) {
+    setState((prev) => ({ ...prev, authLoading: true, syncStatus: 'syncing' }));
+
+    const profile = await getUserProfileByEmail(email);
+
+    if (!profile) {
+      // Email not in allowed_users
       setState((prev) => ({
         ...prev,
-        ...parsed,
-        showSearch: false,
-        showNotes: false,
-        currentUser: savedUser,
-        activeTab: 'overview',
-        currentDay: isNaN(savedDay) ? 1 : savedDay,
-        checklistItems: checklist,
-        syncStatus: 'idle',
+        authLoading: false,
+        accessDenied: true,
+        deniedEmail: email,
+        syncStatus: 'offline',
       }));
+      return;
+    }
 
-      // Background-sync from Supabase after local restore
-      if (savedUser) {
-        setState((prev) => ({ ...prev, syncStatus: 'syncing' }));
-        fetchUserData(savedUser).then((remote) => {
-          if (!remote) {
-            setState((prev) => ({ ...prev, syncStatus: 'offline' }));
-            return;
-          }
-          // Merge remote into local (remote wins on conflicts)
-          setState((prev) => {
-            const merged: AppState = {
-              ...prev,
-              currentDay: remote.currentDay,
-              completedSections: Array.from(new Set([...prev.completedSections, ...remote.completedSections])),
-              quizScores: { ...prev.quizScores, ...remote.quizScores },
-              checklistItems: { ...prev.checklistItems, ...remote.checklistItems },
-              syncStatus: 'synced',
-            };
-            // Persist merged checklist locally
-            if (savedUser) persistChecklistLocal(savedUser, merged.checklistItems);
-            return merged;
-          });
-        });
-      }
-    } catch {}
-  }, []);
+    const userKey = profile.userKey;
 
-  // ── Persist sections to localStorage ─────────────────────
-  const persistSections = useCallback((next: AppState) => {
-    try {
-      const { showSearch, showNotes, currentUser, activeTab, currentDay, checklistItems, syncStatus, ...toSave } = next;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-    } catch {}
-  }, []);
+    // Load local checklist immediately
+    const localChecklist = loadChecklistLocal(userKey);
+    const localDay = parseInt(localStorage.getItem(`ri_${userKey}_day`) || '1', 10);
 
-  const update = useCallback((patch: Partial<AppState>) => {
+    // Default tab: super_admins go to admin, users go to overview
+    const defaultTab: ActiveTab = profile.role === 'super_admin' ? 'admin' : 'overview';
+
+    setState((prev) => ({
+      ...prev,
+      currentUser: profile,
+      authLoading: false,
+      accessDenied: false,
+      activeTab: defaultTab,
+      currentDay: isNaN(localDay) ? 1 : localDay,
+      checklistItems: localChecklist,
+      syncStatus: 'syncing',
+    }));
+
+    // Background-merge from Supabase
+    const remote = await fetchUserData(userKey);
+    if (!remote) {
+      setState((prev) => ({ ...prev, syncStatus: 'offline' }));
+      return;
+    }
+
     setState((prev) => {
-      const next = { ...prev, ...patch };
-      persistSections(next);
+      const merged: AppState = {
+        ...prev,
+        currentDay: remote.currentDay,
+        completedSections: Array.from(new Set([...prev.completedSections, ...remote.completedSections])),
+        quizScores: { ...prev.quizScores, ...remote.quizScores },
+        checklistItems: { ...prev.checklistItems, ...remote.checklistItems },
+        syncStatus: 'synced',
+      };
+      persistChecklistLocal(userKey, merged.checklistItems);
+      return merged;
+    });
+  }
+
+  // ── Auth actions ──────────────────────────────────────────
+  const logout = useCallback(() => {
+    authSignOut();
+    // onAuthStateChange 'SIGNED_OUT' will reset state
+  }, []);
+
+  // ── Navigation ────────────────────────────────────────────
+  const setActiveTab = useCallback((tab: ActiveTab) => {
+    setState((prev) => ({ ...prev, activeTab: tab }));
+  }, []);
+
+  const setCurrentSection = useCallback((id: number) => {
+    setState((prev) => {
+      const next = { ...prev, currentSection: id };
+      persistSectionsLocal(next);
       return next;
     });
-  }, [persistSections]);
+  }, []);
 
-  // ── Section navigation ────────────────────────────────────
-  const setCurrentSection = useCallback((id: number) => update({ currentSection: id }), [update]);
+  const setSidebarOpen = useCallback((v: boolean) => {
+    setState((prev) => ({ ...prev, sidebarOpen: v }));
+  }, []);
 
+  // ── Worksheet ─────────────────────────────────────────────
+  const setCurrentDay = useCallback((day: number) => {
+    setState((prev) => {
+      if (prev.currentUser) {
+        try { localStorage.setItem(`ri_${prev.currentUser.userKey}_day`, String(day)); } catch {}
+        pushCurrentDay(prev.currentUser.userKey, day);
+      }
+      return { ...prev, currentDay: day };
+    });
+  }, []);
+
+  const toggleChecklistItem = useCallback((groupId: string, index: number) => {
+    setState((prev) => {
+      const key = `${groupId}_${index}`;
+      const newVal = !prev.checklistItems[key];
+      const updated = { ...prev.checklistItems, [key]: newVal };
+      if (prev.currentUser) {
+        try { localStorage.setItem(`ri_${prev.currentUser.userKey}_${key}`, newVal ? '1' : '0'); } catch {}
+        pushChecklistItem(prev.currentUser.userKey, groupId, index, newVal);
+      }
+      return { ...prev, checklistItems: updated };
+    });
+  }, []);
+
+  // ── Training sections ─────────────────────────────────────
   const markSectionComplete = useCallback((id: number) => {
     setState((prev) => {
       if (prev.completedSections.includes(id)) return prev;
       const next = { ...prev, completedSections: [...prev.completedSections, id] };
-      persistSections(next);
-      if (prev.currentUser) pushSectionComplete(prev.currentUser, id);
+      persistSectionsLocal(next);
+      if (prev.currentUser) pushSectionComplete(prev.currentUser.userKey, id);
       return next;
     });
-  }, [persistSections]);
+  }, []);
 
   const toggleBookmark = useCallback((id: number) => {
     setState((prev) => {
@@ -183,115 +292,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ? prev.bookmarks.filter((b) => b !== id)
         : [...prev.bookmarks, id];
       const updated = { ...prev, bookmarks: next };
-      persistSections(updated);
+      persistSectionsLocal(updated);
       return updated;
     });
-  }, [persistSections]);
+  }, []);
 
   const saveNote = useCallback((sectionId: number, text: string) => {
     setState((prev) => {
       const notes = { ...prev.notes, [sectionId]: { text, updatedAt: new Date().toISOString() } };
-      const next  = { ...prev, notes };
-      persistSections(next);
+      const next = { ...prev, notes };
+      persistSectionsLocal(next);
       return next;
     });
-  }, [persistSections]);
+  }, []);
 
   const saveQuizScore = useCallback((sectionId: number, score: number) => {
     setState((prev) => {
       const quizScores = { ...prev.quizScores, [sectionId]: score };
       const next = { ...prev, quizScores };
-      persistSections(next);
-      if (prev.currentUser) pushQuizScore(prev.currentUser, sectionId, score);
+      persistSectionsLocal(next);
+      if (prev.currentUser) pushQuizScore(prev.currentUser.userKey, sectionId, score);
       return next;
     });
-  }, [persistSections]);
-
-  const setSearchQuery  = useCallback((q: string)  => update({ searchQuery: q }), [update]);
-  const setShowSearch   = useCallback((v: boolean)  => update({ showSearch: v }), [update]);
-  const setShowNotes    = useCallback((v: boolean)  => update({ showNotes: v }), [update]);
-  const setSidebarOpen  = useCallback((v: boolean)  => update({ sidebarOpen: v }), [update]);
-
-  // ── Login / logout ────────────────────────────────────────
-  const login = useCallback((user: UserName) => {
-    try { localStorage.setItem('ri_user', user); } catch {}
-    const savedDay = parseInt(localStorage.getItem(`ri_${user}_day`) || '1', 10);
-    const checklist = loadChecklistLocal(user);
-
-    setState((prev) => ({
-      ...prev,
-      currentUser: user,
-      activeTab: 'overview',
-      currentDay: isNaN(savedDay) ? 1 : savedDay,
-      checklistItems: checklist,
-      syncStatus: 'syncing',
-    }));
-
-    // Background-sync from Supabase
-    fetchUserData(user).then((remote) => {
-      if (!remote) {
-        setState((prev) => ({ ...prev, syncStatus: 'offline' }));
-        return;
-      }
-      setState((prev) => {
-        const merged: AppState = {
-          ...prev,
-          currentDay: remote.currentDay,
-          completedSections: Array.from(new Set([...prev.completedSections, ...remote.completedSections])),
-          quizScores: { ...prev.quizScores, ...remote.quizScores },
-          checklistItems: { ...prev.checklistItems, ...remote.checklistItems },
-          syncStatus: 'synced',
-        };
-        persistChecklistLocal(user, merged.checklistItems);
-        return merged;
-      });
-    });
   }, []);
 
-  const logout = useCallback(() => {
-    try { localStorage.removeItem('ri_user'); } catch {}
-    setState((prev) => ({
-      ...prev,
-      currentUser: null,
-      activeTab: 'overview',
-      currentDay: 1,
-      checklistItems: {},
-      syncStatus: 'idle',
-    }));
-  }, []);
-
-  // ── Tab & day ─────────────────────────────────────────────
-  const setActiveTab = useCallback((tab: ActiveTab) => {
-    setState((prev) => ({ ...prev, activeTab: tab }));
-  }, []);
-
-  const setCurrentDay = useCallback((day: number) => {
-    setState((prev) => {
-      try {
-        if (prev.currentUser) {
-          localStorage.setItem(`ri_${prev.currentUser}_day`, String(day));
-          pushCurrentDay(prev.currentUser, day);
-        }
-      } catch {}
-      return { ...prev, currentDay: day };
-    });
-  }, []);
-
-  // ── Checklist toggle ──────────────────────────────────────
-  const toggleChecklistItem = useCallback((groupId: string, index: number) => {
-    setState((prev) => {
-      const key    = `${groupId}_${index}`;
-      const newVal = !prev.checklistItems[key];
-      const updated = { ...prev.checklistItems, [key]: newVal };
-      try {
-        if (prev.currentUser) {
-          localStorage.setItem(`ri_${prev.currentUser}_${key}`, newVal ? '1' : '0');
-          pushChecklistItem(prev.currentUser, groupId, index, newVal);
-        }
-      } catch {}
-      return { ...prev, checklistItems: updated };
-    });
-  }, []);
+  // ── UI overlays ───────────────────────────────────────────
+  const setSearchQuery  = useCallback((q: string)  => setState((p) => ({ ...p, searchQuery: q })), []);
+  const setShowSearch   = useCallback((v: boolean)  => setState((p) => ({ ...p, showSearch: v })), []);
+  const setShowNotes    = useCallback((v: boolean)  => setState((p) => ({ ...p, showNotes: v })), []);
 
   const progressPercent = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
   const isBookmarked    = (id: number) => state.bookmarks.includes(id);
@@ -300,7 +328,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider value={{
       ...state,
+      logout,
+      setActiveTab,
       setCurrentSection,
+      setSidebarOpen,
+      setCurrentDay,
+      toggleChecklistItem,
       markSectionComplete,
       toggleBookmark,
       saveNote,
@@ -308,15 +341,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setSearchQuery,
       setShowSearch,
       setShowNotes,
-      setSidebarOpen,
       progressPercent,
       isBookmarked,
       isCompleted,
-      login,
-      logout,
-      setActiveTab,
-      setCurrentDay,
-      toggleChecklistItem,
     }}>
       {children}
     </AppContext.Provider>

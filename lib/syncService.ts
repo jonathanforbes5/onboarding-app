@@ -6,7 +6,8 @@
 
 import { supabase } from './supabase';
 
-export type UserName = 'sam' | 'patrick' | 'jonathan';
+// userKey is any string (sam, patrick, jonathan, mani, oscar, etc.)
+export type UserName = string;
 
 // ── Types returned by fetchUserData ──────────────────────────
 

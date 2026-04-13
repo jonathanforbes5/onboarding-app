@@ -1,36 +1,17 @@
 'use client';
-import React from 'react';
-import { useApp, UserName } from '@/context/AppContext';
-
-const USERS: { id: UserName; name: string; role: string; accent: string; textOnAccent: string; initial: string }[] = [
-  {
-    id: 'sam',
-    name: 'Sam',
-    role: 'Pod 4 Manager',
-    accent: '#F5C800',
-    textOnAccent: '#000000',
-    initial: 'S',
-  },
-  {
-    id: 'patrick',
-    name: 'Patrick',
-    role: 'Pod 4 Manager',
-    accent: '#E07B39',
-    textOnAccent: '#FFFFFF',
-    initial: 'P',
-  },
-  {
-    id: 'jonathan',
-    name: 'Jonathan',
-    role: 'Head of Pod Operations',
-    accent: '#4A90D9',
-    textOnAccent: '#FFFFFF',
-    initial: 'J',
-  },
-];
+import React, { useState } from 'react';
+import { signInWithGoogle } from '@/lib/auth';
+import { isSupabaseEnabled } from '@/lib/supabase';
 
 export function LoginScreen() {
-  const { login } = useApp();
+  const [loading, setLoading] = useState(false);
+  const configured = isSupabaseEnabled();
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    await signInWithGoogle();
+    // Browser redirects to Google — loading state stays until redirect
+  };
 
   return (
     <div
@@ -45,22 +26,21 @@ export function LoginScreen() {
         fontFamily: 'Inter, system-ui, sans-serif',
       }}
     >
-      {/* Logo / Brand */}
+      {/* Brand */}
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div
           style={{
-            width: 60,
-            height: 60,
+            width: 64,
+            height: 64,
             backgroundColor: '#F5C800',
-            borderRadius: 14,
+            borderRadius: 16,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             margin: '0 auto 1.25rem',
             fontWeight: 900,
-            fontSize: 22,
+            fontSize: 24,
             color: '#000',
-            letterSpacing: '-0.5px',
           }}
         >
           CI
@@ -77,97 +57,98 @@ export function LoginScreen() {
           Contractors Ignite
         </h1>
         <p style={{ color: '#666', fontSize: 14, margin: 0 }}>
-          Pod Manager Onboarding — Select your profile to continue
+          Pod Manager Onboarding & Training Hub
         </p>
       </div>
 
-      {/* User cards */}
+      {/* Login card */}
       <div
         style={{
-          display: 'flex',
-          gap: '1rem',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          maxWidth: 700,
+          backgroundColor: '#141414',
+          border: '1.5px solid #2A2A2A',
+          borderRadius: 18,
+          padding: '2rem 2.5rem',
           width: '100%',
+          maxWidth: 380,
+          textAlign: 'center',
         }}
       >
-        {USERS.map((user) => (
+        <h2
+          style={{
+            color: '#F5F5F5',
+            fontSize: 17,
+            fontWeight: 800,
+            margin: '0 0 0.5rem',
+          }}
+        >
+          Sign in to continue
+        </h2>
+        <p style={{ color: '#666', fontSize: 13, margin: '0 0 1.75rem', lineHeight: 1.5 }}>
+          Use your <strong style={{ color: '#aaa' }}>@roofignite.com</strong> Google account.
+          Access is restricted to authorised team members only.
+        </p>
+
+        {configured ? (
           <button
-            key={user.id}
-            onClick={() => login(user.id)}
+            onClick={handleGoogleLogin}
+            disabled={loading}
             style={{
-              background: '#141414',
-              border: '1.5px solid #2A2A2A',
-              borderRadius: 16,
-              padding: '1.75rem 2rem',
-              cursor: 'pointer',
+              width: '100%',
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
-              gap: '0.75rem',
-              flex: '1 1 180px',
-              maxWidth: 210,
+              justifyContent: 'center',
+              gap: 12,
+              backgroundColor: loading ? '#1C1C1C' : '#fff',
+              border: '1.5px solid #2A2A2A',
+              borderRadius: 10,
+              padding: '12px 20px',
+              cursor: loading ? 'not-allowed' : 'pointer',
               transition: 'all 0.15s ease',
-              outline: 'none',
+              fontSize: 14,
+              fontWeight: 700,
+              color: loading ? '#666' : '#000',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = user.accent;
-              (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-2px)';
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = `0 8px 24px ${user.accent}22`;
+              if (!loading) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#f0f0f0';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.borderColor = '#2A2A2A';
-              (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
-              (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
+              if (!loading) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#fff';
             }}
           >
-            {/* Avatar */}
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: '50%',
-                backgroundColor: user.accent,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 900,
-                fontSize: 22,
-                color: user.textOnAccent,
-                flexShrink: 0,
-              }}
-            >
-              {user.initial}
-            </div>
-            {/* Name & role */}
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ color: '#F5F5F5', fontWeight: 800, fontSize: 16, marginBottom: 3 }}>
-                {user.name}
-              </div>
-              <div style={{ color: '#888', fontSize: 12 }}>{user.role}</div>
-            </div>
-            {/* CTA */}
-            <div
-              style={{
-                marginTop: 4,
-                padding: '6px 16px',
-                borderRadius: 8,
-                backgroundColor: user.accent,
-                color: user.textOnAccent,
-                fontSize: 12,
-                fontWeight: 700,
-              }}
-            >
-              Continue →
-            </div>
+            {/* Google G icon */}
+            {!loading && (
+              <svg width="18" height="18" viewBox="0 0 18 18">
+                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+                <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+              </svg>
+            )}
+            {loading ? 'Redirecting to Google…' : 'Continue with Google'}
           </button>
-        ))}
+        ) : (
+          <div
+            style={{
+              backgroundColor: '#2A1A00',
+              border: '1px solid #F59E0B44',
+              borderRadius: 10,
+              padding: '14px 16px',
+              color: '#F59E0B',
+              fontSize: 12,
+              lineHeight: 1.5,
+            }}
+          >
+            ⚠️ Supabase is not configured. Add your{' '}
+            <code style={{ backgroundColor: '#1A1000', padding: '1px 4px', borderRadius: 3 }}>
+              .env.local
+            </code>{' '}
+            file to enable login.
+          </div>
+        )}
       </div>
 
-      {/* Footer note */}
-      <p style={{ color: '#444', fontSize: 12, marginTop: '2.5rem', textAlign: 'center' }}>
-        Progress is saved per profile · April 2026 Cohort · Pod 4
+      <p style={{ color: '#333', fontSize: 11, marginTop: '1.75rem', textAlign: 'center' }}>
+        roofignite.com · Internal use only
       </p>
     </div>
   );

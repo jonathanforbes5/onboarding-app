@@ -2,13 +2,8 @@
 import React from 'react';
 import { Search, FileText, Bookmark, Menu, X, LogOut } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { getUserColor } from '@/lib/auth';
 import { SECTIONS } from '@/data/sections';
-
-const USER_META: Record<string, { name: string; color: string; textColor: string }> = {
-  sam:      { name: 'Sam',      color: '#F5C800', textColor: '#000' },
-  patrick:  { name: 'Patrick',  color: '#E07B39', textColor: '#fff' },
-  jonathan: { name: 'Jonathan', color: '#4A90D9', textColor: '#fff' },
-};
 
 // Sync indicator dot
 function SyncDot({ status }: { status: string }) {
@@ -50,8 +45,8 @@ export function Header() {
     syncStatus,
   } = useApp();
 
-  const userMeta   = currentUser ? USER_META[currentUser] : null;
-  const isJonathan = currentUser === 'jonathan';
+  const userColor     = currentUser ? getUserColor(currentUser.userKey) : null;
+  const isSuperAdmin  = currentUser?.role === 'super_admin';
 
   // Tabs visible to all users
   const baseTabs = [
@@ -60,9 +55,9 @@ export function Header() {
     { id: 'sections',  label: 'Training',  icon: '📚' },
   ] as const;
 
-  // Jonathan gets an extra Admin tab
+  // Super admins get an extra Admin tab
   const adminTab = { id: 'admin', label: 'Admin', icon: '📊' } as const;
-  const tabs = isJonathan ? [...baseTabs, adminTab] : baseTabs;
+  const tabs = isSuperAdmin ? [...baseTabs, adminTab] : baseTabs;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-brand-black text-white shadow-lg">
@@ -164,16 +159,16 @@ export function Header() {
           )}
 
           {/* User pill + sync dot */}
-          {userMeta && (
+          {currentUser && userColor && (
             <div className="flex items-center gap-1.5 ml-1 pl-1.5 border-l border-white/10">
               <SyncDot status={syncStatus} />
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0"
-                style={{ backgroundColor: userMeta.color, color: userMeta.textColor }}
+                style={{ backgroundColor: userColor.bg, color: userColor.text }}
               >
-                {userMeta.name[0]}
+                {currentUser.displayName[0]}
               </div>
-              <span className="text-xs font-semibold text-white/75 hidden sm:inline">{userMeta.name}</span>
+              <span className="text-xs font-semibold text-white/75 hidden sm:inline">{currentUser.displayName}</span>
               <button
                 onClick={logout}
                 className="p-1 rounded hover:bg-white/10 transition-colors"

@@ -278,7 +278,7 @@ function RefLink({
 // ----------- Main OverviewTab -----------
 export function OverviewTab() {
   const { currentUser } = useApp();
-  const userName = currentUser ? currentUser.charAt(0).toUpperCase() + currentUser.slice(1) : 'Pod Manager';
+  const userName = currentUser?.displayName ?? 'Pod Manager';
 
   // Group team by tier
   const teamByTier = TIER_ORDER.reduce<Record<string, typeof teamData>>((acc, tier) => {

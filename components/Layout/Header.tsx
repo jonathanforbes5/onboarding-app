@@ -80,20 +80,8 @@ export function Header() {
               {sidebarOpen ? <X size={17} /> : <Menu size={17} />}
             </button>
           )}
-          {/* Roof Ignite wordmark */}
-          <div className="flex flex-col items-center leading-none gap-[3px]">
-            <span className="font-black text-[12px] text-white tracking-[0.2em]">ROOF</span>
-            <div className="hidden sm:flex items-center gap-[4px]">
-              <div className="w-4 h-[1.5px] bg-brand-yellow rounded-full" />
-              {/* Flame */}
-              <svg width="9" height="12" viewBox="0 0 18 22" fill="none">
-                <path d="M9 1C9 1 4 7 4 13C4 15.5 5.5 17.5 5.5 17.5C5.5 14.5 7 12 9 10C11 12 12.5 14.5 12.5 17.5C12.5 17.5 14 15.5 14 13C14 7 9 1 9 1Z" fill="#FFD740"/>
-                <path d="M7 15C7 18 7.8 20 9 20C10.2 20 11 18 11 15C11 13.5 10.2 12 9.5 11.5C9.5 13 9.2 14.5 9 15C8.8 14.5 8.5 13 8.5 11.5C7.8 12 7 13.5 7 15Z" fill="#F5A623"/>
-              </svg>
-              <span className="font-black text-[10px] text-brand-yellow tracking-[0.2em]">IGNITE</span>
-              <div className="w-4 h-[1.5px] bg-brand-yellow rounded-full" />
-            </div>
-          </div>
+          {/* Roof Ignite logo */}
+          <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
         </div>
 
         {/* ── Center: Tabs ── */}

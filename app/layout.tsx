@@ -6,9 +6,9 @@ export const metadata: Metadata = {
   title: 'Roof Ignite — Pod Manager Onboarding',
   description: 'Interactive onboarding for new Pod Managers at Roof Ignite',
   icons: {
-    icon: '/icon.svg',
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    icon: '/icon-mark.png',
+    shortcut: '/icon-mark.png',
+    apple: '/icon-mark.png',
   },
 };
 

@@ -3,8 +3,8 @@ import './globals.css';
 import { AppProvider } from '@/context/AppContext';
 
 export const metadata: Metadata = {
-  title: 'Contractors Ignite — Pod Manager Onboarding',
-  description: 'Interactive onboarding for new Marketing & Operations Managers at Contractors Ignite / RoofIgnite',
+  title: 'Roof Ignite — Pod Manager Onboarding',
+  description: 'Interactive onboarding for new Pod Managers at Roof Ignite',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

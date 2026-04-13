@@ -13,7 +13,7 @@ export function S10_CulturePerformance() {
         <div className="text-brand-yellow text-xs font-black uppercase tracking-widest mb-2">The Standard</div>
         <h2 className="text-xl font-black text-white mb-2">High Performance Culture</h2>
         <p className="text-white/70 text-sm leading-relaxed">
-          Contractors Ignite is a results-driven, fast-paced environment. We hire slow and fire fast.
+          Roof Ignite is a results-driven, fast-paced environment. We hire slow and fire fast.
           <strong className="text-white"> Hit your numbers → growth. Miss your numbers → you&apos;re not meeting the standard.</strong>
         </p>
       </Card>
@@ -143,7 +143,7 @@ export function S10_CulturePerformance() {
             ))}
           </div>
           <InfoBox type="info">
-            Feedback at Contractors Ignite is direct and immediate. It&apos;s never personal — it&apos;s always about results and improvement.
+            Feedback at Roof Ignite is direct and immediate. It&apos;s never personal — it&apos;s always about results and improvement.
             The right response is: <strong>&quot;Understood. Here&apos;s my plan.&quot;</strong>
           </InfoBox>
         </div>

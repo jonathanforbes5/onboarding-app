@@ -295,7 +295,7 @@ export function S11_ToolsSystems() {
         </div>
       </Card>
 
-      <InfoBox type="success" title="Welcome to Contractors Ignite">
+      <InfoBox type="success" title="Welcome to Roof Ignite">
         You were chosen because you demonstrated the right mindset, potential for leadership, and commitment to outcomes.
         <strong> Now it&apos;s time to prove it. Let&apos;s build something extraordinary together.</strong>
       </InfoBox>

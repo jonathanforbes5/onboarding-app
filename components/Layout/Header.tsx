@@ -81,10 +81,15 @@ export function Header() {
             </button>
           )}
           <div className="flex items-center gap-1.5">
-            <div className="w-6 h-6 rounded-md bg-brand-yellow flex items-center justify-center flex-shrink-0">
-              <span className="font-black text-brand-black text-[10px]">CI</span>
+            {/* Flame icon */}
+            <svg width="18" height="18" viewBox="0 0 24 28" fill="none" className="flex-shrink-0">
+              <path d="M12 2C12 2 7 8 7 14C7 16.5 8.5 18.5 8.5 18.5C8.5 15.5 10 13 12 11C14 13 15.5 15.5 15.5 18.5C15.5 18.5 17 16.5 17 14C17 8 12 2 12 2Z" fill="#F5C800"/>
+              <path d="M9 18C9 21.3 10.3 24 12 24C13.7 24 15 21.3 15 18C15 16 14 14.5 13 14C13 16 12.5 17.5 12 18C11.5 17.5 11 16 11 14C10 14.5 9 16 9 18Z" fill="#F97316"/>
+            </svg>
+            <div className="hidden sm:flex flex-col leading-none">
+              <span className="font-black text-[11px] text-white tracking-widest">ROOF</span>
+              <span className="font-black text-[11px] text-brand-yellow tracking-widest">IGNITE</span>
             </div>
-            <span className="font-black text-sm hidden sm:inline">Contractors Ignite</span>
           </div>
         </div>
 

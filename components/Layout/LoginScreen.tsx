@@ -39,34 +39,25 @@ export function LoginScreen() {
     >
       {/* Brand */}
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <div
-          style={{
-            width: 64,
-            height: 64,
-            backgroundColor: '#F5C800',
-            borderRadius: 16,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 1.25rem',
-            fontWeight: 900,
-            fontSize: 24,
-            color: '#000',
-          }}
-        >
-          CI
+        {/* Logo mark */}
+        <div style={{ margin: '0 auto 1.25rem', display: 'inline-block' }}>
+          {/* ROOF */}
+          <div style={{ color: '#F5F5F5', fontWeight: 900, fontSize: 22, letterSpacing: '0.25em', lineHeight: 1 }}>
+            ROOF
+          </div>
+          {/* Flame + IGNITE row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+            <div style={{ flex: 1, height: 1.5, backgroundColor: '#F5C800', borderRadius: 2 }} />
+            <svg width="14" height="18" viewBox="0 0 24 28" fill="none">
+              <path d="M12 2C12 2 7 8 7 14C7 16.5 8.5 18.5 8.5 18.5C8.5 15.5 10 13 12 11C14 13 15.5 15.5 15.5 18.5C15.5 18.5 17 16.5 17 14C17 8 12 2 12 2Z" fill="#F5C800"/>
+              <path d="M9 18C9 21.3 10.3 24 12 24C13.7 24 15 21.3 15 18C15 16 14 14.5 13 14C13 16 12.5 17.5 12 18C11.5 17.5 11 16 11 14C10 14.5 9 16 9 18Z" fill="#F97316"/>
+            </svg>
+            <div style={{ color: '#F5C800', fontWeight: 900, fontSize: 16, letterSpacing: '0.3em', lineHeight: 1 }}>
+              IGNITE
+            </div>
+            <div style={{ flex: 1, height: 1.5, backgroundColor: '#F5C800', borderRadius: 2 }} />
+          </div>
         </div>
-        <h1
-          style={{
-            color: '#F5F5F5',
-            fontSize: 26,
-            fontWeight: 900,
-            margin: '0 0 0.4rem',
-            letterSpacing: '-0.5px',
-          }}
-        >
-          Contractors Ignite
-        </h1>
         <p style={{ color: '#666', fontSize: 14, margin: 0 }}>
           Pod Manager Onboarding & Training Hub
         </p>

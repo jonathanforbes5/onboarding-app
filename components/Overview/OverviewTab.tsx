@@ -348,7 +348,7 @@ export function OverviewTab() {
                 Welcome, {userName}.
               </h1>
               <p style={{ color: '#aaa', fontSize: 14, margin: 0, lineHeight: 1.6, maxWidth: 560 }}>
-                You're joining <strong style={{ color: C.text }}>Contractors Ignite</strong> (formerly RoofIgnite) as a Pod 4 Manager.
+                You're joining <strong style={{ color: C.text }}>Roof Ignite</strong> as a Pod 4 Manager.
                 Your job is to be the single point of accountability for a portfolio of contractor clients — from onboarding through renewal.
               </p>
             </div>

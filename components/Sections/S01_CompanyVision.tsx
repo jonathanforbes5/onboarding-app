@@ -14,7 +14,7 @@ export function S01_CompanyVision() {
           <div className="text-brand-yellow text-xs font-black uppercase tracking-widest mb-2">Our Story</div>
           <h2 className="text-2xl font-black text-white mb-3">From Side Hustle to Industry Leader</h2>
           <p className="text-white/70 text-sm leading-relaxed">
-            Contractors Ignite began when <span className="text-white font-bold">Mani and Oscar</span>, then just 15 years old,
+            Roof Ignite began when <span className="text-white font-bold">Mani and Oscar</span>, then just 15 years old,
             set out to help their families by using their skills to support local contractors. What started as a small side project
             quickly grew into a proven system for generating qualified leads and booked appointments for contractors across multiple industries.
           </p>

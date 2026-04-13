@@ -119,9 +119,9 @@ export const SECTIONS: SectionMeta[] = [
       },
       {
         question: 'What is the typical setup timeline for a new client?',
-        options: ['Same day', '2–3 days', '1–2 weeks', '30 days'],
-        correctIndex: 1,
-        explanation: 'Emmanuel (Service Delivery Setup) builds all infrastructure in 2–3 days: landing pages, surveys, GoHighLevel CRM, Meta ads, VA team assignment.',
+        options: ['Same day', '2–3 days', '5–10 business days', '30 days'],
+        correctIndex: 2,
+        explanation: 'Emmanuel builds all infrastructure in 5–10 business days: landing pages, surveys, GoHighLevel CRM, Meta ads, A2P registration, and VA team assignment. Every day of delay = delayed cashflow.',
       },
     ],
   },
@@ -204,11 +204,11 @@ export const SECTIONS: SectionMeta[] = [
         options: [
           'Sell the client on upgrading their package',
           'Build landing pages and set up the CRM',
-          'Understand their business, gather assets, set expectations, and document everything in Asana',
+          'Understand their business, gather assets, set expectations — then post Fathom summary to Slack and task Emmanuel in ClickUp within 1 hour',
           'Introduce them to the VA team',
         ],
         correctIndex: 2,
-        explanation: 'The onboarding call is YOUR call. You understand their business, gather logos/photos/brand assets, set expectations for the 28-day cycle, and document everything in Asana.',
+        explanation: 'The onboarding call is YOUR call. Within 1 hour of finishing: paste Fathom transcript into Custom GPT → post summary to #post-onboarding-discussion → create ClickUp task for Emmanuel → text the client confirming next steps.',
       },
       {
         question: 'Who handles the technical service delivery setup?',
@@ -239,9 +239,9 @@ export const SECTIONS: SectionMeta[] = [
     quiz: [
       {
         question: 'How many clients does each pod manage?',
-        options: ['5–10 clients', '10–20 clients', '30–40 clients', '50–60 clients'],
+        options: ['5–10 clients', '10–20 clients', '25–30 clients', '50–60 clients'],
         correctIndex: 2,
-        explanation: 'Each Pod Manager runs a pod of 30–40 clients. You own all client relationships and coordinate specialists to deliver results.',
+        explanation: 'Each Pod Manager runs a pod of 25–30 clients. You own all client relationships and coordinate specialists to deliver results.',
       },
       {
         question: 'Who is your direct manager?',
@@ -322,18 +322,18 @@ export const SECTIONS: SectionMeta[] = [
           'Landing page load time',
         ],
         correctIndex: 1,
-        explanation: 'Low booking rate usually points to VA performance or script issues. You should coordinate with Layla/Aika (VA managers) to review scripts and response times (<5 min).',
+        explanation: 'Low booking rate usually points to VA performance or script issues. Coordinate with Leila/Aica (VA managers) — flag specific lead examples, request call recording review, and ask for script retraining.',
       },
       {
         question: 'When you have high Cost Per Lead, who do you coordinate with?',
         options: [
-          'Layla/Aika for VA script updates',
+          'Leila/Aica for VA script updates',
           'Jonathan for budget approval',
-          'Ken (creative) and Emmanuel (campaigns)',
+          'Ken (creative) and Emmanuel/Mervin (campaigns)',
           'The client directly',
         ],
         correctIndex: 2,
-        explanation: 'High CPL = likely creative fatigue or targeting issues. Prescribe creative refresh with Ken and campaign/targeting adjustments with Emmanuel.',
+        explanation: 'High CPL = likely creative fatigue or targeting issues. Task Ken via ClickUp for new AI creatives and task Emmanuel/Mervin for campaign and targeting adjustments.',
       },
       {
         question: 'What does "pixel seasoning" fix?',
@@ -396,9 +396,9 @@ export const SECTIONS: SectionMeta[] = [
     quiz: [
       {
         question: 'Which tool is your PRIMARY communication hub?',
-        options: ['Asana', 'Google Workspace', 'Slack', 'GoHighLevel'],
+        options: ['ClickUp', 'Google Workspace', 'Slack', 'GoHighLevel'],
         correctIndex: 2,
-        explanation: 'Slack is your primary communication hub for all internal communication, client update channels, and team coordination.',
+        explanation: 'Slack is your primary communication hub for all internal communication, client update channels, and team coordination. ClickUp is for task management and assigning work to specialists.',
       },
       {
         question: 'What is GoHighLevel used for?',
@@ -420,7 +420,7 @@ export const SECTIONS: SectionMeta[] = [
           'Set up Zapier integrations and CAPI tracking',
         ],
         correctIndex: 1,
-        explanation: 'The proficiency timeline: Day 1 = fluent in Slack & Asana. Week 1 = understand GoHighLevel navigation. Week 2 = read Meta Ads Manager data. Week 3 = understand how all systems connect.',
+        explanation: 'The proficiency timeline: Day 1 = fluent in Slack & ClickUp. Week 1 = understand GoHighLevel navigation. Week 2 = read Meta Ads Manager data. Week 3+ = understand how Logbook → Dashboard → Command Center all connect.',
       },
     ],
   },

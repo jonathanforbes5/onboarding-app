@@ -9,7 +9,7 @@ const PHASES = [
   { num: 2, title: 'Sales Call', owner: 'Mani\'s Team', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
   { num: 3, title: 'Client Closed', owner: 'Closers + Pod Assignment', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
   { num: 4, title: 'Onboarding Call', owner: 'YOU', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
-  { num: 5, title: 'Service Delivery Setup', owner: 'Emmanuel (2–3 days)', color: 'bg-brand-black border-brand-black', text: 'text-white' },
+  { num: 5, title: 'Service Delivery Setup', owner: 'Emmanuel (5–10 business days)', color: 'bg-brand-black border-brand-black', text: 'text-white' },
   { num: 6, title: 'Launch Campaigns', owner: 'Emmanuel + VA Team', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
   { num: 7, title: 'Ongoing Optimization', owner: 'You + Specialists', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
   { num: 8, title: 'Cycle Completion', owner: 'You verify + bill', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
@@ -56,43 +56,60 @@ export function S06_ServiceDelivery() {
           </InfoBox>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Your Goals</h4>
+              <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Your Goals on the Call</h4>
               <BulletList check items={[
                 'Understand their business deeply',
                 'Gather all assets (logos, photos, brand colors)',
                 'Set clear timeline expectations',
                 'Explain the 28-day cycle model',
-                'Establish communication cadence',
+                'Establish communication cadence (WhatsApp/Slack)',
                 'Collect CRM details if they have one',
-                'Document everything in Asana',
               ]} />
             </div>
             <div>
               <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Questions to Ask</h4>
               <BulletList items={[
                 'What is your average job value?',
-                'What is your service area (zip codes)?',
+                'What is your service area (exact zip codes)?',
                 'Do you have a CRM we need to integrate?',
-                'What is your capacity for new appointments?',
+                'What is your appointment capacity per week?',
                 'What is your current close rate?',
                 'Have you run paid ads before?',
               ]} />
+            </div>
+          </div>
+          <div>
+            <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Within 1 Hour of Ending the Call</h4>
+            <div className="space-y-1.5">
+              {[
+                { step: '1', action: 'Paste Fathom transcript into Custom GPT → get structured summary' },
+                { step: '2', action: 'Post summary to #post-onboarding-discussion in Slack' },
+                { step: '3', action: 'Create ClickUp task for Emmanuel with client details + 48hr deadline' },
+                { step: '4', action: 'Text/WhatsApp client confirming next steps and timeline' },
+              ].map((s) => (
+                <div key={s.step} className="flex items-start gap-2 p-2 bg-brand-gray-light rounded-lg text-xs">
+                  <span className="w-5 h-5 rounded-full bg-brand-black text-white text-[10px] font-black flex items-center justify-center flex-shrink-0 mt-0.5">{s.step}</span>
+                  <span>{s.action}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </ExpandableCard>
 
       {/* Phase 5: Setup */}
-      <ExpandableCard title="Phase 5: Service Delivery Setup" subtitle="Emmanuel builds the entire infrastructure in 2–3 days">
+      <ExpandableCard title="Phase 5: Service Delivery Setup" subtitle="Emmanuel & Mervin build the full infrastructure in 5–10 business days">
         <div className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {[
-              { item: 'GoHighLevel CRM', desc: 'Account setup, pipelines, automations, calendar' },
-              { item: 'Landing Pages', desc: 'Conversion-optimized, brand-matched' },
-              { item: 'Survey Funnels', desc: 'Multi-step qualification flow' },
-              { item: 'Meta Ads', desc: 'Campaign structure, audiences, ad sets' },
-              { item: 'VA Coordination', desc: 'Team briefed, scripts loaded, tested' },
-              { item: 'Zapier/API Setup', desc: 'If client has their own CRM to integrate' },
+              { item: 'GoHighLevel CRM', desc: 'Sub-account setup, pipelines, automations, calendar booking' },
+              { item: 'Landing Pages', desc: 'Conversion-optimized, brand-matched, hosted on Cloudflare' },
+              { item: 'Qualification Survey', desc: '4-question standard: name, email, phone, service type' },
+              { item: 'Meta Ad Campaigns', desc: 'Campaign structure, audiences, 6 approved placements only' },
+              { item: 'A2P Registration', desc: 'GHL phone registration via A2P Wizard — ALWAYS Emmanuel, never you' },
+              { item: 'VA Assignment & Brief', desc: 'Leila assigns VAs, Account Specific Doc created for VA scripts' },
+              { item: 'CAPI Setup', desc: 'Pixel conditioning via GHL: Qualified tag → fires event to Meta' },
+              { item: 'Zapier/API Setup', desc: 'If client has their own CRM to integrate via Google Sheets' },
             ].map((item) => (
               <div key={item.item} className="flex items-start gap-2 p-2 bg-brand-gray-light rounded-lg">
                 <span className="text-green-500 mt-0.5">✓</span>
@@ -103,8 +120,12 @@ export function S06_ServiceDelivery() {
               </div>
             ))}
           </div>
+          <InfoBox type="warning" title="A2P Critical Rule">
+            A2P (10DLC) is the GHL phone number registration process — NOT related to Meta. A rejected A2P = 2–3 week wait to reapply.
+            Always task Emmanuel via ClickUp with the client name + GHL sub-account link. Never submit yourself.
+          </InfoBox>
           <InfoBox type="info">
-            Your job here: ensure Emmanuel has all assets from the onboarding call. Follow up in Asana. Don&apos;t do the setup yourself — coordinate it.
+            Your job: ensure Emmanuel has all assets from the onboarding call. Track progress in ClickUp. Every day of delay = delayed cashflow.
           </InfoBox>
         </div>
       </ExpandableCard>

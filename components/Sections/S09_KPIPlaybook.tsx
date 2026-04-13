@@ -61,7 +61,7 @@ export function S09_KPIPlaybook() {
                 { problem: 'Low Survey CVR', cause: 'Too much friction', fix: 'Shorten + simplify survey', owner: 'Emmanuel' },
                 { problem: 'High CPL', cause: 'Creative fatigue / bad targeting', fix: 'New creative + targeting', owner: 'Ken + Emmanuel' },
                 { problem: 'Low Lead Quality', cause: 'Pixel unseasoned / broad targeting', fix: 'Pixel seasoning + narrow targeting', owner: 'Emmanuel' },
-                { problem: 'Low Booking Rate', cause: 'VA speed or script issue', fix: 'VA retrain + script review', owner: 'Layla / Aika' },
+                { problem: 'Low Booking Rate', cause: 'VA speed or script issue', fix: 'VA retrain + script review', owner: 'Leila / Aica' },
                 { problem: 'Low Show Rate', cause: 'Reminder failure or bad qual', fix: 'Automations + confirmation flow', owner: 'Emmanuel + You' },
               ].map((row, i) => (
                 <tr key={row.problem} className={i % 2 === 0 ? 'bg-white' : 'bg-brand-gray-light'}>
@@ -78,7 +78,7 @@ export function S09_KPIPlaybook() {
 
       <InfoBox type="warning" title="Critical Reminder">
         You are <strong>not the one executing</strong> the fixes — you are prescribing them and coordinating with specialists.
-        Keep clear records in Asana so there&apos;s accountability on action items.
+        Keep clear records in ClickUp so there&apos;s accountability on action items.
       </InfoBox>
     </SectionWrapper>
   );

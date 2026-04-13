@@ -6,7 +6,7 @@ import { ExpandableCard } from '@/components/Interactive/ExpandableCard';
 
 const TOOLS = [
   { name: 'Slack', category: 'Communication', priority: 'Day 1', icon: '💬', desc: 'Primary communication hub. All internal comms, client updates, team coordination. Your lifeline.', fluency: 'Must be fluent' },
-  { name: 'Asana', category: 'Project Management', priority: 'Day 1', icon: '✅', desc: 'Task tracking, client onboarding workflows, SOP repository, action item management.', fluency: 'Must be fluent' },
+  { name: 'ClickUp', category: 'Project Management', priority: 'Day 1', icon: '✅', desc: 'Task management for ALL specialist coordination. Create tasks for Emmanuel (setup, A2P), Ken (creatives), Mervin. Always include: client details, GHL link, and 48hr deadline. This is how work gets assigned — not via Slack DM.', fluency: 'Must be fluent' },
   { name: 'GoHighLevel', category: 'CRM + Automation', priority: 'Week 1', icon: '⚙️', desc: 'Central CRM hub. Client funnels, automations, pipelines, appointment calendars. The nerve center of delivery.', fluency: 'Must understand navigation' },
   { name: 'Meta Ads Manager', category: 'Paid Media', priority: 'Week 2', icon: '📢', desc: 'Where campaigns live. Monitor performance, review metrics, understand what Emmanuel is managing.', fluency: 'Must read data' },
   { name: 'Fathom', category: 'Call Recording', priority: 'Week 1', icon: '🎙️', desc: 'Call recording and transcription. All pod calls visible to all team members. Use for training and review.', fluency: 'Enable team visibility setting' },
@@ -18,14 +18,14 @@ const TOOLS = [
 ];
 
 const INTERNAL = [
-  { name: 'Logbook', desc: 'Client interaction tracking and history. Document every client touchpoint.', icon: '📓' },
-  { name: 'Account Master Dashboard', desc: 'Real-time account performance and metrics across all pods.', icon: '📊' },
-  { name: 'GoHighLevel Analytics', desc: 'CRM data, funnel metrics, appointments. Deep dive into campaign performance.', icon: '📈' },
-  { name: 'Ads Manager Analytics', desc: 'Campaign performance, ad metrics, spend. Raw paid media data.', icon: '💹' },
+  { name: 'Logbook', desc: 'Central truth for ALL lead data — every lead from every account documented by VAs with status and notes. Access via Leila (not Jonathan). Check daily for open (white) leads.', icon: '📓' },
+  { name: 'Account Master Dashboard', desc: 'Real-time account performance and cycle metrics. Track cycle #, days elapsed, bookings vs target, and billing status. Cole built and maintains this system.', icon: '📊' },
+  { name: 'Command Center', desc: 'Health score dashboard — your daily triage. Color-coded: 🟢 Healthy (monthly check-in) / 🟡 Watch / 🟠 Act Now / 🔴 Escalate to Jonathan. Accounts behind on bookings turn RED.', icon: '🖥️' },
+  { name: 'Custom GPT', desc: 'Paste Fathom transcript after every onboarding call → get structured client summary → post to #post-onboarding-discussion → use for ClickUp task to Emmanuel.', icon: '🤖' },
 ];
 
 const PROFICIENCY = [
-  { timeline: 'Day 1', requirement: 'Slack & Asana — fully fluent', color: 'bg-brand-yellow text-brand-black' },
+  { timeline: 'Day 1', requirement: 'Slack & ClickUp — fully fluent', color: 'bg-brand-yellow text-brand-black' },
   { timeline: 'Week 1', requirement: 'GoHighLevel navigation & structure', color: 'bg-brand-black text-white' },
   { timeline: 'Week 2', requirement: 'Meta Ads Manager — read and interpret data', color: 'bg-brand-gray-mid text-brand-black' },
   { timeline: 'Week 3', requirement: 'How all systems connect together', color: 'bg-brand-gray-light text-brand-black border border-brand-gray-mid' },
@@ -116,11 +116,14 @@ export function S11_ToolsSystems() {
           <p className="text-sm text-brand-black/70 mb-4">Complete the knowledge check below to finish your onboarding.</p>
           <div className="text-left space-y-1">
             {[
-              'Day 1: Complete this onboarding (3 hours)',
-              'Day 2: Shadow an onboarding call',
-              'Days 3–5: Practice, learn, execute',
-              'Days 6–7: Transition to managing your pod',
-              'Day 8+: Fully operational',
+              'Day 1: Company foundations, system access, meet the team',
+              'Day 2: GHL service delivery deep dive, do ONE training setup',
+              'Day 3: First account audit — Layer 1 → Layer 2 framework',
+              'Day 4: First Monday/Thursday status update, cycle management',
+              'Day 5: Meta ad rules, creative standards, ad set reviewer',
+              'Day 6–7: VA management, Logbook, first review call',
+              'Day 8–9: Revenue activities, client comms, creative refresh protocol',
+              'Day 10: Fully operational — final self-assessment',
             ].map((step, i) => (
               <div key={i} className="flex items-center gap-2 text-sm">
                 <span className="w-5 h-5 rounded-full bg-brand-black text-white text-[10px] font-black flex items-center justify-center flex-shrink-0">{i + 1}</span>

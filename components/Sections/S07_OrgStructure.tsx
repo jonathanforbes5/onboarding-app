@@ -21,20 +21,21 @@ export function S07_OrgStructure() {
         <div className="text-brand-yellow text-xs font-black uppercase tracking-widest mb-2">Pod Structure</div>
         <h2 className="text-xl font-black text-white mb-3">How Pods Work</h2>
         <p className="text-white/70 text-sm leading-relaxed mb-4">
-          Each Operations Manager runs a pod of <strong className="text-white">30–40 clients</strong>.
+          Each pod has 2 managers sharing <strong className="text-white">25–30 client accounts</strong>.
           You own all client relationships in your pod. You coordinate specialists — you don&apos;t do the technical work yourself.
         </p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'Pod 1', detail: 'Gianmarco & Gregory', status: 'Launched March 12', clients: '~50-60', buyer: 'Raymond' },
-            { label: 'Pod 2', detail: 'Cole & Tyler', status: 'Experienced', clients: '~60', buyer: 'Bren' },
-            { label: 'Pod 3', detail: 'Kyle & Abdullah', status: 'NEW — YOU', clients: 'Building', buyer: 'Raymond' },
+            { label: 'Pod 1', detail: 'Gianmarco & Gregory', status: 'Launched Mar 12', clients: '25–30' },
+            { label: 'Pod 2', detail: 'Cole & Tyler', status: 'Most experienced', clients: '25–30' },
+            { label: 'Pod 3', detail: 'Kyle & Abdullah', status: 'Launched Mar 25', clients: 'Building' },
+            { label: 'Pod 4', detail: 'Sam & Patrick', status: 'YOU — Starting Apr 14', clients: 'Onboarding', isYou: true },
           ].map((pod) => (
-            <div key={pod.label} className={`rounded-xl p-3 text-center ${pod.status.includes('YOU') ? 'bg-brand-yellow text-brand-black' : 'bg-white/10'}`}>
-              <div className={`font-black text-sm ${pod.status.includes('YOU') ? 'text-brand-black' : 'text-white'}`}>{pod.label}</div>
-              <div className={`text-[10px] mt-1 ${pod.status.includes('YOU') ? 'text-brand-black/70' : 'text-white/60'}`}>{pod.detail}</div>
-              <div className={`text-[10px] mt-1 font-bold ${pod.status.includes('YOU') ? 'text-brand-black' : 'text-brand-yellow'}`}>{pod.status}</div>
-              <div className={`text-[10px] mt-1 ${pod.status.includes('YOU') ? 'text-brand-black/60' : 'text-white/40'}`}>{pod.clients} clients</div>
+            <div key={pod.label} className={`rounded-xl p-3 text-center ${(pod as any).isYou ? 'bg-brand-yellow text-brand-black' : 'bg-white/10'}`}>
+              <div className={`font-black text-sm ${(pod as any).isYou ? 'text-brand-black' : 'text-white'}`}>{pod.label}</div>
+              <div className={`text-[10px] mt-1 ${(pod as any).isYou ? 'text-brand-black/70' : 'text-white/60'}`}>{pod.detail}</div>
+              <div className={`text-[10px] mt-1 font-bold ${(pod as any).isYou ? 'text-brand-black' : 'text-brand-yellow'}`}>{pod.status}</div>
+              <div className={`text-[10px] mt-1 ${(pod as any).isYou ? 'text-brand-black/60' : 'text-white/40'}`}>{pod.clients} clients</div>
             </div>
           ))}
         </div>
@@ -48,16 +49,16 @@ export function S07_OrgStructure() {
             {
               tier: 'Tier 1',
               label: 'Full Cycle Media Buyers',
-              people: 'Mervyn & Emmanuel',
+              people: 'Emmanuel & Mervin',
               color: 'bg-brand-yellow text-brand-black',
-              desc: 'Handle complete setup AND campaign management. GoHighLevel + Meta campaigns end-to-end.',
+              desc: 'Handle complete GHL setup AND ongoing campaign management. All account setups and A2P go through Emmanuel. Task via ClickUp — always include client name, GHL sub-account link, and 48hr deadline.',
             },
             {
               tier: 'Tier 2',
-              label: 'Pod Media Buyers (Meta + Creative Ops)',
-              people: 'Bren (Pod 2) · Raymond (Pods 1 & 3)',
+              label: 'Pod Media Buyer',
+              people: 'Bren (Pod 2)',
               color: 'bg-brand-black text-white',
-              desc: 'Meta ad buyers AND creative operators combined. Own campaign execution and creative optimization for their assigned pods.',
+              desc: 'Handles Meta campaign execution and creative optimization for Pod 2. Can support other pods on overflow when bandwidth allows.',
             },
             {
               tier: 'Tier 3',
@@ -127,7 +128,7 @@ export function S07_OrgStructure() {
             },
             {
               area: 'Team Coordination',
-              items: ['Emmanuel (campaigns)', 'Ken (creative)', 'VAs (appointment setting)', 'Report to Jonathan weekly'],
+              items: ['Emmanuel/Mervin (setup & campaigns)', 'Ken (AI creatives — 24hr turnaround, Philippines)', 'Leila/Aica (VA team — escalate quality issues)', 'Report to Jonathan Mon/Thu updates, Tue/Fri calls'],
             },
           ].map((area) => (
             <div key={area.area} className="bg-white rounded-xl border border-brand-gray-mid p-4">

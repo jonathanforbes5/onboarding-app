@@ -10,11 +10,28 @@ const USER_META: Record<string, { name: string; color: string; textColor: string
   jonathan: { name: 'Jonathan', color: '#4A90D9', textColor: '#fff' },
 };
 
-const TABS = [
-  { id: 'overview',  label: 'Overview',  icon: '🏠' },
-  { id: 'worksheet', label: 'Worksheet', icon: '📋' },
-  { id: 'sections',  label: 'Training',  icon: '📚' },
-] as const;
+// Sync indicator dot
+function SyncDot({ status }: { status: string }) {
+  const cfg: Record<string, { bg: string; title: string }> = {
+    syncing: { bg: '#F59E0B', title: 'Syncing…' },
+    synced:  { bg: '#22C55E', title: 'Synced'   },
+    offline: { bg: '#EF4444', title: 'Offline — using local data' },
+    idle:    { bg: '#444',    title: 'Not syncing' },
+  };
+  const c = cfg[status] ?? cfg.idle;
+  return (
+    <div
+      title={c.title}
+      style={{
+        width: 7,
+        height: 7,
+        borderRadius: '50%',
+        backgroundColor: c.bg,
+        animation: status === 'syncing' ? 'pulse 1s infinite' : 'none',
+      }}
+    />
+  );
+}
 
 export function Header() {
   const {
@@ -30,13 +47,26 @@ export function Header() {
     activeTab,
     setActiveTab,
     logout,
+    syncStatus,
   } = useApp();
 
-  const userMeta = currentUser ? USER_META[currentUser] : null;
+  const userMeta   = currentUser ? USER_META[currentUser] : null;
+  const isJonathan = currentUser === 'jonathan';
+
+  // Tabs visible to all users
+  const baseTabs = [
+    { id: 'overview',  label: 'Overview',  icon: '🏠' },
+    { id: 'worksheet', label: 'Worksheet', icon: '📋' },
+    { id: 'sections',  label: 'Training',  icon: '📚' },
+  ] as const;
+
+  // Jonathan gets an extra Admin tab
+  const adminTab = { id: 'admin', label: 'Admin', icon: '📊' } as const;
+  const tabs = isJonathan ? [...baseTabs, adminTab] : baseTabs;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-brand-black text-white shadow-lg">
-      {/* Thin progress bar — sections tab only */}
+      {/* Progress line */}
       <div className="h-0.5 bg-white/10">
         <div
           className="h-full bg-brand-yellow transition-all duration-500"
@@ -45,8 +75,8 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-2 px-3 py-2">
-        {/* ── Left: Logo + burger (sections only) ── */}
-        <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
+        {/* ── Left: Logo ── */}
+        <div className="flex items-center gap-2 flex-shrink-0 min-w-0">
           {activeTab === 'sections' && (
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -59,14 +89,14 @@ export function Header() {
             <div className="w-6 h-6 rounded-md bg-brand-yellow flex items-center justify-center flex-shrink-0">
               <span className="font-black text-brand-black text-[10px]">CI</span>
             </div>
-            <span className="font-black text-sm hidden sm:inline truncate">Contractors Ignite</span>
+            <span className="font-black text-sm hidden sm:inline">Contractors Ignite</span>
           </div>
         </div>
 
-        {/* ── Center: Tab switcher ── */}
+        {/* ── Center: Tabs ── */}
         <div className="flex-1 flex items-center justify-center">
           <div className="flex items-center gap-0.5 bg-white/10 rounded-lg p-0.5">
-            {TABS.map((tab) => (
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -85,7 +115,6 @@ export function Header() {
 
         {/* ── Right: Actions + user ── */}
         <div className="flex items-center gap-0.5 flex-shrink-0">
-          {/* Sections-specific tools */}
           {activeTab === 'sections' && (
             <>
               {bookmarks.length > 0 && (
@@ -134,9 +163,10 @@ export function Header() {
             </>
           )}
 
-          {/* User pill */}
+          {/* User pill + sync dot */}
           {userMeta && (
             <div className="flex items-center gap-1.5 ml-1 pl-1.5 border-l border-white/10">
+              <SyncDot status={syncStatus} />
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0"
                 style={{ backgroundColor: userMeta.color, color: userMeta.textColor }}

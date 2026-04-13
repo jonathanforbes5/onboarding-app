@@ -5,6 +5,7 @@ import { Sidebar } from './Sidebar';
 import { LoginScreen } from './LoginScreen';
 import { OverviewTab } from '@/components/Overview/OverviewTab';
 import { WorksheetTab } from '@/components/Worksheet/WorksheetTab';
+import { AdminDashboard } from '@/components/Admin/AdminDashboard';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { useApp } from '@/context/AppContext';
@@ -12,13 +13,17 @@ import { useApp } from '@/context/AppContext';
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { currentUser, activeTab } = useApp();
 
-  // Show login screen if no user
   if (!currentUser) {
     return <LoginScreen />;
   }
 
+  const isDark = activeTab !== 'sections';
+
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: activeTab === 'sections' ? '#F5F5F5' : '#0A0A0A' }}>
+    <div
+      className="min-h-screen font-sans"
+      style={{ backgroundColor: isDark ? '#0A0A0A' : '#F5F5F5' }}
+    >
       <Header />
 
       {activeTab === 'overview' && (
@@ -28,8 +33,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       )}
 
       {activeTab === 'worksheet' && (
-        <div className="pt-[42px]" style={{ backgroundColor: '#0A0A0A' }}>
+        <div className="pt-[42px]">
           <WorksheetTab />
+        </div>
+      )}
+
+      {activeTab === 'admin' && currentUser === 'jonathan' && (
+        <div className="pt-[42px]">
+          <AdminDashboard />
         </div>
       )}
 
@@ -44,7 +55,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </>
       )}
 
-      {/* Always-available modals */}
       <SearchModal />
       <NotesPanel />
     </div>

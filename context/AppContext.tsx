@@ -1,8 +1,15 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import {
+  fetchUserData,
+  pushChecklistItem,
+  pushCurrentDay,
+  pushSectionComplete,
+  pushQuizScore,
+} from '@/lib/syncService';
 
 export type UserName = 'sam' | 'patrick' | 'jonathan';
-export type ActiveTab = 'overview' | 'worksheet' | 'sections';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'admin';
 
 export interface Note {
   text: string;
@@ -19,11 +26,11 @@ export interface AppState {
   showSearch: boolean;
   showNotes: boolean;
   sidebarOpen: boolean;
-  // User & tab
   currentUser: UserName | null;
   activeTab: ActiveTab;
   currentDay: number;
-  checklistItems: Record<string, boolean>; // keyed by `${groupId}_${index}`
+  checklistItems: Record<string, boolean>;
+  syncStatus: 'idle' | 'syncing' | 'synced' | 'offline';
 }
 
 interface AppContextType extends AppState {
@@ -39,7 +46,6 @@ interface AppContextType extends AppState {
   progressPercent: number;
   isBookmarked: (id: number) => boolean;
   isCompleted: (id: number) => boolean;
-  // User & tab
   login: (user: UserName) => void;
   logout: () => void;
   setActiveTab: (tab: ActiveTab) => void;
@@ -64,57 +70,88 @@ const defaultState: AppState = {
   activeTab: 'overview',
   currentDay: 1,
   checklistItems: {},
+  syncStatus: 'idle',
 };
 
 const AppContext = createContext<AppContextType | null>(null);
 
-function loadChecklistForUser(user: UserName): Record<string, boolean> {
+function loadChecklistLocal(user: UserName): Record<string, boolean> {
   const items: Record<string, boolean> = {};
   try {
     const prefix = `ri_${user}_`;
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && key.startsWith(prefix)) {
-        const subKey = key.slice(prefix.length);
-        items[subKey] = localStorage.getItem(key) === '1';
+      if (key && key.startsWith(prefix) && !key.endsWith('_day')) {
+        items[key.slice(prefix.length)] = localStorage.getItem(key) === '1';
       }
     }
   } catch {}
   return items;
 }
 
+function persistChecklistLocal(user: UserName, items: Record<string, boolean>) {
+  try {
+    Object.entries(items).forEach(([k, v]) => {
+      localStorage.setItem(`ri_${user}_${k}`, v ? '1' : '0');
+    });
+  } catch {}
+}
+
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AppState>(defaultState);
 
+  // ── Boot: restore from localStorage ──────────────────────
   useEffect(() => {
     try {
-      // Load saved user
       const savedUser = localStorage.getItem('ri_user') as UserName | null;
-      const savedDay = savedUser ? parseInt(localStorage.getItem(`ri_${savedUser}_day`) || '1', 10) : 1;
-
-      // Load sections state
-      const saved = localStorage.getItem(STORAGE_KEY);
-      const parsedSections = saved ? JSON.parse(saved) : {};
-
-      // Load checklist for user if exists
-      const checklist = savedUser ? loadChecklistForUser(savedUser) : {};
+      const savedDay  = savedUser ? parseInt(localStorage.getItem(`ri_${savedUser}_day`) || '1', 10) : 1;
+      const saved     = localStorage.getItem(STORAGE_KEY);
+      const parsed    = saved ? JSON.parse(saved) : {};
+      const checklist = savedUser ? loadChecklistLocal(savedUser) : {};
 
       setState((prev) => ({
         ...prev,
-        ...parsedSections,
+        ...parsed,
         showSearch: false,
         showNotes: false,
         currentUser: savedUser,
         activeTab: 'overview',
         currentDay: isNaN(savedDay) ? 1 : savedDay,
         checklistItems: checklist,
+        syncStatus: 'idle',
       }));
+
+      // Background-sync from Supabase after local restore
+      if (savedUser) {
+        setState((prev) => ({ ...prev, syncStatus: 'syncing' }));
+        fetchUserData(savedUser).then((remote) => {
+          if (!remote) {
+            setState((prev) => ({ ...prev, syncStatus: 'offline' }));
+            return;
+          }
+          // Merge remote into local (remote wins on conflicts)
+          setState((prev) => {
+            const merged: AppState = {
+              ...prev,
+              currentDay: remote.currentDay,
+              completedSections: Array.from(new Set([...prev.completedSections, ...remote.completedSections])),
+              quizScores: { ...prev.quizScores, ...remote.quizScores },
+              checklistItems: { ...prev.checklistItems, ...remote.checklistItems },
+              syncStatus: 'synced',
+            };
+            // Persist merged checklist locally
+            if (savedUser) persistChecklistLocal(savedUser, merged.checklistItems);
+            return merged;
+          });
+        });
+      }
     } catch {}
   }, []);
 
+  // ── Persist sections to localStorage ─────────────────────
   const persistSections = useCallback((next: AppState) => {
     try {
-      const { showSearch, showNotes, currentUser, activeTab, currentDay, checklistItems, ...toSave } = next;
+      const { showSearch, showNotes, currentUser, activeTab, currentDay, checklistItems, syncStatus, ...toSave } = next;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
     } catch {}
   }, []);
@@ -127,6 +164,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   }, [persistSections]);
 
+  // ── Section navigation ────────────────────────────────────
   const setCurrentSection = useCallback((id: number) => update({ currentSection: id }), [update]);
 
   const markSectionComplete = useCallback((id: number) => {
@@ -134,6 +172,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (prev.completedSections.includes(id)) return prev;
       const next = { ...prev, completedSections: [...prev.completedSections, id] };
       persistSections(next);
+      if (prev.currentUser) pushSectionComplete(prev.currentUser, id);
       return next;
     });
   }, [persistSections]);
@@ -152,7 +191,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const saveNote = useCallback((sectionId: number, text: string) => {
     setState((prev) => {
       const notes = { ...prev.notes, [sectionId]: { text, updatedAt: new Date().toISOString() } };
-      const next = { ...prev, notes };
+      const next  = { ...prev, notes };
       persistSections(next);
       return next;
     });
@@ -163,43 +202,65 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const quizScores = { ...prev.quizScores, [sectionId]: score };
       const next = { ...prev, quizScores };
       persistSections(next);
+      if (prev.currentUser) pushQuizScore(prev.currentUser, sectionId, score);
       return next;
     });
   }, [persistSections]);
 
-  const setSearchQuery = useCallback((q: string) => update({ searchQuery: q }), [update]);
-  const setShowSearch = useCallback((v: boolean) => update({ showSearch: v }), [update]);
-  const setShowNotes = useCallback((v: boolean) => update({ showNotes: v }), [update]);
-  const setSidebarOpen = useCallback((v: boolean) => update({ sidebarOpen: v }), [update]);
+  const setSearchQuery  = useCallback((q: string)  => update({ searchQuery: q }), [update]);
+  const setShowSearch   = useCallback((v: boolean)  => update({ showSearch: v }), [update]);
+  const setShowNotes    = useCallback((v: boolean)  => update({ showNotes: v }), [update]);
+  const setSidebarOpen  = useCallback((v: boolean)  => update({ sidebarOpen: v }), [update]);
 
+  // ── Login / logout ────────────────────────────────────────
   const login = useCallback((user: UserName) => {
-    try {
-      localStorage.setItem('ri_user', user);
-    } catch {}
+    try { localStorage.setItem('ri_user', user); } catch {}
     const savedDay = parseInt(localStorage.getItem(`ri_${user}_day`) || '1', 10);
-    const checklist = loadChecklistForUser(user);
+    const checklist = loadChecklistLocal(user);
+
     setState((prev) => ({
       ...prev,
       currentUser: user,
       activeTab: 'overview',
       currentDay: isNaN(savedDay) ? 1 : savedDay,
       checklistItems: checklist,
+      syncStatus: 'syncing',
     }));
+
+    // Background-sync from Supabase
+    fetchUserData(user).then((remote) => {
+      if (!remote) {
+        setState((prev) => ({ ...prev, syncStatus: 'offline' }));
+        return;
+      }
+      setState((prev) => {
+        const merged: AppState = {
+          ...prev,
+          currentDay: remote.currentDay,
+          completedSections: Array.from(new Set([...prev.completedSections, ...remote.completedSections])),
+          quizScores: { ...prev.quizScores, ...remote.quizScores },
+          checklistItems: { ...prev.checklistItems, ...remote.checklistItems },
+          syncStatus: 'synced',
+        };
+        persistChecklistLocal(user, merged.checklistItems);
+        return merged;
+      });
+    });
   }, []);
 
   const logout = useCallback(() => {
-    try {
-      localStorage.removeItem('ri_user');
-    } catch {}
+    try { localStorage.removeItem('ri_user'); } catch {}
     setState((prev) => ({
       ...prev,
       currentUser: null,
-      activeTab: 'worksheet',
+      activeTab: 'overview',
       currentDay: 1,
       checklistItems: {},
+      syncStatus: 'idle',
     }));
   }, []);
 
+  // ── Tab & day ─────────────────────────────────────────────
   const setActiveTab = useCallback((tab: ActiveTab) => {
     setState((prev) => ({ ...prev, activeTab: tab }));
   }, []);
@@ -209,20 +270,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       try {
         if (prev.currentUser) {
           localStorage.setItem(`ri_${prev.currentUser}_day`, String(day));
+          pushCurrentDay(prev.currentUser, day);
         }
       } catch {}
       return { ...prev, currentDay: day };
     });
   }, []);
 
+  // ── Checklist toggle ──────────────────────────────────────
   const toggleChecklistItem = useCallback((groupId: string, index: number) => {
     setState((prev) => {
-      const itemKey = `${groupId}_${index}`;
-      const newVal = !prev.checklistItems[itemKey];
-      const updated = { ...prev.checklistItems, [itemKey]: newVal };
+      const key    = `${groupId}_${index}`;
+      const newVal = !prev.checklistItems[key];
+      const updated = { ...prev.checklistItems, [key]: newVal };
       try {
         if (prev.currentUser) {
-          localStorage.setItem(`ri_${prev.currentUser}_${itemKey}`, newVal ? '1' : '0');
+          localStorage.setItem(`ri_${prev.currentUser}_${key}`, newVal ? '1' : '0');
+          pushChecklistItem(prev.currentUser, groupId, index, newVal);
         }
       } catch {}
       return { ...prev, checklistItems: updated };
@@ -230,8 +294,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const progressPercent = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
-  const isBookmarked = (id: number) => state.bookmarks.includes(id);
-  const isCompleted = (id: number) => state.completedSections.includes(id);
+  const isBookmarked    = (id: number) => state.bookmarks.includes(id);
+  const isCompleted     = (id: number) => state.completedSections.includes(id);
 
   return (
     <AppContext.Provider value={{

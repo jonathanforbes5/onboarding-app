@@ -1,0 +1,47 @@
+'use client';
+import React from 'react';
+import { AppLayout } from '@/components/Layout/AppLayout';
+import { useApp } from '@/context/AppContext';
+
+import { S01_CompanyVision } from '@/components/Sections/S01_CompanyVision';
+import { S02_ContractorIndustry } from '@/components/Sections/S02_ContractorIndustry';
+import { S03_BusinessModel } from '@/components/Sections/S03_BusinessModel';
+import { S04_HowWeGenerateResults } from '@/components/Sections/S04_HowWeGenerateResults';
+import { S05_SalesProcess } from '@/components/Sections/S05_SalesProcess';
+import { S06_ServiceDelivery } from '@/components/Sections/S06_ServiceDelivery';
+import { S07_OrgStructure } from '@/components/Sections/S07_OrgStructure';
+import { S08_MetricsHierarchy } from '@/components/Sections/S08_MetricsHierarchy';
+import { S09_KPIPlaybook } from '@/components/Sections/S09_KPIPlaybook';
+import { S10_CulturePerformance } from '@/components/Sections/S10_CulturePerformance';
+import { S11_ToolsSystems } from '@/components/Sections/S11_ToolsSystems';
+
+const SECTION_MAP: Record<number, React.FC> = {
+  1: S01_CompanyVision,
+  2: S02_ContractorIndustry,
+  3: S03_BusinessModel,
+  4: S04_HowWeGenerateResults,
+  5: S05_SalesProcess,
+  6: S06_ServiceDelivery,
+  7: S07_OrgStructure,
+  8: S08_MetricsHierarchy,
+  9: S09_KPIPlaybook,
+  10: S10_CulturePerformance,
+  11: S11_ToolsSystems,
+};
+
+function MainContent() {
+  const { currentSection } = useApp();
+  const SectionComponent = SECTION_MAP[currentSection];
+
+  if (!SectionComponent) return null;
+
+  return <SectionComponent />;
+}
+
+export default function Home() {
+  return (
+    <AppLayout>
+      <MainContent />
+    </AppLayout>
+  );
+}

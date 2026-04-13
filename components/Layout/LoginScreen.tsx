@@ -39,23 +39,37 @@ export function LoginScreen() {
     >
       {/* Brand */}
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        {/* Logo mark */}
-        <div style={{ margin: '0 auto 1.25rem', display: 'inline-block' }}>
+        {/* Wordmark */}
+        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginBottom: '1.25rem' }}>
           {/* ROOF */}
-          <div style={{ color: '#F5F5F5', fontWeight: 900, fontSize: 22, letterSpacing: '0.25em', lineHeight: 1 }}>
+          <div style={{
+            color: '#FFFFFF',
+            fontWeight: 900,
+            fontSize: 32,
+            letterSpacing: '0.3em',
+            lineHeight: 1,
+            fontFamily: 'Inter, Helvetica Neue, Arial, sans-serif',
+          }}>
             ROOF
           </div>
-          {/* Flame + IGNITE row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
-            <div style={{ flex: 1, height: 1.5, backgroundColor: '#F5C800', borderRadius: 2 }} />
-            <svg width="14" height="18" viewBox="0 0 24 28" fill="none">
-              <path d="M12 2C12 2 7 8 7 14C7 16.5 8.5 18.5 8.5 18.5C8.5 15.5 10 13 12 11C14 13 15.5 15.5 15.5 18.5C15.5 18.5 17 16.5 17 14C17 8 12 2 12 2Z" fill="#F5C800"/>
-              <path d="M9 18C9 21.3 10.3 24 12 24C13.7 24 15 21.3 15 18C15 16 14 14.5 13 14C13 16 12.5 17.5 12 18C11.5 17.5 11 16 11 14C10 14.5 9 16 9 18Z" fill="#F97316"/>
+          {/* Line — Flame — IGNITE — Line */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 32, height: 1.5, backgroundColor: '#FFD740', borderRadius: 2 }} />
+            <svg width="13" height="17" viewBox="0 0 18 22" fill="none">
+              <path d="M9 1C9 1 4 7 4 13C4 15.5 5.5 17.5 5.5 17.5C5.5 14.5 7 12 9 10C11 12 12.5 14.5 12.5 17.5C12.5 17.5 14 15.5 14 13C14 7 9 1 9 1Z" fill="#FFD740"/>
+              <path d="M7 15C7 18 7.8 20 9 20C10.2 20 11 18 11 15C11 13.5 10.2 12 9.5 11.5C9.5 13 9.2 14.5 9 15C8.8 14.5 8.5 13 8.5 11.5C7.8 12 7 13.5 7 15Z" fill="#F5A623"/>
             </svg>
-            <div style={{ color: '#F5C800', fontWeight: 900, fontSize: 16, letterSpacing: '0.3em', lineHeight: 1 }}>
+            <div style={{
+              color: '#FFD740',
+              fontWeight: 900,
+              fontSize: 16,
+              letterSpacing: '0.3em',
+              lineHeight: 1,
+              fontFamily: 'Inter, Helvetica Neue, Arial, sans-serif',
+            }}>
               IGNITE
             </div>
-            <div style={{ flex: 1, height: 1.5, backgroundColor: '#F5C800', borderRadius: 2 }} />
+            <div style={{ width: 32, height: 1.5, backgroundColor: '#FFD740', borderRadius: 2 }} />
           </div>
         </div>
         <p style={{ color: '#666', fontSize: 14, margin: 0 }}>

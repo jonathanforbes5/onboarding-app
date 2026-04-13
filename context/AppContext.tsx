@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 export type UserName = 'sam' | 'patrick' | 'jonathan';
-export type ActiveTab = 'worksheet' | 'sections';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections';
 
 export interface Note {
   text: string;
@@ -61,7 +61,7 @@ const defaultState: AppState = {
   showNotes: false,
   sidebarOpen: true,
   currentUser: null,
-  activeTab: 'worksheet',
+  activeTab: 'overview',
   currentDay: 1,
   checklistItems: {},
 };
@@ -105,7 +105,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         showSearch: false,
         showNotes: false,
         currentUser: savedUser,
-        activeTab: 'worksheet',
+        activeTab: 'overview',
         currentDay: isNaN(savedDay) ? 1 : savedDay,
         checklistItems: checklist,
       }));
@@ -181,7 +181,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setState((prev) => ({
       ...prev,
       currentUser: user,
-      activeTab: 'worksheet',
+      activeTab: 'overview',
       currentDay: isNaN(savedDay) ? 1 : savedDay,
       checklistItems: checklist,
     }));

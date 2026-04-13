@@ -1,0 +1,71 @@
+{
+  "recordings": [
+    {
+      "id": "gutter_onboarding",
+      "title": "Gutter Onboarding Call",
+      "description": "Reference for how a real gutter client onboarding call is run. Note: gutters require different ad angles and ~2x the booking volume vs roofing to be profitable.",
+      "url": "https://fathom.video/share/yNyAaNPjWJdhj-zps7GYjpziqpCsBhN_",
+      "day": 1,
+      "category": "onboarding_reference"
+    },
+    {
+      "id": "roofing_onboarding",
+      "title": "Roofing Onboarding Call",
+      "description": "Reference for how a real roofing client onboarding call is run. Primary niche (80–90% of clients). Watch this one carefully.",
+      "url": "https://fathom.video/share/qj9AYoqURQ6jhx34jFRZiR2-xESYDswF",
+      "day": 1,
+      "category": "onboarding_reference"
+    },
+    {
+      "id": "hvac_onboarding",
+      "title": "HVAC Onboarding Call",
+      "description": "Reference for HVAC-specific onboarding nuances. Different pain points and seasonality vs roofing.",
+      "url": "https://fathom.video/share/VYz9GhzfjBBj1YuVUPLXLdbVz6UkW4Pd",
+      "day": 1,
+      "category": "onboarding_reference"
+    },
+    {
+      "id": "service_delivery_p1",
+      "title": "Service Delivery Part 1",
+      "description": "GHL setup walkthrough — how the sub-account build works from start to finish.",
+      "url": "https://fathom.video/share/uZeCCaxRRVumFq_K6yHx_tbN75iRaMaX",
+      "day": 2,
+      "category": "service_delivery"
+    },
+    {
+      "id": "service_delivery_p2",
+      "title": "Service Delivery Part 2",
+      "description": "Most recent service delivery process. Watch this first before Part 1 if choosing one.",
+      "url": "https://fathom.video/share/G9juWT1oFG_3CrppLscPDXceijJvP_rR",
+      "day": 2,
+      "category": "service_delivery",
+      "watch_first": true
+    },
+    {
+      "id": "entire_ghl_build",
+      "title": "Entire GHL Build Start to Finish",
+      "description": "Complete sub-account build walkthrough using standard A2P (not A2P Wizard). Understand the full picture even though Emmanuel handles this for you.",
+      "url": "https://fathom.video/share/VG-nsEXiRvRP-7oyMY1VxcVET743mMs8",
+      "day": 2,
+      "category": "service_delivery"
+    }
+  ],
+  "sop_links": [
+    {
+      "id": "service_delivery_sop",
+      "title": "Service Delivery SOP",
+      "description": "Full written SOP for the service delivery process. Reference document — don't memorize, know where to find it.",
+      "url": "https://docs.google.com/document/d/10aoaz3edxvQBsDrwPsHjEO2CgZa0FPA8KltuXDf-IeQ/edit?tab=t.0#heading=h.y7cg64efk2n0",
+      "category": "sop"
+    }
+  ],
+  "tools": [
+    {
+      "id": "ad_set_reviewer",
+      "title": "Ad Set Reviewer",
+      "description": "QA tool used by VAs and media buyers to review creatives before launch. Know these standards — you're approving setups.",
+      "url": "https://ad-set-reviewer.vercel.app/",
+      "category": "tools"
+    }
+  ]
+}

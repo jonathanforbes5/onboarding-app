@@ -1,0 +1,424 @@
+{
+  "meta": {
+    "pod": 4,
+    "managers": ["Sam", "Patrick"],
+    "start_date": "2026-04-14",
+    "account_target_week1": "10-15 accounts in first 2 weeks",
+    "billing_goal": "First payment within 60 days of contract signed"
+  },
+  "days": [
+    {
+      "day": 1,
+      "title": "Foundation Day",
+      "subtitle": "Company foundations, service delivery overview, system access",
+      "quiz_id": "day1",
+      "unlock_condition": "none",
+      "sections": [
+        {
+          "id": "d1-orientation",
+          "title": "9:00–11:00 AM — Company Foundations Presentation",
+          "type": "session",
+          "items": [
+            "Company history: Mani and Oscar founding story, RoofIgnite → ContractorsIgnite evolution",
+            "Three niches: Roofing (primary 80–90%), HVAC, Gutters — ticket sizes, sales cycles, seasonality",
+            "Client ICP: $2.5M+ revenue, 3+ years in business, growth-minded, $3K+/month ad spend",
+            "28-day cycle model: setup fees, retainer (~$4K + 10% ad spend), 80% margin rule (12/15 min)",
+            "Full funnel: Ads → Landing Page → Survey → GHL CRM → VA call → Booked Appointment",
+            "Your role: Revenue Retention Engine — quarterback, not the doer",
+            "Layer 1 vs. Layer 2 metrics framework — how you diagnose performance",
+            "Monday/Thursday status updates → Tuesday/Friday review calls structure",
+            "Culture: radical ownership, no egos, feedback-first",
+            "Growth roadmap: 5 pods → $1M/month target by Q3 2026"
+          ]
+        },
+        {
+          "id": "d1-recordings",
+          "title": "Watch These Recordings",
+          "type": "recordings",
+          "instruction": "Watch in this order. These are reference recordings — not required to finish today, but start here.",
+          "items": [
+            {"text": "Service Delivery Part 2 — Most recent process. Start here.", "recording_id": "service_delivery_p2"},
+            {"text": "Service Delivery Part 1 — GHL setup walkthrough.", "recording_id": "service_delivery_p1"},
+            {"text": "Entire GHL Build Start to Finish — Full sub-account build (standard A2P — not A2P Wizard).", "recording_id": "entire_ghl_build"},
+            {"text": "Roofing Onboarding Call — Reference for how a real onboarding call is run.", "recording_id": "roofing_onboarding"},
+            {"text": "HVAC Onboarding Call — Reference for HVAC-specific onboarding nuances.", "recording_id": "hvac_onboarding"},
+            {"text": "Gutter Onboarding Call — Reference for gutter client onboarding.", "recording_id": "gutter_onboarding"}
+          ]
+        },
+        {
+          "id": "d1-access",
+          "title": "Access & Setup",
+          "type": "checklist",
+          "items": [
+            "Request Logbook access from Leila (NOT Jonathan — Leila owns the Logbook)",
+            "Confirm ClickUp access (all tasks, comms, media buyer coordination live here)",
+            "Get added to relevant Slack channels: #internal-team, #ops, #closer-call-recordings",
+            "Log into GoHighLevel (GHL) — confirm sub-account access",
+            "Log into Meta Business Manager — confirm partner access to client accounts",
+            "Access Account Master Dashboard — confirm your accounts are showing",
+            "Access Command Center — understand the health status dashboard"
+          ]
+        },
+        {
+          "id": "d1-intro",
+          "title": "Team Introductions",
+          "type": "checklist",
+          "items": [
+            "Message Emmanuel in Slack: introduce yourself, confirm ClickUp setup process",
+            "Message Leila in Slack: introduce yourself, request Logbook access",
+            "Message Ken in Slack: introduce yourself (he's in Philippines timezone — plan ahead)",
+            "Shadow a Tuesday or Friday review call if one occurs this week"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Service Delivery Deep Dive",
+      "subtitle": "GHL builds, A2P, Meta setup, your one training build",
+      "quiz_id": "day2",
+      "unlock_condition": "day1_quiz_passed",
+      "sections": [
+        {
+          "id": "d2-service",
+          "title": "Service Delivery — GHL Setup",
+          "type": "checklist",
+          "callout": {
+            "type": "warning",
+            "text": "You do ONE setup in training to understand the process. After that, Emmanuel and Mervin handle all setups. Task them via ClickUp."
+          },
+          "items": [
+            "Complete ONE training GHL sub-account setup with Emmanuel watching/guiding",
+            "Understand the survey structure: 4-question standard (name, email, phone, roof type)",
+            "Review the Service Delivery SOP — know where it lives, not every step",
+            "Watch Emmanuel submit A2P via GHL A2P Wizard — A2P = GoHighLevel phone registration (NOT Meta)",
+            "Understand the automation flow: survey submit → logbook entry → VA notification → call sequence"
+          ]
+        },
+        {
+          "id": "d2-a2p",
+          "title": "A2P — What You Must Know",
+          "type": "callout",
+          "type_detail": "critical",
+          "content": "A2P (10DLC) is a phone number registration process handled entirely in GoHighLevel (GHL). It is NOT related to Meta or Facebook ads. Emmanuel handles all A2P registrations via GHL's A2P Wizard. A rejected A2P application means a 2–3 week wait before reapplying. Never touch A2P yourself. Always task Emmanuel via ClickUp with the client's GHL sub-account link and a 48-hour deadline.",
+          "items": [
+            "Confirm you understand: A2P = GHL process, not Meta",
+            "Task Emmanuel in ClickUp for your first assigned account's A2P",
+            "Include: client name, GHL sub-account link, 48hr deadline label"
+          ]
+        },
+        {
+          "id": "d2-tools",
+          "title": "Tool Fluency",
+          "type": "checklist",
+          "items": [
+            "Navigate GHL: sub-account view, contacts, automation builder, calendar",
+            "Navigate Meta Ads Manager: campaigns, ad sets, ads, columns, filters",
+            "Navigate the Logbook: filter by account, understand status columns (open/booked/qualified/OSA)",
+            "Navigate Command Center: understand health color logic (green/yellow/orange/red)",
+            "ClickUp: understand how to create tasks with due dates, priority, and assignee"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "title": "First Account Deep Dive",
+      "subtitle": "Layer 1 vs Layer 2, diagnosing your first real account",
+      "quiz_id": "day3",
+      "unlock_condition": "day2_quiz_passed",
+      "sections": [
+        {
+          "id": "d3-layer1",
+          "title": "Layer 1 — Your Daily Discipline",
+          "type": "checklist",
+          "callout": {
+            "type": "info",
+            "text": "Layer 1 first. Always. If Layer 1 is green, do not look at Layer 2."
+          },
+          "items": [
+            "Open Command Center — identify which accounts are green, yellow, orange, red",
+            "For each red/orange account: open Logbook, count open leads, check booking rate",
+            "Calculate cost per booking for each account: ad spend ÷ booked appointments",
+            "Confirm all accounts are properly named with 'B2C' in the campaign name (required for dashboard tracking)",
+            "Identify which of your accounts have CAPI set up (pixel conditioning) vs not"
+          ]
+        },
+        {
+          "id": "d3-layer2",
+          "title": "Layer 2 — Only When Layer 1 Fails",
+          "type": "checklist",
+          "callout": {
+            "type": "warning",
+            "text": "Only pull up Layer 2 metrics if Layer 1 is failing. Do not waste time here on healthy accounts."
+          },
+          "items": [
+            "For any red/orange account: check CPC (target < $6), CTR (target > 0.8%), survey conversion rate (target > 2.5%)",
+            "Identify pattern: high CPC + low CTR = creative problem. High CPC + good CTR + low leads = survey/landing page problem",
+            "Check for creative fatigue: sort by reach — if top 3–4 ads have 90%+ of spend, fatigue is likely",
+            "Check OSA rate: if > 20% of leads are out-of-service area, check targeting vs account-specific doc",
+            "Draft action steps for any problem accounts — bring to Jonathan at next review call"
+          ]
+        },
+        {
+          "id": "d3-comms",
+          "title": "First Client Touchpoints",
+          "type": "checklist",
+          "items": [
+            "Send a brief status message to each active client — introduce yourself, confirm they have your Slack/WhatsApp",
+            "For any account that just onboarded: confirm pre-onboarding email was sent + client acknowledged",
+            "Check WhatsApp groups — read all history so you know the relationship context",
+            "Pull the closer call recording from #closer-call-recordings for any new client — know what was promised"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "title": "Operating Rhythm",
+      "subtitle": "Status updates, review calls, and weekly discipline",
+      "quiz_id": "day4",
+      "unlock_condition": "day3_quiz_passed",
+      "sections": [
+        {
+          "id": "d4-update",
+          "title": "Your First Monday/Thursday Status Update",
+          "type": "checklist",
+          "callout": {
+            "type": "info",
+            "text": "Post by end of day Monday and Thursday. Jonathan and Oscar may send action items before the Tuesday/Friday call based on what you post."
+          },
+          "items": [
+            "For every account: client name, cycle #, days elapsed, bookings vs target, health color (🟢🟡🟠🔴)",
+            "What's happening with each account — 1–2 sentences max",
+            "Specific action steps with due dates for any account that's behind",
+            "Never: 'accounts are doing well' without specifics — that gets called out on the review call",
+            "Post in the designated Slack channel before the end of the day"
+          ]
+        },
+        {
+          "id": "d4-cycle",
+          "title": "Cycle Management Fundamentals",
+          "type": "checklist",
+          "items": [
+            "Know your billing window for each active account: what's the target, how many days elapsed, are we on pace?",
+            "Initiate renewal conversations 5–7 days before any cycle end — never let a cycle expire unconfirmed",
+            "If a billing failure occurs: CALL the client same day. Don't email. Don't wait. Every paused day delays cashflow.",
+            "Document all cycle dates in the Account Master Dashboard"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "title": "Creative & Advertising Deep Dive",
+      "subtitle": "Meta ad rules, creative standards, and what you approve",
+      "quiz_id": "day4",
+      "unlock_condition": "day4_quiz_passed",
+      "sections": [
+        {
+          "id": "d5-meta-rules",
+          "title": "Meta Advertising Hard Rules",
+          "type": "checklist",
+          "items": [
+            "Memorize the 6 approved placements: FB Feed, IG Feed, FB Stories, IG Stories, FB Reels, IG Reels",
+            "Never approve: Marketplace, Messenger, Audience Network, or any other placement",
+            "Always verify Advantage+ is OFF when duplicating ad sets (Meta re-enables it automatically)",
+            "Confirm 'B2C' appears in every campaign name before launch",
+            "Campaign objective: always Leads (not Traffic, not Conversions)"
+          ]
+        },
+        {
+          "id": "d5-creative-standard",
+          "title": "Creative Mastery — The Standard",
+          "type": "checklist",
+          "items": [
+            "Review the Ad Set Reviewer at https://ad-set-reviewer.vercel.app/ — these are the standards applied to every set",
+            "Every ad set = 5 Singles + 5 Two-Folds + 5 Tri-Folds = 15 ads minimum",
+            "Photo types: Trust (person), Service (completed roof), Brand (vehicle/clothes/sign)",
+            "Once a photo is used in a set, it is never reused in any future set",
+            "Task Ken via ClickUp for AI images with: brand info, market, reference images, due date",
+            "Verify any AI images: no jumbled text, no logo distortion, no 'twins', likeness matches real reps if using them"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 6,
+      "title": "VA Management & Logbook",
+      "subtitle": "Working with Leila's VA team, Logbook discipline, lead quality",
+      "quiz_id": "week2",
+      "unlock_condition": "day5_quiz_passed",
+      "sections": [
+        {
+          "id": "d6-va",
+          "title": "VA Management",
+          "type": "checklist",
+          "items": [
+            "Understand the VA's role: call every lead within 4 hours, qualify, book, update Logbook",
+            "VAs apply the 'Qualified' tag in GHL → this fires the CAPI conversion event to Meta",
+            "Escalate VA quality issues to Leila (not to individual VAs)",
+            "Post account-specific notes in #internal-team: service area restrictions, lead quality filters, targeting updates",
+            "Live transfer process: VA calls → lead interested → VA transfers live to client's sales rep. Work stops at booking, not transfer."
+          ]
+        },
+        {
+          "id": "d6-logbook",
+          "title": "Logbook Discipline",
+          "type": "checklist",
+          "items": [
+            "Check Logbook daily for any open leads (white leads) that haven't been resolved",
+            "If OSA leads are appearing: cross-reference with targeting in Meta — may be a zip code issue",
+            "If booking rate drops below 30%: escalate to Leila — may be VA performance issue",
+            "Never count a live transfer as a 'qualified booking' unless the lead books an appointment",
+            "If a lead doesn't book on the first call: it goes back to VAs for a second follow-up attempt"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 7,
+      "title": "First Tuesday Review Call",
+      "subtitle": "Your first live review call with Jonathan and Oscar",
+      "quiz_id": null,
+      "unlock_condition": "day6_complete",
+      "sections": [
+        {
+          "id": "d7-prep",
+          "title": "Pre-Call Preparation",
+          "type": "checklist",
+          "items": [
+            "Update your status in Slack before 9 AM Monday (or Thursday)",
+            "Know the current status of every account before the call starts",
+            "Have action steps ready — not just reporting, prescribing",
+            "Layer 1 metrics for every account (bookings vs target, health color, cost per booking)",
+            "Flag any accounts that need deeper discussion — don't bury problems"
+          ]
+        },
+        {
+          "id": "d7-review",
+          "title": "During the Review Call",
+          "type": "checklist",
+          "items": [
+            "Present each account: Layer 1 first — bookings vs. target, cost per booking, health status",
+            "Have a current status for every account: launched / launching / pending / billing",
+            "Bring specific action steps WITH dates to the call — don't show up with just a report",
+            "Listen carefully to Jonathan and Oscar's feedback — implement same day where possible",
+            "Ask questions during the call for anything unclear",
+            "After call: execute all flagged action items immediately — not tomorrow"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 8,
+      "title": "Revenue Activities & Client Communication",
+      "subtitle": "Renewals, upsells, testimonials, and communication standards",
+      "quiz_id": null,
+      "unlock_condition": "day7_complete",
+      "sections": [
+        {
+          "id": "d8-revenue",
+          "title": "Revenue Activities",
+          "type": "checklist",
+          "callout": {
+            "type": "info",
+            "text": "These are the activities that compound over time. Every cycle is a chance to grow the relationship."
+          },
+          "items": [
+            "Testimonials: ask every client who hit target for a written or video testimonial",
+            "Referrals: ask happy clients if they know other contractors who could benefit",
+            "Upsells: propose higher ad spend to clients with healthy cost per booking",
+            "Cross-sells: propose additional market/geo if client wants to expand",
+            "Cycle renewals: initiate 5–7 days before cycle end — present results, propose improvements, confirm next cycle"
+          ]
+        },
+        {
+          "id": "d8-comms",
+          "title": "Communication Standards",
+          "type": "checklist",
+          "items": [
+            "24–48 hour rule: any client blocker must be resolved or escalated within 48 hours. Always.",
+            "Billing failures: call the client the same day. Phone call, not Slack.",
+            "Client 'leads suck' complaints: ask for sales data before making any changes. Usually a sales problem, not a media problem.",
+            "Client threatening to cancel: loop in Oscar immediately. Don't try to handle retention alone.",
+            "Weekly communication rhythm: update Mon/Thu, review Tue/Fri. No surprises."
+          ]
+        }
+      ]
+    },
+    {
+      "day": 9,
+      "title": "Creative Refresh Protocol",
+      "subtitle": "When to refresh, how to execute, what to task",
+      "quiz_id": null,
+      "unlock_condition": "day8_complete",
+      "sections": [
+        {
+          "id": "d9-refresh",
+          "title": "Creative Refresh — The Standard Process",
+          "type": "checklist",
+          "items": [
+            "Check Context first: was there a holiday or local event? Are you inside the first 7 days of a new campaign?",
+            "Check Layer 1: if bookings are on track, don't touch anything.",
+            "Check creative concentration: sort by reach — if top 3–4 ads have 90%+ of spend and performance is declining:",
+            "Step 1: Duplicate the ad set (no changes). Turn off top-reach ads. Launch new set. Turn off old set.",
+            "Step 2: Wait 48 hours. 50% chance this resets performance.",
+            "Step 3: If it fails, do a full creative refresh — new photos, new combinations, nothing reused.",
+            "Task Ken (AI images) or Emmanuel/Bren (Canva) via ClickUp with full creative brief."
+          ]
+        },
+        {
+          "id": "d9-pixel",
+          "title": "Pixel & CAPI Check",
+          "type": "checklist",
+          "items": [
+            "Every active account should have CAPI configured in GHL automations",
+            "Verify: when 'Qualified' tag is applied, a Schedule event fires to Meta via CAPI",
+            "If CAPI is not set up: task Emmanuel immediately. Meta is spending blind without it.",
+            "Backfill: for accounts with missing CAPI, apply Qualified tag to all existing booked leads to send historical data",
+            "Campaign names must include 'B2C' — verify after any duplication"
+          ]
+        }
+      ]
+    },
+    {
+      "day": 10,
+      "title": "Friday Review Call + First 10 Days Wrap",
+      "subtitle": "Full account review, operational self-assessment, and final quiz",
+      "quiz_id": "final",
+      "unlock_condition": "day9_complete",
+      "sections": [
+        {
+          "id": "d10-friday",
+          "title": "Friday Review Call",
+          "type": "checklist",
+          "items": [
+            "Present all accounts — show movement and improvement since Tuesday's call",
+            "Highlight wins: launched accounts, targets hit, positive client feedback received",
+            "Bring hardest problems forward — hiding them helps no one",
+            "Implement all feedback same day",
+            "By end of Day 10: fully operational without hand-holding on standard scenarios"
+          ]
+        },
+        {
+          "id": "d10-checklist",
+          "title": "10-Day Self-Assessment",
+          "type": "checklist",
+          "items": [
+            "I can run a client onboarding call independently",
+            "I know how to diagnose an account using Layer 1 → Layer 2 framework",
+            "I know who to task for setups, A2P, creatives, and VA escalations",
+            "I post Monday/Thursday updates with actionable detail, not just status reports",
+            "I never calculate CPL and call it cost per booking",
+            "I check the Logbook daily for open leads",
+            "I initiate renewal conversations before cycles expire",
+            "I know that A2P is a GHL process, not Meta",
+            "I know the 6 approved Meta placements",
+            "I know when to escalate to Jonathan vs when to handle independently"
+          ]
+        }
+      ]
+    }
+  ]
+}

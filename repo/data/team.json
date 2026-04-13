@@ -1,0 +1,168 @@
+[
+  {
+    "id": "oscar",
+    "name": "Oscar Sey",
+    "role": "CEO & Co-Founder",
+    "tier": "leadership",
+    "contact": "Direct — Slack or call. Joins review calls. Handles high-stakes client retention conversations.",
+    "notes": "When a client threatens to leave or pushes back on pricing, loop Oscar in. He plays the 'CEO card' and usually retains them.",
+    "avatar_initial": "O"
+  },
+  {
+    "id": "mani",
+    "name": "Mani Asadi",
+    "role": "Co-Founder / Head of Hiring & Screening",
+    "tier": "leadership",
+    "contact": "Slack — handles hiring, screening, initial sales outreach.",
+    "notes": "Also involved in sales. Note: never spell 'Manny' — always 'Mani'.",
+    "avatar_initial": "M"
+  },
+  {
+    "id": "jonathan",
+    "name": "Jonathan Forbes",
+    "role": "Director of Operations",
+    "tier": "leadership",
+    "contact": "Slack (fastest), call if urgent. Always available for pod manager questions.",
+    "notes": "Your direct manager. Runs Tuesday/Friday review calls. Escalate any account that's been red for 3+ days without resolution.",
+    "avatar_initial": "J"
+  },
+  {
+    "id": "tyler",
+    "name": "Tyler",
+    "role": "Pod 2 Manager — Most Experienced",
+    "tier": "pod_managers",
+    "contact": "Slack — best peer reference for client communication and ClickUp organization.",
+    "notes": "Most experienced pod manager currently. Great resource for day-to-day client management questions.",
+    "pod": 2,
+    "avatar_initial": "T"
+  },
+  {
+    "id": "cole",
+    "name": "Cole",
+    "role": "Pod 2 → Operational Role",
+    "tier": "pod_managers",
+    "contact": "Slack — Account Master Dashboard, Command Center, ClickUp systems.",
+    "notes": "Moved from pod management to an ops/systems role. Most experienced person on internal tooling. Great for process questions.",
+    "pod": 2,
+    "avatar_initial": "C"
+  },
+  {
+    "id": "gianmarco",
+    "name": "Gianmarco Sinisi",
+    "role": "Pod 1 Manager",
+    "tier": "pod_managers",
+    "contact": "Slack — general pod management questions.",
+    "pod": 1,
+    "avatar_initial": "G"
+  },
+  {
+    "id": "gregory",
+    "name": "Gregory Pomeroy",
+    "role": "Pod 1 Manager",
+    "tier": "pod_managers",
+    "contact": "Slack — general pod management questions.",
+    "pod": 1,
+    "avatar_initial": "Gr"
+  },
+  {
+    "id": "kyle",
+    "name": "Kyle Mohammed",
+    "role": "Pod 3 Manager",
+    "tier": "pod_managers",
+    "contact": "Slack — peer support. ~3 weeks ahead of Pod 4.",
+    "notes": "Started March 25, 2026. Most recent onboarding experience after Pod 4.",
+    "pod": 3,
+    "started": "2026-03-25",
+    "avatar_initial": "K"
+  },
+  {
+    "id": "abdullah",
+    "name": "Abdullah Ahmed",
+    "role": "Pod 3 Manager",
+    "tier": "pod_managers",
+    "contact": "Slack — peer support. ~3 weeks ahead of Pod 4.",
+    "notes": "Started March 25, 2026. Most recent onboarding experience after Pod 4.",
+    "pod": 3,
+    "started": "2026-03-25",
+    "avatar_initial": "A"
+  },
+  {
+    "id": "sam",
+    "name": "Sam",
+    "role": "Pod 4 Manager",
+    "tier": "pod_managers",
+    "pod": 4,
+    "started": "2026-04-14",
+    "is_current_user": true,
+    "avatar_initial": "S"
+  },
+  {
+    "id": "patrick",
+    "name": "Patrick",
+    "role": "Pod 4 Manager",
+    "tier": "pod_managers",
+    "pod": 4,
+    "started": "2026-04-14",
+    "is_current_user": true,
+    "avatar_initial": "P"
+  },
+  {
+    "id": "emmanuel",
+    "name": "Emmanuel",
+    "role": "Full-Cycle Media Buyer + Setup Lead",
+    "tier": "media_buying",
+    "contact": "ClickUp — always task with full client details + 48hr deadline. For A2P, include client name + GHL sub-account link.",
+    "notes": "Handles ALL account setups, A2P Wizard (GHL), technical GHL issues, landing pages. A2P goes to Emmanuel — never to pod managers. KEY PERSON.",
+    "is_key": true,
+    "avatar_initial": "E"
+  },
+  {
+    "id": "mervin",
+    "name": "Mervin",
+    "role": "Full-Cycle Media Buyer + Setup Support",
+    "tier": "media_buying",
+    "contact": "ClickUp — task for setup overflow and campaign optimization.",
+    "notes": "Same tier as Emmanuel. Supports on setups when Emmanuel is at capacity, and ongoing media buying. Task via ClickUp.",
+    "avatar_initial": "Mv"
+  },
+  {
+    "id": "bren",
+    "name": "Bren",
+    "role": "Pod Media Buyer (Pod 2)",
+    "tier": "media_buying",
+    "contact": "ClickUp — assigned to Pod 2 primarily. May help other pods if bandwidth available.",
+    "notes": "Handles creative refreshes (Canva), ad set builds for Pod 2. Can support other pods on overflow.",
+    "assigned_pod": 2,
+    "avatar_initial": "B"
+  },
+  {
+    "id": "ken",
+    "name": "Ken",
+    "role": "Graphic Designer / AI Specialist",
+    "tier": "media_buying",
+    "contact": "ClickUp — task with: brand info, target market, reference images, due date. Plan ahead — Philippines timezone.",
+    "notes": "Based in Philippines. Standard turnaround: 24 hours. Specializes in AI-generated creatives and Canva graphic design. PLAN AHEAD — never wait until something is urgent.",
+    "timezone": "Philippines (UTC+8)",
+    "turnaround_hours": 24,
+    "avatar_initial": "K"
+  },
+  {
+    "id": "leila",
+    "name": "Leila",
+    "role": "Head of VA Management",
+    "tier": "va_management",
+    "contact": "Slack (#internal-team for account-specific requests, DM for direct escalations). Contact for: Logbook access, VA quality issues, booking rate problems.",
+    "notes": "Primary lead for ALL VAs across ALL pods. Provides Logbook access — ask Leila, not Jonathan. Note: never spell 'Layla' — always 'Leila'.",
+    "is_key": true,
+    "avatar_initial": "L"
+  },
+  {
+    "id": "aica",
+    "name": "Aica",
+    "role": "VA Manager",
+    "tier": "va_management",
+    "contact": "Slack — VA assignments and scheduling for new accounts.",
+    "notes": "Works alongside Leila. Note: never 'AICA' — always 'Aica'.",
+    "avatar_initial": "Ac"
+  }
+]

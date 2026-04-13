@@ -1,0 +1,520 @@
+{
+  "day1": [
+    {
+      "question": "ContractorsIgnite operates on what billing model?",
+      "options": [
+        "Monthly retainer regardless of results",
+        "Performance-based 28-day cycles \u2014 client pays ONLY after targets are hit",
+        "Weekly billing based on ad spend",
+        "Annual subscription"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "A client is spending $100/day. Target is 15 booked appointments. What is the minimum to bill them?",
+      "options": [
+        "15 (100% of target)",
+        "12 (80% margin rule)",
+        "10 (first-cycle grace)",
+        "8 (reasonable effort)"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "Who founded ContractorsIgnite?",
+      "options": [
+        "Jonathan and Cole",
+        "Mani and Oscar",
+        "Emmanuel and Mervin",
+        "Cole and Tyler"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "What is the standard retainer structure today?",
+      "options": [
+        "$2,500/cycle flat",
+        "$3,500 + 5% ad spend",
+        "~$4,000/cycle + 10% of ad spend",
+        "$5,000 + 15% ad spend"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "When does a client pay their retainer?",
+      "options": [
+        "Before the cycle starts",
+        "On Day 14",
+        "After the cycle completes and targets are met",
+        "Quarterly"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "What is Mani's role?",
+      "options": [
+        "CEO & Founder",
+        "Director of Operations",
+        "Director of Sales & Co-Founder",
+        "B2B Ads Manager"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "Which three niches does ContractorsIgnite serve?",
+      "options": [
+        "Roofing, Flooring, HVAC",
+        "Roofing, HVAC, Gutters",
+        "Roofing, Plumbing, Electrical",
+        "HVAC, Gutters, Landscaping"
+      ],
+      "correct": 1,
+      "explanation": "Roofing (80-90% of revenue), HVAC, and Gutters. Roofing is the primary focus with the highest average ticket size."
+    }
+  ],
+  "day2": [
+    {
+      "question": "Which tool is used for task management at ContractorsIgnite?",
+      "options": [
+        "Notion",
+        "Monday.com",
+        "ClickUp",
+        "Trello"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "When should you handle A2P registration yourself?",
+      "options": [
+        "When Emmanuel is busy",
+        "When the account is under $100/day",
+        "Never \u2014 always assign to Emmanuel via A2P Wizard",
+        "Only on weekends"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "What are the only allowed Meta ad placements?",
+      "options": [
+        "All placements for maximum reach",
+        "Facebook Feed, IG Feed, FB Stories, IG Stories, FB Reels, IG Reels (6 only)",
+        "Facebook Feed and Stories only",
+        "10 placements including Marketplace"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "How do you get Logbook access?",
+      "options": [
+        "Ask Jonathan",
+        "Request from Oscar",
+        "Request from Leila",
+        "Ask Emmanuel"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "After doing one training setup, what is your ongoing role for account setups?",
+      "options": [
+        "Do every setup yourself",
+        "Split 50/50 with Emmanuel",
+        "Task all setups to Emmanuel via ClickUp \u2014 never set up again",
+        "Set up first 5 accounts, then hand off"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "Ken is based in the Philippines. What is his expected turnaround time?",
+      "options": [
+        "Same-day",
+        "4 hours",
+        "24 hours",
+        "48 hours"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "What does Mervin do at ContractorsIgnite?",
+      "options": [
+        "Manages VA teams alongside Leila",
+        "Handles graphic design with Ken",
+        "Full-cycle media buyer and setup support \u2014 similar role to Emmanuel",
+        "Manages B2B ad campaigns"
+      ],
+      "correct": 2,
+      "explanation": "Mervin is a full-cycle media buyer who supports Emmanuel on setups and ongoing media buying tasks. Task him via ClickUp just as you would Emmanuel."
+    }
+  ],
+  "day3": [
+    {
+      "question": "During a setup audit, call recording in GHL should be:",
+      "options": [
+        "Turned OFF for privacy",
+        "Turned ON",
+        "Optional by client preference",
+        "HVAC only"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "You're stuck on a GHL setting during your training setup. First step?",
+      "options": [
+        "Message Jonathan immediately",
+        "Ask Emmanuel to finish it",
+        "Open another live client sub-account and see how it's configured",
+        "Skip it"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "What does the Account Specific Document contain?",
+      "options": [
+        "Client billing history",
+        "VA cheat sheet \u2014 service area, hours, owner name, calendar login, lead Q&A",
+        "Internal ad performance analytics",
+        "List of all clients across all pods"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "After an onboarding call, what's the correct sequence within 1 hour?",
+      "options": [
+        "Build the client's GHL sub-account yourself",
+        "Paste Fathom transcript into Custom GPT \u2192 post to #post-onboarding-discussion \u2192 ClickUp task for Emmanuel \u2192 text client",
+        "Call Jonathan to debrief",
+        "Send a Loom of their ads"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "You should NEVER create a Facebook Business Manager for a client. Why?",
+      "options": [
+        "It takes too long",
+        "Creates legal liability \u2014 BMs must be owned by the client, not us",
+        "Facebook doesn't allow it",
+        "It costs money"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "Which Slack channel do you post to after every onboarding call?",
+      "options": [
+        "#internal-team",
+        "#ops-manager-discussion",
+        "#post-onboarding-discussion",
+        "#closer-call-recordings"
+      ],
+      "correct": 2,
+      "explanation": "#post-onboarding-discussion receives your Custom GPT summary from every onboarding call. This keeps Jonathan and the team looped in immediately after every new client call."
+    }
+  ],
+  "day4": [
+    {
+      "question": "What must every Monday/Thursday status update include?",
+      "options": [
+        "A quick \"all accounts good\" message",
+        "Per account: name, cycle #, days elapsed, bookings vs target, health color, notes, and action steps WITH dates",
+        "An email summary to Jonathan",
+        "An auto-exported ClickUp report"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "Pod managers post updates Monday/Thursday. When are review calls?",
+      "options": [
+        "Monday and Thursday",
+        "Tuesday and Friday",
+        "Wednesday and Saturday",
+        "Every day at standup"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "Layer 1 metrics are great for an account. Should you audit Meta KPIs?",
+      "options": [
+        "Yes \u2014 weekly audit for all accounts",
+        "No \u2014 if Layer 1 is healthy, check in monthly only",
+        "Yes \u2014 creative fatigue builds invisibly",
+        "Only if client asks"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "A client's ads have been paused 3 days due to billing failure. What do you do?",
+      "options": [
+        "Send a Slack when convenient",
+        "CALL the client immediately \u2014 every paused day = delayed cycle and cashflow",
+        "Wait for them to notice",
+        "Restart from a different ad account"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "When should you initiate the renewal conversation?",
+      "options": [
+        "Day of cycle end",
+        "Only when client asks",
+        "5\u20137 days before cycle end",
+        "Immediately after launching"
+      ],
+      "correct": 2,
+      "explanation": "Initiate renewal 5\u20137 days before cycle end. Never let a cycle expire without already having confirmed the next one. Proactive renewals feel like a win; surprise renewals create friction."
+    }
+  ],
+  "week2": [
+    {
+      "question": "You receive 5 accounts in the handoff. Which do you prioritize first?",
+      "options": [
+        "Healthiest accounts first \u2014 protect the wins",
+        "Launch-pending \u2192 underperforming \u2192 healthy (healthy = monthly check-in only)",
+        "Highest ad spend first",
+        "Alphabetical order"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "A client says their close rate on appointments is low. First step?",
+      "options": [
+        "Pause the campaign immediately",
+        "Call Mani to take over",
+        "Request full CRM sales data \u2014 what happened to each appointment?",
+        "Offer a discount on next cycle"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "The 24\u201348 hour rule means:",
+      "options": [
+        "Respond to all Slacks in 24\u201348 hours",
+        "If a client owes you something, get an answer within 24\u201348 hours or escalate",
+        "New clients get a Loom within 24\u201348 hours",
+        "Renewals confirmed 24\u201348 hours before cycle end"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "What is the KRS (Klaus Roofing Systems) retainer rate?",
+      "options": [
+        "Standard: $4,000/cycle + 10%",
+        "Premium: $5,000 + 12%",
+        "Discounted: $3,300/cycle + 10%",
+        "Flat: $2,500/cycle"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "After a successful cycle, what revenue activities should you always do?",
+      "options": [
+        "Invoice and move on",
+        "Request a video testimonial, ask for referrals, confirm cycle renewal proactively",
+        "Wait for the client to bring up testimonials organically",
+        "Offer a discount to lock in next cycle"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "Leila's title is:",
+      "options": [
+        "VA Team Lead",
+        "Head of VA Management",
+        "Operations Coordinator",
+        "VA Scheduler"
+      ],
+      "correct": 1,
+      "explanation": "Leila is Head of VA Management \u2014 the senior VA manager who leads all VAs. Aica supports her. Leila also controls Logbook access."
+    }
+  ],
+  "final": [
+    {
+      "question": "What is the current company revenue and the target?",
+      "options": [
+        "$50K \u2192 $500K",
+        "$200K\u2013$300K/month \u2192 $1M/month by Q3",
+        "$1M \u2192 $10M",
+        "$500K \u2192 $2M"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "What does the 10% of ad spend in the retainer structure pay for?",
+      "options": [
+        "Facebook fees",
+        "Scalability \u2014 higher spend = more leads, more VA time, more management. Incentivizes us to scale clients.",
+        "Cycle extension buffer",
+        "Emmanuel's time for setup"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "Pod 3 is:",
+      "options": [
+        "Cole and Tyler",
+        "Gianmarco and Gregory",
+        "Kyle and Abdullah",
+        "Sam and Patrick"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "Which ad creative type performs BEST for roofing clients?",
+      "options": [
+        "Professional drone footage",
+        "AI-generated polished renders",
+        "Raw client photos, Canva trifolds, Ken's AI images \u2014 native-looking content",
+        "Stock photo libraries"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "A client has a Facebook page not in their Business Manager. Solution?",
+      "options": [
+        "Create a new page from their BM",
+        "Tell them you can't run ads",
+        "Have client add you as individual with \"Run Ads\" access via page Settings (requires FB friend request)",
+        "Create a Business Manager for them"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "What is the Logbook?",
+      "options": [
+        "Record of team meetings",
+        "Central truth for ALL lead data \u2014 every lead from every account documented by VAs with status and notes",
+        "Jonathan's operations log",
+        "Billing history for all clients"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "When should you look at Layer 2 metrics (CPC, CTR, conversion rate)?",
+      "options": [
+        "Every week for every account",
+        "Only when Layer 1 metrics are failing",
+        "Only in week 1 of a campaign",
+        "Every Monday update"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "What is the first thing you do when an onboarding call lands on your calendar?",
+      "options": [
+        "Wing it \u2014 trust your knowledge",
+        "Pull closer call recording, research client, send pre-onboarding email + text, create ClickUp task for Emmanuel",
+        "Ask Jonathan to join as support",
+        "Call Emmanuel to start setup"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "You're on Day 42 of a cycle and still 2 appointments short of the 80% rule. What happens?",
+      "options": [
+        "Bill at a discounted rate",
+        "Cancel and refund setup fee",
+        "Continue extending at no charge and escalate strategy to Jonathan immediately",
+        "Auto-convert to winter plan"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "What is the Speed to Cashflow target?",
+      "options": [
+        "120 days from signed contract to first payment",
+        "60 days or less (company average is 75\u201380)",
+        "30 days from onboarding call",
+        "90 days from contract sign"
+      ],
+      "correct": 1,
+      "explanation": "The company average is 75\u201380 days from signed contract to first payment. Your target is 60 or less. Every day a client isn't launched = delayed cashflow for you and the business."
+    },
+    {
+      "question": "What is the ICP (Ideal Client Profile) for ContractorsIgnite?",
+      "options": [
+        "Any contractor with a Facebook account",
+        "Startups under 1 year old with high growth ambition",
+        "$2.5M+ revenue, 3+ years in business, growth-minded, $3K+/month ad spend capacity",
+        "Any roofing company spending over $500/month"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "How do you handle a survey with low conversion (lots of leads, few bookings)?",
+      "options": [
+        "Increase ad budget to get more leads",
+        "Audit survey questions \u2014 remove friction, test shorter form, check if qualifier questions are filtering too hard or too soft",
+        "Pause all ads immediately",
+        "Escalate to Oscar without reviewing yourself"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "What does the Command Center show that turns RED?",
+      "options": [
+        "Accounts with high ad spend",
+        "Clients approaching contract end date",
+        "Accounts behind on bookings vs. target \u2014 your daily triage dashboard",
+        "Accounts missing payment"
+      ],
+      "correct": 2,
+      "explanation": ""
+    },
+    {
+      "question": "What are the three niches ContractorsIgnite serves, and what is the primary one?",
+      "options": [
+        "Plumbing, HVAC, Roofing \u2014 Plumbing is primary",
+        "Roofing (80\u201390%), HVAC, Gutters \u2014 Roofing is primary",
+        "Roofing, Solar, Landscaping \u2014 Roofing is primary",
+        "HVAC, Electrical, Roofing \u2014 HVAC is primary"
+      ],
+      "correct": 1,
+      "explanation": ""
+    },
+    {
+      "question": "What is the 24\u201348 hour rule?",
+      "options": [
+        "All ClickUp tasks must be completed within 48 hours",
+        "You have 24\u201348 hours to identify and resolve any client blocker, or escalate \u2014 no blocker sits unaddressed",
+        "Client calls must be returned within 24 hours",
+        "New accounts must go live within 48 hours of signing"
+      ],
+      "correct": 1,
+      "explanation": ""
+    }
+  ]
+}

@@ -1,16 +1,27 @@
 'use client';
 import React, { useState } from 'react';
-import { signInWithGoogle } from '@/lib/auth';
+import { signInWithMagicLink } from '@/lib/auth';
 import { isSupabaseEnabled } from '@/lib/supabase';
 
 export function LoginScreen() {
+  const [email, setEmail]     = useState('');
   const [loading, setLoading] = useState(false);
+  const [sent, setSent]       = useState(false);
+  const [error, setError]     = useState('');
   const configured = isSupabaseEnabled();
 
-  const handleGoogleLogin = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
     setLoading(true);
-    await signInWithGoogle();
-    // Browser redirects to Google — loading state stays until redirect
+    setError('');
+    const result = await signInWithMagicLink(email.trim());
+    setLoading(false);
+    if (result.error) {
+      setError(result.error);
+    } else {
+      setSent(true);
+    }
   };
 
   return (
@@ -73,77 +84,139 @@ export function LoginScreen() {
           textAlign: 'center',
         }}
       >
-        <h2
-          style={{
-            color: '#F5F5F5',
-            fontSize: 17,
-            fontWeight: 800,
-            margin: '0 0 0.5rem',
-          }}
-        >
-          Sign in to continue
-        </h2>
-        <p style={{ color: '#666', fontSize: 13, margin: '0 0 1.75rem', lineHeight: 1.5 }}>
-          Use your <strong style={{ color: '#aaa' }}>@roofignite.com</strong> Google account.
-          Access is restricted to authorised team members only.
-        </p>
-
-        {configured ? (
-          <button
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 12,
-              backgroundColor: loading ? '#1C1C1C' : '#fff',
-              border: '1.5px solid #2A2A2A',
-              borderRadius: 10,
-              padding: '12px 20px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              transition: 'all 0.15s ease',
-              fontSize: 14,
-              fontWeight: 700,
-              color: loading ? '#666' : '#000',
-            }}
-            onMouseEnter={(e) => {
-              if (!loading) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#f0f0f0';
-            }}
-            onMouseLeave={(e) => {
-              if (!loading) (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#fff';
-            }}
-          >
-            {/* Google G icon */}
-            {!loading && (
-              <svg width="18" height="18" viewBox="0 0 18 18">
-                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
-                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-                <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
-                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-              </svg>
-            )}
-            {loading ? 'Redirecting to Google…' : 'Continue with Google'}
-          </button>
+        {sent ? (
+          /* ── Success state ── */
+          <>
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                backgroundColor: '#0D2A1A',
+                border: '1.5px solid #22C55E44',
+                borderRadius: 12,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.25rem',
+                fontSize: 22,
+              }}
+            >
+              ✉️
+            </div>
+            <h2 style={{ color: '#F5F5F5', fontSize: 17, fontWeight: 800, margin: '0 0 0.5rem' }}>
+              Check your email
+            </h2>
+            <p style={{ color: '#888', fontSize: 13, margin: '0 0 1.5rem', lineHeight: 1.6 }}>
+              We sent a login link to{' '}
+              <strong style={{ color: '#ccc' }}>{email}</strong>.
+              Click it and you&apos;ll be signed in instantly.
+            </p>
+            <button
+              onClick={() => { setSent(false); setEmail(''); }}
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                color: '#666',
+                fontSize: 12,
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                fontFamily: 'inherit',
+              }}
+            >
+              Use a different email
+            </button>
+          </>
         ) : (
-          <div
-            style={{
-              backgroundColor: '#2A1A00',
-              border: '1px solid #F59E0B44',
-              borderRadius: 10,
-              padding: '14px 16px',
-              color: '#F59E0B',
-              fontSize: 12,
-              lineHeight: 1.5,
-            }}
-          >
-            ⚠️ Supabase is not configured. Add your{' '}
-            <code style={{ backgroundColor: '#1A1000', padding: '1px 4px', borderRadius: 3 }}>
-              .env.local
-            </code>{' '}
-            file to enable login.
-          </div>
+          /* ── Email form ── */
+          <>
+            <h2
+              style={{
+                color: '#F5F5F5',
+                fontSize: 17,
+                fontWeight: 800,
+                margin: '0 0 0.5rem',
+              }}
+            >
+              Sign in to continue
+            </h2>
+            <p style={{ color: '#666', fontSize: 13, margin: '0 0 1.75rem', lineHeight: 1.5 }}>
+              Enter your{' '}
+              <strong style={{ color: '#aaa' }}>@roofignite.com</strong> email
+              and we&apos;ll send you a login link — no password needed.
+            </p>
+
+            {configured ? (
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@roofignite.com"
+                  required
+                  disabled={loading}
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#1C1C1C',
+                    border: '1.5px solid #2A2A2A',
+                    borderRadius: 10,
+                    padding: '11px 14px',
+                    color: '#F5F5F5',
+                    fontSize: 14,
+                    outline: 'none',
+                    marginBottom: 10,
+                    boxSizing: 'border-box',
+                    fontFamily: 'inherit',
+                  }}
+                  onFocus={(e) => (e.currentTarget.style.borderColor = '#F5C800')}
+                  onBlur={(e) => (e.currentTarget.style.borderColor = '#2A2A2A')}
+                />
+
+                {error && (
+                  <p style={{ color: '#EF4444', fontSize: 12, marginBottom: 10, textAlign: 'left' }}>
+                    {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading || !email.trim()}
+                  style={{
+                    width: '100%',
+                    backgroundColor: loading || !email.trim() ? '#1C1C1C' : '#F5C800',
+                    border: '1.5px solid transparent',
+                    borderRadius: 10,
+                    padding: '12px 20px',
+                    cursor: loading || !email.trim() ? 'not-allowed' : 'pointer',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: loading || !email.trim() ? '#555' : '#000',
+                    transition: 'all 0.15s ease',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  {loading ? 'Sending…' : 'Send login link →'}
+                </button>
+              </form>
+            ) : (
+              <div
+                style={{
+                  backgroundColor: '#2A1A00',
+                  border: '1px solid #F59E0B44',
+                  borderRadius: 10,
+                  padding: '14px 16px',
+                  color: '#F59E0B',
+                  fontSize: 12,
+                  lineHeight: 1.5,
+                }}
+              >
+                ⚠️ Supabase is not configured. Add your{' '}
+                <code style={{ backgroundColor: '#1A1000', padding: '1px 4px', borderRadius: 3 }}>
+                  .env.local
+                </code>{' '}
+                file to enable login.
+              </div>
+            )}
+          </>
         )}
       </div>
 

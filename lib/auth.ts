@@ -22,22 +22,17 @@ export function getUserColor(userKey: string) {
   return USER_COLORS[userKey] ?? { bg: '#666', text: '#fff' };
 }
 
-/** Trigger Google OAuth login — redirects browser to Google */
-export async function signInWithGoogle(): Promise<void> {
-  if (!supabase) {
-    console.error('Supabase not configured');
-    return;
-  }
-  await supabase.auth.signInWithOAuth({
-    provider: 'google',
+/** Send a magic link / OTP email to the given address */
+export async function signInWithMagicLink(email: string): Promise<{ error: string | null }> {
+  if (!supabase) return { error: 'Supabase not configured' };
+  const { error } = await supabase.auth.signInWithOtp({
+    email: email.toLowerCase().trim(),
     options: {
-      redirectTo: typeof window !== 'undefined' ? window.location.origin : '',
-      queryParams: {
-        // Restrict to roofignite.com Google Workspace accounts
-        hd: 'roofignite.com',
-      },
+      emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : '',
+      shouldCreateUser: true,
     },
   });
+  return { error: error?.message ?? null };
 }
 
 /** Sign the current user out */

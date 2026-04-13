@@ -68,14 +68,16 @@ export function S08_MetricsHierarchy() {
 
       {/* Metrics quick reference */}
       <Card yellow>
-        <h3 className="font-black text-sm uppercase tracking-widest mb-3">Quick Reference: What Good Looks Like</h3>
+        <h3 className="font-black text-sm uppercase tracking-widest mb-3">Layer 2 Benchmarks — What Good Looks Like</h3>
         <div className="space-y-2">
           {[
-            { metric: 'CTR', target: '1–3%+', note: 'Below 1% = creative issue' },
-            { metric: 'Survey Completion Rate', target: '20–40%', note: 'Below 15% = friction in survey' },
-            { metric: 'VA Booking Rate', target: '30–50%', note: 'Below 25% = script/speed issue' },
-            { metric: 'Show Rate', target: '60–80%', note: 'Below 50% = reminder/qual issue' },
-            { metric: 'Speed to Lead', target: '< 5 min', note: 'Over 15 min = serious problem' },
+            { metric: 'CTR (Click-Through Rate)', target: '> 0.8%', note: 'Low CTR = refresh creative or test new hooks' },
+            { metric: 'Cost Per Link Click (CPLC)', target: '< $6', note: 'High CPLC = improve CTR or adjust targeting' },
+            { metric: 'Survey Conversion Rate', target: '> 2.5%', note: 'Low = simplify survey, reduce friction' },
+            { metric: 'VA Booking Rate', target: '> 30%', note: 'Low = retrain VAs, review scripts' },
+            { metric: 'Show Rate', target: '> 60%', note: 'Low = improve reminder automations' },
+            { metric: 'Speed to Lead', target: '< 5 min', note: 'Over 15 min = serious problem — escalate to Leila' },
+            { metric: 'OSA Rate (Out of Service Area)', target: '< 20%', note: 'High = audit zip codes vs targeting vs Account Specific Doc' },
           ].map((m) => (
             <div key={m.metric} className="flex items-center justify-between bg-black/10 rounded-lg px-3 py-2">
               <span className="font-bold text-sm">{m.metric}</span>
@@ -86,6 +88,7 @@ export function S08_MetricsHierarchy() {
             </div>
           ))}
         </div>
+        <p className="text-xs text-brand-black/50 mt-3">Only check these when Layer 1 is failing. Healthy Layer 1 = monthly check-in only.</p>
       </Card>
 
       <InfoBox type="tip" title="Think in Systems">

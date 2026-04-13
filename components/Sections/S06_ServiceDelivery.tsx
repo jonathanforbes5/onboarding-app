@@ -131,6 +131,42 @@ export function S06_ServiceDelivery() {
       </ExpandableCard>
 
       {/* Ongoing optimization */}
+      {/* Reference recordings */}
+      <ExpandableCard title="Reference Recordings — Watch Before Your First Call" subtitle="Real onboarding and service delivery calls to study">
+        <div className="space-y-2">
+          {[
+            { label: 'Service Delivery Part 2 (Most Recent)', desc: 'Start here — most recent service delivery process.', url: 'https://fathom.video/share/G9juWT1oFG_3CrppLscPDXceijJvP_rR', priority: true },
+            { label: 'Service Delivery Part 1', desc: 'GHL setup walkthrough start to finish.', url: 'https://fathom.video/share/uZeCCaxRRVumFq_K6yHx_tbN75iRaMaX', priority: false },
+            { label: 'Entire GHL Build Start to Finish', desc: 'Complete sub-account build using standard A2P. Know the full picture even though Emmanuel handles it.', url: 'https://fathom.video/share/VG-nsEXiRvRP-7oyMY1VxcVET743mMs8', priority: false },
+            { label: 'Roofing Onboarding Call', desc: 'Real roofing client onboarding. Primary niche (80–90% of clients) — watch carefully.', url: 'https://fathom.video/share/qj9AYoqURQ6jhx34jFRZiR2-xESYDswF', priority: false },
+            { label: 'HVAC Onboarding Call', desc: 'HVAC-specific nuances. Different pain points and seasonality vs roofing.', url: 'https://fathom.video/share/VYz9GhzfjBBj1YuVUPLXLdbVz6UkW4Pd', priority: false },
+            { label: 'Gutter Onboarding Call', desc: 'Gutter client onboarding. Note: gutters need 2–3× booking volume vs roofing to be profitable.', url: 'https://fathom.video/share/yNyAaNPjWJdhj-zps7GYjpziqpCsBhN_', priority: false },
+          ].map((rec) => (
+            <a key={rec.label} href={rec.url} target="_blank" rel="noopener noreferrer"
+              className={`flex items-start gap-3 p-3 rounded-xl border-2 hover:shadow-sm transition-all group ${rec.priority ? 'border-brand-yellow bg-brand-yellow-light' : 'border-brand-gray-mid bg-white hover:border-brand-black'}`}>
+              <span className="text-lg mt-0.5 flex-shrink-0">🎥</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-sm">{rec.label}</span>
+                  {rec.priority && <span className="bg-brand-black text-white text-[9px] font-black px-1.5 py-0.5 rounded uppercase">Watch First</span>}
+                </div>
+                <div className="text-xs text-brand-gray mt-0.5">{rec.desc}</div>
+              </div>
+              <span className="text-brand-gray group-hover:text-brand-black text-xs flex-shrink-0 mt-1">↗</span>
+            </a>
+          ))}
+          <a href="https://docs.google.com/document/d/10aoaz3edxvQBsDrwPsHjEO2CgZa0FPA8KltuXDf-IeQ/edit" target="_blank" rel="noopener noreferrer"
+            className="flex items-start gap-3 p-3 rounded-xl border-2 border-brand-gray-mid bg-white hover:border-brand-black hover:shadow-sm transition-all group">
+            <span className="text-lg mt-0.5 flex-shrink-0">📄</span>
+            <div className="flex-1 min-w-0">
+              <div className="font-bold text-sm">Service Delivery SOP (Google Doc)</div>
+              <div className="text-xs text-brand-gray mt-0.5">Full written SOP — know where it lives, not every step by memory.</div>
+            </div>
+            <span className="text-brand-gray group-hover:text-brand-black text-xs flex-shrink-0 mt-1">↗</span>
+          </a>
+        </div>
+      </ExpandableCard>
+
       <ExpandableCard title="Phase 7: Ongoing Optimization" subtitle="Your weekly rhythm during an active cycle">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[

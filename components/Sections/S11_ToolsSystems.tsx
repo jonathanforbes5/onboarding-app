@@ -108,29 +108,190 @@ export function S11_ToolsSystems() {
         </div>
       </div>
 
+      {/* 10-day worksheet */}
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Your 10-Day Onboarding Worksheet</h3>
+        <div className="space-y-3">
+          {[
+            {
+              day: 1,
+              title: 'Foundation Day',
+              subtitle: 'Company foundations, system access, team intros',
+              tasks: [
+                'Request Logbook access from Leila (NOT Jonathan)',
+                'Confirm ClickUp access and understand task structure',
+                'Get added to Slack channels: #internal-team, #ops, #closer-call-recordings, #post-onboarding-discussion',
+                'Log into GHL — confirm sub-account access',
+                'Log into Meta Ads Manager — confirm partner access',
+                'Access Account Master Dashboard and Command Center',
+                'Message Emmanuel, Leila, and Ken in Slack — introduce yourself',
+                'Watch Service Delivery Part 2 recording',
+              ],
+              color: 'border-brand-yellow bg-brand-yellow-light',
+            },
+            {
+              day: 2,
+              title: 'Service Delivery Deep Dive',
+              subtitle: 'GHL builds, A2P, your one training setup',
+              tasks: [
+                'Complete ONE training GHL sub-account setup with Emmanuel',
+                'Watch Emmanuel submit A2P via GHL A2P Wizard — understand the process',
+                'Review the Service Delivery SOP — know where it lives',
+                'Navigate GHL: sub-account view, contacts, automation builder, calendar',
+                'Navigate the Logbook: filter by account, understand status columns',
+                'Navigate Command Center: understand health color logic',
+                'Task all future setups to Emmanuel via ClickUp — never set up again yourself',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 3,
+              title: 'First Account Deep Dive',
+              subtitle: 'Layer 1 → Layer 2, diagnosing your first real account',
+              tasks: [
+                'Open Command Center — identify green, yellow, orange, red accounts',
+                'For red/orange: open Logbook, count open leads, check booking rate',
+                'Calculate cost per booking for each account: ad spend ÷ booked appointments',
+                'Confirm all campaigns are named with "B2C" (required for dashboard tracking)',
+                'Identify which accounts have CAPI set up vs not — task Emmanuel for any missing',
+                'Send intro message to each active client',
+                'Pull closer call recordings for any new clients',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 4,
+              title: 'Operating Rhythm',
+              subtitle: 'Status updates, review calls, cycle management',
+              tasks: [
+                'Post your first Monday/Thursday status update: per account — name, cycle #, days elapsed, bookings vs target, health color, action steps with dates',
+                'Know your billing window for each active account',
+                'Initiate renewal conversations 5–7 days before any cycle end',
+                'Document all cycle dates in Account Master Dashboard',
+                'If any billing failure exists: CALL the client same day',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 5,
+              title: 'Creative & Advertising',
+              subtitle: 'Meta ad rules, creative standards, what you approve',
+              tasks: [
+                'Memorize the 6 approved placements: FB Feed, IG Feed, FB Stories, IG Stories, FB Reels, IG Reels',
+                'Review Ad Set Reviewer at ad-set-reviewer.vercel.app',
+                'Verify Advantage+ is OFF on all active campaigns (Meta re-enables after duplication)',
+                'Confirm "B2C" appears in every campaign name',
+                'Task Ken via ClickUp for any needed AI creatives — include brand info, market, reference images',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 6,
+              title: 'VA Management & Logbook',
+              subtitle: 'Working with Leila\'s team, lead quality, Logbook discipline',
+              tasks: [
+                'Check Logbook daily for open (white) leads',
+                'Confirm VA response time is <5 min — escalate issues to Leila with specific lead examples',
+                'Check OSA rate in Logbook — if >20%, audit targeting vs Account Specific Doc',
+                'Post account-specific notes in #internal-team for any targeting or quality updates',
+                'Understand live transfer process: VA transfers live to client\'s sales rep',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 7,
+              title: 'First Review Call',
+              subtitle: 'Prepare and present to Jonathan',
+              tasks: [
+                'Update Slack status by 9 AM (day before the call)',
+                'Know current status of every account before the call',
+                'Have specific action steps WITH dates ready — not just a report',
+                'Layer 1 metrics ready for every account: bookings vs target, health color, cost per booking',
+                'Flag any accounts needing deeper discussion — never bury problems',
+                'After call: execute all flagged action items same day',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 8,
+              title: 'Revenue Activities',
+              subtitle: 'Renewals, testimonials, referrals, upsells',
+              tasks: [
+                'Ask every client who hit target for a written or video testimonial',
+                'Ask happy clients if they know other contractors who could benefit',
+                'Propose higher ad spend to clients with healthy cost per booking',
+                'For any account in Week 3–4: initiate renewal conversation proactively',
+                'Apply 24–48 hour rule: every client blocker resolved or escalated within 48 hours',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 9,
+              title: 'Creative Refresh Protocol',
+              subtitle: 'Post-Andromeda framework — what to do when performance drops',
+              tasks: [
+                'For any declining account: check context first (holiday? <7 days in campaign?)',
+                'Check Layer 1 — if bookings on track, do not touch anything',
+                'If creative fatigue: duplicate ad set → turn off top-reach ads → launch new set → wait 48h',
+                'Only if Step 1 fails: do a full creative refresh — new photos, nothing reused',
+                'Verify CAPI is set up on every active account',
+                'Backfill CAPI on any accounts that were missing it',
+              ],
+              color: 'border-brand-gray-mid bg-white',
+            },
+            {
+              day: 10,
+              title: 'Friday Review + 10-Day Wrap',
+              subtitle: 'Full account review, self-assessment, fully operational',
+              tasks: [
+                'Present all accounts — show movement since Tuesday\'s call',
+                'Highlight wins: launched accounts, targets hit, positive client feedback',
+                'I can run a client onboarding call independently',
+                'I know how to diagnose using Layer 1 → Layer 2 framework',
+                'I never confuse CPL with cost per booking',
+                'I check the Logbook daily for open leads',
+                'I know the 6 approved Meta placements',
+                'I know A2P is a GHL process, not Meta',
+                'I initiate renewals before cycles expire',
+                'I know when to escalate to Jonathan vs handle independently',
+              ],
+              color: 'border-brand-black bg-brand-black',
+              dark: true,
+            },
+          ].map((day) => (
+            <div key={day.day} className={`rounded-xl border-2 overflow-hidden ${day.color}`}>
+              <div className={`px-4 py-3 flex items-center gap-3 ${day.dark ? '' : ''}`}>
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm flex-shrink-0 ${
+                  day.dark ? 'bg-brand-yellow text-brand-black' : 'bg-brand-black text-white'
+                }`}>
+                  {day.day}
+                </div>
+                <div>
+                  <div className={`font-black text-sm ${day.dark ? 'text-white' : ''}`}>{day.title}</div>
+                  <div className={`text-xs ${day.dark ? 'text-white/60' : 'text-brand-gray'}`}>{day.subtitle}</div>
+                </div>
+              </div>
+              <div className={`px-4 pb-3 border-t ${day.dark ? 'border-white/10' : 'border-brand-gray-mid/50'}`}>
+                <div className="pt-3 space-y-1.5">
+                  {day.tasks.map((task, i) => (
+                    <div key={i} className="flex items-start gap-2 text-xs">
+                      <span className={`mt-0.5 flex-shrink-0 ${day.dark ? 'text-brand-yellow' : 'text-brand-gray'}`}>▸</span>
+                      <span className={day.dark ? 'text-white/80' : ''}>{task}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* What's next CTA */}
       <Card yellow>
         <div className="text-center">
           <div className="text-4xl mb-3">🎓</div>
           <h3 className="font-black text-xl mb-2">You&apos;re Almost Done!</h3>
-          <p className="text-sm text-brand-black/70 mb-4">Complete the knowledge check below to finish your onboarding.</p>
-          <div className="text-left space-y-1">
-            {[
-              'Day 1: Company foundations, system access, meet the team',
-              'Day 2: GHL service delivery deep dive, do ONE training setup',
-              'Day 3: First account audit — Layer 1 → Layer 2 framework',
-              'Day 4: First Monday/Thursday status update, cycle management',
-              'Day 5: Meta ad rules, creative standards, ad set reviewer',
-              'Day 6–7: VA management, Logbook, first review call',
-              'Day 8–9: Revenue activities, client comms, creative refresh protocol',
-              'Day 10: Fully operational — final self-assessment',
-            ].map((step, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm">
-                <span className="w-5 h-5 rounded-full bg-brand-black text-white text-[10px] font-black flex items-center justify-center flex-shrink-0">{i + 1}</span>
-                <span>{step}</span>
-              </div>
-            ))}
-          </div>
+          <p className="text-sm text-brand-black/70">Complete the knowledge check below to finish this section.</p>
         </div>
       </Card>
 

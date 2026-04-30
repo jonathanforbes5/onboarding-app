@@ -7,6 +7,8 @@ import { AccessDenied } from './AccessDenied';
 import { OverviewTab } from '@/components/Overview/OverviewTab';
 import { WorksheetTab } from '@/components/Worksheet/WorksheetTab';
 import { AdminDashboard } from '@/components/Admin/AdminDashboard';
+import { SOPsTab } from '@/components/SOPs/SOPsTab';
+import { RecordingsTab } from '@/components/Recordings/RecordingsTab';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { useApp } from '@/context/AppContext';
@@ -67,6 +69,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {activeTab === 'worksheet' && (
         <div className="pt-[42px]">
           <WorksheetTab />
+        </div>
+      )}
+
+      {activeTab === 'resources' && (
+        <div className="pt-[42px]">
+          <SOPsTab />
+        </div>
+      )}
+
+      {activeTab === 'recordings' && (
+        <div className="pt-[42px]">
+          <RecordingsTab />
         </div>
       )}
 

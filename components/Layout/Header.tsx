@@ -50,9 +50,11 @@ export function Header() {
 
   // Tabs visible to all users
   const baseTabs = [
-    { id: 'overview',  label: 'Overview',  icon: '🏠' },
-    { id: 'worksheet', label: 'Worksheet', icon: '📋' },
-    { id: 'sections',  label: 'Training',  icon: '📚' },
+    { id: 'overview',    label: 'Overview',    icon: '🏠' },
+    { id: 'worksheet',   label: 'Worksheet',   icon: '📋' },
+    { id: 'sections',    label: 'Training',    icon: '📚' },
+    { id: 'resources',   label: 'Resources',   icon: '📁' },
+    { id: 'recordings',  label: 'Recordings',  icon: '🎬' },
   ] as const;
 
   // Super admins get an extra Admin tab

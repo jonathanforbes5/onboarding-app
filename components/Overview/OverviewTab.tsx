@@ -79,16 +79,16 @@ function Card({ children, style }: { children: React.ReactNode; style?: React.CS
 }
 
 // ----------- Team member card -----------
-function TeamCard({ member }: { member: typeof teamData[0] }) {
+function TeamCard({ member, userPod }: { member: typeof teamData[0]; userPod: number }) {
   const [expanded, setExpanded] = useState(false);
   const accent = TIER_ACCENT[member.tier] ?? C.muted;
-  const isPod4 = (member as any).pod === 4;
+  const isUserPod = (member as any).pod === userPod;
 
   return (
     <div
       style={{
         backgroundColor: C.surf3,
-        border: `1px solid ${isPod4 ? C.acc + '44' : C.border}`,
+        border: `1px solid ${isUserPod ? C.acc + '44' : C.border}`,
         borderRadius: 10,
         padding: '12px 14px',
         cursor: (member as any).contact || (member as any).notes ? 'pointer' : 'default',
@@ -119,7 +119,7 @@ function TeamCard({ member }: { member: typeof teamData[0] }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
             <span style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>{member.name}</span>
-            {isPod4 && (
+            {isUserPod && (
               <span
                 style={{
                   backgroundColor: C.acc + '22',
@@ -275,10 +275,18 @@ function RefLink({
   );
 }
 
+const POD5_USERS = new Set(['ksenia', 'adeen']);
+
 // ----------- Main OverviewTab -----------
 export function OverviewTab() {
   const { currentUser } = useApp();
   const userName = currentUser?.displayName ?? 'Pod Manager';
+  const isPod5   = POD5_USERS.has(currentUser?.userKey ?? '');
+  const podNum   = isPod5 ? 5 : 4;
+  const podStart = isPod5 ? 'May 5, 2026' : 'April 14, 2026';
+  const podPeer  = isPod5
+    ? 'Pod 4 managers (Sam) started 3 weeks before you — great peer resource.'
+    : 'Pod 3 managers (Kyle, Abdullah) started 3 weeks before you — great peer resource.';
 
   // Group team by tier
   const teamByTier = TIER_ORDER.reduce<Record<string, typeof teamData>>((acc, tier) => {
@@ -338,18 +346,19 @@ export function OverviewTab() {
                 flexShrink: 0,
               }}
             >
-              CI
+              RI
             </div>
             <div>
               <p style={{ color: C.acc, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 4px' }}>
-                Pod 4 · April 14, 2026
+                Pod {podNum} · {podStart}
               </p>
               <h1 style={{ color: C.text, fontSize: 26, fontWeight: 900, margin: '0 0 6px', letterSpacing: '-0.5px' }}>
                 Welcome, {userName}.
               </h1>
               <p style={{ color: '#aaa', fontSize: 14, margin: 0, lineHeight: 1.6, maxWidth: 560 }}>
-                You're joining <strong style={{ color: C.text }}>Roof Ignite</strong> as a Pod 4 Manager.
+                You're joining <strong style={{ color: C.text }}>Roof Ignite</strong> as a Pod {podNum} Manager.
                 Your job is to be the single point of accountability for a portfolio of contractor clients — from onboarding through renewal.
+                {isPod5 && <><br /><span style={{ color: '#888', fontSize: 13 }}>Pod 5 uses the updated onboarding process from the April 30 call — you're expected to be independent by Day 3.</span></>}
               </p>
             </div>
           </div>
@@ -509,7 +518,7 @@ export function OverviewTab() {
                   }}
                 >
                   {members.map((m) => (
-                    <TeamCard key={m.id} member={m} />
+                    <TeamCard key={m.id} member={m} userPod={podNum} />
                   ))}
                 </div>
               </div>

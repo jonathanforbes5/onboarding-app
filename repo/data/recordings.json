@@ -50,6 +50,48 @@
       "category": "service_delivery"
     }
   ],
+  "reference_recordings": [
+    {
+      "id": "new_onboarding_comp",
+      "title": "New Onboarding Process & Comp Structure",
+      "description": "Jonathan, Cole, and Tyler walk through the updated onboarding process and compensation structure. Key context for how pod managers are expected to operate.",
+      "url": "https://fathom.video/share/9JhnQ7WvdHRKUgsnCyVkbzjKxeK-o_78",
+      "duration_mins": 66,
+      "date": "2026-04-30",
+      "participants": ["Jonathan Forbes", "Cole Yedema", "Tyler"],
+      "tags": ["onboarding", "comp", "process"]
+    },
+    {
+      "id": "accounts_review_apr28",
+      "title": "Accounts Review",
+      "description": "Oscar and Jonathan review account health across all pods — covers what good and bad account management looks like, and how to handle underperforming campaigns.",
+      "url": "https://fathom.video/share/cx9UfVfB2TFefZAsqWyyQEvGNM9UWXLL",
+      "duration_mins": 80,
+      "date": "2026-04-28",
+      "participants": ["Oscar Sey", "Jonathan Forbes"],
+      "tags": ["accounts", "review", "performance"]
+    },
+    {
+      "id": "pod3_marketing_apr28",
+      "title": "Pod 3 Marketing Meeting",
+      "description": "Jonathan runs through marketing strategy with Pod 3 — covers account triage, creative refreshes, and how to read Meta performance data.",
+      "url": "https://fathom.video/share/ygfiDR6SrHBpCfZpxg7j_4KZTTo47vUi",
+      "duration_mins": 61,
+      "date": "2026-04-28",
+      "participants": ["Jonathan Forbes", "Kyle Mohammed", "Abdullah Ahmed"],
+      "tags": ["marketing", "strategy", "ads"]
+    },
+    {
+      "id": "day1_onboarding_apr14",
+      "title": "Day 1 Onboarding — Pod 4",
+      "description": "Full Day 1 onboarding session with Sam. The most comprehensive single recording of what new pod managers cover — tools, process, client management, and expectations.",
+      "url": "https://fathom.video/share/cfN6yMKjkU_nxBatufNzktunJmbPMxrv",
+      "duration_mins": 162,
+      "date": "2026-04-14",
+      "participants": ["Jonathan Forbes", "Sam"],
+      "tags": ["onboarding", "training", "fundamentals"]
+    }
+  ],
   "sop_links": [
     {
       "id": "service_delivery_sop",

@@ -177,7 +177,8 @@
     "name": "Pamela",
     "role": "VA Manager",
     "tier": "va_management",
-    "contact": "Slack — VA assignments and support.",
-    "avatar_initial": "P"
+    "contact": "Slack — VA scheduling and quality management.",
+    "notes": "Works alongside Leila and Aica on VA operations.",
+    "avatar_initial": "Pa"
   }
 ]

@@ -1,7 +1,8 @@
 'use client';
 import React, { useMemo } from 'react';
 import { useApp } from '@/context/AppContext';
-import dayContent from '@/repo/data/day-content.json';
+import dayContentPod4 from '@/repo/data/day-content.json';
+import dayContentPod5 from '@/repo/data/day-content-pod5.json';
 
 // ----------- Types -----------
 
@@ -29,33 +30,55 @@ interface Day {
   sections: DaySection[];
 }
 
-// ----------- Pod 4 specific dates (Mon–Fri, Apr 14–25, 2026) -----------
-const DAY_DATES: Record<number, { short: string; full: string; week: number }> = {
-  1:  { short: 'Mon Apr 14', full: 'Monday, April 14 2026',  week: 1 },
-  2:  { short: 'Tue Apr 15', full: 'Tuesday, April 15 2026', week: 1 },
+// ----------- Pod 4 dates (Mon–Fri, Apr 14–25, 2026) -----------
+const DAY_DATES_POD4: Record<number, { short: string; full: string; week: number }> = {
+  1:  { short: 'Mon Apr 14', full: 'Monday, April 14 2026',    week: 1 },
+  2:  { short: 'Tue Apr 15', full: 'Tuesday, April 15 2026',   week: 1 },
   3:  { short: 'Wed Apr 16', full: 'Wednesday, April 16 2026', week: 1 },
-  4:  { short: 'Thu Apr 17', full: 'Thursday, April 17 2026', week: 1 },
-  5:  { short: 'Fri Apr 18', full: 'Friday, April 18 2026',  week: 1 },
-  6:  { short: 'Mon Apr 21', full: 'Monday, April 21 2026',  week: 2 },
-  7:  { short: 'Tue Apr 22', full: 'Tuesday, April 22 2026', week: 2 },
+  4:  { short: 'Thu Apr 17', full: 'Thursday, April 17 2026',  week: 1 },
+  5:  { short: 'Fri Apr 18', full: 'Friday, April 18 2026',    week: 1 },
+  6:  { short: 'Mon Apr 21', full: 'Monday, April 21 2026',    week: 2 },
+  7:  { short: 'Tue Apr 22', full: 'Tuesday, April 22 2026',   week: 2 },
   8:  { short: 'Wed Apr 23', full: 'Wednesday, April 23 2026', week: 2 },
-  9:  { short: 'Thu Apr 24', full: 'Thursday, April 24 2026', week: 2 },
-  10: { short: 'Fri Apr 25', full: 'Friday, April 25 2026',  week: 2 },
+  9:  { short: 'Thu Apr 24', full: 'Thursday, April 24 2026',  week: 2 },
+  10: { short: 'Fri Apr 25', full: 'Friday, April 25 2026',    week: 2 },
 };
 
-const WEEK_LABELS: Record<number, string> = {
+// ----------- Pod 5 dates (Mon–Fri, May 5–16, 2026) -----------
+const DAY_DATES_POD5: Record<number, { short: string; full: string; week: number }> = {
+  1:  { short: 'Mon May 5',  full: 'Monday, May 5 2026',       week: 1 },
+  2:  { short: 'Tue May 6',  full: 'Tuesday, May 6 2026',      week: 1 },
+  3:  { short: 'Wed May 7',  full: 'Wednesday, May 7 2026',    week: 1 },
+  4:  { short: 'Thu May 8',  full: 'Thursday, May 8 2026',     week: 1 },
+  5:  { short: 'Fri May 9',  full: 'Friday, May 9 2026',       week: 1 },
+  6:  { short: 'Mon May 12', full: 'Monday, May 12 2026',      week: 2 },
+  7:  { short: 'Tue May 13', full: 'Tuesday, May 13 2026',     week: 2 },
+  8:  { short: 'Wed May 14', full: 'Wednesday, May 14 2026',   week: 2 },
+  9:  { short: 'Thu May 15', full: 'Thursday, May 15 2026',    week: 2 },
+  10: { short: 'Fri May 16', full: 'Friday, May 16 2026',      week: 2 },
+};
+
+const WEEK_LABELS_POD4: Record<number, string> = {
   1: 'Week 1 — Apr 14–18',
   2: 'Week 2 — Apr 21–25',
 };
 
+const WEEK_LABELS_POD5: Record<number, string> = {
+  1: 'Week 1 — May 5–9',
+  2: 'Week 2 — May 12–16',
+};
+
+const POD5_USERS = new Set(['ksenia', 'adeen']);
+
 // ----------- Recording URLs -----------
 const RECORDING_URLS: Record<string, string> = {
-  service_delivery_p2: 'https://fathom.video/share/G9juWT1oFG_3CrppLscPDXceijJvP_rR',
-  service_delivery_p1: 'https://fathom.video/share/uZeCCaxRRVumFq_K6yHx_tbN75iRaMaX',
-  entire_ghl_build:    'https://fathom.video/share/VG-nsEXiRvRP-7oyMY1VxcVET743mMs8',
-  roofing_onboarding: 'https://fathom.video/share/qj9AYoqURQ6jhx34jFRZiR2-xESYDswF',
-  hvac_onboarding:    'https://fathom.video/share/VYz9GhzfjBBj1YuVUPLXLdbVz6UkW4Pd',
-  gutter_onboarding:  'https://fathom.video/share/yNyAaNPjWJdhj-zps7GYjpziqpCsBhN_',
+  new_onboarding_apr30: 'https://fathom.video/share/9JhnQ7WvdHRKUgsnCyVkbzjKxeK-o_78',
+  service_delivery_p2:  'https://fathom.video/share/G9juWT1oFG_3CrppLscPDXceijJvP_rR',
+  service_delivery_p1:  'https://fathom.video/share/uZeCCaxRRVumFq_K6yHx_tbN75iRaMaX',
+  entire_ghl_build:     'https://fathom.video/share/VG-nsEXiRvRP-7oyMY1VxcVET743mMs8',
+  roofing_onboarding:   'https://fathom.video/share/qj9AYoqURQ6jhx34jFRZiR2-xESYDswF',
+  hvac_onboarding:      'https://fathom.video/share/VYz9GhzfjBBj1YuVUPLXLdbVz6UkW4Pd',
+  gutter_onboarding:    'https://fathom.video/share/yNyAaNPjWJdhj-zps7GYjpziqpCsBhN_',
 };
 
 // ----------- Helpers -----------
@@ -278,15 +301,16 @@ function DayRow({
   stats,
   isActive,
   onClick,
+  dateInfo,
 }: {
   day: Day;
   stats: { total: number; completed: number };
   isActive: boolean;
   onClick: () => void;
+  dateInfo?: { short: string; week: number };
 }) {
   const isDone    = stats.total > 0 && stats.completed === stats.total;
   const isPartial = stats.completed > 0 && stats.completed < stats.total;
-  const dateInfo  = DAY_DATES[day.day];
 
   return (
     <button
@@ -305,7 +329,6 @@ function DayRow({
         transition: 'all 0.12s ease',
       }}
     >
-      {/* Status dot */}
       <div
         style={{
           width: 26,
@@ -325,7 +348,6 @@ function DayRow({
         {isDone ? '✓' : day.day}
       </div>
 
-      {/* Labels */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div
           style={{
@@ -354,8 +376,14 @@ function DayRow({
 
 // ----------- Main WorksheetTab -----------
 export function WorksheetTab() {
-  const { currentDay, setCurrentDay, checklistItems, toggleChecklistItem } = useApp();
-  const days = dayContent.days as Day[];
+  const { currentDay, setCurrentDay, checklistItems, toggleChecklistItem, currentUser } = useApp();
+
+  const isPod5  = POD5_USERS.has(currentUser?.userKey ?? '');
+  const podNum  = isPod5 ? 5 : 4;
+  const dayDates    = isPod5 ? DAY_DATES_POD5 : DAY_DATES_POD4;
+  const weekLabels  = isPod5 ? WEEK_LABELS_POD5 : WEEK_LABELS_POD4;
+  const rawContent  = isPod5 ? dayContentPod5 : dayContentPod4;
+  const days = rawContent.days as Day[];
 
   const allStats = useMemo(
     () => days.map((d) => getDayStats(d, checklistItems)),
@@ -365,17 +393,16 @@ export function WorksheetTab() {
   const currentDayData  = days.find((d) => d.day === currentDay) ?? days[0];
   const currentDayIndex = days.indexOf(currentDayData);
   const currentStats    = allStats[currentDayIndex];
-  const currentDateInfo = DAY_DATES[currentDayData.day];
+  const currentDateInfo = dayDates[currentDayData.day];
 
   const totalItems     = allStats.reduce((s, x) => s + x.total, 0);
   const completedItems = allStats.reduce((s, x) => s + x.completed, 0);
   const pct            = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
 
-  // Group days by week for sidebar
   const weeks = [1, 2].map((wk) => ({
     week: wk,
-    label: WEEK_LABELS[wk],
-    days: days.filter((d) => DAY_DATES[d.day]?.week === wk),
+    label: weekLabels[wk],
+    days: days.filter((d) => dayDates[d.day]?.week === wk),
   }));
 
   return (
@@ -401,7 +428,6 @@ export function WorksheetTab() {
           overflowY: 'auto',
         }}
       >
-        {/* Overall progress */}
         <div
           style={{
             padding: '14px 16px 12px',
@@ -434,15 +460,13 @@ export function WorksheetTab() {
             />
           </div>
           <div style={{ color: C.muted2, fontSize: 10.5, marginTop: 5 }}>
-            {completedItems} of {totalItems} tasks · Pod 4
+            {completedItems} of {totalItems} tasks · Pod {podNum}
           </div>
         </div>
 
-        {/* Week-grouped day list */}
         <nav style={{ flex: 1, paddingBottom: 8 }}>
           {weeks.map(({ week, label, days: wDays }) => (
             <div key={week}>
-              {/* Week header */}
               <div
                 style={{
                   padding: '10px 16px 6px',
@@ -457,13 +481,14 @@ export function WorksheetTab() {
               >
                 {label}
               </div>
-              {wDays.map((d, i) => (
+              {wDays.map((d) => (
                 <DayRow
                   key={d.day}
                   day={d}
                   stats={allStats[days.indexOf(d)]}
                   isActive={d.day === currentDay}
                   onClick={() => setCurrentDay(d.day)}
+                  dateInfo={dayDates[d.day]}
                 />
               ))}
             </div>
@@ -473,7 +498,6 @@ export function WorksheetTab() {
 
       {/* ───── Main content ───── */}
       <main style={{ flex: 1, overflowY: 'auto' }}>
-        {/* Day header (sticky) */}
         <div
           style={{
             borderBottom: `1px solid ${C.border}`,
@@ -551,7 +575,6 @@ export function WorksheetTab() {
               <p style={{ color: C.muted, fontSize: 13, margin: 0 }}>{currentDayData.subtitle}</p>
             </div>
 
-            {/* Progress pill */}
             <div
               style={{
                 display: 'flex',
@@ -580,7 +603,6 @@ export function WorksheetTab() {
             </div>
           </div>
 
-          {/* Day progress bar */}
           <div style={{ height: 3, backgroundColor: C.border, borderRadius: 2, overflow: 'hidden', marginTop: 12 }}>
             <div
               style={{
@@ -599,7 +621,6 @@ export function WorksheetTab() {
           </div>
         </div>
 
-        {/* Sections */}
         <div style={{ padding: '20px 28px 40px' }}>
           {currentDayData.sections.map((section) => (
             <SectionCard
@@ -610,7 +631,6 @@ export function WorksheetTab() {
             />
           ))}
 
-          {/* Day complete banner */}
           {currentStats.total > 0 && currentStats.completed === currentStats.total && (
             <div
               style={{
@@ -627,7 +647,7 @@ export function WorksheetTab() {
                 Day {currentDayData.day} Complete!
               </div>
               <p style={{ color: '#4ade80', fontSize: 13, margin: '0 0 14px' }}>
-                All tasks done. {currentDateInfo ? `See you ${DAY_DATES[currentDayData.day + 1]?.short ?? 'next week'}.` : 'Keep it up.'}
+                All tasks done. {currentDateInfo ? `See you ${dayDates[currentDayData.day + 1]?.short ?? 'next week'}.` : 'Keep it up.'}
               </p>
               {currentDayData.day < 10 && (
                 <button
@@ -649,7 +669,6 @@ export function WorksheetTab() {
             </div>
           )}
 
-          {/* Nav arrows */}
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
             <button
               onClick={() => setCurrentDay(Math.max(1, currentDay - 1))}

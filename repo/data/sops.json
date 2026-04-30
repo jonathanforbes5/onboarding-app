@@ -1,0 +1,209 @@
+{
+  "resources": [
+    {
+      "id": "command_centre",
+      "title": "Command Centre",
+      "description": "Your daily triage dashboard. Shows all accounts, booking status vs targets, and flags anything red. Open this first every morning.",
+      "url": "https://dashboard.roofignite.com",
+      "icon": "🖥️",
+      "category": "resource"
+    },
+    {
+      "id": "client_checkin",
+      "title": "Client Check-In Sheet",
+      "description": "Structured check-in tracker for all accounts. Log your Monday/Thursday updates here.",
+      "url": "https://docs.google.com/spreadsheets/d/15xYnNomoGM3bQn0TGsIaQaH7bks4ZY3_N3ESFJKIl1Q/edit?gid=889272086#gid=889272086",
+      "icon": "📊",
+      "category": "resource"
+    },
+    {
+      "id": "logbook",
+      "title": "LogBook",
+      "description": "Central source of truth for ALL lead data across every account. Every lead from every account is documented by VAs. Request access from Leila.",
+      "url": "https://docs.google.com/spreadsheets/d/1Kd0smsW26IJR1H5kJ0MP0kH8jPOTazo2_TbLEkgmbRs/edit?gid=1085023364#gid=1085023364",
+      "icon": "📒",
+      "category": "resource"
+    },
+    {
+      "id": "account_doc",
+      "title": "Account Specific Document",
+      "description": "VA cheat sheet template — service area, hours, owner name, calendar login, lead Q&A. Every new account gets one.",
+      "url": "https://docs.google.com/document/d/1RmLtprnhJxhY7asBbUSPuiahD4H8vbz_dIb42Y__wr0/edit?tab=t.0#heading=h.ejdpav59p7qx",
+      "icon": "📄",
+      "category": "resource"
+    },
+    {
+      "id": "fb_duty_sop",
+      "title": "FB Duty SOP",
+      "description": "Protocol for Facebook ad account monitoring, troubleshooting, and daily duties.",
+      "url": "https://docs.google.com/document/d/1kGKlMwvvidrV0uqEcQXF2SRyYP60hgSVi8jDrmODnxo/edit?usp=sharing",
+      "icon": "📘",
+      "category": "resource"
+    },
+    {
+      "id": "comp_structure",
+      "title": "Compensation Structure",
+      "description": "Full breakdown of pod manager compensation, bonus structure, and cycle-based earnings.",
+      "url": "https://docs.google.com/document/d/1H5NYHSFK4PBrSj259_d7ijWuY5Q9SST7DNeFQWqK0Lg/edit?usp=drive_link",
+      "icon": "💰",
+      "category": "resource"
+    }
+  ],
+  "tools": [
+    {
+      "id": "slack",
+      "title": "Slack",
+      "description": "Primary internal comms. All pod updates, escalations, and team communication happen here.",
+      "url": "https://roofigniteltd.slack.com",
+      "icon": "💬",
+      "category": "tool"
+    },
+    {
+      "id": "ghl",
+      "title": "GHL / CRM",
+      "description": "GoHighLevel — client CRM and pipeline management. All sub-accounts and client data live here.",
+      "url": "https://app.roofignite.com",
+      "icon": "🔧",
+      "category": "tool"
+    },
+    {
+      "id": "clickup",
+      "title": "ClickUp",
+      "description": "Task and project management. Use for Emmanuel setup tasks, Ken creative requests, and all internal assignments.",
+      "url": "https://app.clickup.com",
+      "icon": "✅",
+      "category": "tool"
+    },
+    {
+      "id": "meta",
+      "title": "Meta Business Manager",
+      "description": "Facebook/Instagram ads management. Never create a BM for a client — they must own it themselves.",
+      "url": "https://business.facebook.com",
+      "icon": "📣",
+      "category": "tool"
+    },
+    {
+      "id": "fathom",
+      "title": "Fathom",
+      "description": "Call recording and transcription. Every onboarding call and review call is recorded here.",
+      "url": "https://fathom.video",
+      "icon": "🎙️",
+      "category": "tool"
+    },
+    {
+      "id": "ad_set_reviewer",
+      "title": "Ad Set Reviewer",
+      "description": "QA tool for reviewing creatives before launch. You're approving setups — know these standards cold.",
+      "url": "https://ad-set-reviewer.vercel.app/",
+      "icon": "🔍",
+      "category": "tool"
+    }
+  ],
+  "sops": [
+    {
+      "id": "onboarding_call",
+      "title": "Onboarding Call SOP",
+      "description": "Step-by-step protocol for running a new client onboarding call. Pre-call prep, during-call checklist, and post-call actions within 1 hour.",
+      "url": "https://docs.google.com/document/d/1H4l1e5MCi0EdgvWvho0FRt3peYiJBq_WmX6o8kpOZIA/edit?usp=sharing",
+      "tags": ["onboarding", "client", "critical"]
+    },
+    {
+      "id": "andromeda",
+      "title": "ANDROMEDA Creative Diversification Playbook",
+      "description": "Framework for creative diversification across ad accounts. Prevents creative fatigue and scales winning creatives systematically.",
+      "url": "https://docs.google.com/document/d/1du8s7ylQDfBi4zqHWXF2VF2nt8LodggjiKxcKW3pLWU/edit?usp=sharing",
+      "tags": ["creative", "ads", "strategy"]
+    },
+    {
+      "id": "command_centre_guide",
+      "title": "Command Centre CSM Guide",
+      "description": "How to use the Command Centre dashboard for account health monitoring, triage, and escalation.",
+      "url": "https://drive.google.com/file/d/1T8fSpw_Ln0KhxF74WpdK_4JtEQWC3I2B/view?usp=sharing",
+      "tags": ["dashboard", "monitoring", "critical"]
+    },
+    {
+      "id": "creative_mastery",
+      "title": "Creative Mastery: Ad Set 101",
+      "description": "Foundation for building high-converting ad sets. Covers creative formats, placement strategy, and the 6 allowed placements.",
+      "url": "https://drive.google.com/file/d/1cp4dKeQOW2H0AURfWNefBOY1YpUqHAeK/view?usp=drive_link",
+      "tags": ["creative", "ads", "fundamentals"]
+    },
+    {
+      "id": "roofing_b2c",
+      "title": "Roofing B2C Ads Buildout",
+      "description": "Copy and headline frameworks for roofing ad campaigns. The primary niche — know this cold.",
+      "url": "https://docs.google.com/document/d/1UdHQXz-i7T5YfgS1aiVe7ycDYijudw1C8F0oMGr6mrU/edit?usp=sharing",
+      "tags": ["roofing", "ads", "copy"]
+    },
+    {
+      "id": "crm_integration",
+      "title": "CRM Integration SOP",
+      "description": "How to connect client CRMs, set up integrations, and ensure lead data flows correctly into GHL.",
+      "url": "https://docs.google.com/document/d/181t7-60cMYu8MYXPpmtwJ7n3Hh-FwWxW/edit?usp=sharing",
+      "tags": ["ghl", "setup", "technical"]
+    },
+    {
+      "id": "follow_up",
+      "title": "Follow Up Protocol SOP",
+      "description": "VA follow-up sequences, timing, and escalation triggers. How we ensure no lead goes cold.",
+      "url": "https://docs.google.com/document/d/1lH06In_dkC8cifabacgt1womP-eNtveH4xHcHJObwKA/edit?usp=sharing",
+      "tags": ["va", "follow-up", "leads"]
+    },
+    {
+      "id": "client_checkin_sop",
+      "title": "Client Check-In System SOP",
+      "description": "The structured check-in cadence — what to cover, when to escalate, and how to document account health.",
+      "url": "https://docs.google.com/document/d/1wLTYhGS8pHeuTmkPvXN7_8BL-0vSHlqprl1RZoK9czE/edit?usp=sharing",
+      "tags": ["client", "monitoring", "process"]
+    },
+    {
+      "id": "hail_mary",
+      "title": "Hail Mary Actions",
+      "description": "Documented history of last-resort interventions that saved struggling accounts. Study these before escalating to Jonathan.",
+      "url": "https://docs.google.com/document/d/18rEAqwS6JLsdUFgvS9uRsr4hUxOZqYAWBund175YsuM/edit?usp=sharing",
+      "tags": ["escalation", "recovery", "strategy"]
+    },
+    {
+      "id": "creative_construction",
+      "title": "Creative Construction Mastery SOP",
+      "description": "How to brief Ken, structure creative requests, and build ad creatives that convert for roofing clients.",
+      "url": "https://docs.google.com/document/d/1CMJ-s4BwXIp7pAU_vSKYU54RZlnrqb0RXlYJujg8Gxo/edit?usp=sharing",
+      "tags": ["creative", "ken", "design"]
+    },
+    {
+      "id": "winter_retainer",
+      "title": "Winter Retainer Plan SOP",
+      "description": "How to handle seasonal slowdowns — winter retainer structure, client conversations, and maintaining relationships during off-season.",
+      "url": "https://docs.google.com/document/d/1KrhdBIV9R2skH2tDO1VIQ1_GRm3g_9EDEfNH8rp3150/edit?usp=sharing",
+      "tags": ["seasonal", "retention", "client"]
+    },
+    {
+      "id": "color_grading",
+      "title": "Color Grading System SOP",
+      "description": "Visual standards for ad creatives — color treatment, brand consistency, and approval process for Ken's work.",
+      "url": "https://docs.google.com/document/d/1gH_dGvnu8rQpjMlfOkV8jeBxxj2FON9dglqXe39B5SA/edit?usp=sharing",
+      "tags": ["creative", "design", "standards"]
+    },
+    {
+      "id": "ad_scaling",
+      "title": "Ad Scaling Strategies Playbook",
+      "description": "When and how to scale winning campaigns — budget increase triggers, creative expansion, and avoiding algorithm resets.",
+      "url": "https://docs.google.com/document/d/1AVDGRFk75Av7FyAP5xdhIM_cE-XMXgtLzxfs4LuYhks/edit?usp=sharing",
+      "tags": ["ads", "scaling", "strategy"]
+    },
+    {
+      "id": "creative_testing",
+      "title": "Creative Testing Playbook",
+      "description": "Structured testing framework for new creatives — isolation testing, reading results, and killing losers fast.",
+      "url": "https://docs.google.com/document/d/1qZcm8ynIhqY9MaxqtRqTu-gp4j96mkdBq9W6IbkBPAw/edit?usp=sharing",
+      "tags": ["creative", "testing", "ads"]
+    },
+    {
+      "id": "testimonial_request",
+      "title": "Testimonial Request SOP",
+      "description": "How and when to ask for client video testimonials — scripts, timing, and follow-up to maximize collection rate.",
+      "url": "https://docs.google.com/document/d/1bdSZHIq8tohGRjuFHfCyDzrMEfwUqlvd_n5gLwnzqkY/edit?usp=sharing",
+      "tags": ["client", "retention", "social-proof"]
+    }
+  ]
+}

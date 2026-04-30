@@ -49,6 +49,7 @@ export interface AppState {
 
 interface AppContextType extends AppState {
   logout: () => void;
+  devLogin: () => void;
   setActiveTab: (tab: ActiveTab) => void;
   setCurrentSection: (id: number) => void;
   setSidebarOpen: (v: boolean) => void;
@@ -235,6 +236,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // onAuthStateChange 'SIGNED_OUT' will reset state
   }, []);
 
+  const devLogin = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      currentUser: {
+        email: 'jonathan@roofignite.com',
+        displayName: 'Jonathan',
+        userKey: 'jonathan',
+        role: 'super_admin',
+      },
+      authLoading: false,
+      accessDenied: false,
+      activeTab: 'admin',
+      syncStatus: 'offline',
+    }));
+  }, []);
+
   // ── Navigation ────────────────────────────────────────────
   const setActiveTab = useCallback((tab: ActiveTab) => {
     setState((prev) => {
@@ -335,6 +352,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     <AppContext.Provider value={{
       ...state,
       logout,
+      devLogin,
       setActiveTab,
       setCurrentSection,
       setSidebarOpen,

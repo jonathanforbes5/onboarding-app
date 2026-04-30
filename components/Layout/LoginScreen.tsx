@@ -2,12 +2,18 @@
 import React, { useState } from 'react';
 import { signInWithMagicLink } from '@/lib/auth';
 import { isSupabaseEnabled } from '@/lib/supabase';
+import { useApp } from '@/context/AppContext';
+
+const MASTER_PASSWORD = process.env.NEXT_PUBLIC_MASTER_PASSWORD;
 
 export function LoginScreen() {
-  const [email, setEmail]     = useState('');
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent]       = useState(false);
-  const [error, setError]     = useState('');
+  const { devLogin } = useApp();
+  const [email, setEmail]       = useState('');
+  const [loading, setLoading]   = useState(false);
+  const [sent, setSent]         = useState(false);
+  const [error, setError]       = useState('');
+  const [devPass, setDevPass]   = useState('');
+  const [devError, setDevError] = useState(false);
   const configured = isSupabaseEnabled();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -205,7 +211,57 @@ export function LoginScreen() {
         )}
       </div>
 
-      <p style={{ color: '#2A2A2A', fontSize: 11, marginTop: '2rem', letterSpacing: '0.05em' }}>
+      {/* Master password — only visible when NEXT_PUBLIC_MASTER_PASSWORD is set */}
+      {MASTER_PASSWORD && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (devPass === MASTER_PASSWORD) {
+              devLogin();
+            } else {
+              setDevError(true);
+              setTimeout(() => setDevError(false), 1500);
+            }
+          }}
+          style={{ marginTop: '1.5rem', display: 'flex', gap: 8, alignItems: 'center' }}
+        >
+          <input
+            type="password"
+            value={devPass}
+            onChange={(e) => setDevPass(e.target.value)}
+            placeholder="Master password"
+            style={{
+              backgroundColor: '#111',
+              border: `1px solid ${devError ? '#EF4444' : '#1E1E1E'}`,
+              borderRadius: 8,
+              padding: '8px 12px',
+              color: '#555',
+              fontSize: 12,
+              outline: 'none',
+              fontFamily: 'inherit',
+              width: 160,
+              transition: 'border-color 0.15s',
+            }}
+          />
+          <button
+            type="submit"
+            style={{
+              backgroundColor: '#111',
+              border: '1px solid #1E1E1E',
+              borderRadius: 8,
+              padding: '8px 14px',
+              color: '#444',
+              fontSize: 12,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          >
+            Quick access →
+          </button>
+        </form>
+      )}
+
+      <p style={{ color: '#2A2A2A', fontSize: 11, marginTop: '1rem', letterSpacing: '0.05em' }}>
         roofignite.com · internal use only
       </p>
     </div>

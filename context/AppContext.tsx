@@ -193,8 +193,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const localChecklist = loadChecklistLocal(userKey);
     const localDay = parseInt(localStorage.getItem(`ri_${userKey}_day`) || '1', 10);
 
-    // Default tab: super_admins go to admin, users go to overview
-    const defaultTab: ActiveTab = profile.role === 'super_admin' ? 'admin' : 'overview';
+    // Restore last active tab; fall back to role-based default only on first visit
+    const savedTab = localStorage.getItem(`ri_${userKey}_activeTab`) as ActiveTab | null;
+    const defaultTab: ActiveTab = savedTab ?? (profile.role === 'super_admin' ? 'admin' : 'overview');
 
     setState((prev) => ({
       ...prev,
@@ -236,7 +237,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // ── Navigation ────────────────────────────────────────────
   const setActiveTab = useCallback((tab: ActiveTab) => {
-    setState((prev) => ({ ...prev, activeTab: tab }));
+    setState((prev) => {
+      if (prev.currentUser) {
+        try { localStorage.setItem(`ri_${prev.currentUser.userKey}_activeTab`, tab); } catch {}
+      }
+      return { ...prev, activeTab: tab };
+    });
   }, []);
 
   const setCurrentSection = useCallback((id: number) => {

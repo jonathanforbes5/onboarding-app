@@ -591,9 +591,9 @@ export function OverviewTab() {
             }}
           >
             {[
-              { channel: '#ops', desc: 'Operations announcements and SOP updates.' },
-              { channel: '#internal-team', desc: 'VA task assignments and team-wide notices. Post account-specific notes here.' },
-              { channel: '#closer-call-recordings', desc: 'Every sales call. Pull these before every client onboarding call.' },
+              { channel: '#ops-manager-discussion', desc: 'Post your Monday & Thursday updates here. All pod managers, media buyers, and leadership are in this channel.' },
+              { channel: '#internal-team', desc: 'Post your good morning and good night messages here. Team-wide channel (all VAs included). Announce account launches and accounts going orange or red.' },
+              { channel: '#closer-call-recordings', desc: 'Every sales call is posted here. Pull these before every client onboarding call.' },
               { channel: '#post-onboarding-discussion', desc: 'Post your Custom GPT summary after every onboarding call.' },
             ].map((ch) => (
               <div

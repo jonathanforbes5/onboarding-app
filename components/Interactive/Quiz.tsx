@@ -43,7 +43,7 @@ export function Quiz({ sectionId, questions, onComplete }: QuizProps) {
       const score = Math.round((answers.filter((a) => a === 'correct').length / questions.length) * 100);
       saveQuizScore(sectionId, score);
       setFinished(true);
-      if (score >= 60 && onComplete) onComplete();
+      if (score >= 80 && onComplete) onComplete();
     }
   };
 
@@ -61,7 +61,7 @@ export function Quiz({ sectionId, questions, onComplete }: QuizProps) {
     return (
       <div className="bg-white rounded-xl border border-brand-gray-mid p-6 text-center">
         <div className="flex justify-center mb-4">
-          {score >= 60 ? (
+          {score >= 80 ? (
             <div className="w-16 h-16 rounded-full bg-brand-yellow flex items-center justify-center">
               <Trophy size={28} className="text-brand-black" />
             </div>
@@ -75,8 +75,8 @@ export function Quiz({ sectionId, questions, onComplete }: QuizProps) {
         <div className="text-brand-gray text-sm mb-1">
           {answers.filter((a) => a === 'correct').length} of {questions.length} correct
         </div>
-        <div className={`text-sm font-bold mb-5 ${score >= 60 ? 'text-green-600' : 'text-red-600'}`}>
-          {score >= 100 ? 'Perfect score!' : score >= 60 ? 'Section complete!' : 'Review the section and try again'}
+        <div className={`text-sm font-bold mb-5 ${score >= 80 ? 'text-green-600' : 'text-red-600'}`}>
+          {score >= 100 ? 'Perfect score!' : score >= 80 ? 'Section complete!' : 'Review the section and try again'}
         </div>
         <div className="flex gap-3 justify-center flex-wrap">
           <button
@@ -86,7 +86,7 @@ export function Quiz({ sectionId, questions, onComplete }: QuizProps) {
             <RotateCcw size={14} />
             Retake Quiz
           </button>
-          {score >= 60 && onComplete && (
+          {score >= 80 && onComplete && (
             <button
               onClick={onComplete}
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-yellow text-brand-black text-sm font-bold hover:bg-brand-yellow-dark transition-colors"

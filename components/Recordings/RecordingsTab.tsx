@@ -225,7 +225,7 @@ export function RecordingsTab() {
     if (filter === 'all') return true;
     if (filter === 'onboarding') return r.tags.includes('onboarding');
     if (filter === 'strategy') return r.tags.some((t) => ['review', 'performance', 'strategy', 'marketing'].includes(t));
-    return filter === 'all';
+    return true;
   });
 
   const showTraining = filter === 'all' || filter === 'onboarding' || filter === 'service';

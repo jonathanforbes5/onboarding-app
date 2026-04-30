@@ -93,18 +93,25 @@
     "tier": "pod_managers",
     "pod": 4,
     "started": "2026-04-14",
-    "is_current_user": true,
     "avatar_initial": "S"
   },
   {
-    "id": "patrick",
-    "name": "Patrick",
-    "role": "Pod 4 Manager",
+    "id": "ksenia",
+    "name": "Ksenia",
+    "role": "Pod 5 Manager",
     "tier": "pod_managers",
-    "pod": 4,
-    "started": "2026-04-14",
-    "is_current_user": true,
-    "avatar_initial": "P"
+    "pod": 5,
+    "started": "2026-05-05",
+    "avatar_initial": "K"
+  },
+  {
+    "id": "adeen",
+    "name": "Adeen",
+    "role": "Pod 5 Manager",
+    "tier": "pod_managers",
+    "pod": 5,
+    "started": "2026-05-05",
+    "avatar_initial": "Ad"
   },
   {
     "id": "emmanuel",
@@ -164,5 +171,14 @@
     "contact": "Slack — VA assignments and scheduling for new accounts.",
     "notes": "Works alongside Leila. Note: never 'AICA' — always 'Aica'.",
     "avatar_initial": "Ac"
+  },
+  {
+    "id": "pamela",
+    "name": "Pamela",
+    "role": "VA Manager",
+    "tier": "va_management",
+    "contact": "Slack — VA scheduling and quality management.",
+    "notes": "Works alongside Leila and Aica on VA operations.",
+    "avatar_initial": "Pa"
   }
 ]

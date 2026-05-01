@@ -51,8 +51,8 @@ export function S01_CompanyVision() {
       <div>
         <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Where We Are & Where We&apos;re Going</h3>
         <div className="grid grid-cols-2 gap-4">
-          <StatCard label="Current Revenue" value="$200K" sub="Per Month" border />
-          <StatCard label="Target Revenue" value="$1M" sub="Per Month" yellow />
+          <StatCard label="Current Revenue" value="$3K" sub="Per Month" border />
+          <StatCard label="Target Revenue" value="$1M" sub="By end of summer 2026" yellow />
         </div>
       </div>
 

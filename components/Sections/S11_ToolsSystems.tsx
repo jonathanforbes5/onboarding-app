@@ -15,6 +15,7 @@ const TOOLS = [
   { name: 'Canva', category: 'Design', priority: 'Nice to have', icon: '🎨', desc: 'Creative asset edits. Primarily used by Ken, but helpful for quick edits.', fluency: 'Basic understanding' },
   { name: 'Loom', category: 'Async Video', priority: 'Week 1', icon: '📹', desc: 'Async walkthroughs, training videos, and client update recordings.', fluency: 'Able to record and share' },
   { name: 'Cloudflare', category: 'DNS', priority: 'Background', icon: '🌐', desc: 'Domain DNS management. Used during technical setup. Emmanuel manages.', fluency: 'Awareness only' },
+  { name: 'Porkbun', category: 'Domain Registrar', priority: 'Background', icon: '🐷', desc: 'Domain registrar for client domains. Technical setup — Emmanuel manages.', fluency: 'Awareness only' },
 ];
 
 const INTERNAL = [
@@ -108,8 +109,8 @@ export function S11_ToolsSystems() {
         </div>
       </div>
 
-      {/* 10-day worksheet */}
-      <div>
+      {/* 10-day worksheet removed — use the Worksheet tab for the full day-by-day plan */}
+      {false && <div>
         <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Your 10-Day Onboarding Worksheet</h3>
         <div className="space-y-3">
           {[
@@ -284,9 +285,7 @@ export function S11_ToolsSystems() {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* What's next CTA */}
+      </div>}
       <Card yellow>
         <div className="text-center">
           <div className="text-4xl mb-3">🎓</div>

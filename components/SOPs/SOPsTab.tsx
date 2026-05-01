@@ -2,14 +2,13 @@
 import React, { useState } from 'react';
 import sopData from '@/repo/data/sops.json';
 
-type FilterTag = 'all' | 'client' | 'creative' | 'ads' | 'process' | 'onboarding';
+type FilterTag = 'all' | 'client' | 'creative' | 'process' | 'onboarding';
 
 const TAG_LABELS: Record<FilterTag, string> = {
   all: 'All SOPs',
   onboarding: 'Onboarding',
   client: 'Client Management',
   creative: 'Creative & Ads',
-  ads: 'Ad Strategy',
   process: 'Process & Systems',
 };
 
@@ -93,9 +92,8 @@ export function SOPsTab() {
 
   const filteredSOPs = sopData.sops.filter((sop) => {
     if (activeFilter === 'all') return true;
-    if (activeFilter === 'creative') return sop.tags.includes('creative');
-    if (activeFilter === 'ads') return sop.tags.some((t) => ['ads', 'scaling', 'testing'].includes(t));
-    if (activeFilter === 'client') return sop.tags.some((t) => ['client', 'retention', 'seasonal'].includes(t));
+    if (activeFilter === 'creative') return sop.tags.some((t) => ['creative', 'ads', 'scaling', 'testing', 'copy', 'design', 'fundamentals'].includes(t));
+    if (activeFilter === 'client') return sop.tags.some((t) => ['client', 'retention', 'seasonal', 'social-proof'].includes(t));
     if (activeFilter === 'process') return sop.tags.some((t) => ['process', 'va', 'setup', 'technical', 'dashboard', 'monitoring'].includes(t));
     if (activeFilter === 'onboarding') return sop.tags.includes('onboarding');
     return true;

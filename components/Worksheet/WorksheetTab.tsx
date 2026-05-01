@@ -44,18 +44,18 @@ const DAY_DATES_POD4: Record<number, { short: string; full: string; week: number
   10: { short: 'Fri Apr 25', full: 'Friday, April 25 2026',    week: 2 },
 };
 
-// ----------- Pod 5 dates (Mon–Fri, May 5–16, 2026) -----------
+// ----------- Pod 5 dates (Mon–Fri, May 4–15, 2026) -----------
 const DAY_DATES_POD5: Record<number, { short: string; full: string; week: number }> = {
-  1:  { short: 'Mon May 5',  full: 'Monday, May 5 2026',       week: 1 },
-  2:  { short: 'Tue May 6',  full: 'Tuesday, May 6 2026',      week: 1 },
-  3:  { short: 'Wed May 7',  full: 'Wednesday, May 7 2026',    week: 1 },
-  4:  { short: 'Thu May 8',  full: 'Thursday, May 8 2026',     week: 1 },
-  5:  { short: 'Fri May 9',  full: 'Friday, May 9 2026',       week: 1 },
-  6:  { short: 'Mon May 12', full: 'Monday, May 12 2026',      week: 2 },
-  7:  { short: 'Tue May 13', full: 'Tuesday, May 13 2026',     week: 2 },
-  8:  { short: 'Wed May 14', full: 'Wednesday, May 14 2026',   week: 2 },
-  9:  { short: 'Thu May 15', full: 'Thursday, May 15 2026',    week: 2 },
-  10: { short: 'Fri May 16', full: 'Friday, May 16 2026',      week: 2 },
+  1:  { short: 'Mon May 4',  full: 'Monday, May 4 2026',       week: 1 },
+  2:  { short: 'Tue May 5',  full: 'Tuesday, May 5 2026',      week: 1 },
+  3:  { short: 'Wed May 6',  full: 'Wednesday, May 6 2026',    week: 1 },
+  4:  { short: 'Thu May 7',  full: 'Thursday, May 7 2026',     week: 1 },
+  5:  { short: 'Fri May 8',  full: 'Friday, May 8 2026',       week: 1 },
+  6:  { short: 'Mon May 11', full: 'Monday, May 11 2026',      week: 2 },
+  7:  { short: 'Tue May 12', full: 'Tuesday, May 12 2026',     week: 2 },
+  8:  { short: 'Wed May 13', full: 'Wednesday, May 13 2026',   week: 2 },
+  9:  { short: 'Thu May 14', full: 'Thursday, May 14 2026',    week: 2 },
+  10: { short: 'Fri May 15', full: 'Friday, May 15 2026',      week: 2 },
 };
 
 const WEEK_LABELS_POD4: Record<number, string> = {
@@ -64,8 +64,8 @@ const WEEK_LABELS_POD4: Record<number, string> = {
 };
 
 const WEEK_LABELS_POD5: Record<number, string> = {
-  1: 'Week 1 — May 5–9',
-  2: 'Week 2 — May 12–16',
+  1: 'Week 1 — May 4–8',
+  2: 'Week 2 — May 11–15',
 };
 
 const POD5_USERS = new Set(['ksenia', 'adeen']);

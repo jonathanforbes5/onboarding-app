@@ -21,7 +21,7 @@ export function S03_BusinessModel() {
 
       {/* How the offer is structured */}
       <div className="space-y-2">
-        <ExpandableCard title="Setup Fee" subtitle="Paid upfront — one time" defaultOpen>
+        <ExpandableCard title="Setup Fee — $1,500 to $5,000" subtitle="Paid upfront — one time" defaultOpen>
           <div className="space-y-2 text-sm">
             <p className="text-brand-gray">Client pays a one-time setup fee before launch. This covers all infrastructure work:</p>
             <BulletList items={[
@@ -32,11 +32,11 @@ export function S03_BusinessModel() {
               'VA team assignment and onboarding',
               'Calendar integration',
             ]} />
-            <div className="text-xs text-brand-gray mt-2"><strong>Timeline:</strong> 2–3 days by Emmanuel</div>
+            <div className="text-xs text-brand-gray mt-2"><strong>Handled by:</strong> Emmanuel and Mervin · <strong>Timeline:</strong> 2–3 business days</div>
           </div>
         </ExpandableCard>
 
-        <ExpandableCard title="28-Day Performance Cycles" subtitle="Recurring — pay on results" accent defaultOpen>
+        <ExpandableCard title="28-Day Performance Cycles — from $3,200/mo" subtitle="Recurring — usually $4,000 + 10% of ad spend" accent defaultOpen>
           <div className="space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
@@ -103,7 +103,7 @@ export function S03_BusinessModel() {
               <BulletList items={['Retainer model', 'Maintenance mode', 'Relationship focus', 'Lower volume expectations']} className="[&_span]:text-white/80" />
             </div>
           </div>
-          <InfoBox type="info">See the <strong>Winter Retainer Plan SOP</strong> in Asana for the full detailed process.</InfoBox>
+          <InfoBox type="info">See the <strong>Winter Retainer Plan SOP</strong> in the Resources tab for the full detailed process.</InfoBox>
         </div>
       </ExpandableCard>
 

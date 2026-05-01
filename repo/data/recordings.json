@@ -11,7 +11,7 @@
     {
       "id": "roofing_onboarding",
       "title": "Roofing Onboarding Call",
-      "description": "Reference for how a real roofing client onboarding call is run. Primary niche (80–90% of clients). Watch this one carefully.",
+      "description": "Reference for how a real roofing client onboarding call is run. Primary niche (80\u201390% of clients). Watch this one carefully.",
       "url": "https://fathom.video/share/qj9AYoqURQ6jhx34jFRZiR2-xESYDswF",
       "day": 1,
       "category": "onboarding_reference"
@@ -27,7 +27,7 @@
     {
       "id": "service_delivery_p1",
       "title": "Service Delivery Part 1",
-      "description": "GHL setup walkthrough — how the sub-account build works from start to finish.",
+      "description": "GHL setup walkthrough \u2014 how the sub-account build works from start to finish.",
       "url": "https://fathom.video/share/uZeCCaxRRVumFq_K6yHx_tbN75iRaMaX",
       "day": 2,
       "category": "service_delivery"
@@ -58,45 +58,75 @@
       "url": "https://fathom.video/share/9JhnQ7WvdHRKUgsnCyVkbzjKxeK-o_78",
       "duration_mins": 66,
       "date": "2026-04-30",
-      "participants": ["Jonathan Forbes", "Cole Yedema", "Tyler"],
-      "tags": ["onboarding", "comp", "process"]
+      "participants": [
+        "Jonathan Forbes",
+        "Cole Yedema",
+        "Tyler"
+      ],
+      "tags": [
+        "onboarding",
+        "comp",
+        "process"
+      ]
     },
     {
       "id": "accounts_review_apr28",
       "title": "Accounts Review",
-      "description": "Oscar and Jonathan review account health across all pods — covers what good and bad account management looks like, and how to handle underperforming campaigns.",
+      "description": "Oscar and Jonathan review account health across all pods \u2014 covers what good and bad account management looks like, and how to handle underperforming campaigns.",
       "url": "https://fathom.video/share/cx9UfVfB2TFefZAsqWyyQEvGNM9UWXLL",
       "duration_mins": 80,
       "date": "2026-04-28",
-      "participants": ["Oscar Sey", "Jonathan Forbes"],
-      "tags": ["accounts", "review", "performance"]
+      "participants": [
+        "Oscar Sey",
+        "Jonathan Forbes"
+      ],
+      "tags": [
+        "accounts",
+        "review",
+        "performance"
+      ]
     },
     {
       "id": "pod3_marketing_apr28",
       "title": "Pod 3 Marketing Meeting",
-      "description": "Jonathan runs through marketing strategy with Pod 3 — covers account triage, creative refreshes, and how to read Meta performance data.",
+      "description": "Jonathan runs through marketing strategy with Pod 3 \u2014 covers account triage, creative refreshes, and how to read Meta performance data.",
       "url": "https://fathom.video/share/ygfiDR6SrHBpCfZpxg7j_4KZTTo47vUi",
       "duration_mins": 61,
       "date": "2026-04-28",
-      "participants": ["Jonathan Forbes", "Kyle Mohammed", "Abdullah Ahmed"],
-      "tags": ["marketing", "strategy", "ads"]
+      "participants": [
+        "Jonathan Forbes",
+        "Kyle Mohammed",
+        "Abdullah Ahmed"
+      ],
+      "tags": [
+        "marketing",
+        "strategy",
+        "ads"
+      ]
     },
     {
       "id": "day1_onboarding_apr14",
-      "title": "Day 1 Onboarding — Pod 4",
-      "description": "Full Day 1 onboarding session with Sam. The most comprehensive single recording of what new pod managers cover — tools, process, client management, and expectations.",
+      "title": "Day 1 Onboarding \u2014 Pod 4",
+      "description": "Full Day 1 onboarding session with Sam. The most comprehensive single recording of what new pod managers cover \u2014 tools, process, client management, and expectations.",
       "url": "https://fathom.video/share/cfN6yMKjkU_nxBatufNzktunJmbPMxrv",
       "duration_mins": 162,
       "date": "2026-04-14",
-      "participants": ["Jonathan Forbes", "Sam"],
-      "tags": ["onboarding", "training", "fundamentals"]
+      "participants": [
+        "Jonathan Forbes",
+        "Sam"
+      ],
+      "tags": [
+        "onboarding",
+        "training",
+        "fundamentals"
+      ]
     }
   ],
   "sop_links": [
     {
       "id": "service_delivery_sop",
       "title": "Service Delivery SOP",
-      "description": "Full written SOP for the service delivery process. Reference document — don't memorize, know where to find it.",
+      "description": "Full written SOP for the service delivery process. Reference document \u2014 don't memorize, know where to find it.",
       "url": "https://docs.google.com/document/d/10aoaz3edxvQBsDrwPsHjEO2CgZa0FPA8KltuXDf-IeQ/edit?tab=t.0#heading=h.y7cg64efk2n0",
       "category": "sop"
     }
@@ -105,9 +135,307 @@
     {
       "id": "ad_set_reviewer",
       "title": "Ad Set Reviewer",
-      "description": "QA tool used by VAs and media buyers to review creatives before launch. Know these standards — you're approving setups.",
+      "description": "QA tool used by VAs and media buyers to review creatives before launch. Know these standards \u2014 you're approving setups.",
       "url": "https://ad-set-reviewer.vercel.app/",
       "category": "tools"
+    }
+  ],
+  "training_looms": [
+    {
+      "id": "loom_pixel_conditioning",
+      "title": "Advanced Pixel Conditioning \u2014 Full Walkthrough",
+      "description": "Step-by-step walkthrough of the advanced pixel conditioning process. Only run this when lead volume is high \u2014 withholding conversion events when volume is low will hurt performance. Watch this before touching CAPI settings.",
+      "url": "https://www.loom.com/share/8625af65318a49aaa2ce69830df8f949",
+      "category": "advanced",
+      "priority": "core"
+    },
+    {
+      "id": "loom_kpi_breakdown",
+      "title": "KPI Breakdown: What Happens to Cost Per Appointment When You Scale?",
+      "description": "Jonathan breaks down the full KPI hierarchy and explains the relationship between spend level, lead volume, and cost per confirmed appointment. Core framework every pod manager must understand before any scaling decision.",
+      "url": "https://www.loom.com/share/8bb0a7c60ae746ceabc75b27ed5a29d2",
+      "category": "advanced",
+      "priority": "core"
+    },
+    {
+      "id": "loom_bottleneck_analysis",
+      "title": "Bottleneck Analysis \u2014 When a Client Is Struggling",
+      "description": "Systematic framework for diagnosing exactly what's wrong with an underperforming account. Follow this before escalating. Covers the full funnel from ad level down to VA call quality.",
+      "url": "https://www.loom.com/share/ea1387a557544bf0b91f7dcc808d7241",
+      "category": "advanced",
+      "priority": "core"
+    },
+    {
+      "id": "loom_va_team_calls",
+      "title": "What Our VA Team Does \u2014 Real Call Walkthrough",
+      "description": "Inside look at what VAs actually say on calls to homeowners. Understand the full call flow so you can diagnose VA performance issues accurately and brief Leila when quality drops.",
+      "url": "https://www.loom.com/share/6b49fbcc1eb74345be7f7791e7e37355",
+      "category": "advanced",
+      "priority": "core"
+    },
+    {
+      "id": "loom_lead_flow_7day",
+      "title": "Lead Flow Slow-Down: 7-Day Window Fix",
+      "description": "Walk-through for diagnosing and fixing when a client's lead flow drops for a 7-day period. Covers the top-of-funnel triage: ad level KPIs \u2192 landing page \u2192 survey \u2192 duplicate campaign reset.",
+      "url": "https://www.loom.com/share/d2f632ee7e694d66bfc63e4a7fc74d36",
+      "category": "lead_flow",
+      "priority": "core"
+    },
+    {
+      "id": "loom_low_leads_trust_issue",
+      "title": "Good Ad Metrics, Low Lead Volume \u2014 Trust & Survey Fix",
+      "description": "When CPC and CTR look fine but leads aren't coming in, it's usually a trust or survey friction issue. This covers switching from 7Q to 4Q survey, adjusting the landing page, and notifying the VA team.",
+      "url": "https://www.loom.com/share/99392ecd5e904ce89e681c6dab0e289d",
+      "category": "lead_flow",
+      "priority": "core"
+    },
+    {
+      "id": "loom_ad_metrics_off_kpi",
+      "title": "Ad Metrics Off-KPI: Low Lead Volume Fix",
+      "description": "When CPC/CTR/CPM aren't in range and lead volume is suffering. Covers how to identify whether it's a creative problem, targeting problem, or budget constraint \u2014 and what to do in each case.",
+      "url": "https://www.loom.com/share/bbfd2a9801914e04981b8b9da71cb174",
+      "category": "lead_flow",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_lead_quality_fix",
+      "title": "Lead Quality Low: Full Volume & Quality Breakdown",
+      "description": "When volume is fine but quality is sub-par. Covers pixel seasoning triggers, VA pre-call SMS changes, CNAM/phone trust fixes, and survey qualification adjustments to improve lead intent.",
+      "url": "https://www.loom.com/share/07dd1be8a96c4d60a936f30caf6cebcc",
+      "category": "lead_flow",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_slow_lead_good_booking",
+      "title": "Slow Lead Flow, Good Booking Rate",
+      "description": "When VA call quality and booking rate are strong but leads aren't coming in volume. The problem is entirely at the top of funnel \u2014 creative and/or targeting. Walk-through of how to address it without touching the VA layer.",
+      "url": "https://www.loom.com/share/4a929ae9c19640fdb1fa6f3e688ebf56",
+      "category": "lead_flow",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_slow_high_cost",
+      "title": "Slow Lead Flow + Infinite Cost Per Appointment",
+      "description": "Detailed fix walk-through for an account in a proven market where cost per appointment is way too high or zero. Covers CNAM, landing page headline, creative reset, secondary phone numbers, and copy switch to MAIN/KNOW V2.",
+      "url": "https://www.loom.com/share/95e955cdd3524c7dbaaeff5e385963f0",
+      "category": "lead_flow",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_osa_survey_fix",
+      "title": "Out-of-Service-Area Leads \u2014 Survey Question Fix",
+      "description": "When a high proportion of leads are coming from outside the service area. This covers adding a qualifying question at the survey level to filter OSA leads before they reach the VA team.",
+      "url": "https://www.loom.com/share/3303b0f97948404fbb81b088acb31bcb",
+      "category": "osa",
+      "priority": "core"
+    },
+    {
+      "id": "loom_osa_targeting_audit",
+      "title": "OSA + Targeting Audit \u2014 Klaus Roofing Oregon",
+      "description": "Client with good lead volume but a high percentage of out-of-service-area leads and non-responsive contacts. Full diagnostic walk-through of targeting settings, zip code exclusions, and the Logbook OSA filter.",
+      "url": "https://www.loom.com/share/0d99edc169cf4f96b0bad51197c0550",
+      "category": "osa",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_osa_weak_leads_creative",
+      "title": "Weak Lead Flow + Major OSA Problem \u2014 Creative Development Mastery",
+      "description": "When you have both an OSA problem and creative fatigue hitting at the same time. The creative development mastery process \u2014 how to rebuild ad sets that attract in-area homeowners and filter out low-intent contacts.",
+      "url": "https://www.loom.com/share/ab849120a0bb44f4bfee5d5cb651bec4",
+      "category": "osa",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_slow_booking_bad_osa",
+      "title": "Slow Booking Flow + Bad OSA \u2014 Problem Solving",
+      "description": "When booking rate and OSA are both failing simultaneously. Covers diagnosing whether the issue is VA quality, targeting, or survey friction \u2014 and which lever to pull first.",
+      "url": "https://www.loom.com/share/fecb4cd569bf4abf9e60673f3a6d2810",
+      "category": "osa",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_creative_fatigue_2_3mo",
+      "title": "Creative Fatigue After 2\u20133 Months \u2014 Ad Set Swap",
+      "description": "When an account has been running 2\u20133 months and performance starts declining from creative fatigue. The correct approach: use lead-to-ad attribution data to identify performers, turn off non-performers, and build the next set from what's already working.",
+      "url": "https://www.loom.com/share/ed65a4fdb81b4e03b2372daf00e949b8",
+      "category": "creative",
+      "priority": "core"
+    },
+    {
+      "id": "loom_rising_costs_3_4mo",
+      "title": "Rising Costs After 3\u20134 Months \u2014 Copy & Creative Overhaul",
+      "description": "When an account has spent months using the same copy with only creative swaps and costs keep rising and won't come back down. This is when you change the copy angle entirely \u2014 how to approach it.",
+      "url": "https://www.loom.com/share/a7ba3218ba094d5e9ca257330dfc4605",
+      "category": "creative",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_creative_refresh_psych",
+      "title": "Full Creative Refresh with Psychological Triggers",
+      "description": "US Shingle: longstanding account, extremely slow lead flow. Full creative refresh using psychological trigger angles \u2014 what to change in the copy, what photo combinations to build, and how to test new angles without resetting the pixel.",
+      "url": "https://www.loom.com/share/d98186317ecd4df4bea4dbc448d4c738",
+      "category": "creative",
+      "priority": "core"
+    },
+    {
+      "id": "loom_polishing_creatives",
+      "title": "Polishing Creatives for a Refresh \u2014 Why a Set Wasn't Working",
+      "description": "Detailed video explaining why a specific creative setup underperformed, how to identify the visual/copy mismatch, and what changes turned around the campaign. A framework for creative QA before launch.",
+      "url": "https://www.loom.com/share/7c3289fb985940069a70fc24f13e9d7a",
+      "category": "creative",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_big_client_creative_selection",
+      "title": "Creative Selection for High-Spend Accounts",
+      "description": "When a big client gives you everything you need but the account is underperforming \u2014 how to manage your creative reserve, sequence refreshes, and avoid burning through all photos too fast.",
+      "url": "https://www.loom.com/share/edf082d9ab504c82a4cc735cc8479847",
+      "category": "creative",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_ad_attribution",
+      "title": "Ad Attribution \u2014 Which Ad Drove Which Lead",
+      "description": "When leads come in but the Lead Mastersheet doesn't show which ad drove them. How to trace back from a lead to the specific creative that converted, so you can scale winners and kill losers.",
+      "url": "https://www.loom.com/share/3cdb39244caa459abe9c6df69f1f182c",
+      "category": "creative",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_ab_test_angles",
+      "title": "A/B Test: Pricing Angle (KNOW) vs Story Angle (MAIN)",
+      "description": "Client wants to test KNOW angle (starts at pricing) vs MAIN angle (story-based, no numbers) to reduce price shoppers and improve close rate. How to set up the split, read results, and decide which angle wins.",
+      "url": "https://www.loom.com/share/0d371ad8d363404b9e9e0dca8cc6397e",
+      "category": "creative",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_creative_fatigue_hvac",
+      "title": "Ad Fatigue Killing Lead Flow \u2014 HVAC (Applies to All Niches)",
+      "description": "HVAC account with ad fatigue causing lead flow collapse. The diagnostic and recovery process is identical for roofing \u2014 study the methodology, not just the niche specifics.",
+      "url": "https://www.loom.com/share/0f6689b9782f44959f6fde72c511d1fd",
+      "category": "creative",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_low_lp_conversion_copy",
+      "title": "Great Ad Metrics, Low Landing Page Conversion + Copy Switch",
+      "description": "When CTR looks fine but the survey opt-in rate is below 2.5%. Covers landing page headline changes, switching ad copy angle, and how to test both simultaneously without polluting your data.",
+      "url": "https://www.loom.com/share/86695f85fc8c4941be147fb50f4d5bcf",
+      "category": "creative",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_ad_spend_50_limit",
+      "title": "Ad Spend Locked at $50/Day \u2014 How to Fix",
+      "description": "When Meta caps a client's account at $50/day and business verification is not available. The specific fix for bypassing the spending limit and what to do if the business portfolio is ineligible for verification.",
+      "url": "https://www.loom.com/share/014abf82664e4a6fa99b82cdd029c33d",
+      "category": "technical",
+      "priority": "core"
+    },
+    {
+      "id": "loom_cnam_delete",
+      "title": "CNAM: Delete Existing Record and Reapply",
+      "description": "How to delete an existing CNAM record and apply for a new one. Run this when a client's calls are showing as Likely Spam or Fraud on the recipient's phone. Steps inside GHL phone number settings.",
+      "url": "https://www.loom.com/share/c7d3c23fafcf42b8b9cc08ba47c0ca21",
+      "category": "technical",
+      "priority": "core"
+    },
+    {
+      "id": "loom_a2p_verified_switch",
+      "title": "Switching an Account to an A2P-Verified Sub-Account",
+      "description": "When you need to move a client's setup to a sub-account that already has A2P verified \u2014 the full process for transferring assets, automations, and confirming the new number is properly configured.",
+      "url": "https://www.loom.com/share/7f8322d24522419d885375cd7e2e2c1b",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_zapier_ghl_sheets_pt1",
+      "title": "GHL \u2192 Google Sheets \u2192 Client CRM via Zapier (Pt 1/2)",
+      "description": "How to connect GHL to Google Sheets and then to a client's CRM (e.g. Acculynx) using Zapier so leads auto-sync. Part 1 covers the Google Sheets setup and initial Zap creation.",
+      "url": "https://www.loom.com/share/8a9d316d70f64f9d9b4ed95c3761ea3a",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_zapier_ghl_sheets_pt2",
+      "title": "GHL \u2192 Google Sheets \u2192 Client CRM via Zapier (Pt 2/2)",
+      "description": "Part 2: completing the Zapier integration, testing the connection, and handling edge cases when you switch from a 7Q to 4Q survey (you must update the Google Sheet headings and re-map the Zap fields).",
+      "url": "https://www.loom.com/share/095fe1fe2e7a4486a164d030a08ea80b",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_zapier_roofr",
+      "title": "Connecting Zapier to Client CRM (Roofr)",
+      "description": "Specific setup for clients using Roofr as their CRM \u2014 how to create contacts under the client's Roofr account automatically using Zapier triggered from GHL survey submissions.",
+      "url": "https://www.loom.com/share/d5c9c9141e824acab01946cc0b3d8030",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_multi_area_setup",
+      "title": "Multiple Service Areas \u2014 Full GHL Setup",
+      "description": "How to set up a client with multiple service areas (different markets, different VAs, different phone numbers). Covers survey routing, automation assignments, phone number assignment, and VA user setup.",
+      "url": "https://www.loom.com/share/6faefc01e04c43198b38d7c648c969b6",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_install_on_client_ghl",
+      "title": "Installing RI Ad System on Client's GHL (Not Our Agency)",
+      "description": "When a client has a dealbreaker requiring us to install our system inside their own GHL agency account rather than ours. How to handle client communications, asset transfer, and sub-account configuration.",
+      "url": "https://www.loom.com/share/23404ec9af31419eb876682010fdd143",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_shorten_hvac_survey",
+      "title": "Shortening HVAC Survey from 7Q to 5Q",
+      "description": "The full process for shortening a survey to reduce friction \u2014 removing questions, updating GHL automations, updating the Zapier field mapping, and notifying the VA team of the change.",
+      "url": "https://www.loom.com/share/c0b8fbd567ae4370ae2bc50552367087",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_ghl_sophisticated",
+      "title": "Sophisticated GHL Problem-Solving \u2014 Live Session",
+      "description": "Live problem-solving session inside a client's GHL \u2014 covers edge cases in automation, calendar setup, and integration issues that aren't covered by standard SOPs.",
+      "url": "https://www.loom.com/share/9195143fae2b4eccbb9ad1cb64258879",
+      "category": "technical",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_client_cancellation_threat",
+      "title": "Longstanding Client Hints at Cancelling \u2014 How to Handle",
+      "description": "When a client who has been with us for months starts hinting at cancelling due to a recent performance dip. How to reframe results, propose a gameplan, and loop in Oscar when needed.",
+      "url": "https://www.loom.com/share/92eb6eab8a77435db39906f944b9f2ad",
+      "category": "retention",
+      "priority": "core"
+    },
+    {
+      "id": "loom_performance_drops_longstanding",
+      "title": "Consistent Results \u2192 Performance Drops \u2014 Longstanding Account",
+      "description": "When a client that has performed consistently for months suddenly sees lead flow drop and more OSA leads. The account-aging diagnostic \u2014 what causes performance degradation over time and how to reverse it.",
+      "url": "https://www.loom.com/share/d3b59c5550074411bc23581300d7e158",
+      "category": "retention",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_bad_appt_flow",
+      "title": "Bad Appointment Flow Fix \u2014 Sales Rep Coordination",
+      "description": "When leads are booking but appointments aren't showing up or being confirmed by the client's sales team. How to diagnose whether it's a VA handoff problem, a sales rep problem, or a calendar setup issue.",
+      "url": "https://www.loom.com/share/ae8eb877aa324dc5b6495d9778540118",
+      "category": "retention",
+      "priority": "reference"
+    },
+    {
+      "id": "loom_sales_closing_issue",
+      "title": "Client with Sales/Closing Issues \u2014 Not a Leads Problem",
+      "description": "When a client complains about lead quality but the real issue is their sales team's close rate. How to identify it from the data, have the conversation with the client, and document it so you're not blamed for a sales failure.",
+      "url": "https://www.loom.com/share/5d43df0992ab429abe8fd875f7311dff",
+      "category": "retention",
+      "priority": "reference"
     }
   ]
 }

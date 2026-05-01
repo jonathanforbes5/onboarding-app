@@ -32,9 +32,9 @@ export const SECTIONS: SectionMeta[] = [
       },
       {
         question: 'What is the current monthly revenue and the target by end of summer 2026?',
-        options: ['$50K → $500K/month', '$3K → $1M/month by end of summer 2026', '$1M → $5M/month', '$500K → $2M/month'],
+        options: ['$50K → $500K/month', '$300K → $1M/month by end of summer 2026', '$1M → $5M/month', '$500K → $2M/month'],
         correctIndex: 1,
-        explanation: 'Current: ~$3K/month. Target: $1M/month by end of summer 2026. The math: 5 pods × ~25 accounts × ~$4,500 average retainer. Your retention performance is the single biggest lever.',
+        explanation: 'Current: ~$300K/month. Target: $1M/month by end of summer 2026. The math: 5 pods × ~25 accounts × ~$4,500 average retainer. Your retention performance is the single biggest lever.',
       },
       {
         question: 'A client finishes Cycle 1 and gets 18 booked appointments. Cycle 2 launches. Which statement about retention is most accurate?',

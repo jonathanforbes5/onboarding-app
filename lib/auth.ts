@@ -16,6 +16,8 @@ export const USER_COLORS: Record<string, { bg: string; text: string }> = {
   oscar:    { bg: '#A78BFA', text: '#fff' },
   info:     { bg: '#F97316', text: '#fff' },
   cole:     { bg: '#06B6D4', text: '#fff' },
+  ksenia:   { bg: '#EC4899', text: '#fff' },
+  adeen:    { bg: '#8B5CF6', text: '#fff' },
 };
 
 export function getUserColor(userKey: string) {

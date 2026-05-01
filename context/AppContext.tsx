@@ -69,6 +69,7 @@ interface AppContextType extends AppState {
 
 const SECTIONS_STORAGE_KEY = 'ri_onboarding_v1';
 const TOTAL_SECTIONS = 11;
+const BYPASS_KEY = 'ri_bypass_profile';
 
 const defaultState: AppState = {
   currentUser: null,
@@ -141,6 +142,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // ── Supabase Auth listener ────────────────────────────────
   useEffect(() => {
+    // Check for master-password bypass profile (staging preview)
+    try {
+      const bypass = sessionStorage.getItem(BYPASS_KEY);
+      if (bypass) {
+        const profile = JSON.parse(bypass) as UserProfile;
+        const defaultTab: ActiveTab = profile.role === 'super_admin' ? 'admin' : 'overview';
+        setState((prev) => ({
+          ...prev,
+          currentUser: profile,
+          authLoading: false,
+          activeTab: defaultTab,
+          syncStatus: 'offline',
+        }));
+        return;
+      }
+    } catch {}
+
     if (!supabase) {
       setState((prev) => ({ ...prev, authLoading: false }));
       return;
@@ -232,8 +250,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // ── Auth actions ──────────────────────────────────────────
   const logout = useCallback(() => {
+    try { sessionStorage.removeItem(BYPASS_KEY); } catch {}
     authSignOut();
-    // onAuthStateChange 'SIGNED_OUT' will reset state
+    setState((prev) => ({ ...defaultState, authLoading: false }));
   }, []);
 
   const devLogin = useCallback(() => {

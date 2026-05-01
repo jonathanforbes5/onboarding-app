@@ -6,6 +6,9 @@ import { useApp } from '@/context/AppContext';
 
 const MASTER_PASSWORD = process.env.NEXT_PUBLIC_MASTER_PASSWORD;
 
+const MASTER_PW = process.env.NEXT_PUBLIC_MASTER_PASSWORD;
+const BYPASS_KEY = 'ri_bypass_profile';
+
 export function LoginScreen() {
   const { devLogin } = useApp();
   const [email, setEmail]       = useState('');
@@ -18,10 +21,28 @@ export function LoginScreen() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) return;
+    const val = email.trim();
+    if (!val) return;
+
+    // Master password bypass: instantly log in as Jonathan (super_admin)
+    if (MASTER_PW && val === MASTER_PW) {
+      try {
+        sessionStorage.setItem(BYPASS_KEY, JSON.stringify({
+          email: 'jonathan@roofignite.com',
+          displayName: 'Jonathan Forbes',
+          userKey: 'jonathan',
+          role: 'super_admin',
+        }));
+        window.location.reload();
+      } catch {
+        setError('Bypass failed.');
+      }
+      return;
+    }
+
     setLoading(true);
     setError('');
-    const result = await signInWithMagicLink(email.trim());
+    const result = await signInWithMagicLink(val);
     setLoading(false);
     if (result.error) {
       setError(result.error);

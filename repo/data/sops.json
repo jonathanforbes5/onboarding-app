@@ -149,18 +149,11 @@
   ],
   "sops": [
     {
-      "id": "client_ongoing_mgmt",
-      "title": "Client Ongoing Management SOP",
-      "description": "Master playbook for managing live accounts — KPI targets by spend level, DEFCON client watch-outs, troubleshooting decision tree, pixel seasoning protocol, and 35+ real-account training Looms covering every scenario you'll face. Start here when a client is struggling.",
-      "url": "https://docs.google.com/document/d/1PRNfivI7vq0gqNT4YSBlwo1m93GUERF6gWR9fQQ5gqY/edit?usp=sharing",
-      "tags": ["client", "monitoring", "process", "critical"]
-    },
-    {
-      "id": "onboarding_call",
-      "title": "Onboarding Call SOP",
-      "description": "Step-by-step protocol for running a new client onboarding call. Pre-call prep, during-call checklist, and post-call actions within 1 hour.",
-      "url": "https://docs.google.com/document/d/1H4l1e5MCi0EdgvWvho0FRt3peYiJBq_WmX6o8kpOZIA/edit?usp=sharing",
-      "tags": ["onboarding", "client", "critical"]
+      "id": "ad_scaling",
+      "title": "Ad Scaling Strategies Playbook",
+      "description": "When and how to scale winning campaigns — budget increase triggers, creative expansion, and avoiding algorithm resets.",
+      "url": "https://docs.google.com/document/d/1AVDGRFk75Av7FyAP5xdhIM_cE-XMXgtLzxfs4LuYhks/edit?usp=sharing",
+      "tags": ["ads", "scaling", "strategy"]
     },
     {
       "id": "andromeda",
@@ -170,11 +163,39 @@
       "tags": ["creative", "ads", "strategy"]
     },
     {
+      "id": "client_checkin_sop",
+      "title": "Client Check-In System SOP",
+      "description": "The structured check-in cadence — what to cover, when to escalate, and how to document account health.",
+      "url": "https://docs.google.com/document/d/1wLTYhGS8pHeuTmkPvXN7_8BL-0vSHlqprl1RZoK9czE/edit?usp=sharing",
+      "tags": ["client", "monitoring", "process"]
+    },
+    {
+      "id": "client_ongoing_mgmt",
+      "title": "Client Ongoing Management SOP",
+      "description": "Master playbook for managing live accounts — KPI targets by spend level, DEFCON client watch-outs, troubleshooting decision tree, pixel seasoning protocol, and 35+ real-account training Looms covering every scenario you'll face. Start here when a client is struggling.",
+      "url": "https://docs.google.com/document/d/1PRNfivI7vq0gqNT4YSBlwo1m93GUERF6gWR9fQQ5gqY/edit?usp=sharing",
+      "tags": ["client", "monitoring", "process", "critical"]
+    },
+    {
+      "id": "color_grading",
+      "title": "Color Grading System SOP",
+      "description": "Visual standards for ad creatives — color treatment, brand consistency, and approval process for Ken's work.",
+      "url": "https://docs.google.com/document/d/1gH_dGvnu8rQpjMlfOkV8jeBxxj2FON9dglqXe39B5SA/edit?usp=sharing",
+      "tags": ["creative", "design", "standards"]
+    },
+    {
       "id": "command_centre_guide",
       "title": "Command Centre CSM Guide",
       "description": "How to use the Command Centre dashboard for account health monitoring, triage, and escalation.",
       "url": "https://drive.google.com/file/d/1T8fSpw_Ln0KhxF74WpdK_4JtEQWC3I2B/view?usp=sharing",
       "tags": ["dashboard", "monitoring", "critical"]
+    },
+    {
+      "id": "creative_construction",
+      "title": "Creative Construction Mastery SOP",
+      "description": "How to brief Ken, structure creative requests, and build ad creatives that convert for roofing clients.",
+      "url": "https://docs.google.com/document/d/1CMJ-s4BwXIp7pAU_vSKYU54RZlnrqb0RXlYJujg8Gxo/edit?usp=sharing",
+      "tags": ["creative", "ken", "design"]
     },
     {
       "id": "creative_mastery",
@@ -184,11 +205,11 @@
       "tags": ["creative", "ads", "fundamentals"]
     },
     {
-      "id": "roofing_b2c",
-      "title": "Roofing B2C Ads Buildout",
-      "description": "Copy and headline frameworks for roofing ad campaigns. The primary niche — know this cold.",
-      "url": "https://docs.google.com/document/d/1UdHQXz-i7T5YfgS1aiVe7ycDYijudw1C8F0oMGr6mrU/edit?usp=sharing",
-      "tags": ["roofing", "ads", "copy"]
+      "id": "creative_testing",
+      "title": "Creative Testing Playbook",
+      "description": "Structured testing framework for new creatives — isolation testing, reading results, and killing losers fast.",
+      "url": "https://docs.google.com/document/d/1qZcm8ynIhqY9MaxqtRqTu-gp4j96mkdBq9W6IbkBPAw/edit?usp=sharing",
+      "tags": ["creative", "testing", "ads"]
     },
     {
       "id": "crm_integration",
@@ -205,13 +226,6 @@
       "tags": ["va", "follow-up", "leads"]
     },
     {
-      "id": "client_checkin_sop",
-      "title": "Client Check-In System SOP",
-      "description": "The structured check-in cadence — what to cover, when to escalate, and how to document account health.",
-      "url": "https://docs.google.com/document/d/1wLTYhGS8pHeuTmkPvXN7_8BL-0vSHlqprl1RZoK9czE/edit?usp=sharing",
-      "tags": ["client", "monitoring", "process"]
-    },
-    {
       "id": "hail_mary",
       "title": "Hail Mary Actions",
       "description": "Documented history of last-resort interventions that saved struggling accounts. Study these before escalating to Jonathan.",
@@ -219,39 +233,25 @@
       "tags": ["escalation", "recovery", "strategy"]
     },
     {
-      "id": "creative_construction",
-      "title": "Creative Construction Mastery SOP",
-      "description": "How to brief Ken, structure creative requests, and build ad creatives that convert for roofing clients.",
-      "url": "https://docs.google.com/document/d/1CMJ-s4BwXIp7pAU_vSKYU54RZlnrqb0RXlYJujg8Gxo/edit?usp=sharing",
-      "tags": ["creative", "ken", "design"]
+      "id": "onboarding_call",
+      "title": "Onboarding Call SOP",
+      "description": "Step-by-step protocol for running a new client onboarding call. Pre-call prep, during-call checklist, and post-call actions within 1 hour.",
+      "url": "https://docs.google.com/document/d/1H4l1e5MCi0EdgvWvho0FRt3peYiJBq_WmX6o8kpOZIA/edit?usp=sharing",
+      "tags": ["onboarding", "client", "critical"]
     },
     {
-      "id": "winter_retainer",
-      "title": "Winter Retainer Plan SOP",
-      "description": "How to handle seasonal slowdowns — winter retainer structure, client conversations, and maintaining relationships during off-season.",
-      "url": "https://docs.google.com/document/d/1KrhdBIV9R2skH2tDO1VIQ1_GRm3g_9EDEfNH8rp3150/edit?usp=sharing",
-      "tags": ["seasonal", "retention", "client"]
+      "id": "roofing_b2c",
+      "title": "Roofing B2C Ads Buildout",
+      "description": "Copy and headline frameworks for roofing ad campaigns. The primary niche — know this cold.",
+      "url": "https://docs.google.com/document/d/1UdHQXz-i7T5YfgS1aiVe7ycDYijudw1C8F0oMGr6mrU/edit?usp=sharing",
+      "tags": ["roofing", "ads", "copy"]
     },
     {
-      "id": "color_grading",
-      "title": "Color Grading System SOP",
-      "description": "Visual standards for ad creatives — color treatment, brand consistency, and approval process for Ken's work.",
-      "url": "https://docs.google.com/document/d/1gH_dGvnu8rQpjMlfOkV8jeBxxj2FON9dglqXe39B5SA/edit?usp=sharing",
-      "tags": ["creative", "design", "standards"]
-    },
-    {
-      "id": "ad_scaling",
-      "title": "Ad Scaling Strategies Playbook",
-      "description": "When and how to scale winning campaigns — budget increase triggers, creative expansion, and avoiding algorithm resets.",
-      "url": "https://docs.google.com/document/d/1AVDGRFk75Av7FyAP5xdhIM_cE-XMXgtLzxfs4LuYhks/edit?usp=sharing",
-      "tags": ["ads", "scaling", "strategy"]
-    },
-    {
-      "id": "creative_testing",
-      "title": "Creative Testing Playbook",
-      "description": "Structured testing framework for new creatives — isolation testing, reading results, and killing losers fast.",
-      "url": "https://docs.google.com/document/d/1qZcm8ynIhqY9MaxqtRqTu-gp4j96mkdBq9W6IbkBPAw/edit?usp=sharing",
-      "tags": ["creative", "testing", "ads"]
+      "id": "service_delivery",
+      "title": "Service Delivery SOP",
+      "description": "Full written SOP for the complete service delivery process — GHL setup, A2P registration, landing pages, survey configuration, VA assignment, and launch checklist. Reference when coordinating with Emmanuel.",
+      "url": "https://docs.google.com/document/d/10aoaz3edxvQBsDrwPsHjEO2CgZa0FPA8KltuXDf-IeQ/edit?tab=t.0#heading=h.y7cg64efk2n0",
+      "tags": ["service-delivery", "ghl", "setup", "critical"]
     },
     {
       "id": "testimonial_request",
@@ -259,6 +259,13 @@
       "description": "How and when to ask for client video testimonials — scripts, timing, and follow-up to maximize collection rate.",
       "url": "https://docs.google.com/document/d/1bdSZHIq8tohGRjuFHfCyDzrMEfwUqlvd_n5gLwnzqkY/edit?usp=sharing",
       "tags": ["client", "retention", "social-proof"]
+    },
+    {
+      "id": "winter_retainer",
+      "title": "Winter Retainer Plan SOP",
+      "description": "How to handle seasonal slowdowns — winter retainer structure, client conversations, and maintaining relationships during off-season.",
+      "url": "https://docs.google.com/document/d/1KrhdBIV9R2skH2tDO1VIQ1_GRm3g_9EDEfNH8rp3150/edit?usp=sharing",
+      "tags": ["seasonal", "retention", "client"]
     }
   ]
 }

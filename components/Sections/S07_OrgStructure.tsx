@@ -26,8 +26,8 @@ export function S07_OrgStructure() {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {[
-            { label: 'Pod 1', detail: 'Gianmarco & Gregory', status: 'Launched Mar 12', clients: '20–30' },
-            { label: 'Pod 2', detail: 'Cole & Tyler', status: 'Most experienced', clients: '20–30' },
+            { label: 'Pod 1', detail: 'Gianmarco & Gregory', status: 'Started Mar 3, 2026', clients: '20–30' },
+            { label: 'Pod 2', detail: 'Cole & Tyler', status: 'Started Aug 2025', clients: '20–30' },
             { label: 'Pod 3', detail: 'Kyle & Abdullah', status: 'Launched Mar 25', clients: 'Building' },
             { label: 'Pod 4', detail: 'Sam', status: 'Started Apr 14', clients: 'Onboarding' },
             { label: 'Pod 5', detail: 'Ksenia & Adeen', status: 'Starting May 4', clients: 'Onboarding', isYou: true },

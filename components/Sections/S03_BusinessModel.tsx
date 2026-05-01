@@ -107,6 +107,41 @@ export function S03_BusinessModel() {
         </div>
       </ExpandableCard>
 
+      {/* Comp structure */}
+      <ExpandableCard title="Your Compensation Structure" subtitle="Cycle-based earnings — understand how you're paid">
+        <div className="space-y-3">
+          <p className="text-sm text-brand-gray">
+            Your compensation is directly tied to the performance model you deliver for clients.
+            The more cycles you close and preserve, the more your earnings compound — same logic as RETENTION &gt; ACQUISITION.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { label: 'Base', detail: 'Fixed monthly rate for your role', color: 'bg-brand-gray-light border-brand-gray-mid text-brand-black' },
+              { label: 'Cycle Bonuses', detail: 'Earned per successful 28-day cycle delivered', color: 'bg-brand-yellow border-brand-yellow text-brand-black' },
+              { label: 'Compounding', detail: 'Retention across cycles stacks earnings over time', color: 'bg-brand-black border-brand-black text-white' },
+            ].map((s) => (
+              <div key={s.label} className={`p-3 rounded-xl border ${s.color}`}>
+                <div className="font-black text-sm mb-1">{s.label}</div>
+                <div className={`text-xs ${s.color.includes('text-white') ? 'text-white/70' : 'text-brand-gray'}`}>{s.detail}</div>
+              </div>
+            ))}
+          </div>
+          <a href="https://docs.google.com/document/d/1H5NYHSFK4PBrSj259_d7ijWuY5Q9SST7DNeFQWqK0Lg/edit?usp=drive_link"
+            target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-2 p-3 rounded-xl border-2 border-brand-gray-mid bg-white hover:border-brand-black hover:shadow-sm transition-all group">
+            <span className="text-lg flex-shrink-0">📄</span>
+            <div className="flex-1">
+              <div className="font-bold text-sm">Full Compensation Structure Doc</div>
+              <div className="text-xs text-brand-gray mt-0.5">Complete breakdown of base, bonuses, and cycle earnings</div>
+            </div>
+            <span className="text-brand-gray group-hover:text-brand-black text-xs flex-shrink-0">↗</span>
+          </a>
+          <InfoBox type="info">
+            The <strong>April 30 Onboarding Process &amp; Comp Structure</strong> recording in the Recordings tab covers this in detail with Jonathan, Cole, and Tyler.
+          </InfoBox>
+        </div>
+      </ExpandableCard>
+
       <InfoBox type="tip" title="The Compounding Effect">
         Acquiring a client costs thousands. Retaining a client costs time and care. Every cycle you preserve multiplies the agency&apos;s revenue. <strong>Your retention = your impact.</strong>
       </InfoBox>

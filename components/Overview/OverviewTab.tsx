@@ -142,7 +142,7 @@ const TAB_GUIDE = [
     label: 'Worksheet',
     icon: '📋',
     color: '#22C55E',
-    desc: 'Your 10-day onboarding plan — daily task lists, checklists, and milestones.',
+    desc: 'Day-by-day onboarding plan for your first 10 days. Built specifically for new pods (like Pod 5) — daily tasks, checklists, and milestones to get fully operational fast.',
     start: true,
   },
   {
@@ -405,16 +405,16 @@ export function OverviewTab() {
               },
               {
                 icon: '📋',
-                title: 'You Own Phases 4–9',
-                body: 'Onboarding call → setup coordination → launch → optimization → cycle completion → renewal. You are the client\'s single point of contact throughout.',
+                title: 'You Own the Client Relationship',
+                body: 'Once a client is closed, you take over. Onboarding call → setup coordination → launch → optimization → cycle completion → renewal. You are the client\'s single point of contact from day one to renewal.',
               },
               {
                 icon: '⚡',
                 title: '3 Things to Internalize',
                 list: [
-                  'Layer 1 before Layer 2. Always.',
-                  'Cost per Booking = spend ÷ appointments. Not CPL.',
-                  'Speed to Cashflow — every day unlaunched costs revenue.',
+                  'Layer 1 first, always — if bookings are on pace, don\'t touch anything.',
+                  'Cost per Booking — spend ÷ booked appointments. Not CPL, ever.',
+                  'Speed to cashflow — every day a client isn\'t launched is revenue delayed.',
                 ],
               },
             ].map((card) => (

@@ -9,12 +9,13 @@ import { WorksheetTab } from '@/components/Worksheet/WorksheetTab';
 import { AdminDashboard } from '@/components/Admin/AdminDashboard';
 import { SOPsTab } from '@/components/SOPs/SOPsTab';
 import { RecordingsTab } from '@/components/Recordings/RecordingsTab';
+import { CompanyCurriculum } from '@/components/Sections/CompanyCurriculum';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab } = useApp();
+  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap } = useApp();
 
   if (authLoading) {
     return (
@@ -90,7 +91,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {activeTab === 'sections' && (
+      {activeTab === 'sections' && showCurriculumMap && (
+        <div className="pt-[42px]">
+          <CompanyCurriculum />
+        </div>
+      )}
+
+      {activeTab === 'sections' && !showCurriculumMap && (
         <>
           <Sidebar />
           <main className="pt-[42px] lg:pl-64 min-h-screen bg-brand-gray-light">

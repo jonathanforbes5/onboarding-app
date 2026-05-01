@@ -255,10 +255,10 @@ export function RecordingsTab() {
         {/* Header */}
         <div style={{ marginBottom: '1.5rem' }}>
           <h1 style={{ color: '#F5F5F5', fontSize: 20, fontWeight: 900, margin: '0 0 6px' }}>
-            Reference Recordings
+            Training Library
           </h1>
           <p style={{ color: '#555', fontSize: 13, margin: 0 }}>
-            Training walkthroughs, real team calls, and 37 hands-on Loom walkthroughs from the Client Ongoing Management SOP — covering every scenario you'll face on live accounts.
+            Structured training videos, service delivery walkthroughs, and 37 hands-on Loom walkthroughs from the Client Ongoing Management SOP — every scenario you'll face on live accounts.
           </p>
         </div>
 

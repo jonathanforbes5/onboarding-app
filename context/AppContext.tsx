@@ -45,6 +45,7 @@ export interface AppState {
   searchQuery: string;
   showSearch: boolean;
   showNotes: boolean;
+  showCurriculumMap: boolean;
 }
 
 interface AppContextType extends AppState {
@@ -62,6 +63,7 @@ interface AppContextType extends AppState {
   setSearchQuery: (q: string) => void;
   setShowSearch: (v: boolean) => void;
   setShowNotes: (v: boolean) => void;
+  setShowCurriculumMap: (v: boolean) => void;
   progressPercent: number;
   isBookmarked: (id: number) => boolean;
   isCompleted: (id: number) => boolean;
@@ -89,6 +91,7 @@ const defaultState: AppState = {
   searchQuery: '',
   showSearch: false,
   showNotes: false,
+  showCurriculumMap: true,
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -277,13 +280,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (prev.currentUser) {
         try { localStorage.setItem(`ri_${prev.currentUser.userKey}_activeTab`, tab); } catch {}
       }
-      return { ...prev, activeTab: tab };
+      return { ...prev, activeTab: tab, showCurriculumMap: tab === 'sections' ? true : prev.showCurriculumMap };
     });
   }, []);
 
   const setCurrentSection = useCallback((id: number) => {
     setState((prev) => {
-      const next = { ...prev, currentSection: id };
+      const next = { ...prev, currentSection: id, showCurriculumMap: false };
       persistSectionsLocal(next);
       return next;
     });
@@ -359,9 +362,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // ── UI overlays ───────────────────────────────────────────
-  const setSearchQuery  = useCallback((q: string)  => setState((p) => ({ ...p, searchQuery: q })), []);
-  const setShowSearch   = useCallback((v: boolean)  => setState((p) => ({ ...p, showSearch: v })), []);
-  const setShowNotes    = useCallback((v: boolean)  => setState((p) => ({ ...p, showNotes: v })), []);
+  const setSearchQuery       = useCallback((q: string)  => setState((p) => ({ ...p, searchQuery: q })), []);
+  const setShowSearch        = useCallback((v: boolean)  => setState((p) => ({ ...p, showSearch: v })), []);
+  const setShowNotes         = useCallback((v: boolean)  => setState((p) => ({ ...p, showNotes: v })), []);
+  const setShowCurriculumMap = useCallback((v: boolean)  => setState((p) => ({ ...p, showCurriculumMap: v })), []);
 
   const progressPercent = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
   const isBookmarked    = (id: number) => state.bookmarks.includes(id);
@@ -384,6 +388,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setSearchQuery,
       setShowSearch,
       setShowNotes,
+      setShowCurriculumMap,
       progressPercent,
       isBookmarked,
       isCompleted,

@@ -41,6 +41,8 @@ export function Header() {
     currentUser,
     activeTab,
     setActiveTab,
+    showCurriculumMap,
+    setShowCurriculumMap,
     logout,
     syncStatus,
   } = useApp();
@@ -69,17 +71,28 @@ export function Header() {
           className="h-full bg-brand-yellow transition-all duration-500"
           style={{ width: activeTab === 'sections' ? `${progressPercent}%` : '0%' }}
         />
+        {/* Curriculum map back button indicator */}
       </div>
 
       <div className="flex items-center gap-2 px-3 py-2">
         {/* ── Left: Logo ── */}
         <div className="flex items-center gap-2 flex-shrink-0 min-w-0">
-          {activeTab === 'sections' && (
+          {activeTab === 'sections' && !showCurriculumMap && (
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="p-1.5 rounded-lg hover:bg-white/10 transition-colors lg:hidden"
             >
               {sidebarOpen ? <X size={17} /> : <Menu size={17} />}
+            </button>
+          )}
+          {activeTab === 'sections' && !showCurriculumMap && (
+            <button
+              onClick={() => setShowCurriculumMap(true)}
+              className="p-1.5 rounded-lg hover:bg-white/10 transition-colors hidden sm:flex items-center gap-1 text-xs text-white/50 hover:text-white"
+              title="Back to curriculum"
+            >
+              <Menu size={15} />
+              <span className="hidden md:inline">Curriculum</span>
             </button>
           )}
           {/* Roof Ignite logo */}

@@ -26,47 +26,47 @@ export const SECTIONS: SectionMeta[] = [
     quiz: [
       {
         question: 'Who founded Roof Ignite and how old were they when they started?',
-        options: ['Jonathan and Cole, both 22', 'Mani and Oscar, both 15', 'Emmanuel and Mervin, both 18', 'Oscar and Jonathan, both 20'],
-        correctIndex: 1,
+        options: ['Mani and Oscar, both 15', 'Jonathan and Cole, both 22', 'Emmanuel and Mervin, both 18', 'Oscar and Jonathan, both 20'],
+        correctIndex: 0,
         explanation: 'Mani and Oscar co-founded Roof Ignite at 15 years old, starting out to help their families by supporting local contractors. That side project became the agency you are now part of.',
       },
       {
-        question: 'What is the current monthly revenue and the Q3 2026 target?',
-        options: ['$50K → $500K/month', '$200K–$300K/month → $1M/month', '$1M → $5M/month', '$500K → $2M/month'],
+        question: 'What is the current monthly revenue and the target by end of summer 2026?',
+        options: ['$50K → $500K/month', '$3K → $1M/month by end of summer 2026', '$1M → $5M/month', '$500K → $2M/month'],
         correctIndex: 1,
-        explanation: 'Current: $200K–$300K/month. Target: $1M/month by Q3 2026. The math: 5 pods × ~25 accounts × ~$4,500 average retainer. Your retention performance is the single biggest lever.',
+        explanation: 'Current: ~$3K/month. Target: $1M/month by end of summer 2026. The math: 5 pods × ~25 accounts × ~$4,500 average retainer. Your retention performance is the single biggest lever.',
       },
       {
         question: 'A client finishes Cycle 1 and gets 18 booked appointments. Cycle 2 launches. Which statement about retention is most accurate?',
         options: [
-          'Cycle 2 is worth slightly more due to ad optimisation',
           'Each additional cycle compounds — a client on Cycle 10 is worth roughly 10× Cycle 1',
+          'Cycle 2 is worth slightly more due to ad optimisation',
           'Client value stays flat after Cycle 3',
           'Retention only matters after Cycle 5',
         ],
-        correctIndex: 1,
+        correctIndex: 0,
         explanation: 'Retention compounds. Client on Cycle 1 = $X. Client on Cycle 10 = ~10X. Acquiring a new client costs thousands in sales overhead. Retaining one costs time and care. Retention > Acquisition, always.',
       },
       {
         question: 'Which three contractor niches does Roof Ignite serve, and which is primary?',
         options: [
           'Plumbing, HVAC, Solar — Plumbing is primary',
+          'HVAC, Electrical, Roofing — HVAC is primary',
           'Roofing, HVAC, Gutters — Roofing is primary (80–90% of revenue)',
           'Roofing, Landscaping, Gutters — Gutters is primary',
-          'HVAC, Electrical, Roofing — HVAC is primary',
         ],
-        correctIndex: 1,
+        correctIndex: 2,
         explanation: 'Roofing (80–90% of revenue), HVAC, and Gutters. Roofing has the highest average ticket ($8K–$25K), is seasonal, and insurance claims drive 40%+ of business. Gutters need 2–3× the lead volume vs roofing to be equally profitable.',
       },
       {
         question: 'The agency is in an "aggressive scaling phase." What does that mean for your role specifically?',
         options: [
           'You should focus on acquiring new clients yourself',
-          'Retention is your #1 job — every cycle you preserve drives the path to $1M/month',
           'You should prioritise reporting over client communication',
           'Speed to launch matters less now that the team is larger',
+          'Retention is your #1 job — every cycle you preserve drives the path to $1M/month',
         ],
-        correctIndex: 1,
+        correctIndex: 3,
         explanation: 'In a scaling phase, every retained client is compounding revenue. Losing a client in Cycle 3 costs the agency far more than the one retainer — it costs the entire future cycle stack. Retention is the mission.',
       },
       {
@@ -75,7 +75,7 @@ export const SECTIONS: SectionMeta[] = [
           'Clients to spend less so the agency makes more margin',
           'The agency to scale clients aggressively — higher spend = more leads = higher fee',
           'Pod managers to run ads themselves',
-          'Emmanuel to set up accounts faster',
+          'Emmanuel and Mervin to set up accounts faster',
         ],
         correctIndex: 1,
         explanation: 'The 10% of ad spend aligns incentives: higher client spend = more leads generated = more VA work = more management. A client at $5K/month in ad spend pays $4,500 retainer ($4K + $500). We win when clients scale.',
@@ -98,14 +98,14 @@ export const SECTIONS: SectionMeta[] = [
       },
       {
         question: 'Why do gutter accounts need 2–3× more leads than roofing to be equally profitable?',
-        options: ['Gutters have lower close rates', 'Gutter jobs average $1K–$5K vs roofing $8K–$25K — lower ticket means more volume needed', 'VA calling is less effective for gutters', 'Gutter clients are harder to reach'],
-        correctIndex: 1,
+        options: ['Gutter jobs average $1K–$5K vs roofing $8K–$25K — lower ticket means more volume needed', 'Gutters have lower close rates', 'VA calling is less effective for gutters', 'Gutter clients are harder to reach'],
+        correctIndex: 0,
         explanation: 'Gutters average $1K–$5K per job vs roofing $8K–$25K. To generate the same revenue you need 2–3× as many appointments. Set booking targets accordingly and evaluate performance with this in mind.',
       },
       {
         question: 'An HVAC lead\'s AC breaks at 9am. Your VA calls them at 9:45am. What likely happened?',
-        options: ['Fine — 45 min is within standard', 'Lead probably already booked with a competitor. Speed to lead < 5 min is critical for HVAC.', 'Lead still converts if price is right', 'HVAC clients are patient — no urgency'],
-        correctIndex: 1,
+        options: ['Fine — 45 min is within standard', 'Lead still converts if price is right', 'Lead probably already booked with a competitor. Speed to lead < 5 min is critical for HVAC.', 'HVAC clients are patient — no urgency'],
+        correctIndex: 2,
         explanation: 'HVAC emergencies = "I need this fixed today." A 45-minute response means they already called competitors. Speed to lead under 5 minutes is non-negotiable for HVAC — one of the biggest booking rate killers on these accounts.',
       },
       {
@@ -116,14 +116,14 @@ export const SECTIONS: SectionMeta[] = [
       },
       {
         question: 'A client\'s Facebook ad targets homeowners in Florida in May. Should you expect seasonal performance issues?',
-        options: ['Yes — roofing always slows in summer', 'No — Florida is a year-round roofing market', 'Yes — all contractor niches slow in summer', 'Only if they also serve HVAC'],
-        correctIndex: 1,
+        options: ['Yes — roofing always slows in summer', 'Yes — all contractor niches slow in summer', 'No — Florida is a year-round roofing market', 'Only if they also serve HVAC'],
+        correctIndex: 2,
         explanation: 'Roofing seasonality is geography-dependent. Florida = year-round market. Midwest/Northeast = Spring/Summer peak, Winter slowdown. Always factor in the client\'s market before attributing performance dips to seasonality.',
       },
       {
         question: 'What is the typical roofing sales cycle (lead to signed job)?',
-        options: ['Same day', '7–21 days', '60–90 days', '3–6 months'],
-        correctIndex: 1,
+        options: ['7–21 days', 'Same day', '60–90 days', '3–6 months'],
+        correctIndex: 0,
         explanation: 'Roofing sales cycles run 7–21 days — it\'s a high-ticket considered purchase. Homeowners get multiple quotes, check reviews, discuss with spouses. This is why getting them on a calendar call fast matters more than trying to close on first contact.',
       },
     ],
@@ -174,7 +174,7 @@ export const SECTIONS: SectionMeta[] = [
       },
       {
         question: 'You did a training account setup with Emmanuel. How many setups should you handle going forward?',
-        options: ['All setups in your pod', '50% — split with Emmanuel', 'Zero — task all setups to Emmanuel via ClickUp from now on', 'First 5 then hand off'],
+        options: ['All setups in your pod', '50% — split with Emmanuel and Mervin', 'Zero — task all setups to Emmanuel and Mervin via ClickUp from now on', 'First 5 then hand off'],
         correctIndex: 2,
         explanation: 'You do ONE training setup to understand the process. After that, Emmanuel and Mervin handle all setups. Your job is to task them via ClickUp with full client details + GHL sub-account link + 48hr deadline label.',
       },
@@ -214,11 +214,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'All campaign names must include what specific string — and why?',
         options: [
           '"META" — for Meta billing tracking',
-          '"B2C" — without it the campaign will not appear in the Account Master Dashboard',
           '"RI" — for Roof Ignite internal tracking',
+          '"B2C" — without it the campaign will not appear in the Account Master Dashboard',
           '"LEADS" — to match the campaign objective',
         ],
-        correctIndex: 1,
+        correctIndex: 2,
         explanation: '"B2C" must be in every campaign name. The Account Master Dashboard filters for this string to surface the right campaigns. Missing it = the campaign becomes invisible in your dashboard. Verify after every setup or duplication.',
       },
       {
@@ -247,11 +247,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'What is the survey conversion rate benchmark — and what does a low rate indicate?',
         options: [
           'Target > 5%. Low rate = bad targeting.',
-          'Target > 2.5%. Low rate = survey has too much friction, too many questions, or a mismatch with the ad promise.',
           'Target > 1%. Any rate above 1% is acceptable.',
           'Target > 10%. Low rate = ads are reaching the wrong audience.',
+          'Target > 2.5%. Low rate = survey has too much friction, too many questions, or a mismatch with the ad promise.',
         ],
-        correctIndex: 1,
+        correctIndex: 3,
         explanation: 'Survey conversion rate benchmark: > 2.5%. Low rate = too much friction (too many questions, hard to complete on mobile) or the survey promise doesn\'t match the ad (e.g. ad says free estimate but survey asks for credit check). Shorten and simplify when below 1.5%.',
       },
     ],
@@ -333,44 +333,44 @@ export const SECTIONS: SectionMeta[] = [
         question: 'An onboarding call just ended. What are the 4 required steps within the next hour?',
         options: [
           'Call Jonathan → Email client → Build GHL sub-account → Post on Slack',
-          'Paste Fathom transcript into Custom GPT → post summary to #post-onboarding-discussion → ClickUp task for Emmanuel → text client confirming next steps',
           'Build GHL sub-account → Create ClickUp task → Post on Slack → Email client',
+          'Paste Fathom transcript into Custom GPT → post summary to #post-onboarding-discussion → ClickUp task for Emmanuel and Mervin → text client confirming next steps',
           'Email client → Call Emmanuel → Post on #internal-team → Wait for Jonathan to brief you',
         ],
-        correctIndex: 1,
-        explanation: 'Within 1 hour of every onboarding call: (1) Paste Fathom transcript into Custom GPT → structured summary. (2) Post summary to #post-onboarding-discussion. (3) ClickUp task for Emmanuel with client name, GHL sub-account link, 48hr deadline. (4) Text client confirming their next steps.',
+        correctIndex: 2,
+        explanation: 'Within 1 hour of every onboarding call: (1) Paste Fathom transcript into Custom GPT → structured summary. (2) Post summary to #post-onboarding-discussion. (3) ClickUp task for Emmanuel and Mervin with client name, GHL sub-account link, 48hr deadline. (4) Text client confirming their next steps.',
       },
       {
         question: 'A2P (10DLC) registration takes how long, and who handles it?',
         options: [
-          '24 hours. You handle it through Meta.',
           '2–3 weeks for approval. Emmanuel handles it exclusively via GHL\'s A2P Wizard — never pod managers.',
+          '24 hours. You handle it through Meta.',
           '48 hours. Emmanuel handles it if you\'re busy.',
           '1 week. Leila handles it through the VA portal.',
         ],
-        correctIndex: 1,
+        correctIndex: 0,
         explanation: 'A2P / 10DLC = GHL phone registration (NOT Meta). Approval takes 2–3 weeks. A rejected application = another 2–3 weeks wait. This is why you always task Emmanuel immediately via ClickUp with the client name + GHL sub-account link. Never attempt A2P yourself.',
       },
       {
         question: 'A client\'s A2P is still pending after 2 weeks. Can VAs contact leads in the meantime?',
         options: [
           'No — all outreach is blocked until A2P is approved',
-          'Yes — VAs can make outbound calls while A2P is pending. Only SMS/text is blocked.',
           'Only if the client approves it manually',
           'No — both calls and SMS are blocked during A2P review',
+          'Yes — VAs can make outbound calls while A2P is pending. Only SMS/text is blocked.',
         ],
-        correctIndex: 1,
+        correctIndex: 3,
         explanation: 'A2P only restricts SMS/text messaging — outbound phone calls are unaffected. VAs can and should continue calling leads while A2P is pending. Never pause outreach while waiting for approval. Leads go cold fast.',
       },
       {
         question: 'A brand new Facebook page just launched for a client. Can you run ads immediately?',
         options: [
           'Yes — launch ads the same day',
-          'No — boost the page to 200+ followers before launching ads. New pages with < 100 followers have reduced ad delivery.',
           'Yes, but only if the client has a Business Manager',
+          'No — boost the page to 200+ followers before launching ads. New pages with < 100 followers have reduced ad delivery.',
           'Only if Emmanuel has completed the GHL setup first',
         ],
-        correctIndex: 1,
+        correctIndex: 2,
         explanation: 'Brand new Facebook pages need to be boosted to 200+ followers before launching ads. Pages with very few followers have limited credibility and can affect ad delivery. This is part of the pre-launch checklist.',
       },
       {
@@ -436,12 +436,12 @@ export const SECTIONS: SectionMeta[] = [
       {
         question: 'Ken is your graphic designer. He\'s based in the Philippines. What is his standard turnaround and what must you include in his ClickUp task?',
         options: [
-          '4 hours. Just describe what you need.',
           '24 hours. Include: brand info, target market, reference images, and due date. Plan ahead — never wait until something is urgent.',
+          '4 hours. Just describe what you need.',
           '48 hours. Include the client name only.',
           'Same day. Send via Slack DM.',
         ],
-        correctIndex: 1,
+        correctIndex: 0,
         explanation: 'Ken\'s standard: 24-hour turnaround, Philippines timezone (UTC+8). Always include in ClickUp: brand info, target market, reference images, and a specific due date. Never wait until creative is urgent — Ken needs planning lead time due to the timezone gap.',
       },
       {
@@ -459,11 +459,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'Mervin\'s role is:',
         options: [
           'Lead graphic designer alongside Ken',
-          'Full-cycle media buyer and setup support — same tier as Emmanuel, task via ClickUp',
           'Head of VA management alongside Leila',
+          'Full-cycle media buyer and setup support — same tier as Emmanuel, task via ClickUp',
           'B2B ad manager who generates new client leads',
         ],
-        correctIndex: 1,
+        correctIndex: 2,
         explanation: 'Mervin is a full-cycle media buyer who supports Emmanuel on setups and ongoing media buying when Emmanuel is at capacity. Task him exactly the same way as Emmanuel — via ClickUp with client name, GHL link, and 48hr deadline.',
       },
       {
@@ -508,11 +508,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'Account health is 🔴 Red. What does this mean and what do you do immediately?',
         options: [
           'Red = 10–20% behind pace. Note it in your Monday update.',
-          'Red = 40%+ behind pace. Immediate action + escalate to Jonathan.',
           'Red = below 50% of target. Escalate to Oscar.',
           'Red = ads are paused. Restart the campaign.',
+          'Red = 40%+ behind pace. Immediate action + escalate to Jonathan.',
         ],
-        correctIndex: 1,
+        correctIndex: 3,
         explanation: 'Red = 40%+ behind booking pace. Immediate actions: update Command Centre, tag Leila to prioritise open leads, check Layer 2, escalate to Emmanuel/Ken for creative if needed, report at next review call, loop in Jonathan. Do not sit on red accounts.',
       },
       {
@@ -594,8 +594,8 @@ export const SECTIONS: SectionMeta[] = [
       },
       {
         question: 'At what ad frequency level should you act immediately on creative fatigue?',
-        options: ['> 1.5', '> 2.5 = incoming warning; > 3.5 = act immediately', '> 5.0', '> 4.0'],
-        correctIndex: 1,
+        options: ['> 2.5 = incoming warning; > 3.5 = act immediately', '> 1.5', '> 5.0', '> 4.0'],
+        correctIndex: 0,
         explanation: 'Frequency > 2.5 = creative fatigue is incoming — monitor closely. Frequency > 3.5 = act immediately. At these levels the same audience is seeing the same creative too many times, CTR drops, CPC rises, and lead volume falls. Start the protocol.',
       },
       {
@@ -613,11 +613,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'A client claims their close rate on appointments is low. Your first step is:',
         options: [
           'Pause the campaign — the leads must be low quality',
-          'Request full CRM sales data — what happened to each appointment? Only diagnose media after reviewing sales.',
           'Call Mani to take over the client',
+          'Request full CRM sales data — what happened to each appointment? Only diagnose media after reviewing sales.',
           'Offer a discounted next cycle to retain the client',
         ],
-        correctIndex: 1,
+        correctIndex: 2,
         explanation: 'Low close rate = almost always a sales problem, not a media problem. Request full CRM data first: were appointments no-shows, bad fits, or lost to competition? If the client goes quiet after you ask for data, they don\'t have data — which tells you something. Diagnose before prescribing.',
       },
       {
@@ -677,12 +677,12 @@ export const SECTIONS: SectionMeta[] = [
       {
         question: 'What is the 24–48 hour rule?',
         options: [
-          'All ClickUp tasks must be completed within 48 hours',
           'If a client owes you something (info, access, approval), get an answer within 24–48 hours or escalate — no blocker sits unaddressed',
+          'All ClickUp tasks must be completed within 48 hours',
           'New accounts must go live within 48 hours of signing',
           'Client calls must be returned within 24 hours always',
         ],
-        correctIndex: 1,
+        correctIndex: 0,
         explanation: 'The 24–48 hour rule: if a client owes you something (Facebook access, billing fix, survey approval), you have 24–48 hours to get a response before escalating. No blocker sits unaddressed. This protects Speed to Cashflow and cycle timelines.',
       },
       {
@@ -700,11 +700,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'What does "radical ownership" mean at Roof Ignite?',
         options: [
           'You own the creative process — brief Ken yourself',
-          'You own every client relationship in your pod — their results, their problems, their renewal',
           'You own the billing process — chase invoices yourself',
           'You own the VA scheduling — coordinate with Leila daily',
+          'You own every client relationship in your pod — their results, their problems, their renewal',
         ],
-        correctIndex: 1,
+        correctIndex: 3,
         explanation: 'Radical ownership: you are the quarterback of your pod. Every client relationship, result, and problem is yours. You coordinate specialists (Emmanuel, Ken, Leila), but the outcome is always your responsibility. "I was waiting for Emmanuel" is not an excuse — follow up, escalate, own it.',
       },
       {
@@ -754,11 +754,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'After an onboarding call, the Fathom transcript gets pasted into the Custom GPT. Where does the output go next?',
         options: [
           'Email it to Jonathan',
-          'Post the structured summary to #post-onboarding-discussion on Slack',
           'Save it to the client\'s GHL sub-account',
+          'Post the structured summary to #post-onboarding-discussion on Slack',
           'Upload to the client\'s ClickUp folder',
         ],
-        correctIndex: 1,
+        correctIndex: 2,
         explanation: 'Fathom transcript → Custom GPT → structured summary → post to #post-onboarding-discussion on Slack. This keeps Jonathan and the team immediately looped in after every new client call. Do this within 1 hour of every onboarding call, every time.',
       },
       {
@@ -776,11 +776,11 @@ export const SECTIONS: SectionMeta[] = [
         question: 'You need Ken to create AI-generated ad creatives for a roofing client. What must you include in the ClickUp task?',
         options: [
           'Just "roofing ad creatives please"',
-          'Brand info, target market description, reference images, and a specific due date — plan ahead, Ken is in Philippines timezone',
           'Client name and which type of ad (Single, Trifold)',
           'A Loom video briefing',
+          'Brand info, target market description, reference images, and a specific due date — plan ahead, Ken is in Philippines timezone',
         ],
-        correctIndex: 1,
+        correctIndex: 3,
         explanation: 'Every Ken task must include: (1) Brand info (colors, fonts, logo). (2) Target market description. (3) Reference images (from previous winning creatives or client photos). (4) Specific due date. Ken is in the Philippines (UTC+8) with a 24-hour turnaround — plan ahead. Never make a request urgent.',
       },
       {

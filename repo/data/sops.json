@@ -101,6 +101,13 @@
   ],
   "sops": [
     {
+      "id": "client_ongoing_mgmt",
+      "title": "Client Ongoing Management SOP",
+      "description": "Master playbook for managing live accounts — KPI targets by spend level, DEFCON client watch-outs, troubleshooting decision tree, pixel seasoning protocol, and 35+ real-account training Looms covering every scenario you'll face. Start here when a client is struggling.",
+      "url": "https://docs.google.com/document/d/1PRNfivI7vq0gqNT4YSBlwo1m93GUERF6gWR9fQQ5gqY/edit?usp=sharing",
+      "tags": ["client", "monitoring", "process", "critical"]
+    },
+    {
       "id": "onboarding_call",
       "title": "Onboarding Call SOP",
       "description": "Step-by-step protocol for running a new client onboarding call. Pre-call prep, during-call checklist, and post-call actions within 1 hour.",

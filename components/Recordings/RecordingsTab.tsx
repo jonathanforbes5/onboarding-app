@@ -203,6 +203,7 @@ function ReferenceCard({ title, description, url, duration_mins, date, participa
 }
 
 type ViewFilter = 'all' | 'onboarding' | 'service' | 'strategy';
+type LoomFilter = 'all' | 'lead_flow' | 'creative' | 'osa' | 'technical' | 'advanced' | 'retention';
 
 const FILTERS: { id: ViewFilter; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -211,8 +212,120 @@ const FILTERS: { id: ViewFilter; label: string }[] = [
   { id: 'strategy', label: 'Strategy & Reviews' },
 ];
 
+const LOOM_FILTERS: { id: LoomFilter; label: string; color: string }[] = [
+  { id: 'all',        label: 'All',             color: '#F5C800' },
+  { id: 'lead_flow',  label: 'Lead Flow',        color: '#22C55E' },
+  { id: 'creative',   label: 'Creative',         color: '#F59E0B' },
+  { id: 'osa',        label: 'OSA Fixes',        color: '#EF4444' },
+  { id: 'technical',  label: 'Technical',        color: '#4A90D9' },
+  { id: 'advanced',   label: 'Advanced',         color: '#A78BFA' },
+  { id: 'retention',  label: 'Retention',        color: '#EC4899' },
+];
+
+const LOOM_CATEGORY_LABELS: Record<LoomFilter, string> = {
+  all:        'All',
+  lead_flow:  'Lead Flow',
+  creative:   'Creative & Ads',
+  osa:        'Out-of-Service-Area',
+  technical:  'Technical Fix',
+  advanced:   'Advanced Ops',
+  retention:  'Client Retention',
+};
+
+interface TrainingLoom {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  category: string;
+  priority: string;
+}
+
+function LoomCard({ loom }: { loom: TrainingLoom }) {
+  const catColor = LOOM_FILTERS.find((f) => f.id === loom.category)?.color ?? '#666';
+  const isCore = loom.priority === 'core';
+  return (
+    <a
+      href={loom.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: 'flex',
+        gap: 12,
+        backgroundColor: '#111111',
+        border: `1px solid ${isCore ? catColor + '33' : '#1E1E1E'}`,
+        borderRadius: 12,
+        padding: '14px 16px',
+        textDecoration: 'none',
+        transition: 'border-color 0.15s, background-color 0.15s',
+        cursor: 'pointer',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = catColor + '66';
+        e.currentTarget.style.backgroundColor = '#161616';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = isCore ? catColor + '33' : '#1E1E1E';
+        e.currentTarget.style.backgroundColor = '#111111';
+      }}
+    >
+      <div style={{
+        width: 36,
+        height: 36,
+        borderRadius: 10,
+        backgroundColor: catColor + '15',
+        border: `1px solid ${catColor}30`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        color: catColor,
+        fontSize: 14,
+      }}>
+        ▶
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+          <span style={{ color: '#F5F5F5', fontSize: 13, fontWeight: 700 }}>{loom.title}</span>
+          {isCore && (
+            <span style={{
+              backgroundColor: catColor,
+              color: '#000',
+              fontSize: 9,
+              fontWeight: 800,
+              padding: '2px 7px',
+              borderRadius: 20,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              flexShrink: 0,
+            }}>
+              Core
+            </span>
+          )}
+        </div>
+        <div style={{ color: '#666', fontSize: 12, lineHeight: 1.55, marginBottom: 5 }}>{loom.description}</div>
+        <span style={{
+          backgroundColor: catColor + '18',
+          border: `1px solid ${catColor}30`,
+          color: catColor,
+          fontSize: 10,
+          fontWeight: 700,
+          padding: '2px 8px',
+          borderRadius: 20,
+        }}>
+          {LOOM_CATEGORY_LABELS[loom.category as LoomFilter] ?? loom.category}
+        </span>
+      </div>
+      <div style={{ color: '#555', marginTop: 2, flexShrink: 0 }}>
+        <ExternalLinkIcon />
+      </div>
+    </a>
+  );
+}
+
 export function RecordingsTab() {
   const [filter, setFilter] = useState<ViewFilter>('all');
+  const [loomFilter, setLoomFilter] = useState<LoomFilter>('all');
 
   const filteredTraining = recordingsData.recordings.filter((r) => {
     if (filter === 'all') return true;
@@ -228,7 +341,12 @@ export function RecordingsTab() {
     return true;
   });
 
-  const showTraining = filter === 'all' || filter === 'onboarding' || filter === 'service';
+  const filteredLooms = (recordingsData.training_looms as TrainingLoom[]).filter((l) => {
+    if (loomFilter === 'all') return true;
+    return l.category === loomFilter;
+  });
+
+  const showTraining  = filter === 'all' || filter === 'onboarding' || filter === 'service';
   const showReference = filter === 'all' || filter === 'onboarding' || filter === 'strategy';
 
   return (
@@ -246,7 +364,7 @@ export function RecordingsTab() {
             Reference Recordings
           </h1>
           <p style={{ color: '#555', fontSize: 13, margin: 0 }}>
-            Training walkthroughs and recent team calls. Watch these to understand how Roof Ignite operates in practice.
+            Training walkthroughs, real team calls, and 37 hands-on Loom walkthroughs from the Client Ongoing Management SOP — covering every scenario you'll face on live accounts.
           </p>
         </div>
 
@@ -306,7 +424,7 @@ export function RecordingsTab() {
 
         {/* ── Training Videos ── */}
         {showTraining && filteredTraining.length > 0 && (
-          <div>
+          <div style={{ marginBottom: '2.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem' }}>
               <span style={{ fontSize: 16 }}>🎓</span>
               <h2 style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, margin: 0 }}>Training Videos</h2>
@@ -338,6 +456,68 @@ export function RecordingsTab() {
             No recordings match this filter.
           </div>
         )}
+
+        {/* ── Training Looms ── */}
+        <div style={{ marginTop: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: 16 }}>🎬</span>
+            <h2 style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, margin: 0 }}>Training Looms</h2>
+            <span style={{
+              backgroundColor: '#1A1400',
+              border: '1px solid #2A2200',
+              color: '#F5C800',
+              fontSize: 10,
+              padding: '2px 7px',
+              borderRadius: 20,
+              fontWeight: 700,
+            }}>
+              {filteredLooms.length}
+            </span>
+          </div>
+          <p style={{ color: '#444', fontSize: 12, margin: '0 0 1rem', paddingLeft: 24 }}>
+            Real account walkthroughs from the Client Ongoing Management SOP — every scenario you'll face on live accounts. Start with the <strong style={{ color: '#888' }}>Core</strong> ones.
+          </p>
+
+          {/* Loom filter pills */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem', paddingLeft: 24 }}>
+            {LOOM_FILTERS.map((f) => {
+              const active = loomFilter === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setLoomFilter(f.id)}
+                  style={{
+                    padding: '4px 11px',
+                    borderRadius: 20,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    border: '1px solid',
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                    transition: 'all 0.1s',
+                    backgroundColor: active ? f.color : '#111',
+                    borderColor: active ? f.color : '#2A2A2A',
+                    color: active ? '#000' : '#666',
+                  }}
+                >
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {filteredLooms.map((loom) => (
+              <LoomCard key={loom.id} loom={loom} />
+            ))}
+          </div>
+
+          {filteredLooms.length === 0 && (
+            <div style={{ textAlign: 'center', color: '#444', fontSize: 13, padding: '2rem' }}>
+              No Looms in this category.
+            </div>
+          )}
+        </div>
 
       </div>
     </div>

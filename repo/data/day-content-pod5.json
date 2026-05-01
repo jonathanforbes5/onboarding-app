@@ -2,7 +2,7 @@
   "meta": {
     "pod": 5,
     "managers": ["Ksenia", "Adeen"],
-    "start_date": "2026-05-05",
+    "start_date": "2026-05-04",
     "account_target_week1": "10-15 accounts in first 2 weeks",
     "billing_goal": "First payment within 60 days of contract signed"
   },
@@ -16,19 +16,22 @@
       "sections": [
         {
           "id": "p5d1-orientation",
-          "title": "9:00–11:00 AM — Company Foundations Presentation",
+          "title": "Company Foundations Presentation",
           "type": "session",
+          "instruction": "Work through the Company tab in this portal. The presentation is long — take your time, split across Day 1 and Day 2 morning if needed. Complete every quiz with at least 80%.",
           "items": [
+            "Open the Company tab in this portal and start from Section 1",
             "Company history: Mani and Oscar founding story, Roof Ignite brand and mission",
             "Three niches: Roofing (primary 80–90%), HVAC, Gutters — ticket sizes, sales cycles, seasonality",
             "Client ICP: $2.5M+ revenue, 3+ years in business, growth-minded, $3K+/month ad spend",
-            "28-day cycle model: setup fees, retainer (~$4K + 10% ad spend), 80% margin rule (12/15 min)",
+            "28-day cycle model: setup fees ($1.5K–$5K), retainer ($4K + 10% ad spend), 80% margin rule",
             "Full funnel: Ads → Landing Page → Survey → GHL CRM → VA call → Booked Appointment",
             "Your role: Revenue Retention Engine — quarterback, not the doer",
             "Layer 1 vs. Layer 2 metrics framework — how you diagnose performance",
             "Monday/Thursday status updates → Tuesday/Friday review calls structure",
             "Culture: radical ownership, no egos, feedback-first",
-            "Growth roadmap: 5 pods → $1M/month target by Q3 2026"
+            "Complete each section knowledge quiz — minimum 80% to pass",
+            "Growth roadmap: 5 pods → $1M/month target by end of summer 2026"
           ]
         },
         {
@@ -56,7 +59,6 @@
             "Get added to relevant Slack channels: #internal-team, #ops, #closer-call-recordings",
             "Log into GoHighLevel (GHL) — confirm sub-account access",
             "Log into Meta Business Manager — confirm partner access to client accounts",
-            "Access Account Master Dashboard — confirm your accounts are showing",
             "Access Command Center — understand the health status dashboard"
           ]
         },
@@ -64,12 +66,22 @@
           "id": "p5d1-intro",
           "title": "Team Introductions",
           "type": "checklist",
+          "instruction": "Introduce yourself to everyone this week. Shadow the Friday review call only — Tuesday's is too early in your training.",
           "items": [
-            "Message Emmanuel in Slack: introduce yourself, confirm ClickUp setup process",
+            "Meet with Oscar (CEO & Co-Founder) — introduce yourself from a company foundations standpoint",
+            "Meet with Mani (Co-Founder / Director of Sales) — understand the sales side of the business",
+            "Introduce yourself to Pod 1 managers (Gianmarco & Gregory) in Slack",
+            "Introduce yourself to Pod 2 managers (Cole & Tyler) in Slack — Cole is the go-to for internal tools/systems",
+            "Introduce yourself to Pod 3 managers (Kyle & Abdullah) in Slack — started 3 weeks before you",
+            "Introduce yourself to Pod 4 manager (Sam) in Slack — started April 14, great peer resource",
             "Message Leila in Slack: introduce yourself, request Logbook access",
-            "Message Ken in Slack: introduce yourself (he's in Philippines timezone — plan ahead)",
-            "Shadow a Tuesday or Friday review call if one occurs this week",
-            "Introduce yourself to Pod 4 managers (Sam) — they're 3 weeks ahead of you, good peer resource"
+            "Message Aica in Slack: introduce yourself",
+            "Message Pamela in Slack: introduce yourself",
+            "Message Emmanuel in Slack: introduce yourself, confirm ClickUp setup process",
+            "Message Mervin in Slack: introduce yourself",
+            "Message Ken in Slack: introduce yourself (Philippines timezone — plan ahead for creative requests)",
+            "Message Bren in Slack: introduce yourself",
+            "Shadow the Friday review call — do NOT shadow Tuesday's call yet (too early in training)"
           ]
         }
       ]
@@ -288,8 +300,8 @@
     },
     {
       "day": 7,
-      "title": "First Tuesday Review Call",
-      "subtitle": "Your first live review call with Jonathan and Oscar",
+      "title": "First Live Review Call",
+      "subtitle": "Your first Tuesday review call — come prepared with Layer 1 data for every account",
       "quiz_id": null,
       "unlock_condition": "day6_complete",
       "sections": [

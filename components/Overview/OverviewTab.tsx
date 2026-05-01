@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import teamData from '@/repo/data/team.json';
-import recordingsData from '@/repo/data/recordings.json';
 
 // ----------- Colour tokens (shared with WorksheetTab) -----------
 const C = {
@@ -79,16 +78,15 @@ function Card({ children, style }: { children: React.ReactNode; style?: React.CS
 }
 
 // ----------- Team member card -----------
-function TeamCard({ member, userPod }: { member: typeof teamData[0]; userPod: number }) {
+function TeamCard({ member }: { member: typeof teamData[0] }) {
   const [expanded, setExpanded] = useState(false);
   const accent = TIER_ACCENT[member.tier] ?? C.muted;
-  const isUserPod = (member as any).pod === userPod;
 
   return (
     <div
       style={{
         backgroundColor: C.surf3,
-        border: `1px solid ${isUserPod ? C.acc + '44' : C.border}`,
+        border: `1px solid ${C.border}`,
         borderRadius: 10,
         padding: '12px 14px',
         cursor: (member as any).contact || (member as any).notes ? 'pointer' : 'default',
@@ -119,40 +117,6 @@ function TeamCard({ member, userPod }: { member: typeof teamData[0]; userPod: nu
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
             <span style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>{member.name}</span>
-            {isUserPod && (
-              <span
-                style={{
-                  backgroundColor: C.acc + '22',
-                  border: `1px solid ${C.acc}55`,
-                  color: C.acc,
-                  fontSize: 9,
-                  fontWeight: 800,
-                  padding: '1px 6px',
-                  borderRadius: 4,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                Your Pod
-              </span>
-            )}
-            {(member as any).is_key && (
-              <span
-                style={{
-                  backgroundColor: '#2A1A00',
-                  border: `1px solid ${C.orange}44`,
-                  color: C.orange,
-                  fontSize: 9,
-                  fontWeight: 800,
-                  padding: '1px 6px',
-                  borderRadius: 4,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.06em',
-                }}
-              >
-                Key Contact
-              </span>
-            )}
           </div>
           <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>{member.role}</div>
         </div>
@@ -214,79 +178,10 @@ function TeamCard({ member, userPod }: { member: typeof teamData[0]; userPod: nu
   );
 }
 
-// ----------- Reference link -----------
-function RefLink({
-  icon,
-  label,
-  desc,
-  url,
-  badge,
-}: {
-  icon: string;
-  label: string;
-  desc: string;
-  url: string;
-  badge?: string;
-}) {
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: 12,
-        padding: '12px 14px',
-        backgroundColor: C.surf3,
-        border: `1px solid ${C.border}`,
-        borderRadius: 10,
-        textDecoration: 'none',
-        transition: 'border-color 0.15s',
-        cursor: 'pointer',
-      }}
-      onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.borderColor = C.acc + '88')}
-      onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.borderColor = C.border)}
-    >
-      <span style={{ fontSize: 20, flexShrink: 0, marginTop: 1 }}>{icon}</span>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-          <span style={{ color: C.text, fontSize: 13, fontWeight: 700 }}>{label}</span>
-          {badge && (
-            <span
-              style={{
-                backgroundColor: C.acc,
-                color: '#000',
-                fontSize: 9,
-                fontWeight: 900,
-                padding: '1px 6px',
-                borderRadius: 4,
-                textTransform: 'uppercase',
-              }}
-            >
-              {badge}
-            </span>
-          )}
-        </div>
-        <div style={{ color: C.muted, fontSize: 12, marginTop: 2, lineHeight: 1.5 }}>{desc}</div>
-      </div>
-      <span style={{ color: C.muted2, fontSize: 12, flexShrink: 0, marginTop: 2 }}>↗</span>
-    </a>
-  );
-}
-
-const POD5_USERS = new Set(['ksenia', 'adeen']);
-
 // ----------- Main OverviewTab -----------
 export function OverviewTab() {
-  const { currentUser } = useApp();
+  const { currentUser, setShowSearch } = useApp();
   const userName = currentUser?.displayName ?? 'Pod Manager';
-  const isPod5   = POD5_USERS.has(currentUser?.userKey ?? '');
-  const podNum   = isPod5 ? 5 : 4;
-  const podStart = isPod5 ? 'May 5, 2026' : 'April 14, 2026';
-  const podPeer  = isPod5
-    ? 'Pod 4 managers (Sam) started 3 weeks before you — great peer resource.'
-    : 'Pod 3 managers (Kyle, Abdullah) started 3 weeks before you — great peer resource.';
 
   // Group team by tier
   const teamByTier = TIER_ORDER.reduce<Record<string, typeof teamData>>((acc, tier) => {
@@ -313,12 +208,11 @@ export function OverviewTab() {
             border: `1px solid ${C.acc}44`,
             borderRadius: 16,
             padding: '28px 28px 24px',
-            marginBottom: 28,
+            marginBottom: 20,
             position: 'relative',
             overflow: 'hidden',
           }}
         >
-          {/* Decorative accent */}
           <div
             style={{
               position: 'absolute',
@@ -348,54 +242,46 @@ export function OverviewTab() {
             >
               RI
             </div>
-            <div>
+            <div style={{ flex: 1 }}>
               <p style={{ color: C.acc, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', margin: '0 0 4px' }}>
-                Pod {podNum} · {podStart}
+                Roof Ignite · Pod Manager Portal
               </p>
               <h1 style={{ color: C.text, fontSize: 26, fontWeight: 900, margin: '0 0 6px', letterSpacing: '-0.5px' }}>
                 Welcome, {userName}.
               </h1>
-              <p style={{ color: '#aaa', fontSize: 14, margin: 0, lineHeight: 1.6, maxWidth: 560 }}>
-                You're joining <strong style={{ color: C.text }}>Roof Ignite</strong> as a Pod {podNum} Manager.
-                Your job is to be the single point of accountability for a portfolio of contractor clients — from onboarding through renewal.
-                {isPod5 && <><br /><span style={{ color: '#888', fontSize: 13 }}>Pod 5 uses the updated onboarding process from the April 30 call — you're expected to be independent by Day 3.</span></>}
+              <p style={{ color: '#aaa', fontSize: 14, margin: 0, lineHeight: 1.6, maxWidth: 580 }}>
+                This portal is your single source of truth for everything you need as a pod manager —
+                company training, SOPs, recordings, tools, and your 10-day onboarding worksheet.
+                Use it daily to stay educated, find resources fast, and never miss the mark.
               </p>
             </div>
           </div>
-
-          {/* Mission strip */}
-          <div
-            style={{
-              display: 'flex',
-              gap: 12,
-              marginTop: 20,
-              flexWrap: 'wrap',
-            }}
-          >
-            {[
-              { label: 'Primary niche', value: 'Roofing (80–90%)' },
-              { label: 'Billing model', value: '28-day performance cycles' },
-              { label: 'Your target', value: '25–30 accounts' },
-              { label: 'Revenue target', value: '$1M/mo by Q3 2026' },
-            ].map((item) => (
-              <div
-                key={item.label}
-                style={{
-                  flex: '1 1 140px',
-                  backgroundColor: C.surf3,
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 8,
-                  padding: '8px 12px',
-                }}
-              >
-                <div style={{ color: C.muted, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>
-                  {item.label}
-                </div>
-                <div style={{ color: C.text, fontSize: 13, fontWeight: 700 }}>{item.value}</div>
-              </div>
-            ))}
-          </div>
         </div>
+
+        {/* ── Search bar ── */}
+        <button
+          onClick={() => setShowSearch(true)}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            backgroundColor: C.surf2,
+            border: `1px solid ${C.border}`,
+            borderRadius: 10,
+            padding: '11px 16px',
+            cursor: 'pointer',
+            marginBottom: 24,
+            textAlign: 'left',
+            transition: 'border-color 0.15s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.borderColor = C.acc + '66')}
+          onMouseLeave={(e) => (e.currentTarget.style.borderColor = C.border)}
+        >
+          <span style={{ color: C.muted2, fontSize: 15 }}>🔍</span>
+          <span style={{ color: C.muted2, fontSize: 13, flex: 1 }}>Search training sections, SOPs, recordings…</span>
+          <span style={{ color: C.muted2, fontSize: 11, backgroundColor: C.surf3, border: `1px solid ${C.border2}`, borderRadius: 4, padding: '1px 6px' }}>⌘K</span>
+        </button>
 
         {/* ── Your Role ── */}
         <div style={{ marginBottom: 28 }}>
@@ -518,75 +404,12 @@ export function OverviewTab() {
                   }}
                 >
                   {members.map((m) => (
-                    <TeamCard key={m.id} member={m} userPod={podNum} />
+                    <TeamCard key={m.id} member={m} />
                   ))}
                 </div>
               </div>
             );
           })}
-        </div>
-
-        {/* ── Quick Reference ── */}
-        <div style={{ marginBottom: 28 }}>
-          <SectionTitle>Reference Recordings</SectionTitle>
-          <p style={{ color: C.muted, fontSize: 13, margin: '0 0 12px' }}>
-            Real calls and walkthroughs to study. Start with Service Delivery Part 2.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {recordingsData.recordings.map((rec) => (
-              <RefLink
-                key={rec.id}
-                icon="🎥"
-                label={rec.title}
-                desc={rec.description}
-                url={rec.url}
-                badge={(rec as any).watch_first ? 'Watch First' : undefined}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* ── SOPs & Tools ── */}
-        <div style={{ marginBottom: 28 }}>
-          <SectionTitle>SOPs & Tools</SectionTitle>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {recordingsData.sop_links.map((sop) => (
-              <RefLink
-                key={sop.id}
-                icon="📄"
-                label={sop.title}
-                desc={sop.description}
-                url={sop.url}
-              />
-            ))}
-            {recordingsData.tools.map((tool) => (
-              <RefLink
-                key={tool.id}
-                icon="🔧"
-                label={tool.title}
-                desc={tool.description}
-                url={tool.url}
-              />
-            ))}
-            <RefLink
-              icon="🖥️"
-              label="GoHighLevel (GHL)"
-              desc="Central CRM. Sub-account view, contacts, automations, calendar. Start here for any active account."
-              url="https://app.gohighlevel.com"
-            />
-            <RefLink
-              icon="📢"
-              label="Meta Business Manager"
-              desc="Campaign dashboard. Review metrics, check placements, verify CAPI and campaign naming (B2C required)."
-              url="https://business.facebook.com"
-            />
-            <RefLink
-              icon="✅"
-              label="ClickUp"
-              desc="All task coordination lives here. Create tasks for Emmanuel (setups, A2P), Ken (creatives), Leila (VA issues). Always include client details + 48hr deadline."
-              url="https://app.clickup.com"
-            />
-          </div>
         </div>
 
         {/* ── Slack Channels ── */}
@@ -600,10 +423,8 @@ export function OverviewTab() {
             }}
           >
             {[
-              { channel: '#ops-manager-discussion', desc: 'Post your Monday & Thursday updates here. All pod managers, media buyers, and leadership are in this channel.' },
-              { channel: '#internal-team', desc: 'Post your good morning and good night messages here. Team-wide channel (all VAs included). Announce account launches and accounts going orange or red.' },
-              { channel: '#closer-call-recordings', desc: 'Every sales call is posted here. Pull these before every client onboarding call.' },
-              { channel: '#post-onboarding-discussion', desc: 'Post your Custom GPT summary after every onboarding call.' },
+              { channel: '#ops', desc: 'Operations announcements and SOP updates. Read daily.' },
+              { channel: '#internal-team', desc: 'VA task assignments and team-wide notices. Post all account-specific requests here.' },
             ].map((ch) => (
               <div
                 key={ch.channel}

@@ -25,11 +25,6 @@ function formatDuration(mins: number) {
   return m === 0 ? `${h}h` : `${h}h ${m}m`;
 }
 
-function formatDate(dateStr: string) {
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
-
 const CATEGORY_LABELS: Record<string, string> = {
   onboarding_reference: 'Onboarding Reference',
   service_delivery: 'Service Delivery',
@@ -112,104 +107,13 @@ function TrainingCard({ title, description, url, category, watch_first }: Traini
   );
 }
 
-interface ReferenceRecordingProps {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  duration_mins: number;
-  date: string;
-  participants: string[];
-  tags: string[];
-}
-
-function ReferenceCard({ title, description, url, duration_mins, date, participants, tags }: ReferenceRecordingProps) {
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        display: 'flex',
-        gap: 14,
-        backgroundColor: '#111111',
-        border: '1px solid #1E1E1E',
-        borderRadius: 14,
-        padding: '16px 18px',
-        textDecoration: 'none',
-        transition: 'border-color 0.15s, background-color 0.15s',
-        cursor: 'pointer',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = '#3B82F655';
-        e.currentTarget.style.backgroundColor = '#141414';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = '#1E1E1E';
-        e.currentTarget.style.backgroundColor = '#111111';
-      }}
-    >
-      {/* Duration badge */}
-      <div style={{
-        width: 52,
-        height: 52,
-        borderRadius: 12,
-        backgroundColor: '#0D1020',
-        border: '1px solid #1E2040',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-      }}>
-        <div style={{ color: '#3B82F6', fontSize: 11, fontWeight: 800 }}>
-          {formatDuration(duration_mins)}
-        </div>
-        <div style={{ color: '#3B82F666', fontSize: 9, marginTop: 1 }}>
-          <PlayIcon />
-        </div>
-      </div>
-
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 700, marginBottom: 5 }}>{title}</div>
-        <div style={{ color: '#666', fontSize: 12, lineHeight: 1.6, marginBottom: 8 }}>{description}</div>
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ color: '#444', fontSize: 11 }}>{formatDate(date)}</span>
-          <span style={{ color: '#333', fontSize: 11 }}>·</span>
-          <span style={{ color: '#444', fontSize: 11 }}>{participants.join(', ')}</span>
-        </div>
-        <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginTop: 8 }}>
-          {tags.map((tag) => (
-            <span key={tag} style={{
-              backgroundColor: '#1A1A1A',
-              border: '1px solid #2A2A2A',
-              color: '#555',
-              fontSize: 10,
-              padding: '2px 8px',
-              borderRadius: 20,
-              fontWeight: 600,
-            }}>
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ color: '#555', marginTop: 2 }}>
-        <ExternalLinkIcon />
-      </div>
-    </a>
-  );
-}
-
-type ViewFilter = 'all' | 'onboarding' | 'service' | 'strategy';
+type ViewFilter = 'all' | 'onboarding' | 'service';
 type LoomFilter = 'all' | 'lead_flow' | 'creative' | 'osa' | 'technical' | 'advanced' | 'retention';
 
 const FILTERS: { id: ViewFilter; label: string }[] = [
-  { id: 'all', label: 'All' },
+  { id: 'all',        label: 'All' },
   { id: 'onboarding', label: 'Onboarding' },
-  { id: 'service', label: 'Service Delivery' },
-  { id: 'strategy', label: 'Strategy & Reviews' },
+  { id: 'service',    label: 'Service Delivery' },
 ];
 
 const LOOM_FILTERS: { id: LoomFilter; label: string; color: string }[] = [
@@ -334,20 +238,10 @@ export function RecordingsTab() {
     return false;
   });
 
-  const filteredReference = recordingsData.reference_recordings.filter((r) => {
-    if (filter === 'all') return true;
-    if (filter === 'onboarding') return r.tags.includes('onboarding');
-    if (filter === 'strategy') return r.tags.some((t) => ['review', 'performance', 'strategy', 'marketing'].includes(t));
-    return true;
-  });
-
   const filteredLooms = (recordingsData.training_looms as TrainingLoom[]).filter((l) => {
     if (loomFilter === 'all') return true;
     return l.category === loomFilter;
   });
-
-  const showTraining  = filter === 'all' || filter === 'onboarding' || filter === 'service';
-  const showReference = filter === 'all' || filter === 'onboarding' || filter === 'strategy';
 
   return (
     <div style={{
@@ -393,37 +287,8 @@ export function RecordingsTab() {
           ))}
         </div>
 
-        {/* ── Reference Recordings ── */}
-        {showReference && filteredReference.length > 0 && (
-          <div style={{ marginBottom: '2.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem' }}>
-              <span style={{ fontSize: 16 }}>📹</span>
-              <h2 style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, margin: 0 }}>Recent Team Calls</h2>
-              <span style={{
-                backgroundColor: '#1A1A1A',
-                border: '1px solid #2A2A2A',
-                color: '#555',
-                fontSize: 10,
-                padding: '2px 7px',
-                borderRadius: 20,
-                fontWeight: 700,
-              }}>
-                {filteredReference.length}
-              </span>
-            </div>
-            <p style={{ color: '#444', fontSize: 12, margin: '0 0 1rem', paddingLeft: 24 }}>
-              Real calls from the team. Study these to understand how Jonathan runs reviews, handles accounts, and trains new pod managers.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {filteredReference.map((r) => (
-                <ReferenceCard key={r.id} {...r} />
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* ── Training Videos ── */}
-        {showTraining && filteredTraining.length > 0 && (
+        {filteredTraining.length > 0 && (
           <div style={{ marginBottom: '2.5rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem' }}>
               <span style={{ fontSize: 16 }}>🎓</span>
@@ -451,7 +316,7 @@ export function RecordingsTab() {
           </div>
         )}
 
-        {filteredTraining.length === 0 && filteredReference.length === 0 && (
+        {filteredTraining.length === 0 && (
           <div style={{ textAlign: 'center', color: '#444', fontSize: 13, padding: '3rem' }}>
             No recordings match this filter.
           </div>

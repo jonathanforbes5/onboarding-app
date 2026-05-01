@@ -21,15 +21,16 @@ export function S07_OrgStructure() {
         <div className="text-brand-yellow text-xs font-black uppercase tracking-widest mb-2">Pod Structure</div>
         <h2 className="text-xl font-black text-white mb-3">How Pods Work</h2>
         <p className="text-white/70 text-sm leading-relaxed mb-4">
-          Each pod has 2 managers sharing <strong className="text-white">25–30 client accounts</strong>.
+          Each pod has 1–2 managers sharing <strong className="text-white">20–30 client accounts</strong>.
           You own all client relationships in your pod. You coordinate specialists — you don&apos;t do the technical work yourself.
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {[
-            { label: 'Pod 1', detail: 'Gianmarco & Gregory', status: 'Launched Mar 12', clients: '25–30' },
-            { label: 'Pod 2', detail: 'Cole & Tyler', status: 'Most experienced', clients: '25–30' },
+            { label: 'Pod 1', detail: 'Gianmarco & Gregory', status: 'Launched Mar 12', clients: '20–30' },
+            { label: 'Pod 2', detail: 'Cole & Tyler', status: 'Most experienced', clients: '20–30' },
             { label: 'Pod 3', detail: 'Kyle & Abdullah', status: 'Launched Mar 25', clients: 'Building' },
-            { label: 'Pod 4', detail: 'Sam & Patrick', status: 'YOU — Starting Apr 14', clients: 'Onboarding', isYou: true },
+            { label: 'Pod 4', detail: 'Sam', status: 'Started Apr 14', clients: 'Onboarding' },
+            { label: 'Pod 5', detail: 'Ksenia & Adeen', status: 'Starting May 4', clients: 'Onboarding', isYou: true },
           ].map((pod) => (
             <div key={pod.label} className={`rounded-xl p-3 text-center ${(pod as any).isYou ? 'bg-brand-yellow text-brand-black' : 'bg-white/10'}`}>
               <div className={`font-black text-sm ${(pod as any).isYou ? 'text-brand-black' : 'text-white'}`}>{pod.label}</div>
@@ -102,7 +103,7 @@ export function S07_OrgStructure() {
         right={
           <Card yellow>
             <BulletList check items={[
-              'A pod leader managing 30–40 accounts',
+              'A pod leader managing 20–30 accounts',
               'A revenue retention engine',
               'A client relationship owner',
               'A KPI diagnostician',
@@ -128,7 +129,7 @@ export function S07_OrgStructure() {
             },
             {
               area: 'Team Coordination',
-              items: ['Emmanuel/Mervin (setup & campaigns)', 'Ken (AI creatives — 24hr turnaround, Philippines)', 'Leila/Aica (VA team — escalate quality issues)', 'Report to Jonathan Mon/Thu updates, Tue/Fri calls'],
+              items: ['Emmanuel & Mervin (setups & full-cycle campaigns)', 'Bren (Pod 2 media buying — overflow support)', 'Ken (AI creatives — 24hr turnaround, Philippines)', 'Leila, Aica & Pamela (VA team — escalate quality issues to Leila)', 'Report to Jonathan: Mon/Thu updates, Tue/Fri review calls'],
             },
           ].map((area) => (
             <div key={area.area} className="bg-white rounded-xl border border-brand-gray-mid p-4">

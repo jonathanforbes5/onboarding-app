@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { fetchAllUsersProgress, AllUsersProgress } from '@/lib/syncService';
 import { isSupabaseEnabled } from '@/lib/supabase';
 import dayContent from '@/repo/data/day-content.json';
+import dayContentPod5 from '@/repo/data/day-content-pod5.json';
 import { SECTIONS } from '@/data/sections';
 
 // ── Colour tokens ────────────────────────────────────────────
@@ -23,31 +24,36 @@ const C = {
   blue:    '#4A90D9',
 };
 
-// ── Pod 4 dates ──────────────────────────────────────────────
-const DAY_DATES: Record<number, string> = {
+// ── Per-pod date maps ─────────────────────────────────────────
+const DAY_DATES_POD4: Record<number, string> = {
   1:'Mon Apr 14',2:'Tue Apr 15',3:'Wed Apr 16',4:'Thu Apr 17',5:'Fri Apr 18',
   6:'Mon Apr 21',7:'Tue Apr 22',8:'Wed Apr 23',9:'Thu Apr 24',10:'Fri Apr 25',
 };
-
-// ── User display config ──────────────────────────────────────
-const USER_CONFIG: Record<string, { label: string; color: string; textColor: string }> = {
-  sam:     { label: 'Sam',     color: '#F5C800', textColor: '#000' },
-  patrick: { label: 'Patrick', color: '#E07B39', textColor: '#fff' },
+const DAY_DATES_POD5: Record<number, string> = {
+  1:'Mon May 4', 2:'Tue May 5', 3:'Wed May 6', 4:'Thu May 7', 5:'Fri May 8',
+  6:'Mon May 11',7:'Tue May 12',8:'Wed May 13',9:'Thu May 14',10:'Fri May 15',
 };
 
-// ── Compute total worksheet items across all days ────────────
-function getTotalWorksheetItems(): number {
-  return (dayContent.days as any[]).reduce((sum, day) => {
+// ── User display config ──────────────────────────────────────
+const USER_CONFIG: Record<string, { label: string; color: string; textColor: string; pod: number; startDate: string }> = {
+  sam:    { label: 'Sam',    color: '#F5C800', textColor: '#000', pod: 4, startDate: 'Apr 14, 2026' },
+  ksenia: { label: 'Ksenia', color: '#EC4899', textColor: '#fff', pod: 5, startDate: 'May 4, 2026'  },
+  adeen:  { label: 'Adeen',  color: '#8B5CF6', textColor: '#fff', pod: 5, startDate: 'May 4, 2026'  },
+};
+
+// ── Worksheet helpers ─────────────────────────────────────────
+function getTotalWorksheetItems(days: any[]): number {
+  return days.reduce((sum: number, day: any) => {
     return sum + day.sections.reduce((s: number, sec: any) => s + (sec.items?.length ?? 0), 0);
   }, 0);
 }
 
 function getCompletedForUser(
   checklistItems: Record<string, boolean>,
-  days: typeof dayContent.days,
+  days: any[],
 ): number {
   let done = 0;
-  (days as any[]).forEach((day) => {
+  days.forEach((day: any) => {
     day.sections.forEach((sec: any) => {
       (sec.items ?? []).forEach((_: any, i: number) => {
         if (checklistItems[`${sec.id}_${i}`]) done++;
@@ -58,7 +64,7 @@ function getCompletedForUser(
 }
 
 function getDayCompletion(
-  day: (typeof dayContent.days)[0],
+  day: any,
   checklistItems: Record<string, boolean>,
 ): { total: number; completed: number } {
   let total = 0, completed = 0;
@@ -120,14 +126,19 @@ function UserCard({
   const cfg = USER_CONFIG[userName];
   if (!cfg) return null;
 
-  const totalWS    = getTotalWorksheetItems();
-  const doneWS     = getCompletedForUser(data.checklistItems, dayContent.days as any);
+  const isPod5     = cfg.pod === 5;
+  const days       = isPod5 ? (dayContentPod5.days as any[]) : (dayContent.days as any[]);
+  const dayDates   = isPod5 ? DAY_DATES_POD5 : DAY_DATES_POD4;
+  const startMs    = isPod5 ? new Date('2026-05-04').getTime() : new Date('2026-04-14').getTime();
+
+  const totalWS    = getTotalWorksheetItems(days);
+  const doneWS     = getCompletedForUser(data.checklistItems, days);
   const wsPct      = totalWS > 0 ? Math.round((doneWS / totalWS) * 100) : 0;
   const sectionPct = Math.round((data.completedSections.length / SECTIONS.length) * 100);
-  const currentDate = DAY_DATES[data.currentDay] ?? `Day ${data.currentDay}`;
+  const currentDate = dayDates[data.currentDay] ?? `Day ${data.currentDay}`;
 
   // How many days are fully complete
-  const daysComplete = (dayContent.days as any[]).filter((d) => {
+  const daysComplete = days.filter((d: any) => {
     const { total, completed } = getDayCompletion(d, data.checklistItems);
     return total > 0 && completed === total;
   }).length;
@@ -145,8 +156,7 @@ function UserCard({
 
   // Stalled flag: current day < expected day based on date (rough heuristic)
   const today = new Date();
-  const startDate = new Date('2026-04-14');
-  const elapsed = Math.max(0, Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+  const elapsed = Math.max(0, Math.floor((today.getTime() - startMs) / (1000 * 60 * 60 * 24)));
   const businessDaysElapsed = Math.min(10, Math.floor(elapsed * (5 / 7)));
   const isStalled = data.currentDay < businessDaysElapsed - 1;
 
@@ -190,7 +200,7 @@ function UserCard({
         </div>
         <div>
           <div style={{ color: C.text, fontSize: 17, fontWeight: 900 }}>{cfg.label}</div>
-          <div style={{ color: C.muted, fontSize: 12, marginTop: 1 }}>Pod 4 Manager · Started Apr 14</div>
+          <div style={{ color: C.muted, fontSize: 12, marginTop: 1 }}>Pod {cfg.pod} Manager · Started {cfg.startDate}</div>
         </div>
         <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
           <div
@@ -254,7 +264,7 @@ function UserCard({
           Day Breakdown
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 6 }}>
-          {(dayContent.days as any[]).map((d) => {
+          {days.map((d: any) => {
             const { total, completed } = getDayCompletion(d, data.checklistItems);
             const isDone    = total > 0 && completed === total;
             const isPartial = completed > 0 && !isDone;
@@ -264,7 +274,7 @@ function UserCard({
             return (
               <div
                 key={d.day}
-                title={`Day ${d.day}: ${d.title}\n${completed}/${total} tasks · ${DAY_DATES[d.day]}`}
+                title={`Day ${d.day}: ${d.title}\n${completed}/${total} tasks · ${dayDates[d.day]}`}
                 style={{
                   backgroundColor: isDone ? '#0D2A0D' : isPartial ? '#2A1A00' : C.surf3,
                   border: `1.5px solid ${isDone ? C.green : isPartial ? C.orange : isCurrent ? cfg.color : C.border}`,
@@ -300,8 +310,12 @@ function UserCard({
         </div>
         {/* Week labels */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 4 }}>
-          <div style={{ color: C.muted2, fontSize: 9, textAlign: 'center' }}>Week 1 (Apr 14–18)</div>
-          <div style={{ color: C.muted2, fontSize: 9, textAlign: 'center' }}>Week 2 (Apr 21–25)</div>
+          <div style={{ color: C.muted2, fontSize: 9, textAlign: 'center' }}>
+            {isPod5 ? 'Week 1 (May 4–8)' : 'Week 1 (Apr 14–18)'}
+          </div>
+          <div style={{ color: C.muted2, fontSize: 9, textAlign: 'center' }}>
+            {isPod5 ? 'Week 2 (May 11–15)' : 'Week 2 (Apr 21–25)'}
+          </div>
         </div>
       </div>
 
@@ -357,21 +371,27 @@ export function AdminDashboard() {
 
   useEffect(() => { load(); }, [load]);
 
-  const totalWS   = getTotalWorksheetItems();
-  const users     = ['sam', 'patrick'] as const;
+  const users = ['sam', 'ksenia', 'adeen'] as const;
+  const pod4Users = ['sam'] as const;
+  const pod5Users = ['ksenia', 'adeen'] as const;
 
-  // Pod-wide summary stats
-  const podAvgWorksheet = users.reduce((sum, u) => {
-    const d = progress[u];
-    if (!d) return sum;
-    const done = getCompletedForUser(d.checklistItems, dayContent.days as any);
-    return sum + (totalWS > 0 ? Math.round((done / totalWS) * 100) : 0);
-  }, 0) / users.length;
+  function podAvg(podUsers: readonly string[], daysList: any[]) {
+    const totalWS = getTotalWorksheetItems(daysList);
+    const worksheetAvg = podUsers.reduce((sum, u) => {
+      const d = progress[u];
+      if (!d) return sum;
+      const done = getCompletedForUser(d.checklistItems, daysList);
+      return sum + (totalWS > 0 ? Math.round((done / totalWS) * 100) : 0);
+    }, 0) / podUsers.length;
+    const sectionsAvg = podUsers.reduce((sum, u) => {
+      const d = progress[u];
+      return sum + (d ? Math.round((d.completedSections.length / SECTIONS.length) * 100) : 0);
+    }, 0) / podUsers.length;
+    return { worksheetAvg, sectionsAvg };
+  }
 
-  const podAvgSections = users.reduce((sum, u) => {
-    const d = progress[u];
-    return sum + (d ? Math.round((d.completedSections.length / SECTIONS.length) * 100) : 0);
-  }, 0) / users.length;
+  const pod4Stats = podAvg(pod4Users, dayContent.days as any);
+  const pod5Stats = podAvg(pod5Users, dayContentPod5.days as any);
 
   return (
     <div
@@ -392,10 +412,10 @@ export function AdminDashboard() {
               Admin · Jonathan Forbes
             </div>
             <h1 style={{ color: C.text, fontSize: 24, fontWeight: 900, margin: '0 0 4px', letterSpacing: '-0.4px' }}>
-              Pod 4 Progress Dashboard
+              Pod Manager Progress Dashboard
             </h1>
             <p style={{ color: C.muted, fontSize: 13, margin: 0 }}>
-              Sam &amp; Patrick · Cohort April 14, 2026
+              Pod 4 (Sam · Apr 14) &amp; Pod 5 (Ksenia + Adeen · May 4)
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -444,33 +464,27 @@ export function AdminDashboard() {
             marginBottom: 20,
           }}
         >
-          <div style={{ color: C.muted, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>
-            Pod 4 Summary
-          </div>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <Stat
-              label="Avg Worksheet"
-              value={`${Math.round(podAvgWorksheet)}%`}
-              sub="across Sam & Patrick"
-              color={podAvgWorksheet >= 70 ? C.green : podAvgWorksheet >= 40 ? C.orange : C.red}
-            />
-            <Stat
-              label="Avg Training"
-              value={`${Math.round(podAvgSections)}%`}
-              sub="sections completed"
-              color={podAvgSections >= 70 ? C.green : podAvgSections >= 40 ? C.orange : C.red}
-            />
-            <Stat
-              label="Pod Size"
-              value="2"
-              sub="active managers"
-            />
-            <Stat
-              label="Start Date"
-              value="Apr 14"
-              sub="2026 cohort"
-              color={C.acc}
-            />
+          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+            {/* Pod 4 */}
+            <div style={{ flex: '1 1 260px' }}>
+              <div style={{ color: C.acc, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
+                Pod 4 — Sam · Apr 14
+              </div>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <Stat label="Worksheet" value={`${Math.round(pod4Stats.worksheetAvg)}%`} sub="Sam" color={pod4Stats.worksheetAvg >= 70 ? C.green : pod4Stats.worksheetAvg >= 40 ? C.orange : C.red} />
+                <Stat label="Training" value={`${Math.round(pod4Stats.sectionsAvg)}%`} sub="sections done" color={pod4Stats.sectionsAvg >= 70 ? C.green : pod4Stats.sectionsAvg >= 40 ? C.orange : C.red} />
+              </div>
+            </div>
+            {/* Pod 5 */}
+            <div style={{ flex: '1 1 260px' }}>
+              <div style={{ color: '#EC4899', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
+                Pod 5 — Ksenia + Adeen · May 4
+              </div>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <Stat label="Worksheet" value={`${Math.round(pod5Stats.worksheetAvg)}%`} sub="avg" color={pod5Stats.worksheetAvg >= 70 ? C.green : pod5Stats.worksheetAvg >= 40 ? C.orange : C.red} />
+                <Stat label="Training" value={`${Math.round(pod5Stats.sectionsAvg)}%`} sub="sections done" color={pod5Stats.sectionsAvg >= 70 ? C.green : pod5Stats.sectionsAvg >= 40 ? C.orange : C.red} />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -484,15 +498,38 @@ export function AdminDashboard() {
 
         {/* User cards */}
         {!loading && (
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-            {users.map((u) => (
-              <UserCard
-                key={u}
-                userName={u}
-                data={progress[u] ?? { checklistItems: {}, currentDay: 1, completedSections: [], quizScores: {} }}
-              />
-            ))}
-          </div>
+          <>
+            {/* Pod 4 */}
+            <div style={{ marginBottom: 8 }}>
+              <div style={{ color: C.muted2, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
+                Pod 4
+              </div>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                {pod4Users.map((u) => (
+                  <UserCard
+                    key={u}
+                    userName={u}
+                    data={progress[u] ?? { checklistItems: {}, currentDay: 1, completedSections: [], quizScores: {} }}
+                  />
+                ))}
+              </div>
+            </div>
+            {/* Pod 5 */}
+            <div style={{ marginTop: 24 }}>
+              <div style={{ color: '#EC4899', fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
+                Pod 5
+              </div>
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                {pod5Users.map((u) => (
+                  <UserCard
+                    key={u}
+                    userName={u}
+                    data={progress[u] ?? { checklistItems: {}, currentDay: 1, completedSections: [], quizScores: {} }}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
         )}
 
         {/* Setup instructions if Supabase not configured */}
@@ -510,7 +547,7 @@ export function AdminDashboard() {
               ℹ️ Enable Cross-Device Sync
             </div>
             <p style={{ color: '#ccc', fontSize: 13, margin: '0 0 12px', lineHeight: 1.6 }}>
-              The admin dashboard needs Supabase to show Sam and Patrick's real-time progress.
+              The admin dashboard needs Supabase to show real-time progress for all pod managers.
               Without it, it can only show local data from this browser.
             </p>
             <ol style={{ color: C.muted, fontSize: 13, margin: 0, paddingLeft: 18, lineHeight: 2 }}>

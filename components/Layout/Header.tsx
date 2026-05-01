@@ -52,7 +52,7 @@ export function Header() {
   const baseTabs = [
     { id: 'overview',    label: 'Overview',    icon: '🏠' },
     { id: 'worksheet',   label: 'Worksheet',   icon: '📋' },
-    { id: 'sections',    label: 'Training',    icon: '📚' },
+    { id: 'sections',    label: 'Company',     icon: '📚' },
     { id: 'resources',   label: 'Resources',   icon: '📁' },
     { id: 'recordings',  label: 'Recordings',  icon: '🎬' },
   ] as const;
@@ -108,6 +108,15 @@ export function Header() {
 
         {/* ── Right: Actions + user ── */}
         <div className="flex items-center gap-0.5 flex-shrink-0">
+          {/* Global search — always visible */}
+          <button
+            onClick={() => setShowSearch(true)}
+            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1"
+            title="Search (⌘K)"
+          >
+            <Search size={15} />
+            <span className="hidden md:inline text-xs text-white/40">⌘K</span>
+          </button>
           {activeTab === 'sections' && (
             <>
               {bookmarks.length > 0 && (
@@ -135,14 +144,6 @@ export function Header() {
                   </div>
                 </div>
               )}
-              <button
-                onClick={() => setShowSearch(true)}
-                className="p-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1"
-                title="Search (⌘K)"
-              >
-                <Search size={15} />
-                <span className="hidden md:inline text-xs text-white/40">⌘K</span>
-              </button>
               <button
                 onClick={() => setShowNotes(true)}
                 className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"

@@ -94,7 +94,7 @@ export function S04_HowWeGenerateResults() {
       </div>
 
       <InfoBox type="tip" title="Your Role in the Funnel">
-        You don&apos;t build the funnel — <strong>Emmanuel does</strong>. You diagnose when something is underperforming, prescribe the fix, and coordinate the right specialist. Think like a doctor, not a technician.
+        You don&apos;t build the funnel — <strong>Emmanuel and Mervin do</strong>. You diagnose when something is underperforming, prescribe the fix, and coordinate the right specialist. Think like a doctor, not a technician.
       </InfoBox>
     </SectionWrapper>
   );

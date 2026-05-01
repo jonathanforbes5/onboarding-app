@@ -97,6 +97,54 @@
       "url": "https://ad-set-reviewer.vercel.app/",
       "icon": "🔍",
       "category": "tool"
+    },
+    {
+      "id": "google_workspace",
+      "title": "Google Workspace",
+      "description": "Docs, Sheets, and Drive for reporting and documentation. Logbook and Client Check-In Sheet live here.",
+      "url": "https://workspace.google.com",
+      "icon": "📊",
+      "category": "tool"
+    },
+    {
+      "id": "bamboohr",
+      "title": "BambooHR",
+      "description": "HR management, time tracking, and onboarding documentation.",
+      "url": "https://roofignite.bamboohr.com",
+      "icon": "🌿",
+      "category": "tool"
+    },
+    {
+      "id": "canva",
+      "title": "Canva",
+      "description": "Creative asset editing. Primarily used by Ken and Bren for ad creatives — helpful for quick edits.",
+      "url": "https://canva.com",
+      "icon": "🎨",
+      "category": "tool"
+    },
+    {
+      "id": "loom",
+      "title": "Loom",
+      "description": "Async video walkthroughs and training recordings. Use for client updates and internal documentation.",
+      "url": "https://loom.com",
+      "icon": "📹",
+      "category": "tool"
+    },
+    {
+      "id": "cloudflare",
+      "title": "Cloudflare",
+      "description": "Domain DNS management for client landing pages. Technical setup — Emmanuel manages this.",
+      "url": "https://cloudflare.com",
+      "icon": "🌐",
+      "category": "tool"
+    },
+    {
+      "id": "porkbun",
+      "title": "Porkbun",
+      "description": "Domain registrar used for client domains. Technical setup — Emmanuel manages this.",
+      "url": "https://porkbun.com",
+      "icon": "🐷",
+      "category": "tool"
     }
   ],
   "sops": [

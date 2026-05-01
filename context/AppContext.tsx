@@ -46,6 +46,7 @@ export interface AppState {
   showSearch: boolean;
   showNotes: boolean;
   showCurriculumMap: boolean;
+  showCompletionCelebration: boolean;
 }
 
 interface AppContextType extends AppState {
@@ -64,6 +65,7 @@ interface AppContextType extends AppState {
   setShowSearch: (v: boolean) => void;
   setShowNotes: (v: boolean) => void;
   setShowCurriculumMap: (v: boolean) => void;
+  setShowCompletionCelebration: (v: boolean) => void;
   progressPercent: number;
   isBookmarked: (id: number) => boolean;
   isCompleted: (id: number) => boolean;
@@ -92,6 +94,7 @@ const defaultState: AppState = {
   showSearch: false,
   showNotes: false,
   showCurriculumMap: true,
+  showCompletionCelebration: false,
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -324,7 +327,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const markSectionComplete = useCallback((id: number) => {
     setState((prev) => {
       if (prev.completedSections.includes(id)) return prev;
-      const next = { ...prev, completedSections: [...prev.completedSections, id] };
+      const newCompleted = [...prev.completedSections, id];
+      const allDone = newCompleted.length === TOTAL_SECTIONS;
+      const next = {
+        ...prev,
+        completedSections: newCompleted,
+        showCompletionCelebration: allDone ? true : prev.showCompletionCelebration,
+      };
       persistSectionsLocal(next);
       if (prev.currentUser) pushSectionComplete(prev.currentUser.userKey, id);
       return next;
@@ -365,7 +374,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setSearchQuery       = useCallback((q: string)  => setState((p) => ({ ...p, searchQuery: q })), []);
   const setShowSearch        = useCallback((v: boolean)  => setState((p) => ({ ...p, showSearch: v })), []);
   const setShowNotes         = useCallback((v: boolean)  => setState((p) => ({ ...p, showNotes: v })), []);
-  const setShowCurriculumMap = useCallback((v: boolean)  => setState((p) => ({ ...p, showCurriculumMap: v })), []);
+  const setShowCurriculumMap        = useCallback((v: boolean) => setState((p) => ({ ...p, showCurriculumMap: v })), []);
+  const setShowCompletionCelebration = useCallback((v: boolean) => setState((p) => ({ ...p, showCompletionCelebration: v })), []);
 
   const progressPercent = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
   const isBookmarked    = (id: number) => state.bookmarks.includes(id);
@@ -389,6 +399,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setShowSearch,
       setShowNotes,
       setShowCurriculumMap,
+      setShowCompletionCelebration,
       progressPercent,
       isBookmarked,
       isCompleted,

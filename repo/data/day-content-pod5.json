@@ -56,7 +56,7 @@
           "items": [
             "Request Logbook access from Leila (NOT Jonathan — Leila owns the Logbook)",
             "Confirm ClickUp access (all tasks, comms, media buyer coordination live here)",
-            "Get added to relevant Slack channels: #internal-team, #ops, #closer-call-recordings",
+            "Get added to relevant Slack channels: #internal-team, #ops-manager-discussion",
             "Log into GoHighLevel (GHL) — confirm sub-account access",
             "Log into Meta Business Manager — confirm partner access to client accounts",
             "Access Command Center — understand the health status dashboard"
@@ -190,7 +190,7 @@
             "Send a brief status message to each active client — introduce yourself, confirm they have your Slack/WhatsApp",
             "For any account that just onboarded: confirm pre-onboarding email was sent + client acknowledged",
             "Check WhatsApp groups — read all history so you know the relationship context",
-            "Pull the closer call recording from #closer-call-recordings for any new client — know what was promised"
+            "Pull the closer call recording from Fathom for any new client — know what was promised before you took over"
           ]
         }
       ]

@@ -22,7 +22,7 @@ const INTERNAL = [
   { name: 'Logbook', desc: 'Central truth for ALL lead data — every lead from every account documented by VAs with status and notes. Access via Leila (not Jonathan). Check daily for open (white) leads.', icon: '📓' },
   { name: 'Account Master Dashboard', desc: 'Real-time account performance and cycle metrics. Track cycle #, days elapsed, bookings vs target, and billing status. Cole built and maintains this system.', icon: '📊' },
   { name: 'Command Center', desc: 'Health score dashboard — your daily triage. Color-coded: 🟢 Healthy (monthly check-in) / 🟡 Watch / 🟠 Act Now / 🔴 Escalate to Jonathan. Accounts behind on bookings turn RED.', icon: '🖥️' },
-  { name: 'Custom GPT', desc: 'Paste Fathom transcript after every onboarding call → get structured client summary → post to #post-onboarding-discussion → use for ClickUp task to Emmanuel.', icon: '🤖' },
+  { name: 'Custom GPT', desc: 'Paste Fathom transcript after every onboarding call → get structured client summary → post to #ops-manager-discussion in Slack → use for ClickUp task to Emmanuel and Mervin.', icon: '🤖' },
 ];
 
 const PROFICIENCY = [

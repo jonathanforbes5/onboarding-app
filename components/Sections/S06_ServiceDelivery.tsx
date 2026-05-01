@@ -83,7 +83,7 @@ export function S06_ServiceDelivery() {
             <div className="space-y-1.5">
               {[
                 { step: '1', action: 'Paste Fathom transcript into Custom GPT → get structured summary' },
-                { step: '2', action: 'Post summary to #post-onboarding-discussion in Slack' },
+                { step: '2', action: 'Post Custom GPT summary to #ops-manager-discussion in Slack' },
                 { step: '3', action: 'Create ClickUp task for Emmanuel with client details + 48hr deadline' },
                 { step: '4', action: 'Text/WhatsApp client confirming next steps and timeline' },
               ].map((s) => (

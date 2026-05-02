@@ -181,19 +181,22 @@ export function ChatWidget() {
         body: JSON.stringify({ messages: newMessages }),
       });
 
-      if (res.status === 503) {
-        setNotConfigured(true);
-        setMessages((prev) => [...prev, {
-          role: 'assistant',
-          content: "Ask RI isn't configured yet — the AI key hasn't been added. Ask Jonathan to set it up. In the meantime, you can submit questions below and the team will add answers.",
-          id: 'not-configured',
-        }]);
+      if (!res.ok || !res.body) {
+        let errMsg = "Ask RI hit an error.";
+        try {
+          const d = await res.json();
+          if (res.status === 503) {
+            setNotConfigured(true);
+            errMsg = "Ask RI isn't set up yet — the AI key hasn't been added. In the meantime you can submit questions using the thumbs-down button and we'll add answers.";
+          } else {
+            errMsg = `Ask RI error: ${d.error ?? res.status}`;
+          }
+        } catch { errMsg = `Ask RI error (${res.status}) — try again or ask Jonathan in Slack.`; }
+        setMessages((prev) => [...prev, { role: 'assistant', content: errMsg, id: Math.random().toString(36).slice(2) }]);
         setLoading(false);
         if (open) inputRef.current?.focus();
         return;
       }
-
-      if (!res.ok || !res.body) throw new Error('Failed');
       setNotConfigured(false);
 
       const reader = res.body.getReader();

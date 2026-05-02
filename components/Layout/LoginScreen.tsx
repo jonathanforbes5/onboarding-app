@@ -1,19 +1,24 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
-import { signInWithMagicLink } from '@/lib/auth';
+import React, { useState, useRef } from 'react';
+import { signInWithMagicLink, LOCAL_USERS } from '@/lib/auth';
 import { isSupabaseEnabled } from '@/lib/supabase';
 import { supabase } from '@/lib/supabase';
-import { useApp } from '@/context/AppContext';
 
 const MASTER_PASSWORD = process.env.NEXT_PUBLIC_MASTER_PASSWORD;
 const BYPASS_KEY = 'ri_bypass_profile';
 
 export function LoginScreen() {
-  const { devLogin } = useApp();
   const [email, setEmail]         = useState('');
   const [loading, setLoading]     = useState(false);
   const [sent, setSent]           = useState(false);
   const [error, setError]         = useState('');
+
+  // Staging bypass (no Supabase)
+  const [bypassName, setBypassName] = useState('');
+  const [bypassPass, setBypassPass] = useState('');
+  const [bypassError, setBypassError] = useState('');
+
+  // Legacy bottom quick-access (configured + MASTER_PASSWORD set)
   const [devPass, setDevPass]     = useState('');
   const [devError, setDevError]   = useState(false);
 
@@ -25,26 +30,18 @@ export function LoginScreen() {
 
   const configured = isSupabaseEnabled();
 
+  // Normalize email: if user typed just "jonathan", expand to "jonathan@roofignite.com"
+  function normalizeEmail(raw: string) {
+    const v = raw.trim().toLowerCase();
+    return v.includes('@') ? v : `${v}@roofignite.com`;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const val = email.trim();
+    const val = normalizeEmail(email);
     if (!val) return;
 
-    // Master password bypass
-    if (MASTER_PASSWORD && val === MASTER_PASSWORD) {
-      try {
-        sessionStorage.setItem(BYPASS_KEY, JSON.stringify({
-          email: 'jonathan@roofignite.com',
-          displayName: 'Jonathan Forbes',
-          userKey: 'jonathan',
-          role: 'super_admin',
-        }));
-        window.location.reload();
-      } catch {
-        setError('Bypass failed.');
-      }
-      return;
-    }
+    setEmail(val); // keep state in sync with normalized value
 
     setLoading(true);
     setError('');
@@ -55,6 +52,33 @@ export function LoginScreen() {
     } else {
       setSent(true);
       setTimeout(() => codeRefs.current[0]?.focus(), 100);
+    }
+  };
+
+  // Bypass login for staging (no Supabase)
+  const handleBypassSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setBypassError('');
+    const nameKey = bypassName.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
+    if (!nameKey) return;
+
+    // If MASTER_PASSWORD is set, require it. If not set, open bypass (pure dev environment).
+    if (MASTER_PASSWORD && bypassPass !== MASTER_PASSWORD) {
+      setBypassError('Incorrect password — try again.');
+      return;
+    }
+
+    const user = LOCAL_USERS[nameKey];
+    if (!user) {
+      setBypassError(`"${nameKey}" not found — check your first name.`);
+      return;
+    }
+
+    try {
+      sessionStorage.setItem(BYPASS_KEY, JSON.stringify(user));
+      window.location.reload();
+    } catch {
+      setBypassError('Login failed. Please try again.');
     }
   };
 
@@ -240,12 +264,13 @@ export function LoginScreen() {
             </p>
 
             {configured ? (
+              /* ── Supabase OTP flow ── */
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <input
-                  type="email"
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@roofignite.com"
+                  placeholder="firstname or you@roofignite.com"
                   required
                   disabled={loading}
                   style={inputStyle}
@@ -270,24 +295,100 @@ export function LoginScreen() {
                 </button>
               </form>
             ) : (
-              <div style={{
-                backgroundColor: '#1A1200', border: '1px solid #F59E0B33',
-                borderRadius: 10, padding: '14px 16px', color: '#F59E0B', fontSize: 12, lineHeight: 1.5,
-              }}>
-                ⚠️ Supabase is not configured. Add your <code style={{ backgroundColor: '#110E00', padding: '1px 4px', borderRadius: 3 }}>.env.local</code> to enable login.
-              </div>
+              /* ── Staging bypass (no Supabase) ── */
+              <form onSubmit={handleBypassSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <p style={{ color: '#555', fontSize: 12, margin: '0 0 4px', lineHeight: 1.5 }}>
+                  Enter your <strong style={{ color: '#888' }}>first name</strong>{MASTER_PASSWORD ? ' and the preview password' : ''} to access this site.
+                </p>
+
+                {/* Split input: [firstname] @roofignite.com */}
+                <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                  <input
+                    type="text"
+                    value={bypassName}
+                    onChange={(e) => { setBypassName(e.target.value); setBypassError(''); }}
+                    placeholder="firstname"
+                    required
+                    autoComplete="username"
+                    style={{
+                      ...inputStyle,
+                      borderRadius: '10px 0 0 10px',
+                      borderRight: 'none',
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                    onFocus={(e) => (e.currentTarget.style.borderColor = '#F5C800')}
+                    onBlur={(e)  => (e.currentTarget.style.borderColor = '#2A2A2A')}
+                  />
+                  <div style={{
+                    backgroundColor: '#161616',
+                    border: '1px solid #2A2A2A',
+                    borderRadius: '0 10px 10px 0',
+                    padding: '11px 12px',
+                    color: '#444',
+                    fontSize: 13,
+                    whiteSpace: 'nowrap',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}>
+                    @roofignite.com
+                  </div>
+                </div>
+
+                {MASTER_PASSWORD && (
+                  <input
+                    type="password"
+                    value={bypassPass}
+                    onChange={(e) => { setBypassPass(e.target.value); setBypassError(''); }}
+                    placeholder="Preview password"
+                    required
+                    autoComplete="current-password"
+                    style={inputStyle}
+                    onFocus={(e) => (e.currentTarget.style.borderColor = '#F5C800')}
+                    onBlur={(e)  => (e.currentTarget.style.borderColor = '#2A2A2A')}
+                  />
+                )}
+
+                {bypassError && (
+                  <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{bypassError}</p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={!bypassName.trim() || (!!MASTER_PASSWORD && !bypassPass.trim())}
+                  style={{
+                    width: '100%',
+                    backgroundColor: !bypassName.trim() ? '#1A1A1A' : '#F5C800',
+                    border: 'none', borderRadius: 10, padding: '12px',
+                    cursor: !bypassName.trim() ? 'not-allowed' : 'pointer',
+                    fontSize: 14, fontWeight: 700,
+                    color: !bypassName.trim() ? '#444' : '#000',
+                    transition: 'all 0.15s ease', fontFamily: 'inherit', letterSpacing: '0.02em',
+                  }}
+                >
+                  Sign in →
+                </button>
+              </form>
             )}
           </>
         )}
       </div>
 
-      {/* Master password dev access */}
-      {MASTER_PASSWORD && (
+      {/* Quick access — only shown on configured (production) sites with master password */}
+      {configured && MASTER_PASSWORD && (
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (devPass === MASTER_PASSWORD) devLogin();
-            else { setDevError(true); setTimeout(() => setDevError(false), 1500); }
+            if (devPass !== MASTER_PASSWORD) {
+              setDevError(true);
+              setTimeout(() => setDevError(false), 1500);
+              return;
+            }
+            // Log in as Jonathan (admin quick-access)
+            try {
+              sessionStorage.setItem(BYPASS_KEY, JSON.stringify(LOCAL_USERS.jonathan));
+              window.location.reload();
+            } catch {}
           }}
           style={{ marginTop: '1.5rem', display: 'flex', gap: 8, alignItems: 'center' }}
         >
@@ -295,11 +396,11 @@ export function LoginScreen() {
             type="password"
             value={devPass}
             onChange={(e) => setDevPass(e.target.value)}
-            placeholder="Master password"
+            placeholder="Quick access password"
             style={{
               backgroundColor: '#111', border: `1px solid ${devError ? '#EF4444' : '#1E1E1E'}`,
               borderRadius: 8, padding: '8px 12px', color: '#555', fontSize: 12,
-              outline: 'none', fontFamily: 'inherit', width: 160, transition: 'border-color 0.15s',
+              outline: 'none', fontFamily: 'inherit', width: 180, transition: 'border-color 0.15s',
             }}
           />
           <button type="submit" style={{

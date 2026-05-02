@@ -96,16 +96,24 @@ create index if not exists idx_checklist_user on checklist_items(user_name);
 create index if not exists idx_sections_user  on section_completions(user_name);
 create index if not exists idx_quiz_user      on quiz_scores(user_name);
 
--- Seed users
+-- Seed users (only leadership have super_admin role)
 insert into allowed_users (email, display_name, role, user_key) values
   ('jonathan@roofignite.com', 'Jonathan', 'super_admin', 'jonathan'),
-  ('mani@roofignite.com',     'Mani',     'super_admin', 'mani'),
   ('oscar@roofignite.com',    'Oscar',    'super_admin', 'oscar'),
-  ('info@roofignite.com',     'Info',     'super_admin', 'info'),
-  ('cole@roofignite.com',     'Cole',     'super_admin', 'cole'),
+  ('mani@roofignite.com',     'Mani',     'super_admin', 'mani'),
   ('sam@roofignite.com',      'Sam',      'user',        'sam'),
+  ('cole@roofignite.com',     'Cole',     'user',        'cole'),
+  ('tyler@roofignite.com',    'Tyler',    'user',        'tyler'),
+  ('ksenia@roofignite.com',   'Ksenia',   'user',        'ksenia'),
+  ('adeen@roofignite.com',    'Adeen',    'user',        'adeen'),
   ('patrick@roofignite.com',  'Patrick',  'user',        'patrick')
 on conflict (email) do nothing;
+
+-- Fix any existing super_admin roles that should be user (idempotent)
+update allowed_users set role = 'user' where email in (
+  'cole@roofignite.com', 'info@roofignite.com', 'tyler@roofignite.com',
+  'ksenia@roofignite.com', 'adeen@roofignite.com', 'patrick@roofignite.com', 'sam@roofignite.com'
+) and role = 'super_admin';
 `;
 
 async function runSql(managementToken: string, sql: string) {

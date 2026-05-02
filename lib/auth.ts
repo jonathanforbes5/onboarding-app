@@ -19,8 +19,23 @@ export const USER_COLORS: Record<string, { bg: string; text: string }> = {
   oscar:    { bg: '#A78BFA', text: '#fff' },
   info:     { bg: '#F97316', text: '#fff' },
   cole:     { bg: '#06B6D4', text: '#fff' },
+  tyler:    { bg: '#10B981', text: '#fff' },
   ksenia:   { bg: '#EC4899', text: '#fff' },
   adeen:    { bg: '#8B5CF6', text: '#fff' },
+};
+
+// Static user list used for staging bypass (when Supabase is not configured).
+// Leadership roles: jonathan, oscar, mani. All others are pod managers (user).
+export const LOCAL_USERS: Record<string, UserProfile> = {
+  jonathan: { email: 'jonathan@roofignite.com', displayName: 'Jonathan', userKey: 'jonathan', role: 'super_admin' },
+  oscar:    { email: 'oscar@roofignite.com',     displayName: 'Oscar',   userKey: 'oscar',    role: 'super_admin' },
+  mani:     { email: 'mani@roofignite.com',      displayName: 'Mani',    userKey: 'mani',     role: 'super_admin' },
+  sam:      { email: 'sam@roofignite.com',        displayName: 'Sam',     userKey: 'sam',      role: 'user' },
+  cole:     { email: 'cole@roofignite.com',       displayName: 'Cole',    userKey: 'cole',     role: 'user' },
+  tyler:    { email: 'tyler@roofignite.com',      displayName: 'Tyler',   userKey: 'tyler',    role: 'user' },
+  ksenia:   { email: 'ksenia@roofignite.com',     displayName: 'Ksenia',  userKey: 'ksenia',   role: 'user' },
+  adeen:    { email: 'adeen@roofignite.com',      displayName: 'Adeen',   userKey: 'adeen',    role: 'user' },
+  patrick:  { email: 'patrick@roofignite.com',    displayName: 'Patrick', userKey: 'patrick',  role: 'user' },
 };
 
 export function getUserColor(userKey: string) {

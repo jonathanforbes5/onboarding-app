@@ -199,9 +199,9 @@ export function LoginScreen() {
                 Check your email
               </h2>
               <p style={{ color: '#666', fontSize: 12.5, margin: 0, lineHeight: 1.6 }}>
-                We sent a 6-digit code to{' '}
+                We sent a sign-in link to{' '}
                 <strong style={{ color: '#ccc' }}>{email}</strong>.
-                Enter it below or click the link in the email.
+                Click the link in the email to sign in. If you also see a code, enter it below.
               </p>
             </div>
 
@@ -268,7 +268,7 @@ export function LoginScreen() {
               Sign in to continue
             </h2>
             <p style={{ color: '#555', fontSize: 13, margin: '0 0 1.5rem', lineHeight: 1.6, textAlign: 'center' }}>
-              Enter your <strong style={{ color: '#888' }}>@roofignite.com</strong> email — we&apos;ll send a 6-digit code.
+              Enter your <strong style={{ color: '#888' }}>@roofignite.com</strong> email — we&apos;ll send a sign-in link.
             </p>
 
             {configured ? (

@@ -286,6 +286,86 @@ export function S11_ToolsSystems() {
           ))}
         </div>
       </div>}
+      {/* ClickUp task templates */}
+      <ExpandableCard title="ClickUp Task Templates — Use These Every Time" subtitle="Standard formats for Emmanuel, Ken, and Mervin tasks">
+        <div className="space-y-4">
+          <div className="bg-brand-black rounded-xl p-4 font-mono text-xs">
+            <div className="text-brand-yellow font-black text-sm mb-3 font-sans">📋 Emmanuel — Setup + A2P Task</div>
+            <div className="text-white/80 space-y-1">
+              <div><span className="text-brand-yellow">Task:</span> [CLIENT NAME] — GHL Setup + A2P</div>
+              <div><span className="text-brand-yellow">Assignee:</span> Emmanuel | <span className="text-brand-yellow">Due:</span> [48hr deadline] | <span className="text-brand-yellow">Priority:</span> High</div>
+              <div className="mt-2 text-white/60">---</div>
+              <div><span className="text-brand-yellow">Client Name:</span> [Full name]</div>
+              <div><span className="text-brand-yellow">GHL Sub-Account:</span> [Link]</div>
+              <div><span className="text-brand-yellow">Niche:</span> Roofing / HVAC / Gutters</div>
+              <div><span className="text-brand-yellow">Service Area:</span> [City, State + radius or zip codes]</div>
+              <div><span className="text-brand-yellow">Ad Spend:</span> $[X]/day</div>
+              <div><span className="text-brand-yellow">Target:</span> [X bookings/cycle]</div>
+              <div><span className="text-brand-yellow">Assets:</span> [Google Drive link]</div>
+              <div><span className="text-brand-yellow">Notes:</span> [Client preferences from onboarding call]</div>
+              <div className="mt-2 text-red-400">⚠️ A2P = GHL registration (not Meta). Use A2P Wizard.</div>
+            </div>
+          </div>
+
+          <div className="bg-brand-black rounded-xl p-4 font-mono text-xs">
+            <div className="text-brand-yellow font-black text-sm mb-3 font-sans">🎨 Ken — Creative Request Task</div>
+            <div className="text-white/80 space-y-1">
+              <div><span className="text-brand-yellow">Task:</span> [CLIENT NAME] — Creative Set (Full Refresh)</div>
+              <div><span className="text-brand-yellow">Assignee:</span> Ken | <span className="text-brand-yellow">Due:</span> [24hr — Philippines TZ] | <span className="text-brand-yellow">Priority:</span> High</div>
+              <div className="mt-2 text-white/60">---</div>
+              <div><span className="text-brand-yellow">Brand Info:</span> [Company name, colors, logo link]</div>
+              <div><span className="text-brand-yellow">Market:</span> [City/region — match local house styles]</div>
+              <div><span className="text-brand-yellow">Niche:</span> Roofing / HVAC / Gutters</div>
+              <div><span className="text-brand-yellow">Reference Images:</span> [Google Drive link]</div>
+              <div><span className="text-brand-yellow">Format:</span> 5 Singles + 5 Two-Folds + 5 Tri-Folds = 15 total</div>
+              <div className="mt-2 text-red-400">⚠️ No reused photos. No jumbled text. No twins. Logos must be perfect.</div>
+            </div>
+          </div>
+
+          <div className="bg-brand-black rounded-xl p-4 font-mono text-xs">
+            <div className="text-brand-yellow font-black text-sm mb-3 font-sans">📧 Pre-Onboarding Email to Client</div>
+            <div className="text-white/80 space-y-1">
+              <div><span className="text-brand-yellow">Subject:</span> Getting Ready for Your Onboarding Call — [Client Name]</div>
+              <div className="mt-2">Hey [Client],</div>
+              <div className="mt-1">Looking forward to our call on [Date/Time]. To hit the ground running:</div>
+              <div className="mt-1">✅ Facebook Business Manager access (admin or partner)</div>
+              <div>✅ Facebook Page access</div>
+              <div>✅ Company logo (PNG or SVG)</div>
+              <div>✅ 5–10 photos: team, trucks, or completed jobs</div>
+              <div>✅ Service area: zip codes or radius</div>
+              <div>✅ Primary day-to-day contact</div>
+              <div className="mt-1">See you then — [Your Name]</div>
+            </div>
+          </div>
+        </div>
+      </ExpandableCard>
+
+      {/* Glossary */}
+      <ExpandableCard title="Key Terms Glossary" subtitle="Terms that confused Pod 1 managers in their first month">
+        <div className="space-y-2">
+          {[
+            { term: 'A2P / 10DLC', def: 'GoHighLevel phone number registration. NOT Meta. Emmanuel handles via GHL A2P Wizard. Rejection = 2–3 weeks lockout.' },
+            { term: 'CAPI', def: 'Conversion API. Sends booked appointment data from GHL back to Meta pixel. Tells Meta what a qualified lead looks like.' },
+            { term: 'Andromeda', def: 'Meta AI update that concentrates spend on top-performing ads. Causes creative fatigue faster at scale.' },
+            { term: 'Layer 1 / Layer 2', def: 'L1 = bookings vs target (outcome). L2 = CPC, CTR, conversion rate (diagnostics). Only check L2 if L1 is failing.' },
+            { term: 'Logbook', def: 'Central spreadsheet for all leads. VAs document every lead with status and notes. Access granted by Leila.' },
+            { term: 'Command Center', def: 'Dashboard showing account health by color. Open every morning for daily triage.' },
+            { term: 'Cost per Booking', def: 'Ad spend ÷ booked appointments. NOT cost per lead. This is what you report. Always.' },
+            { term: 'B2C (Campaign Keyword)', def: 'Must be in every Meta campaign name. Account Master Dashboard only tracks "B2C" campaigns.' },
+            { term: 'OSA (Out of Service Area)', def: 'Lead outside client\'s agreed service area. > 20% = targeting issue. Cross-check Meta vs account-specific doc.' },
+            { term: 'Speed to Cashflow', def: 'Days from signed contract to first payment. Company average: 75–80 days. Your target: 60 or less.' },
+            { term: 'Pixel Conditioning', def: 'Manually sending qualified booking data to Meta CAPI via GHL automation. Trains the algorithm on real buyers.' },
+            { term: '80% Rule', def: 'Deliver 80% of agreed booking target before billing. 20 agreed → 16 minimum. Cycle extends at no charge until hit.' },
+            { term: 'Death Valley', def: 'Days 7–21 after launch — where 60% of client churn originates. Highest-priority window for your first 2 cycles.' },
+          ].map((item) => (
+            <div key={item.term} className="flex items-start gap-3 p-2 bg-brand-gray-light rounded-lg">
+              <div className="font-black text-xs text-brand-black min-w-[120px] flex-shrink-0">{item.term}</div>
+              <div className="text-xs text-brand-gray">{item.def}</div>
+            </div>
+          ))}
+        </div>
+      </ExpandableCard>
+
       <Card yellow>
         <div className="text-center">
           <div className="text-4xl mb-3">🎓</div>

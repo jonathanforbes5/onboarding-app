@@ -244,6 +244,35 @@ export const SECTIONS: SectionMeta[] = [
         correctIndex: 2,
         explanation: 'A $5,100 invoice going silent is a retention risk, not just an admin issue. Call same day — not Slack, not email. You need verbal confirmation. If they\'re unresponsive after 24 hours, loop in Jonathan immediately. High-value quiet clients often signal dissatisfaction or cash flow issues that need senior handling.',
       },
+      {
+        question: 'What is the base salary for a pod manager at ContractorsIgnite?',
+        options: ['$50,000 CAD/year', '$72,000 CAD/year ($6,000/month)', '$96,000 CAD/year', '$48,000 CAD/year'],
+        correctIndex: 1,
+        explanation: 'Base salary is $72,000 CAD/year ($6,000/month), paid via direct deposit through Intuit. Set up with Oscar on Day 1. Everything above this — commission, milestones, bonuses — is variable and performance-driven.',
+      },
+      {
+        question: 'What is the commission rate on collected retainer revenue?',
+        options: ['1% of all client revenue', '2% of collected retainer revenue — every client, every cycle', '5% of ad spend managed', '3% in Year 1, 2% thereafter'],
+        correctIndex: 1,
+        explanation: '2% of collected retainer revenue, flat across all clients. At $4,000 average retainer = $80/client/month. 25 clients = $2,000/month commission. Commission is paid on COLLECTED revenue — not invoiced. Late-paying clients defer your commission until payment arrives.',
+      },
+      {
+        question: 'What bonus do you earn when a client completes Cycle 1 and renews into Cycle 2?',
+        options: ['$50 per client', '$100 per client', '$150 per client', '$250 per client'],
+        correctIndex: 2,
+        explanation: '$150 per client who completes Cycle 1. This rewards getting clients through the "Death Valley" window (Days 7–21 after launch) where 60% of all churn originates. You also earn $100 when they complete Cycle 2. Total: $250 per client who makes it past the two-cycle danger zone.',
+      },
+      {
+        question: 'A client at $4,000/month is about to churn. You offer to drop them to $3,200 and they agree to stay. What happens to your commission for the next 3 cycles?',
+        options: [
+          'Commission adjusts immediately to 2% of $3,200 ($64/month)',
+          'Commission is suspended for 3 cycles as a penalty for the concession',
+          'Commission stays calculated on the original $4,000 ($80/month) for 3 cycles — the commission floor protects you',
+          'Commission increases temporarily to reward the retention effort',
+        ],
+        correctIndex: 2,
+        explanation: 'The commission floor: when you save a client with a price concession (with manager approval), your commission stays calculated on the ORIGINAL retainer for 3 cycles. After cycle 3, it adjusts to the actual rate. This protects you from a pay cut when making the right long-term decision. You kept the client, the company keeps revenue, and you weren\'t penalized for good judgment.',
+      },
     ],
   },
   {

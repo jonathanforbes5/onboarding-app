@@ -8,6 +8,9 @@ export function NotesPanel() {
   const { showNotes, setShowNotes, notes, saveNote, currentSection } = useApp();
   const [text, setText] = useState('');
 
+  const savedText = notes[currentSection]?.text || '';
+  const isDirty = text !== savedText;
+
   useEffect(() => {
     setText(notes[currentSection]?.text || '');
   }, [currentSection, notes]);
@@ -15,6 +18,18 @@ export function NotesPanel() {
   const handleSave = () => {
     saveNote(currentSection, text);
   };
+
+  useEffect(() => {
+    if (!showNotes) return;
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        saveNote(currentSection, text);
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [showNotes, text, currentSection, saveNote]);
 
   const section = SECTIONS.find((s) => s.id === currentSection);
 
@@ -56,21 +71,31 @@ export function NotesPanel() {
         <div className="p-4 border-t border-brand-gray-mid flex-shrink-0">
           <button
             onClick={handleSave}
-            className="w-full py-2.5 rounded-lg bg-brand-yellow text-brand-black font-bold text-sm flex items-center justify-center gap-2 hover:bg-brand-yellow-dark transition-colors"
+            className={`w-full py-2.5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 transition-colors ${
+              isDirty
+                ? 'bg-brand-yellow text-brand-black hover:bg-brand-yellow-dark'
+                : 'bg-brand-gray-light text-brand-gray cursor-default'
+            }`}
           >
             <Save size={14} />
-            Save Note
+            {isDirty ? 'Save Note' : 'Saved'}
           </button>
-          {notes[currentSection]?.updatedAt && (
-            <div className="text-xs text-brand-gray text-center mt-2">
-              Last saved: {new Date(notes[currentSection].updatedAt).toLocaleString()}
-            </div>
-          )}
+          <div className="flex items-center justify-between mt-2">
+            {isDirty ? (
+              <span className="text-xs text-orange-500 font-semibold">Unsaved changes · ⌘S to save</span>
+            ) : notes[currentSection]?.updatedAt ? (
+              <span className="text-xs text-brand-gray">
+                Saved {new Date(notes[currentSection].updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            ) : (
+              <span />
+            )}
+          </div>
         </div>
 
         {/* All notes overview */}
         {Object.keys(notes).length > 0 && (
-          <div className="border-t border-brand-gray-mid flex-shrink-0 max-h-40 overflow-y-auto">
+          <div className="border-t border-brand-gray-mid flex-shrink-0 max-h-56 overflow-y-auto">
             <div className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-brand-gray bg-brand-gray-light">
               All Notes
             </div>

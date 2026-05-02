@@ -167,7 +167,8 @@ function UserCard({
         border: `1.5px solid ${C.border}`,
         borderRadius: 16,
         overflow: 'hidden',
-        flex: '1 1 360px',
+        flex: '1 1 min(360px, 100%)',
+        minWidth: 0,
       }}
     >
       {/* Card header */}
@@ -263,7 +264,7 @@ function UserCard({
         <div style={{ color: C.muted, fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>
           Day Breakdown
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 6 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 6 }}>
           {days.map((d: any) => {
             const { total, completed } = getDayCompletion(d, data.checklistItems);
             const isDone    = total > 0 && completed === total;
@@ -403,7 +404,7 @@ export function AdminDashboard() {
         overflowY: 'auto',
       }}
     >
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: '28px 24px 60px' }}>
+      <div style={{ maxWidth: 960, margin: '0 auto', padding: 'clamp(16px, 4vw, 28px) clamp(12px, 3vw, 24px) 60px' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 24 }}>

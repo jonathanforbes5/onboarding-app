@@ -269,9 +269,10 @@ export function RecordingsTab() {
               key={f.id}
               onClick={() => setFilter(f.id)}
               style={{
-                padding: '5px 13px',
+                padding: '10px 16px',
+                minHeight: 40,
                 borderRadius: 20,
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 700,
                 border: '1px solid',
                 cursor: 'pointer',
@@ -352,9 +353,10 @@ export function RecordingsTab() {
                   key={f.id}
                   onClick={() => setLoomFilter(f.id)}
                   style={{
-                    padding: '4px 11px',
+                    padding: '8px 13px',
+                    minHeight: 36,
                     borderRadius: 20,
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: 700,
                     border: '1px solid',
                     cursor: 'pointer',

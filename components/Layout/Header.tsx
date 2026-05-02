@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Search, FileText, Bookmark, Menu, X, LogOut } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { getUserColor } from '@/lib/auth';
@@ -49,6 +49,18 @@ export function Header() {
 
   const userColor     = currentUser ? getUserColor(currentUser.userKey) : null;
   const isSuperAdmin  = currentUser?.role === 'super_admin';
+
+  const [bookmarksOpen, setBookmarksOpen] = useState(false);
+  const bookmarkRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!bookmarksOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (!bookmarkRef.current?.contains(e.target as Node)) setBookmarksOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [bookmarksOpen]);
 
   // Tabs visible to all users
   const baseTabs = [
@@ -134,28 +146,34 @@ export function Header() {
           {activeTab === 'sections' && (
             <>
               {bookmarks.length > 0 && (
-                <div className="relative group">
-                  <button className="p-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1">
+                <div className="relative" ref={bookmarkRef}>
+                  <button
+                    onClick={() => setBookmarksOpen((o) => !o)}
+                    className="p-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1"
+                    title="Bookmarks"
+                  >
                     <Bookmark size={15} fill="currentColor" className="text-brand-yellow" />
                     <span className="text-xs text-brand-yellow font-bold hidden sm:inline">{bookmarks.length}</span>
                   </button>
-                  <div className="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl shadow-xl border border-brand-gray-mid overflow-hidden opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
-                    <div className="px-3 py-2 bg-brand-gray-light border-b border-brand-gray-mid">
-                      <span className="text-xs font-bold text-brand-black uppercase tracking-wide">Bookmarks</span>
+                  {bookmarksOpen && (
+                    <div className="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl shadow-xl border border-brand-gray-mid overflow-hidden z-50 animate-fade-in">
+                      <div className="px-3 py-2 bg-brand-gray-light border-b border-brand-gray-mid">
+                        <span className="text-xs font-bold text-brand-black uppercase tracking-wide">Bookmarks</span>
+                      </div>
+                      {bookmarks.map((id) => {
+                        const sec = SECTIONS.find((s) => s.id === id);
+                        return (
+                          <button
+                            key={id}
+                            onClick={() => { setCurrentSection(id); setActiveTab('sections'); setBookmarksOpen(false); }}
+                            className="w-full text-left px-3 py-2.5 hover:bg-brand-yellow/20 transition-colors border-b border-brand-gray-mid last:border-0"
+                          >
+                            <div className="text-xs font-bold text-brand-black">{sec?.title}</div>
+                          </button>
+                        );
+                      })}
                     </div>
-                    {bookmarks.map((id) => {
-                      const sec = SECTIONS.find((s) => s.id === id);
-                      return (
-                        <button
-                          key={id}
-                          onClick={() => { setCurrentSection(id); setActiveTab('sections'); }}
-                          className="w-full text-left px-3 py-2.5 hover:bg-brand-yellow/20 transition-colors border-b border-brand-gray-mid last:border-0"
-                        >
-                          <div className="text-xs font-bold text-brand-black">{sec?.title}</div>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  )}
                 </div>
               )}
               <button

@@ -245,8 +245,20 @@ export function SearchModal() {
         {/* Results */}
         <div className="max-h-96 overflow-y-auto">
           {filtered.length === 0 ? (
-            <div className="px-4 py-8 text-center text-brand-gray text-sm">
-              No results for &ldquo;{searchQuery}&rdquo;
+            <div className="px-4 py-12 flex flex-col items-center gap-3 text-center">
+              <div className="w-12 h-12 rounded-full bg-brand-gray-light flex items-center justify-center">
+                <Search size={20} className="text-brand-gray" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-brand-black">
+                  {q ? 'No results found' : 'Start searching'}
+                </p>
+                <p className="text-xs text-brand-gray mt-1">
+                  {q
+                    ? `Nothing matched "${searchQuery}" — try a different term`
+                    : 'Search training sections, SOPs, recordings, and tools'}
+                </p>
+              </div>
             </div>
           ) : (
             Object.entries(grouped).map(([kind, items]) => (

@@ -215,9 +215,10 @@ export function SOPsTab() {
                 key={tag}
                 onClick={() => setActiveFilter(tag)}
                 style={{
-                  padding: '5px 12px',
+                  padding: '10px 16px',
+                  minHeight: 40,
                   borderRadius: 20,
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: 700,
                   border: '1px solid',
                   cursor: 'pointer',

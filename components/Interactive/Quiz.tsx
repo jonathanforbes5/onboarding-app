@@ -262,7 +262,7 @@ export function Quiz({ sectionId, questions, onComplete }: QuizProps) {
 
       {/* Explanation */}
       {showExplanation && (
-        <div className={`mx-5 mb-4 p-3 rounded-lg text-sm ${answerState === 'correct' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+        <div className={`mx-5 mb-4 p-3 rounded-lg text-sm animate-slide-up ${answerState === 'correct' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
           <span className="font-bold">{answerState === 'correct' ? 'Correct! ' : 'Not quite. '}</span>
           {q.explanation}
         </div>

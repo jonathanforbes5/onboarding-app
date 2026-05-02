@@ -46,14 +46,14 @@ export function CompanyCurriculum() {
       fontFamily: 'Inter, system-ui, sans-serif',
       paddingBottom: 80,
     }}>
-      <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 20px' }}>
+      <div style={{ maxWidth: 860, margin: '0 auto', padding: '24px 16px' }}>
 
         {/* ── Hero ── */}
         <div style={{
           background: 'linear-gradient(135deg, #111111 0%, #1A1400 100%)',
           border: '1px solid #F5C80033',
           borderRadius: 20,
-          padding: '32px 32px 28px',
+          padding: 'clamp(20px, 5vw, 32px) clamp(16px, 4vw, 32px) clamp(18px, 4vw, 28px)',
           marginBottom: 28,
           position: 'relative',
           overflow: 'hidden',
@@ -200,7 +200,7 @@ export function CompanyCurriculum() {
             </div>
 
             {/* Section cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))', gap: 10 }}>
               {phase.sections.map((id) => {
                 const section = SECTIONS.find((s) => s.id === id)!;
                 const completed = isCompleted(id);
@@ -324,7 +324,7 @@ export function CompanyCurriculum() {
           borderRadius: 14,
           padding: '18px 20px',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(200px, 100%), 1fr))',
           gap: 16,
         }}>
           {[

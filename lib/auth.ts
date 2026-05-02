@@ -49,7 +49,7 @@ export async function signInWithMagicLink(email: string): Promise<{ error: strin
   const { error } = await supabase.auth.signInWithOtp({
     email: email.toLowerCase().trim(),
     options: {
-      emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : '',
+      emailRedirectTo: 'https://onboarding.roofignite.com',
       shouldCreateUser: true,
     },
   });

@@ -3,18 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 
 export async function GET() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const anonKey    = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!supabaseUrl || !serviceKey) {
+  if (!supabaseUrl || !anonKey) {
     return NextResponse.json({ managers: [] });
   }
 
-  const admin = createClient(supabaseUrl, serviceKey);
+  // Anon key is sufficient — RLS allows public SELECT
+  const client = createClient(supabaseUrl, anonKey);
 
-  const { data, error } = await admin
+  const { data, error } = await client
     .from('allowed_users')
-    .select('display_name, user_key, bio, goal, avatar_emoji')
-    .eq('role', 'user')
+    .select('display_name, user_key, bio, goal, avatar_emoji, avatar_url')
     .order('display_name');
 
   if (error) return NextResponse.json({ managers: [] });

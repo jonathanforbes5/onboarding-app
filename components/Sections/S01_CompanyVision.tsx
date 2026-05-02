@@ -10,7 +10,7 @@ const MILESTONES = [
   { year: '2022', label: 'Multi-Niche', detail: 'Expanded to HVAC and Gutters with proven system', icon: '⚡' },
   { year: '2024', label: 'Pod System', detail: 'Pod manager model launched — Pods 1 & 2 operational', icon: '📊' },
   { year: '2025', label: 'Scaling Fast', detail: 'Pods 3, 4, 5 onboarded — aggressive growth phase', icon: '📈' },
-  { year: '2026', label: 'Target: $1M/mo', detail: '5 pods × ~25 accounts × ~$4,500 avg retainer', icon: '🏆' },
+  { year: '2026', label: 'Full Scale', detail: 'All 5 pods operational — aggressive growth and client retention phase', icon: '🏆' },
 ];
 
 const NICHES = [
@@ -55,38 +55,14 @@ export function S01_CompanyVision() {
               <h2 className="text-2xl font-black text-white mb-2">Started at 15. Built to $300K/mo.</h2>
               <p className="text-white/70 text-sm leading-relaxed">
                 Mani and Oscar co-founded Roof Ignite at <strong className="text-white">15 years old</strong> to help their families by supporting local contractors.
-                That side project became a full agency. Today it runs <strong className="text-brand-yellow">5 pods, 100+ active client accounts</strong>, and is on a direct path to $1M/month.
+                That side project became a full agency. Today it runs <strong className="text-brand-yellow">5 pods, 100+ active client accounts</strong>, in aggressive growth mode across roofing, HVAC, and gutters.
               </p>
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Revenue math — visual */}
-      <div>
-        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">The Path to $1M/Month — The Math</h3>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-          {[
-            { label: 'Active Pods', value: '5', sub: 'Pod 1–5' },
-            { label: 'Accounts / Pod', value: '~25', sub: 'Target at scale' },
-            { label: 'Avg Retainer', value: '$4,500', sub: 'Base + 10% ad spend' },
-            { label: 'Monthly Target', value: '$1M', sub: 'By end of summer 2026' },
-          ].map((s) => (
-            <div key={s.label} className="bg-white rounded-xl border border-brand-gray-mid p-4 text-center">
-              <div className="text-2xl font-black text-brand-black">{s.value}</div>
-              <div className="text-xs font-bold text-brand-gray mt-1">{s.label}</div>
-              <div className="text-[10px] text-brand-gray/70 mt-0.5">{s.sub}</div>
-            </div>
-          ))}
-        </div>
-        <div className="bg-brand-black rounded-xl p-4 text-center">
-          <div className="text-white/60 text-xs mb-1">The Equation</div>
-          <div className="text-brand-yellow font-black text-base">5 pods × 25 accounts × $4,500 = <span className="text-white">$562,500 base</span></div>
-          <div className="text-white/50 text-xs mt-1">+ 10% of ad spend across all accounts pushes total to $1M+</div>
-        </div>
-      </div>
-
-      {/* Current vs target */}
+      {/* Growth phase highlight */}
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-brand-gray-mid p-4 text-center bg-white">
           <div className="text-xs font-black text-brand-gray uppercase tracking-widest mb-2">Where We Are Now</div>
@@ -94,9 +70,9 @@ export function S01_CompanyVision() {
           <div className="text-xs text-brand-gray mt-1">per month</div>
         </div>
         <div className="rounded-xl bg-brand-yellow p-4 text-center">
-          <div className="text-xs font-black text-brand-black/60 uppercase tracking-widest mb-2">Target by Summer 2026</div>
-          <div className="text-3xl font-black text-brand-black">$1M</div>
-          <div className="text-xs text-brand-black/70 mt-1">per month</div>
+          <div className="text-xs font-black text-brand-black/60 uppercase tracking-widest mb-2">Aggressive Growth Phase</div>
+          <div className="text-3xl font-black text-brand-black">5 Pods</div>
+          <div className="text-xs text-brand-black/70 mt-1">scaling simultaneously</div>
         </div>
       </div>
 
@@ -164,7 +140,7 @@ export function S01_CompanyVision() {
       </Card>
 
       <InfoBox type="tip" title="Why Your Role Is Critical">
-        You are joining during an aggressive scaling phase. 5 pods × 25 accounts each = the agency hitting $1M/month. Every client you retain is a multiplier. <strong>Retention is the mission.</strong>
+        You are joining during an aggressive scaling phase. 5 pods, all growing simultaneously — every client you retain compounds the agency's revenue. <strong>Retention is the mission.</strong>
       </InfoBox>
     </SectionWrapper>
   );

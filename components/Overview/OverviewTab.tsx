@@ -175,9 +175,11 @@ const TAB_GUIDE = [
 interface PodManagerProfile {
   display_name: string;
   user_key: string;
+  role?: string;
   bio?: string;
   goal?: string;
   avatar_emoji?: string;
+  avatar_url?: string;
 }
 
 export function OverviewTab() {
@@ -512,13 +514,18 @@ export function OverviewTab() {
           })}
         </div>
 
-        {/* ── Pod Manager Profiles ── */}
+        {/* ── Team Profiles ── */}
         {podManagers.length > 0 && (
           <div style={{ marginBottom: 28 }}>
-            <SectionTitle accent="#22C55E">Pod Managers</SectionTitle>
+            <SectionTitle accent="#22C55E">Team Profiles</SectionTitle>
+            <p style={{ color: C.muted, fontSize: 12.5, margin: '0 0 14px', lineHeight: 1.5 }}>
+              Everyone on the pod manager team — bio, goal, and photo set from your profile.
+            </p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 8 }}>
               {podManagers.map((pm) => {
                 const isMe = pm.user_key === currentUser?.userKey;
+                const roleLabel = pm.role === 'super_admin' ? 'Leadership' : 'Pod Manager';
+                const accentColor = pm.role === 'super_admin' ? C.acc : C.green;
                 return (
                   <div
                     key={pm.user_key}
@@ -531,34 +538,37 @@ export function OverviewTab() {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: pm.bio || pm.goal ? 8 : 0 }}>
                       <div style={{
-                        width: 34, height: 34, borderRadius: '50%',
-                        backgroundColor: C.green + '22',
-                        border: `1.5px solid ${C.green}66`,
+                        width: 38, height: 38, borderRadius: '50%',
+                        backgroundColor: pm.avatar_url ? 'transparent' : (accentColor + '22'),
+                        border: `1.5px solid ${accentColor}66`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: pm.avatar_emoji ? 18 : 13, fontWeight: 900, color: C.green, flexShrink: 0,
+                        fontSize: pm.avatar_emoji ? 20 : 14, fontWeight: 900, color: accentColor, flexShrink: 0,
+                        overflow: 'hidden',
                       }}>
-                        {pm.avatar_emoji ?? pm.display_name[0]}
+                        {pm.avatar_url
+                          ? <img src={pm.avatar_url} alt={pm.display_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          : (pm.avatar_emoji ?? pm.display_name[0])}
                       </div>
                       <div>
                         <div style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>
                           {pm.display_name}
                           {isMe && <span style={{ color: C.acc, fontSize: 10, fontWeight: 800, marginLeft: 6, verticalAlign: 'middle' }}>YOU</span>}
                         </div>
-                        <div style={{ color: C.muted, fontSize: 11.5, marginTop: 1 }}>Pod Manager</div>
+                        <div style={{ color: accentColor, fontSize: 11, marginTop: 1, fontWeight: 600 }}>{roleLabel}</div>
                       </div>
                     </div>
                     {pm.bio && (
                       <p style={{ color: '#aaa', fontSize: 12, margin: '0 0 4px', lineHeight: 1.5 }}>{pm.bio}</p>
                     )}
                     {pm.goal && (
-                      <div style={{ backgroundColor: C.green + '11', border: `1px solid ${C.green}22`, borderRadius: 6, padding: '5px 8px', marginTop: 4 }}>
-                        <span style={{ color: C.green, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>30-day goal: </span>
+                      <div style={{ backgroundColor: accentColor + '11', border: `1px solid ${accentColor}22`, borderRadius: 6, padding: '5px 8px', marginTop: 4 }}>
+                        <span style={{ color: accentColor, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Goal: </span>
                         <span style={{ color: '#aaa', fontSize: 12 }}>{pm.goal}</span>
                       </div>
                     )}
                     {!pm.bio && !pm.goal && isMe && (
                       <button
-                        onClick={() => {/* triggers profile modal via storage event */
+                        onClick={() => {
                           localStorage.removeItem(`ri_${pm.user_key}_profile_setup_seen`);
                           window.location.reload();
                         }}
@@ -566,6 +576,9 @@ export function OverviewTab() {
                       >
                         Set up your profile →
                       </button>
+                    )}
+                    {!pm.bio && !pm.goal && !isMe && (
+                      <p style={{ color: C.muted2, fontSize: 11, margin: 0, fontStyle: 'italic' }}>Profile not yet set up</p>
                     )}
                   </div>
                 );

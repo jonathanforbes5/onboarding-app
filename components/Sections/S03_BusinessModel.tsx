@@ -36,7 +36,7 @@ export function S03_BusinessModel() {
 
           <div className="bg-white/5 rounded-xl p-4 mb-4">
             <div className="text-white/60 text-xs font-black uppercase tracking-widest mb-3">How Earnings Compound</div>
-            <div className="flex items-end gap-1 h-16 mb-2">
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 8 }}>
               {[
                 { cycle: 1, h: 25 },
                 { cycle: 2, h: 35 },
@@ -46,12 +46,17 @@ export function S03_BusinessModel() {
                 { cycle: 6, h: 76 },
                 { cycle: 10, h: 100 },
               ].map((c) => (
-                <div key={c.cycle} className="flex flex-col items-center flex-1">
+                <div key={c.cycle} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <div
-                    className="w-full rounded-t transition-all"
-                    style={{ height: `${c.h}%`, backgroundColor: c.cycle === 10 ? '#F5C800' : `rgba(245,200,0,${0.2 + c.h / 200})` }}
+                    style={{
+                      width: '100%',
+                      borderRadius: '3px 3px 0 0',
+                      height: `${Math.round(c.h * 0.72)}px`,
+                      backgroundColor: c.cycle === 10 ? '#F5C800' : `rgba(245,200,0,${0.2 + c.h / 200})`,
+                      transition: 'height 0.5s',
+                    }}
                   />
-                  <div className="text-[9px] text-white/40 mt-1">C{c.cycle}</div>
+                  <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.4)', marginTop: 4 }}>C{c.cycle}</div>
                 </div>
               ))}
             </div>

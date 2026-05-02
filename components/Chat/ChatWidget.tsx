@@ -1,10 +1,16 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, RotateCcw, X, MessageSquare } from 'lucide-react';
+import { Send, RotateCcw, X, MessageSquare, ThumbsUp, ThumbsDown, ChevronDown } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  id?: string;
+}
+
+interface FeedbackState {
+  msgId: string;
+  mode: 'idle' | 'thumbs-down' | 'submitted';
 }
 
 const SUGGESTED = [
@@ -139,6 +145,9 @@ export function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [streamText, setStreamText] = useState('');
   const [unread, setUnread]   = useState(0);
+  const [feedback, setFeedback] = useState<FeedbackState | null>(null);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [notConfigured, setNotConfigured] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef  = useRef<HTMLTextAreaElement>(null);
 
@@ -157,12 +166,13 @@ export function ChatWidget() {
     const text = (question ?? input).trim();
     if (!text || loading) return;
 
-    const userMsg: Message = { role: 'user', content: text };
+    const userMsg: Message = { role: 'user', content: text, id: Math.random().toString(36).slice(2) };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput('');
     setLoading(true);
     setStreamText('');
+    setFeedback(null);
 
     try {
       const res = await fetch('/api/chat', {
@@ -171,7 +181,20 @@ export function ChatWidget() {
         body: JSON.stringify({ messages: newMessages }),
       });
 
+      if (res.status === 503) {
+        setNotConfigured(true);
+        setMessages((prev) => [...prev, {
+          role: 'assistant',
+          content: "Ask RI isn't configured yet — the AI key hasn't been added. Ask Jonathan to set it up. In the meantime, you can submit questions below and the team will add answers.",
+          id: 'not-configured',
+        }]);
+        setLoading(false);
+        if (open) inputRef.current?.focus();
+        return;
+      }
+
       if (!res.ok || !res.body) throw new Error('Failed');
+      setNotConfigured(false);
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -184,15 +207,35 @@ export function ChatWidget() {
         setStreamText(full);
       }
 
-      setMessages((prev) => [...prev, { role: 'assistant', content: full }]);
+      const msgId = Math.random().toString(36).slice(2);
+      setMessages((prev) => [...prev, { role: 'assistant', content: full, id: msgId }]);
       setStreamText('');
+      setFeedback({ msgId, mode: 'idle' });
       if (!open) setUnread((n) => n + 1);
     } catch {
-      setMessages((prev) => [...prev, { role: 'assistant', content: "I couldn't process that. Please try again or ask Jonathan directly in Slack." }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: "I couldn't reach the AI right now. Please try again or ask Jonathan directly in Slack." }]);
     } finally {
       setLoading(false);
       if (open) inputRef.current?.focus();
     }
+  };
+
+  const submitFeedback = async () => {
+    if (!feedbackText.trim() || !feedback) return;
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user');
+    await fetch('/api/chat/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: lastUserMsg?.content ?? 'Unknown question',
+        answer: feedbackText.trim(),
+        submittedBy: typeof window !== 'undefined'
+          ? (() => { try { return JSON.parse(localStorage.getItem('ri_bypass_profile') ?? '{}').userKey; } catch { return 'unknown'; } })()
+          : 'unknown',
+      }),
+    });
+    setFeedback({ msgId: feedback.msgId, mode: 'submitted' });
+    setFeedbackText('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -271,7 +314,64 @@ export function ChatWidget() {
               </div>
             ) : (
               <>
-                {messages.map((msg, i) => <MessageBubble key={i} msg={msg} />)}
+                {messages.map((msg, i) => (
+                  <div key={i}>
+                    <MessageBubble msg={msg} />
+                    {msg.role === 'assistant' && msg.id && feedback?.msgId === msg.id && (
+                      <div style={{ marginLeft: 31, marginTop: -6, marginBottom: 12 }}>
+                        {feedback.mode === 'idle' && (
+                          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                            <span style={{ color: C.muted2, fontSize: 10 }}>Helpful?</span>
+                            <button
+                              onClick={() => setFeedback({ msgId: msg.id!, mode: 'submitted' })}
+                              style={{ background: 'none', border: `1px solid ${C.border}`, borderRadius: 6, padding: '2px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, color: C.muted }}
+                            >
+                              <ThumbsUp size={10} /> <span style={{ fontSize: 10 }}>Yes</span>
+                            </button>
+                            <button
+                              onClick={() => setFeedback({ msgId: msg.id!, mode: 'thumbs-down' })}
+                              style={{ background: 'none', border: `1px solid ${C.border}`, borderRadius: 6, padding: '2px 7px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 3, color: C.muted }}
+                            >
+                              <ThumbsDown size={10} /> <span style={{ fontSize: 10 }}>No</span>
+                            </button>
+                          </div>
+                        )}
+                        {feedback.mode === 'thumbs-down' && (
+                          <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 8, padding: '10px 12px', marginTop: 4 }}>
+                            <p style={{ color: '#ccc', fontSize: 11.5, margin: '0 0 8px', lineHeight: 1.5 }}>
+                              What should the answer be? Help us improve Ask RI.
+                            </p>
+                            <textarea
+                              value={feedbackText}
+                              onChange={(e) => setFeedbackText(e.target.value)}
+                              placeholder="Type the correct answer here…"
+                              rows={3}
+                              style={{ width: '100%', backgroundColor: C.bg, border: `1px solid ${C.border}`, borderRadius: 7, padding: '8px 10px', color: C.text, fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'none', boxSizing: 'border-box' }}
+                            />
+                            <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
+                              <button
+                                onClick={submitFeedback}
+                                disabled={!feedbackText.trim()}
+                                style={{ flex: 1, backgroundColor: feedbackText.trim() ? C.acc : C.surf3, color: feedbackText.trim() ? '#000' : C.muted, border: 'none', borderRadius: 7, padding: '7px', fontSize: 11.5, fontWeight: 700, cursor: feedbackText.trim() ? 'pointer' : 'not-allowed', fontFamily: 'inherit' }}
+                              >
+                                Submit →
+                              </button>
+                              <button
+                                onClick={() => setFeedback({ msgId: msg.id!, mode: 'idle' })}
+                                style={{ backgroundColor: C.surf3, border: `1px solid ${C.border}`, borderRadius: 7, padding: '7px 10px', fontSize: 11.5, color: C.muted, cursor: 'pointer', fontFamily: 'inherit' }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {feedback.mode === 'submitted' && (
+                          <span style={{ color: C.green, fontSize: 10 }}>✓ Thanks — we'll update Ask RI with this.</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
                 {loading && !streamText && <TypingDot />}
                 {streamText && <MessageBubble msg={{ role: 'assistant', content: streamText }} />}
               </>

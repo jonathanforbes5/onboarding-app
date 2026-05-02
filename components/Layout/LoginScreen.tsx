@@ -6,6 +6,7 @@ const BYPASS_KEY = 'ri_bypass_profile';
 
 type Stage =
   | 'name'           // enter first name
+  | 'otp'            // enter one-time passcode sent to email
   | 'set-password'   // first time — create a password
   | 'enter-password' // returning — enter password
   | 'force-reset'    // admin reset — must set new password
@@ -32,6 +33,10 @@ export function LoginScreen() {
   const [pendingProfile, setPendingProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading]       = useState(false);
   const [error, setError]           = useState('');
+  const [otpToken, setOtpToken]     = useState('');
+  const [otpCode, setOtpCode]       = useState('');
+  const [otpEmail, setOtpEmail]     = useState('');
+  const [resending, setResending]   = useState(false);
 
   const inp: React.CSSProperties = {
     width: '100%', backgroundColor: '#0A0A0A', border: '1px solid #2A2A2A',
@@ -76,15 +81,8 @@ export function LoginScreen() {
       }
       setUserStatus(data);
       if (!data.serviceKeyAvailable) {
-        // No service key in env — skip password stage, go straight to confirm
-        const profile: import('@/lib/auth').UserProfile = LOCAL_USERS[key] ?? {
-          email: data.email ?? `${key}@roofignite.com`,
-          displayName: data.displayName,
-          userKey: data.userKey ?? key,
-          role: data.role as 'super_admin' | 'user',
-        };
-        setPendingProfile(profile);
-        setStage('confirm');
+        // No service key — try OTP flow if Resend is available, else confirm directly
+        await sendOtp(key);
       } else if (data.forceReset) {
         setStage('force-reset');
       } else if (data.hasPassword) {
@@ -101,6 +99,75 @@ export function LoginScreen() {
         setPendingProfile(user);
         setStage('confirm');
       }
+    }
+    setLoading(false);
+  };
+
+  /* ── OTP helpers ── */
+  const sendOtp = async (userKey?: string) => {
+    const key = userKey ?? name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
+    setResending(true);
+    setError('');
+    try {
+      const res = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: key }),
+      });
+      const d = await res.json();
+      if (!res.ok) {
+        // OTP not available — fall back to name-confirm
+        const us = userStatus;
+        const profile: import('@/lib/auth').UserProfile = LOCAL_USERS[key] ?? {
+          email: (us?.email ?? `${key}@roofignite.com`),
+          displayName: us?.displayName ?? key,
+          userKey: us?.userKey ?? key,
+          role: (us?.role ?? 'user') as 'super_admin' | 'user',
+        };
+        setPendingProfile(profile);
+        setStage('confirm');
+        return;
+      }
+      setOtpToken(d.token);
+      setOtpEmail(d.email);
+      setStage('otp');
+    } catch {
+      // Network error — fall back
+      const us = userStatus;
+      const profile: import('@/lib/auth').UserProfile = LOCAL_USERS[key] ?? {
+        email: us?.email ?? `${key}@roofignite.com`,
+        displayName: us?.displayName ?? key,
+        userKey: us?.userKey ?? key,
+        role: (us?.role ?? 'user') as 'super_admin' | 'user',
+      };
+      setPendingProfile(profile);
+      setStage('confirm');
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otpCode.trim()) return;
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: otpToken, otp: otpCode.trim() }),
+      });
+      const d = await res.json();
+      if (!res.ok) {
+        setError(d.error ?? 'Invalid code — try again or request a new one.');
+        setLoading(false);
+        return;
+      }
+      setPendingProfile(d.profile);
+      setStage('confirm');
+    } catch {
+      setError('Could not verify code — try again.');
     }
     setLoading(false);
   };
@@ -182,6 +249,7 @@ export function LoginScreen() {
   const reset = () => {
     setStage('name'); setError(''); setPassword(''); setConfirmPw('');
     setUserStatus(null); setPendingProfile(null);
+    setOtpToken(''); setOtpCode(''); setOtpEmail('');
   };
 
   /* ── Render ── */
@@ -231,6 +299,53 @@ export function LoginScreen() {
               <button type="submit" disabled={loading || !name.trim()} style={primaryBtn(!loading && !!name.trim())}>
                 {loading ? 'Checking…' : 'Continue →'}
               </button>
+            </form>
+          </>
+        )}
+
+        {/* ── OTP verification ── */}
+        {stage === 'otp' && (
+          <>
+            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+              <div style={{ fontSize: 32, marginBottom: 8 }}>📨</div>
+              <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 4px' }}>
+                Check your email
+              </h2>
+              <p style={{ color: '#555', fontSize: 12.5, margin: 0, lineHeight: 1.6 }}>
+                We sent a 6-digit code to <strong style={{ color: '#F5C800' }}>{otpEmail}</strong>.
+                Enter it below to continue.
+              </p>
+            </div>
+            <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                value={otpCode}
+                onChange={(e) => { setOtpCode(e.target.value.replace(/\D/g, '')); setError(''); }}
+                placeholder="6-digit code"
+                required
+                autoFocus
+                style={{ ...inp, textAlign: 'center', fontSize: 24, fontWeight: 800, letterSpacing: '0.2em' }}
+                onFocus={focusY}
+                onBlur={blurG}
+              />
+              {error && <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{error}</p>}
+              <button type="submit" disabled={loading || otpCode.length !== 6} style={primaryBtn(!loading && otpCode.length === 6)}>
+                {loading ? 'Verifying…' : 'Verify code →'}
+              </button>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+                <button type="button" onClick={reset} style={linkBtn}>← Back</button>
+                <button
+                  type="button"
+                  disabled={resending}
+                  onClick={() => sendOtp()}
+                  style={{ ...linkBtn, color: resending ? '#333' : '#555' }}
+                >
+                  {resending ? 'Sending…' : 'Resend code'}
+                </button>
+              </div>
             </form>
           </>
         )}

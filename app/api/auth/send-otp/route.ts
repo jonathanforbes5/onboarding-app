@@ -41,8 +41,10 @@ export async function POST(req: NextRequest) {
   const token = signToken(userKey, otp, exp);
 
   const resend = new Resend(RESEND_KEY);
+  // Use Resend's shared test domain until roofignite.com is verified as a sending domain
+  const fromDomain = process.env.RESEND_FROM_EMAIL ?? 'Roof Ignite <onboarding@resend.dev>';
   const { error: emailError } = await resend.emails.send({
-    from: 'Roof Ignite <noreply@roofignite.com>',
+    from: fromDomain,
     to: user.email,
     subject: `Your Roof Ignite login code: ${otp}`,
     html: `

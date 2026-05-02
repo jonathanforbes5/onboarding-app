@@ -168,7 +168,7 @@ export function CompanyCurriculum() {
         </div>
 
         {/* ── Learning Phases ── */}
-        {LEARNING_PHASES.map((phase) => (
+        {LEARNING_PHASES.map((phase, phaseIdx) => (
           <div key={phase.label} style={{ marginBottom: 28 }}>
             {/* Phase header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
@@ -185,7 +185,7 @@ export function CompanyCurriculum() {
                 fontWeight: 900,
                 color: phase.color,
               }}>
-                {phase.sections[0]}
+                {phaseIdx + 1}
               </div>
               <div>
                 <span style={{ color: phase.color, fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>

@@ -81,9 +81,17 @@ on conflict (email) do nothing;
     }, { status: 500 });
   }
 
+  // Also add password columns if missing (safe to re-run)
+  const migrationSql = `
+    alter table allowed_users add column if not exists password_hash text;
+    alter table allowed_users add column if not exists password_salt text;
+    alter table allowed_users add column if not exists force_reset boolean default false;
+  `.trim();
+
   return NextResponse.json({
     success: true,
-    message: `✅ ${data?.length ?? USERS.length} users seeded into allowed_users.`,
+    message: `✅ ${data?.length ?? USERS.length} users seeded. Run this SQL in Supabase SQL Editor to enable password login:`,
+    sql: migrationSql,
     users: data?.map((u) => u.email) ?? USERS.map((u) => u.email),
   });
 }

@@ -130,7 +130,7 @@ function TypingDot() {
   );
 }
 
-const CHAT_DISABLED = !process.env.NEXT_PUBLIC_CHAT_ENABLED;
+const CHAT_DISABLED = false;
 
 export function ChatWidget() {
   const [open, setOpen]       = useState(false);

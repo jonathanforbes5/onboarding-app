@@ -44,7 +44,6 @@ export function Header() {
     showCurriculumMap,
     setShowCurriculumMap,
     logout,
-    syncStatus,
   } = useApp();
 
   const userColor     = currentUser ? getUserColor(currentUser.userKey) : null;
@@ -62,18 +61,18 @@ export function Header() {
     return () => document.removeEventListener('mousedown', handler);
   }, [bookmarksOpen]);
 
-  // Tabs visible to all users
-  const baseTabs = [
-    { id: 'overview',    label: 'Overview',    icon: '🏠' },
-    { id: 'worksheet',   label: 'Worksheet',   icon: '📋' },
-    { id: 'sections',    label: 'Company',     icon: '📚' },
-    { id: 'resources',   label: 'Resources',   icon: '📁' },
-    { id: 'recordings',  label: 'Recordings',  icon: '🎬' },
-  ] as const;
+  const isPod5User = currentUser?.userKey === 'ksenia' || currentUser?.userKey === 'adeen';
+  const canSeeWorksheet = isPod5User || isSuperAdmin;
 
-  // Super admins get an extra Admin tab
-  const adminTab = { id: 'admin', label: 'Admin', icon: '📊' } as const;
-  const tabs = isSuperAdmin ? [...baseTabs, adminTab] : baseTabs;
+  const allTabs = [
+    { id: 'overview',   label: 'Overview',   icon: '🏠' },
+    ...(canSeeWorksheet ? [{ id: 'worksheet', label: 'Worksheet', icon: '📋' }] : []),
+    { id: 'sections',   label: 'Company',    icon: '📚' },
+    { id: 'resources',  label: 'Resources',  icon: '📁' },
+    { id: 'recordings', label: 'Recordings', icon: '🎬' },
+    ...(isSuperAdmin ? [{ id: 'admin', label: 'Admin', icon: '📊' }] : []),
+  ] as const;
+  const tabs = allTabs;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-brand-black text-white shadow-lg">
@@ -117,7 +116,7 @@ export function Header() {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => setActiveTab(tab.id as Parameters<typeof setActiveTab>[0])}
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'bg-brand-yellow text-brand-black'
@@ -188,10 +187,9 @@ export function Header() {
             </>
           )}
 
-          {/* User pill + sync dot */}
+          {/* User pill */}
           {currentUser && userColor && (
             <div className="flex items-center gap-1.5 ml-1 pl-1.5 border-l border-white/10">
-              <SyncDot status={syncStatus} />
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0 overflow-hidden"
                 style={{ backgroundColor: currentUser.avatarUrl || currentUser.avatarEmoji ? 'transparent' : userColor.bg, color: userColor.text, fontSize: currentUser.avatarEmoji ? 16 : undefined }}

@@ -151,16 +151,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check for master-password bypass profile (staging preview)
     try {
-      const bypass = sessionStorage.getItem(BYPASS_KEY);
+      const bypass = localStorage.getItem(BYPASS_KEY);
       if (bypass) {
         const profile = JSON.parse(bypass) as UserProfile;
-        const defaultTab: ActiveTab = profile.role === 'super_admin' ? 'admin' : 'overview';
+        const rawSavedTab = localStorage.getItem(`ri_${profile.userKey}_activeTab`);
+        const savedTab = (rawSavedTab === 'chat' ? null : rawSavedTab) as ActiveTab | null;
         setState((prev) => ({
           ...prev,
           currentUser: profile,
           authLoading: false,
-          activeTab: defaultTab,
-          syncStatus: 'offline',
+          activeTab: savedTab ?? 'overview',
+          syncStatus: 'synced',
         }));
         return;
       }
@@ -223,7 +224,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // 'chat' was removed as a tab — if saved, fall back to default
     const rawSavedTab = localStorage.getItem(`ri_${userKey}_activeTab`);
     const savedTab = (rawSavedTab === 'chat' ? null : rawSavedTab) as ActiveTab | null;
-    const defaultTab: ActiveTab = savedTab ?? (profile.role === 'super_admin' ? 'admin' : 'overview');
+    const defaultTab: ActiveTab = savedTab ?? 'overview';
 
     setState((prev) => ({
       ...prev,
@@ -290,15 +291,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       } : prev.currentUser;
       // Persist to sessionStorage for bypass mode
       try {
-        const bypass = sessionStorage.getItem('ri_bypass_profile');
-        if (bypass && updated) sessionStorage.setItem('ri_bypass_profile', JSON.stringify(updated));
+        const bypass = localStorage.getItem('ri_bypass_profile');
+        if (bypass && updated) localStorage.setItem('ri_bypass_profile', JSON.stringify(updated));
       } catch {}
       return { ...prev, currentUser: updated };
     });
   }, [state.currentUser?.email]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const logout = useCallback(() => {
-    try { sessionStorage.removeItem(BYPASS_KEY); } catch {}
+    try { localStorage.removeItem(BYPASS_KEY); } catch {}
     authSignOut();
     setState((prev) => ({ ...defaultState, authLoading: false }));
   }, []);
@@ -314,8 +315,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       },
       authLoading: false,
       accessDenied: false,
-      activeTab: 'admin',
-      syncStatus: 'offline',
+      activeTab: 'overview',
+      syncStatus: 'synced',
     }));
   }, []);
 

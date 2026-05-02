@@ -378,8 +378,9 @@ function DayRow({
 export function WorksheetTab() {
   const { currentDay, setCurrentDay, checklistItems, toggleChecklistItem, currentUser } = useApp();
 
-  const isPod5      = POD5_USERS.has(currentUser?.userKey ?? '');
   const isLeadership = currentUser?.role === 'super_admin';
+  // Leadership always sees Pod 5 (current cohort); Pod 5 users by key
+  const isPod5      = POD5_USERS.has(currentUser?.userKey ?? '') || isLeadership;
 
   // Only Pod 5 members and leadership can access the worksheet
   if (!isPod5 && !isLeadership) {

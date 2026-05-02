@@ -69,7 +69,6 @@ export function Header() {
     { id: 'sections',    label: 'Company',     icon: '📚' },
     { id: 'resources',   label: 'Resources',   icon: '📁' },
     { id: 'recordings',  label: 'Recordings',  icon: '🎬' },
-    { id: 'chat',        label: 'Ask RI',      icon: '🤖' },
   ] as const;
 
   // Super admins get an extra Admin tab
@@ -194,11 +193,13 @@ export function Header() {
             <div className="flex items-center gap-1.5 ml-1 pl-1.5 border-l border-white/10">
               <SyncDot status={syncStatus} />
               <div
-                className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0"
-                style={{ backgroundColor: currentUser.avatarEmoji ? 'transparent' : userColor.bg, color: userColor.text, fontSize: currentUser.avatarEmoji ? 16 : undefined }}
+                className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0 overflow-hidden"
+                style={{ backgroundColor: currentUser.avatarUrl || currentUser.avatarEmoji ? 'transparent' : userColor.bg, color: userColor.text, fontSize: currentUser.avatarEmoji ? 16 : undefined }}
                 title={currentUser.bio ?? currentUser.displayName}
               >
-                {currentUser.avatarEmoji ?? currentUser.displayName[0]}
+                {currentUser.avatarUrl ? (
+                  <img src={currentUser.avatarUrl} alt={currentUser.displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (currentUser.avatarEmoji ?? currentUser.displayName[0])}
               </div>
               <span className="text-xs font-semibold text-white/75 hidden sm:inline">{currentUser.displayName}</span>
               <button

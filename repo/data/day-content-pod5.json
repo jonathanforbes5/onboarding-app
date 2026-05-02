@@ -79,8 +79,13 @@
             "Message Pamela in Slack: introduce yourself",
             "Message Emmanuel in Slack: introduce yourself, confirm ClickUp setup process",
             "Message Mervin in Slack: introduce yourself",
-            "Message Ken in Slack: introduce yourself (Philippines timezone — plan ahead for creative requests)",
-            "Message Bren in Slack: introduce yourself",
+            "Message Ken in Slack: introduce yourself (Philippines timezone — plan ahead for creative requests, creative-side only)",
+            "Message Bren in Slack: introduce yourself (primarily Pod 2 media buying, has bandwidth for more)",
+            "Message Michael Dallara in Slack: introduce yourself — he oversees B2B ads strategy",
+            "Message Bronson Boyko in Slack: introduce yourself — Sales Closer",
+            "Message Krisz (Chris) in Slack: introduce yourself — Sales Closer",
+            "Message John Kutac in Slack: introduce yourself — Sales Closer",
+            "Message AJ Asif in Slack: introduce yourself — Setter",
             "Shadow the Friday review call — do NOT shadow Tuesday's call yet (too early in training)"
           ]
         }
@@ -310,7 +315,7 @@
           "title": "Pre-Call Preparation",
           "type": "checklist",
           "items": [
-            "Update your status in Slack before 9 AM Monday (or Thursday)",
+            "Update your status in Slack on Monday (or Thursday)",
             "Know the current status of every account before the call starts",
             "Have action steps ready — not just reporting, prescribing",
             "Layer 1 metrics for every account (bookings vs target, health color, cost per booking)",

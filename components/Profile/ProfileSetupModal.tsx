@@ -1,7 +1,7 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useApp } from '@/context/AppContext';
-import { X } from 'lucide-react';
+import { X, Camera, Smile } from 'lucide-react';
 
 const AVATAR_EMOJIS = [
   '🦊','🚀','⚡','🎯','🔥','💡','🏆','🦁','🐺','🌊',
@@ -9,21 +9,70 @@ const AVATAR_EMOJIS = [
   '🎲','🦈','🌿','🔑','🎩',
 ];
 
+function resizeImageToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 100;
+        canvas.height = 100;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) { reject(new Error('Canvas unavailable')); return; }
+        const size = Math.min(img.width, img.height);
+        const x = (img.width - size) / 2;
+        const y = (img.height - size) / 2;
+        ctx.drawImage(img, x, y, size, size, 0, 0, 100, 100);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = reject;
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export function ProfileSetupModal({ onClose }: { onClose: () => void }) {
   const { currentUser, updateUserProfile } = useApp();
   const [bio, setBio]               = useState(currentUser?.bio ?? '');
   const [goal, setGoal]             = useState(currentUser?.goal ?? '');
   const [avatar, setAvatar]         = useState(currentUser?.avatarEmoji ?? '');
+  const [avatarUrl, setAvatarUrl]   = useState(currentUser?.avatarUrl ?? '');
+  const [avatarTab, setAvatarTab]   = useState<'emoji' | 'photo'>(currentUser?.avatarUrl ? 'photo' : 'emoji');
   const [saving, setSaving]         = useState(false);
   const [error, setError]           = useState('');
+  const [photoLoading, setPhotoLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!currentUser) return null;
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoLoading(true);
+    setError('');
+    try {
+      const base64 = await resizeImageToBase64(file);
+      setAvatarUrl(base64);
+    } catch {
+      setError('Could not process image. Please try a different file.');
+    } finally {
+      setPhotoLoading(false);
+    }
+  };
 
   const handleSave = async () => {
     setSaving(true);
     setError('');
     try {
-      await updateUserProfile({ bio: bio.trim(), goal: goal.trim(), avatarEmoji: avatar });
+      await updateUserProfile({
+        bio: bio.trim(),
+        goal: goal.trim(),
+        avatarEmoji: avatarTab === 'emoji' ? avatar : '',
+        avatarUrl: avatarTab === 'photo' ? avatarUrl : '',
+      });
       onClose();
     } catch (e: any) {
       setError(e?.message ?? 'Failed to save profile');
@@ -43,7 +92,7 @@ export function ProfileSetupModal({ onClose }: { onClose: () => void }) {
       onClick={onClose}
     >
       <div
-        style={{ backgroundColor: C.surf, border: `1px solid ${C.border}`, borderRadius: 20, padding: '28px 28px 24px', maxWidth: 460, width: '100%', fontFamily: 'Inter, system-ui, sans-serif' }}
+        style={{ backgroundColor: C.surf, border: `1px solid ${C.border}`, borderRadius: 20, padding: '28px 28px 24px', maxWidth: 460, width: '100%', fontFamily: 'Inter, system-ui, sans-serif', maxHeight: '90vh', overflowY: 'auto' }}
         onClick={(e) => e.stopPropagation()}
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
@@ -63,34 +112,111 @@ export function ProfileSetupModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Avatar emoji picker */}
+        {/* Avatar section */}
         <div style={{ marginBottom: 18 }}>
           <label style={{ color: C.muted, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', display: 'block', marginBottom: 8 }}>
-            Choose your avatar
+            Your avatar
           </label>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {AVATAR_EMOJIS.map((emoji) => (
+
+          {/* Tab toggle */}
+          <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+            {(['emoji', 'photo'] as const).map((tab) => (
               <button
-                key={emoji}
-                onClick={() => setAvatar(avatar === emoji ? '' : emoji)}
+                key={tab}
+                onClick={() => setAvatarTab(tab)}
                 style={{
-                  width: 38, height: 38, borderRadius: 10, fontSize: 20,
-                  backgroundColor: avatar === emoji ? C.acc + '22' : C.surf2,
-                  border: `2px solid ${avatar === emoji ? C.acc : C.border}`,
-                  cursor: 'pointer', transition: 'all 0.1s',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  padding: '6px 12px', borderRadius: 8, fontSize: 12, fontWeight: 700,
+                  cursor: 'pointer', fontFamily: 'inherit',
+                  backgroundColor: avatarTab === tab ? C.acc + '22' : C.surf2,
+                  border: `1.5px solid ${avatarTab === tab ? C.acc : C.border}`,
+                  color: avatarTab === tab ? C.acc : C.muted,
+                  transition: 'all 0.1s',
                 }}
               >
-                {emoji}
+                {tab === 'emoji' ? <><Smile size={13} /> Choose emoji</> : <><Camera size={13} /> Upload photo</>}
               </button>
             ))}
           </div>
+
+          {avatarTab === 'emoji' ? (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {AVATAR_EMOJIS.map((emoji) => (
+                <button
+                  key={emoji}
+                  onClick={() => setAvatar(avatar === emoji ? '' : emoji)}
+                  style={{
+                    width: 38, height: 38, borderRadius: 10, fontSize: 20,
+                    backgroundColor: avatar === emoji ? C.acc + '22' : C.surf2,
+                    border: `2px solid ${avatar === emoji ? C.acc : C.border}`,
+                    cursor: 'pointer', transition: 'all 0.1s',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div>
+              {avatarUrl ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <img
+                    src={avatarUrl}
+                    alt="Your photo"
+                    style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${C.acc}` }}
+                  />
+                  <div>
+                    <p style={{ color: C.text, fontSize: 13, margin: '0 0 6px' }}>Looking good!</p>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      style={{
+                        padding: '5px 10px', borderRadius: 7, fontSize: 12, fontWeight: 600,
+                        backgroundColor: C.surf2, border: `1px solid ${C.border}`, color: C.muted,
+                        cursor: 'pointer', fontFamily: 'inherit',
+                      }}
+                    >
+                      Change photo
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    border: `2px dashed ${C.border}`, borderRadius: 12, padding: '20px',
+                    textAlign: 'center', cursor: 'pointer', backgroundColor: C.bg,
+                    transition: 'border-color 0.15s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = C.acc)}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = C.border)}
+                >
+                  {photoLoading ? (
+                    <p style={{ color: C.muted, fontSize: 13, margin: 0 }}>Processing…</p>
+                  ) : (
+                    <>
+                      <Camera size={24} color={C.muted} style={{ marginBottom: 8 }} />
+                      <p style={{ color: C.muted, fontSize: 13, margin: '0 0 4px' }}>Click to upload a photo</p>
+                      <p style={{ color: '#444', fontSize: 11, margin: 0 }}>JPG, PNG, WebP — cropped to square</p>
+                    </>
+                  )}
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                style={{ display: 'none' }}
+                onChange={handlePhotoChange}
+              />
+            </div>
+          )}
         </div>
 
         {/* Bio */}
         <div style={{ marginBottom: 14 }}>
           <label style={{ color: C.muted, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', display: 'block', marginBottom: 6 }}>
-            Bio <span style={{ color: C.muted, fontWeight: 400, textTransform: 'none' }}>(one-liner — how you'd describe yourself)</span>
+            Bio <span style={{ color: C.muted, fontWeight: 400, textTransform: 'none' }}>(one-liner — how you&apos;d describe yourself)</span>
           </label>
           <input
             type="text"
@@ -111,14 +237,17 @@ export function ProfileSetupModal({ onClose }: { onClose: () => void }) {
         {/* Goal */}
         <div style={{ marginBottom: 20 }}>
           <label style={{ color: C.muted, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', display: 'block', marginBottom: 6 }}>
-            Your 30-day goal <span style={{ color: C.muted, fontWeight: 400, textTransform: 'none' }}>(what do you want to accomplish in your first month?)</span>
+            Your goal{' '}
+            <span style={{ color: C.muted, fontWeight: 400, textTransform: 'none' }}>
+              (work or personal — what are you working toward?)
+            </span>
           </label>
           <textarea
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             maxLength={200}
             rows={2}
-            placeholder="e.g. Get fully operational on 20+ accounts and hit my first cycle billings."
+            placeholder="e.g. Buy a house by end of year, hit 30 accounts under management, get my Supra."
             style={{
               width: '100%', backgroundColor: C.bg, border: `1px solid ${C.border}`, borderRadius: 10,
               padding: '10px 13px', color: C.text, fontSize: 13, outline: 'none', fontFamily: 'inherit',

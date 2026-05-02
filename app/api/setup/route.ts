@@ -102,7 +102,7 @@ insert into allowed_users (email, display_name, role, user_key) values
   ('oscar@roofignite.com',    'Oscar',    'super_admin', 'oscar'),
   ('mani@roofignite.com',     'Mani',     'super_admin', 'mani'),
   ('sam@roofignite.com',      'Sam',      'user',        'sam'),
-  ('cole@roofignite.com',     'Cole',     'user',        'cole'),
+  ('cole@roofignite.com',     'Cole',     'super_admin',  'cole'),
   ('tyler@roofignite.com',    'Tyler',    'user',        'tyler'),
   ('ksenia@roofignite.com',   'Ksenia',   'user',        'ksenia'),
   ('adeen@roofignite.com',    'Adeen',    'user',        'adeen'),
@@ -111,7 +111,7 @@ on conflict (email) do nothing;
 
 -- Fix any existing super_admin roles that should be user (idempotent)
 update allowed_users set role = 'user' where email in (
-  'cole@roofignite.com', 'info@roofignite.com', 'tyler@roofignite.com',
+  'info@roofignite.com', 'tyler@roofignite.com',
   'ksenia@roofignite.com', 'adeen@roofignite.com', 'patrick@roofignite.com', 'sam@roofignite.com'
 ) and role = 'super_admin';
 `;

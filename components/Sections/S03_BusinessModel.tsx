@@ -108,7 +108,7 @@ export function S03_BusinessModel() {
       </ExpandableCard>
 
       {/* Comp structure */}
-      <ExpandableCard title="Your Compensation Structure" subtitle="Cycle-based earnings — understand how you're paid">
+      <ExpandableCard title="Your Compensation Structure" subtitle="Jonathan presented this directly to all pod managers — cycle-based earnings explained">
         <div className="space-y-3">
           <p className="text-sm text-brand-gray">
             Your compensation is directly tied to the performance model you deliver for clients.

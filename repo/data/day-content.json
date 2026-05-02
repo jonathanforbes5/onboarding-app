@@ -16,7 +16,7 @@
       "sections": [
         {
           "id": "d1-orientation",
-          "title": "9:00–11:00 AM — Company Foundations Presentation",
+          "title": "Company Foundations Presentation",
           "type": "session",
           "items": [
             "Company history: Mani and Oscar founding story, RoofIgnite → ContractorsIgnite evolution",
@@ -288,7 +288,7 @@
           "title": "Pre-Call Preparation",
           "type": "checklist",
           "items": [
-            "Update your status in Slack before 9 AM Monday (or Thursday)",
+            "Update your status in Slack on Monday (or Thursday)",
             "Know the current status of every account before the call starts",
             "Have action steps ready — not just reporting, prescribing",
             "Layer 1 metrics for every account (bookings vs target, health color, cost per booking)",

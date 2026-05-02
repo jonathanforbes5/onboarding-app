@@ -32,9 +32,10 @@ const TIER_LABELS: Record<string, string> = {
   pod_managers: 'Pod Managers',
   media_buying: 'Media Buying & Design',
   va_management:'VA Management',
+  sales:        'Sales Team',
 };
 
-const TIER_ORDER = ['leadership', 'pod_managers', 'media_buying', 'va_management'];
+const TIER_ORDER = ['leadership', 'pod_managers', 'media_buying', 'va_management', 'sales'];
 
 function SectionTitle({ children, accent }: { children: React.ReactNode; accent?: string }) {
   return (

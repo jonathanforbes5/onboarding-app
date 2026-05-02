@@ -12,7 +12,7 @@ import { RecordingsTab } from '@/components/Recordings/RecordingsTab';
 import { CompanyCurriculum } from '@/components/Sections/CompanyCurriculum';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
-import { ChatTab } from '@/components/Chat/ChatTab';
+import { ChatWidget } from '@/components/Chat/ChatWidget';
 import { ProfileSetupModal } from '@/components/Profile/ProfileSetupModal';
 import { ToastProvider } from '@/components/UI/Toast';
 import { useApp } from '@/context/AppContext';
@@ -131,12 +131,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {activeTab === 'chat' && (
-        <div className="pt-[42px]">
-          <ChatTab />
-        </div>
-      )}
-
       {activeTab === 'admin' && currentUser.role === 'super_admin' && (
         <div className="pt-[42px]">
           <AdminDashboard />
@@ -163,6 +157,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <SearchModal />
       <NotesPanel />
       {showProfileSetup && <ProfileSetupModal onClose={handleProfileClose} />}
+      <ChatWidget />
 
       {/* Completion celebration modal */}
       {showCompletionCelebration && (

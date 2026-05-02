@@ -9,11 +9,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
   }
 
-  const { email, bio, goal, avatar_emoji } = await req.json() as {
+  const { email, bio, goal, avatar_emoji, avatar_url } = await req.json() as {
     email: string;
     bio?: string;
     goal?: string;
     avatar_emoji?: string;
+    avatar_url?: string;
   };
 
   if (!email) {
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
         alter table allowed_users add column if not exists bio text;
         alter table allowed_users add column if not exists goal text;
         alter table allowed_users add column if not exists avatar_emoji text;
+        alter table allowed_users add column if not exists avatar_url text;
       `,
     });
   } catch {
@@ -41,6 +43,7 @@ export async function POST(req: NextRequest) {
       ...(bio          !== undefined && { bio }),
       ...(goal         !== undefined && { goal }),
       ...(avatar_emoji !== undefined && { avatar_emoji }),
+      ...(avatar_url   !== undefined && { avatar_url }),
     })
     .eq('email', email.toLowerCase());
 

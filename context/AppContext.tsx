@@ -11,7 +11,7 @@ import {
 } from '@/lib/syncService';
 
 export type { UserProfile };
-export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'chat';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin';
 
 export interface Note {
   text: string;
@@ -52,7 +52,7 @@ export interface AppState {
 interface AppContextType extends AppState {
   logout: () => void;
   devLogin: () => void;
-  updateUserProfile: (fields: { bio?: string; goal?: string; avatarEmoji?: string }) => Promise<void>;
+  updateUserProfile: (fields: { bio?: string; goal?: string; avatarEmoji?: string; avatarUrl?: string }) => Promise<void>;
   setActiveTab: (tab: ActiveTab) => void;
   setCurrentSection: (id: number) => void;
   setSidebarOpen: (v: boolean) => void;
@@ -220,7 +220,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const localDay = parseInt(localStorage.getItem(`ri_${userKey}_day`) || '1', 10);
 
     // Restore last active tab; fall back to role-based default only on first visit
-    const savedTab = localStorage.getItem(`ri_${userKey}_activeTab`) as ActiveTab | null;
+    // 'chat' was removed as a tab — if saved, fall back to default
+    const rawSavedTab = localStorage.getItem(`ri_${userKey}_activeTab`);
+    const savedTab = (rawSavedTab === 'chat' ? null : rawSavedTab) as ActiveTab | null;
     const defaultTab: ActiveTab = savedTab ?? (profile.role === 'super_admin' ? 'admin' : 'overview');
 
     setState((prev) => ({
@@ -256,7 +258,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }
 
   // ── Auth actions ──────────────────────────────────────────
-  const updateUserProfile = useCallback(async (fields: { bio?: string; goal?: string; avatarEmoji?: string }) => {
+  const updateUserProfile = useCallback(async (fields: { bio?: string; goal?: string; avatarEmoji?: string; avatarUrl?: string }) => {
     const email = state.currentUser?.email;
     if (!email) throw new Error('Not logged in');
 
@@ -268,21 +270,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         bio: fields.bio,
         goal: fields.goal,
         avatar_emoji: fields.avatarEmoji,
+        avatar_url: fields.avatarUrl,
       }),
     });
+    // Silently ignore API failures when Supabase isn't configured (bypass/staging mode)
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      throw new Error(data.error ?? 'Failed to save profile');
+      if (data.error !== 'Supabase not configured') {
+        throw new Error(data.error ?? 'Failed to save profile');
+      }
     }
-    setState((prev) => ({
-      ...prev,
-      currentUser: prev.currentUser ? {
+    setState((prev) => {
+      const updated = prev.currentUser ? {
         ...prev.currentUser,
         bio: fields.bio ?? prev.currentUser.bio,
         goal: fields.goal ?? prev.currentUser.goal,
         avatarEmoji: fields.avatarEmoji ?? prev.currentUser.avatarEmoji,
-      } : prev.currentUser,
-    }));
+        avatarUrl: fields.avatarUrl ?? prev.currentUser.avatarUrl,
+      } : prev.currentUser;
+      // Persist to sessionStorage for bypass mode
+      try {
+        const bypass = sessionStorage.getItem('ri_bypass_profile');
+        if (bypass && updated) sessionStorage.setItem('ri_bypass_profile', JSON.stringify(updated));
+      } catch {}
+      return { ...prev, currentUser: updated };
+    });
   }, [state.currentUser?.email]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const logout = useCallback(() => {

@@ -378,7 +378,26 @@ function DayRow({
 export function WorksheetTab() {
   const { currentDay, setCurrentDay, checklistItems, toggleChecklistItem, currentUser } = useApp();
 
-  const isPod5  = POD5_USERS.has(currentUser?.userKey ?? '');
+  const isPod5      = POD5_USERS.has(currentUser?.userKey ?? '');
+  const isLeadership = currentUser?.role === 'super_admin';
+
+  // Only Pod 5 members and leadership can access the worksheet
+  if (!isPod5 && !isLeadership) {
+    return (
+      <div style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        height: '100%', minHeight: 'calc(100vh - 48px)', backgroundColor: C.bg,
+        color: C.text, fontFamily: 'Inter, system-ui, sans-serif', padding: 32, textAlign: 'center',
+      }}>
+        <div style={{ fontSize: 36, marginBottom: 16 }}>📋</div>
+        <h2 style={{ color: C.text, fontSize: 20, fontWeight: 900, margin: '0 0 10px' }}>Pod 5 Worksheet</h2>
+        <p style={{ color: C.muted, fontSize: 14, maxWidth: 340, lineHeight: 1.6, margin: 0 }}>
+          This worksheet is for the current onboarding cohort (Pod 5). Your onboarding program has concluded — contact leadership if you need access.
+        </p>
+      </div>
+    );
+  }
+
   const podNum  = isPod5 ? 5 : 4;
   const dayDates    = isPod5 ? DAY_DATES_POD5 : DAY_DATES_POD4;
   const weekLabels  = isPod5 ? WEEK_LABELS_POD5 : WEEK_LABELS_POD4;
@@ -435,17 +454,36 @@ export function WorksheetTab() {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-            <span
-              style={{
-                color: C.muted,
-                fontSize: 10,
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.07em',
-              }}
-            >
-              10-Day Worksheet
-            </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <span
+                style={{
+                  color: C.muted,
+                  fontSize: 10,
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.07em',
+                }}
+              >
+                10-Day Worksheet
+              </span>
+              {isPod5 && (
+                <span style={{
+                  display: 'inline-block',
+                  backgroundColor: '#1A1400',
+                  border: `1px solid ${C.acc}44`,
+                  color: C.acc,
+                  fontSize: 9,
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.07em',
+                  borderRadius: 4,
+                  padding: '1px 5px',
+                  width: 'fit-content',
+                }}>
+                  Pod 5
+                </span>
+              )}
+            </div>
             <span style={{ color: C.acc, fontSize: 12, fontWeight: 800 }}>{pct}%</span>
           </div>
           <div style={{ height: 4, backgroundColor: C.surf3, borderRadius: 2, overflow: 'hidden' }}>

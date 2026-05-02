@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useRef } from 'react';
-import { signInWithMagicLink, LOCAL_USERS } from '@/lib/auth';
+import { signInWithMagicLink, LOCAL_USERS, UserProfile } from '@/lib/auth';
 import { isSupabaseEnabled } from '@/lib/supabase';
 import { supabase } from '@/lib/supabase';
 
@@ -17,6 +17,7 @@ export function LoginScreen() {
   const [bypassName, setBypassName] = useState('');
   const [bypassPass, setBypassPass] = useState('');
   const [bypassError, setBypassError] = useState('');
+  const [pendingBypass, setPendingBypass] = useState<UserProfile | null>(null);
 
   // Legacy bottom quick-access (configured + MASTER_PASSWORD set)
   const [devPass, setDevPass]     = useState('');
@@ -74,11 +75,18 @@ export function LoginScreen() {
       return;
     }
 
+    // Show confirmation before committing session
+    setPendingBypass(user);
+  };
+
+  const confirmBypassLogin = () => {
+    if (!pendingBypass) return;
     try {
-      sessionStorage.setItem(BYPASS_KEY, JSON.stringify(user));
+      sessionStorage.setItem(BYPASS_KEY, JSON.stringify(pendingBypass));
       window.location.reload();
     } catch {
       setBypassError('Login failed. Please try again.');
+      setPendingBypass(null);
     }
   };
 
@@ -294,6 +302,60 @@ export function LoginScreen() {
                   {loading ? 'Sending…' : 'Send code →'}
                 </button>
               </form>
+            ) : pendingBypass ? (
+              /* ── Confirmation step ── */
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{
+                    width: 56, height: 56, borderRadius: '50%',
+                    backgroundColor: '#1A1A00', border: '2px solid #F5C80066',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 12px', fontSize: 22, fontWeight: 900, color: '#F5C800',
+                  }}>
+                    {pendingBypass.displayName.charAt(0)}
+                  </div>
+                  <p style={{ color: '#F5F5F5', fontSize: 15, fontWeight: 700, margin: '0 0 4px' }}>
+                    {pendingBypass.displayName}
+                  </p>
+                  <p style={{ color: '#555', fontSize: 12, margin: '0 0 4px' }}>
+                    {pendingBypass.email}
+                  </p>
+                  <span style={{
+                    display: 'inline-block', backgroundColor: pendingBypass.role === 'super_admin' ? '#1A1400' : '#0D1F14',
+                    border: `1px solid ${pendingBypass.role === 'super_admin' ? '#F5C80044' : '#22C55E33'}`,
+                    color: pendingBypass.role === 'super_admin' ? '#F5C800' : '#22C55E',
+                    borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700,
+                    textTransform: 'uppercase', letterSpacing: '0.05em',
+                  }}>
+                    {pendingBypass.role === 'super_admin' ? 'Leadership' : 'Pod Manager'}
+                  </span>
+                </div>
+                <p style={{ color: '#888', fontSize: 13, textAlign: 'center', margin: 0, lineHeight: 1.5 }}>
+                  Is this you?
+                </p>
+                <button
+                  onClick={confirmBypassLogin}
+                  style={{
+                    width: '100%', backgroundColor: '#F5C800',
+                    border: 'none', borderRadius: 10, padding: '12px',
+                    cursor: 'pointer', fontSize: 14, fontWeight: 700, color: '#000',
+                    transition: 'all 0.15s ease', fontFamily: 'inherit',
+                  }}
+                >
+                  Yes, that&apos;s me →
+                </button>
+                <button
+                  onClick={() => setPendingBypass(null)}
+                  style={{
+                    width: '100%', backgroundColor: 'transparent',
+                    border: '1px solid #2A2A2A', borderRadius: 10, padding: '10px',
+                    cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#666',
+                    fontFamily: 'inherit',
+                  }}
+                >
+                  Not me — go back
+                </button>
+              </div>
             ) : (
               /* ── Staging bypass (no Supabase) ── */
               <form onSubmit={handleBypassSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

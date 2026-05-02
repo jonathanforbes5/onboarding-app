@@ -180,5 +180,50 @@
     "contact": "Slack — VA scheduling and quality management.",
     "notes": "Works alongside Leila and Aica on VA operations.",
     "avatar_initial": "Pa"
+  },
+  {
+    "id": "michael_dallara",
+    "name": "Michael Dallara",
+    "role": "B2B Ads Manager",
+    "tier": "sales",
+    "contact": "Slack.",
+    "notes": "Oversees B2B paid advertising strategy and execution.",
+    "avatar_initial": "MD"
+  },
+  {
+    "id": "bronson",
+    "name": "Bronson Boyko",
+    "role": "Closer",
+    "tier": "sales",
+    "contact": "Slack.",
+    "notes": "Sales closer — handles high-intent prospects through to close.",
+    "avatar_initial": "BB"
+  },
+  {
+    "id": "krisz",
+    "name": "Krisz (Chris)",
+    "role": "Closer",
+    "tier": "sales",
+    "contact": "Slack.",
+    "notes": "Sales closer.",
+    "avatar_initial": "Kr"
+  },
+  {
+    "id": "john_kutac",
+    "name": "John Kutac",
+    "role": "Closer",
+    "tier": "sales",
+    "contact": "Slack.",
+    "notes": "Sales closer.",
+    "avatar_initial": "JK"
+  },
+  {
+    "id": "aj",
+    "name": "AJ Asif",
+    "role": "Setter",
+    "tier": "sales",
+    "contact": "Slack.",
+    "notes": "Setter — qualifies and books prospects for the closers.",
+    "avatar_initial": "AJ"
   }
 ]

@@ -5,15 +5,15 @@ import { Card, InfoBox, BulletList } from '@/components/UI/Card';
 import { ExpandableCard } from '@/components/Interactive/ExpandableCard';
 
 const PHASES = [
-  { num: 1, title: 'Lead Comes In', owner: 'Michael (B2B Ads)', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
-  { num: 2, title: 'Sales Call', owner: "Mani's Team", color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
-  { num: 3, title: 'Client Closed', owner: 'Closers + Pod Assignment', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
-  { num: 4, title: 'Onboarding Call', owner: 'YOU', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
-  { num: 5, title: 'Service Delivery Setup', owner: 'Emmanuel & Mervin (5–10 business days)', color: 'bg-brand-black border-brand-black', text: 'text-white' },
-  { num: 6, title: 'Launch Campaigns', owner: 'Emmanuel + VA Team', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
-  { num: 7, title: 'Ongoing Optimization', owner: 'You + Specialists', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
-  { num: 8, title: 'Cycle Completion', owner: 'You verify + bill', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
-  { num: 9, title: 'Renewal', owner: 'You secure next cycle', color: 'bg-brand-black border-brand-black', text: 'text-white' },
+  { num: 1, title: 'Lead Comes In', owner: 'Michael Dallara (B2B Ads)', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
+  { num: 2, title: 'Sales Call', owner: "Mani's Team (Closers + Setters)", color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
+  { num: 3, title: 'Client Closed', owner: 'Closers → Pod Assignment', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
+  { num: 4, title: 'Onboarding Call', owner: 'YOU — sets the entire tone', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
+  { num: 5, title: 'Infrastructure Build', owner: 'Emmanuel (lead) + Mervin — you track daily', color: 'bg-brand-black border-brand-black', text: 'text-white' },
+  { num: 6, title: 'Launch Campaigns', owner: 'Emmanuel activates — you confirm every detail', color: 'bg-brand-gray-light border-brand-gray-mid', text: 'text-brand-black' },
+  { num: 7, title: 'Ongoing Optimization', owner: 'YOU own every outcome — specialists support', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
+  { num: 8, title: 'Cycle Completion', owner: 'YOU verify results + bill', color: 'bg-brand-yellow border-brand-yellow', text: 'text-brand-black', highlight: true },
+  { num: 9, title: 'Renewal', owner: 'YOU secure the next cycle', color: 'bg-brand-black border-brand-black', text: 'text-white' },
 ];
 
 export function S06_ServiceDelivery() {
@@ -23,11 +23,14 @@ export function S06_ServiceDelivery() {
       {/* Role overview */}
       <Card dark>
         <div className="text-brand-yellow text-xs font-black uppercase tracking-widest mb-2">Your Role</div>
-        <h2 className="text-xl font-black text-white mb-3">You Own the Client Experience</h2>
-        <p className="text-white/70 text-sm leading-relaxed">
-          Once a client is closed, <strong className="text-white">you take over</strong>. You run the onboarding call, coordinate the build,
+        <h2 className="text-xl font-black text-white mb-3">You Own the Client Experience — Fully</h2>
+        <p className="text-white/70 text-sm leading-relaxed mb-3">
+          Once a client is closed, <strong className="text-white">you take full ownership</strong>. You run the onboarding call, coordinate the build,
           manage launch, drive optimization, close the cycle, and secure renewal.
-          You are the client&apos;s single point of contact from day one — <strong className="text-brand-yellow">you do not build or execute the technical work</strong>, you direct, track, and own outcomes.
+          You are the client&apos;s single point of contact from day one.
+        </p>
+        <p className="text-white/70 text-sm leading-relaxed">
+          Specialists support you — Emmanuel and Mervin handle the technical build, Ken handles creatives, Bren handles media buying (primarily Pod 2, with bandwidth for more), the VA team manages speed-to-lead — but <strong className="text-brand-yellow">the outcome is always on you</strong>. When something is underperforming, it's your job to identify it, coordinate the fix, and follow through. You direct, they execute.
         </p>
       </Card>
 
@@ -112,7 +115,7 @@ export function S06_ServiceDelivery() {
       </ExpandableCard>
 
       {/* Setup phase */}
-      <ExpandableCard title="Service Delivery Setup — What Happens After Your Call" subtitle="Emmanuel & Mervin build the full infrastructure in 5–10 business days">
+      <ExpandableCard title="Service Delivery Setup — Infrastructure Build" subtitle="Emmanuel (lead, more senior) + Mervin — equals building the full setup in 5–10 business days">
         <div className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {[
@@ -167,23 +170,42 @@ export function S06_ServiceDelivery() {
       <ExpandableCard title="Reference Recordings — Study Before Your First Call" subtitle="Real onboarding and service delivery sessions to learn from">
         <div className="space-y-2">
           {[
-            { label: 'Service Delivery Part 1', desc: 'GHL setup walkthrough — how the sub-account build works from start to finish.', url: 'https://fathom.video/share/uZeCCaxRRVumFq_K6yHx_tbN75iRaMaX', priority: false },
-            { label: 'Service Delivery Part 2 (Most Recent)', desc: 'Updated service delivery process. Watch after Part 1 for the current standards.', url: 'https://fathom.video/share/G9juWT1oFG_3CrppLscPDXceijJvP_rR', priority: false },
-            { label: 'Entire GHL Build Start to Finish', desc: 'Complete sub-account build using standard A2P (not A2P Wizard). Know the full picture even though Emmanuel handles it.', url: 'https://fathom.video/share/VG-nsEXiRvRP-7oyMY1VxcVET743mMs8', priority: false },
-            { label: 'Roofing Onboarding Call', desc: 'Real roofing client onboarding. Primary niche (80–90% of clients) — study this carefully.', url: 'https://fathom.video/share/qj9AYoqURQ6jhx34jFRZiR2-xESYDswF', priority: false },
-            { label: 'HVAC Onboarding Call', desc: 'HVAC-specific nuances — different pain points and seasonality vs roofing.', url: 'https://fathom.video/share/VYz9GhzfjBBj1YuVUPLXLdbVz6UkW4Pd', priority: false },
-            { label: 'Gutter Onboarding Call', desc: 'Gutter client onboarding. Note: gutters require 2–3× booking volume vs roofing to be profitable.', url: 'https://fathom.video/share/yNyAaNPjWJdhj-zps7GYjpziqpCsBhN_', priority: false },
+            { label: 'Entire GHL Build Start to Finish', badge: 'MOST RECENT', desc: 'The most up-to-date walkthrough of the complete sub-account build. Watch this to understand the full picture — even though Emmanuel handles the execution.', url: 'https://fathom.video/share/VG-nsEXiRvRP-7oyMY1VxcVET743mMs8' },
+            { label: 'New Onboarding Process Call — Apr 30', badge: 'ESSENTIAL', desc: 'Jonathan walks all pod managers through the updated onboarding flow, comp structure, and expectations. Watch this first.', url: 'https://fathom.video/share/9JhnQ7WvdHRKUgsnCyVkbzjKxeK-o_78' },
+            { label: 'Creative Audit — Oscar & Kyle', badge: 'MUST WATCH', desc: 'Oscar conducts a live creative audit for a client account, sharing insights with Kyle. Learn how to analyze ad creative performance, identify what\'s working, and what needs fixing.', url: 'https://www.loom.com/share/4c73ce9ede374abf8eac9158af79ea17' },
+            { label: 'Service Delivery Part 1', badge: null, desc: 'GHL setup walkthrough — how the sub-account build works from start to finish.', url: 'https://fathom.video/share/uZeCCaxRRVumFq_K6yHx_tbN75iRaMaX' },
+            { label: 'Service Delivery Part 2', badge: null, desc: 'Earlier service delivery walkthrough — reference alongside Part 1 for full context.', url: 'https://fathom.video/share/G9juWT1oFG_3CrppLscPDXceijJvP_rR' },
+            { label: 'Roofing Onboarding Call', badge: null, desc: 'Real roofing client onboarding. Primary niche (80–90% of clients) — study this carefully.', url: 'https://fathom.video/share/qj9AYoqURQ6jhx34jFRZiR2-xESYDswF' },
+            { label: 'HVAC Onboarding Call', badge: null, desc: 'HVAC-specific nuances — different pain points and seasonality vs roofing.', url: 'https://fathom.video/share/VYz9GhzfjBBj1YuVUPLXLdbVz6UkW4Pd' },
+            { label: 'Gutter Onboarding Call', badge: null, desc: 'Gutter client onboarding. Note: gutters require 2–3× booking volume vs roofing to be profitable.', url: 'https://fathom.video/share/yNyAaNPjWJdhj-zps7GYjpziqpCsBhN_' },
           ].map((rec) => (
             <a key={rec.label} href={rec.url} target="_blank" rel="noopener noreferrer"
               className="flex items-start gap-3 p-3 rounded-xl border-2 border-brand-gray-mid bg-white hover:border-brand-black hover:shadow-sm transition-all group">
               <span className="text-lg mt-0.5 flex-shrink-0">🎥</span>
               <div className="flex-1 min-w-0">
-                <div className="font-bold text-sm">{rec.label}</div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-sm">{rec.label}</span>
+                  {rec.badge && (
+                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-brand-black text-brand-yellow uppercase tracking-wider">{rec.badge}</span>
+                  )}
+                </div>
                 <div className="text-xs text-brand-gray mt-0.5">{rec.desc}</div>
               </div>
               <span className="text-brand-gray group-hover:text-brand-black text-xs flex-shrink-0 mt-1">↗</span>
             </a>
           ))}
+          <a href="https://docs.google.com/document/d/10aoaz3edxvQBsDrwPsHjEO2CgZa0FPA8KltuXDf-IeQ/edit" target="_blank" rel="noopener noreferrer"
+            className="flex items-start gap-3 p-3 rounded-xl border-2 border-brand-yellow bg-brand-yellow/5 hover:border-brand-black hover:shadow-sm transition-all group">
+            <span className="text-lg mt-0.5 flex-shrink-0">📋</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-sm">Onboarding Flow SOP</span>
+                <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-brand-black text-brand-yellow uppercase tracking-wider">REQUIRED</span>
+              </div>
+              <div className="text-xs text-brand-gray mt-0.5">Full written onboarding process SOP — step-by-step from client close to launch. Know this inside out.</div>
+            </div>
+            <span className="text-brand-gray group-hover:text-brand-black text-xs flex-shrink-0 mt-1">↗</span>
+          </a>
           <a href="https://docs.google.com/document/d/10aoaz3edxvQBsDrwPsHjEO2CgZa0FPA8KltuXDf-IeQ/edit" target="_blank" rel="noopener noreferrer"
             className="flex items-start gap-3 p-3 rounded-xl border-2 border-brand-gray-mid bg-white hover:border-brand-black hover:shadow-sm transition-all group">
             <span className="text-lg mt-0.5 flex-shrink-0">📄</span>
@@ -201,10 +223,10 @@ export function S06_ServiceDelivery() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { week: 'Week 1', action: 'Launch & monitor. Let the pixel gather data — don\'t touch campaigns yet.', who: 'Emmanuel leads' },
-              { week: 'Week 2–3', action: 'Identify early patterns. Optimize based on Layer 1 data.', who: 'You + Emmanuel' },
-              { week: 'Week 3', action: 'Scale winning ad sets. Kill non-performers. Refresh creatives if needed.', who: 'Emmanuel + Ken' },
-              { week: 'Week 4', action: 'Prepare cycle review. Compile results for client and billing.', who: 'You' },
+              { week: 'Week 1', action: 'Launch & monitor. Let the pixel gather data — don\'t touch campaigns yet. Your job: confirm everything is running correctly.', who: 'You monitor — Emmanuel activates' },
+              { week: 'Week 2–3', action: 'Identify early patterns. Diagnose Layer 1 data — bookings on pace? Cost per booking acceptable?', who: 'You own the diagnosis' },
+              { week: 'Week 3', action: 'Scale winning ad sets. Kill non-performers. If creative is the issue, brief Ken (creative only) for refreshes.', who: 'You direct — specialists execute' },
+              { week: 'Week 4', action: 'Prepare cycle review. Compile full results for client, document learnings, prepare billing.', who: 'You' },
             ].map((w) => (
               <div key={w.week} className="p-3 rounded-xl bg-brand-gray-light">
                 <div className="font-black text-xs text-brand-black">{w.week}</div>
@@ -273,11 +295,96 @@ export function S06_ServiceDelivery() {
         </div>
       </ExpandableCard>
 
+      {/* Command Centre */}
+      <ExpandableCard title="Command Centre — Your Primary Workspace" subtitle="This is where you work from every day — not just a dashboard">
+        <div className="space-y-3">
+          <InfoBox type="warning" title="Non-Negotiable">
+            The Command Centre is your primary tool. Every account status, every action item, every flag lives here. If you&apos;re not in Command Centre daily, you are not managing your accounts — you&apos;re reacting to them.
+          </InfoBox>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { item: 'Account Health Colors', desc: 'Green / Yellow / Red — know every account\'s status before you open Slack or GHL.' },
+              { item: 'Daily Check-In', desc: 'Open every morning. Review all accounts before any client communications.' },
+              { item: 'Action Items', desc: 'Everything flagged for follow-up lives here. Don\'t let items go stale.' },
+              { item: 'Booking Pace Tracker', desc: 'Are you on track for each client\'s target? Know this in real time.' },
+              { item: 'VA Logbook Access', desc: 'Open (white) leads — nothing should sit unresolved. Check daily.' },
+              { item: 'Cycle Status', desc: 'How far through the 28-day cycle is each account? Know before your calls.' },
+            ].map((item) => (
+              <div key={item.item} className="flex items-start gap-2 p-2 bg-brand-gray-light rounded-lg">
+                <span className="text-brand-yellow mt-0.5 flex-shrink-0">★</span>
+                <div>
+                  <div className="font-bold text-xs">{item.item}</div>
+                  <div className="text-xs text-brand-gray">{item.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="p-3 rounded-xl border-2 border-brand-yellow bg-brand-yellow/5">
+            <div className="font-black text-xs uppercase tracking-widest text-brand-black mb-2">📄 PDF Training — Complete This</div>
+            <p className="text-sm text-brand-gray mb-2">
+              There is a full PDF training guide for the Command Centre — go through it completely before your first week of active account management. Knowing this tool deeply separates reactive managers from proactive ones.
+            </p>
+            <p className="text-xs text-brand-gray">Ask Jonathan or check the Resources tab for the Command Centre PDF training document.</p>
+          </div>
+        </div>
+      </ExpandableCard>
+
+      {/* Creatives & Content */}
+      <ExpandableCard title="Creatives & Organic Content — Why It Matters" subtitle="Creative quality is the #1 lever you can pull — don't neglect it">
+        <div className="space-y-3">
+          <Card dark>
+            <div className="text-brand-yellow text-xs font-black uppercase tracking-widest mb-2">The Creative Rule</div>
+            <p className="text-white/80 text-sm leading-relaxed">
+              Creative is the single biggest variable in paid ad performance. A weak creative with a great offer will underperform. A great creative with a decent offer will outperform.
+              <strong className="text-white"> You are responsible for identifying when creative is the problem and briefing Ken accordingly.</strong> Ken handles creatives only — brief him with specific direction, not vague requests.
+            </p>
+          </Card>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Monday/Thursday Posts — What You Provide</h4>
+              <BulletList check items={[
+                'Update your Slack status before your Monday/Thursday pod call',
+                'Come with specific account performance data — not vibes',
+                'Identify which accounts need creative refreshes and why',
+                'Flag which creative concepts you want Ken to build next',
+                'Provide context: what\'s the hook? What audience? What outcome?',
+                'Detailed briefs = better creative = better results',
+              ]} />
+            </div>
+            <div>
+              <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Friday Calls — How to Present</h4>
+              <BulletList items={[
+                'Lead with Layer 1: bookings vs target, cost per booking',
+                'Pull Layer 2 only if Layer 1 is failing — don\'t pad with data',
+                'Don\'t ramble — get straight to the point',
+                'Focus on Layer 1 vs Layer 2 framework, not random observations',
+                'Confirm action steps before ending the call',
+                'Reference the data you already analyzed — don\'t depend on leadership to interpret it for you',
+                'Come with prescriptions, not just problems',
+              ]} />
+            </div>
+          </div>
+
+          <InfoBox type="tip" title="Oscar's Creative Audit — Must Watch">
+            Watch the <strong>Creative Audit — Oscar &amp; Kyle</strong> recording in the Reference Recordings above. Oscar walks through a live creative audit: how to identify what&apos;s working, what&apos;s failing, and what to brief for next. This is the standard.
+          </InfoBox>
+
+          <div>
+            <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Organic Content — Why It Supports Paid</h4>
+            <div className="space-y-1.5 text-sm text-brand-gray leading-relaxed">
+              <p>Organic content (social posts, videos) builds trust signals that directly impact paid ad performance. A prospect who&apos;s seen your client&apos;s organic content is more likely to book from a paid ad.</p>
+              <p className="font-bold text-brand-black">Your job: make sure clients are posting consistently and understand why it matters to their results.</p>
+            </div>
+          </div>
+        </div>
+      </ExpandableCard>
+
       <Card yellow>
         <div className="text-center">
           <div className="font-black text-2xl mb-1">You own the relationship.</div>
           <div className="text-sm text-brand-black/70">
-            From the onboarding call to renewal — you are the client&apos;s single point of contact and the one accountable for outcomes.
+            From the onboarding call to renewal — you are the client&apos;s single point of contact and the one accountable for every outcome. Specialists support you. The result is yours.
           </div>
         </div>
       </Card>

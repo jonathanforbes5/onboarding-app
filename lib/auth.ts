@@ -8,6 +8,7 @@ export interface UserProfile {
   bio?: string;
   goal?: string;
   avatarEmoji?: string;
+  avatarUrl?: string;
 }
 
 // Avatar colour per user key
@@ -31,7 +32,7 @@ export const LOCAL_USERS: Record<string, UserProfile> = {
   oscar:    { email: 'oscar@roofignite.com',     displayName: 'Oscar',   userKey: 'oscar',    role: 'super_admin' },
   mani:     { email: 'mani@roofignite.com',      displayName: 'Mani',    userKey: 'mani',     role: 'super_admin' },
   sam:      { email: 'sam@roofignite.com',        displayName: 'Sam',     userKey: 'sam',      role: 'user' },
-  cole:     { email: 'cole@roofignite.com',       displayName: 'Cole',    userKey: 'cole',     role: 'user' },
+  cole:     { email: 'cole@roofignite.com',       displayName: 'Cole',    userKey: 'cole',     role: 'super_admin' },
   tyler:    { email: 'tyler@roofignite.com',      displayName: 'Tyler',   userKey: 'tyler',    role: 'user' },
   ksenia:   { email: 'ksenia@roofignite.com',     displayName: 'Ksenia',  userKey: 'ksenia',   role: 'user' },
   adeen:    { email: 'adeen@roofignite.com',      displayName: 'Adeen',   userKey: 'adeen',    role: 'user' },
@@ -67,7 +68,7 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
   try {
     const { data, error } = await supabase
       .from('allowed_users')
-      .select('email, display_name, role, user_key, bio, goal, avatar_emoji')
+      .select('email, display_name, role, user_key, bio, goal, avatar_emoji, avatar_url')
       .eq('email', email.toLowerCase())
       .maybeSingle();
 
@@ -81,6 +82,7 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
       bio: data.bio ?? undefined,
       goal: data.goal ?? undefined,
       avatarEmoji: data.avatar_emoji ?? undefined,
+      avatarUrl: data.avatar_url ?? undefined,
     };
   } catch {
     return null;

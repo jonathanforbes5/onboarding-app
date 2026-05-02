@@ -18,6 +18,9 @@ interface UserStatus {
   forceReset: boolean;
   displayName: string;
   role: string;
+  userKey?: string;
+  email?: string;
+  serviceKeyAvailable?: boolean;
 }
 
 export function LoginScreen() {
@@ -72,7 +75,17 @@ export function LoginScreen() {
         return;
       }
       setUserStatus(data);
-      if (data.forceReset) {
+      if (!data.serviceKeyAvailable) {
+        // No service key in env — skip password stage, go straight to confirm
+        const profile: import('@/lib/auth').UserProfile = LOCAL_USERS[key] ?? {
+          email: data.email ?? `${key}@roofignite.com`,
+          displayName: data.displayName,
+          userKey: data.userKey ?? key,
+          role: data.role as 'super_admin' | 'user',
+        };
+        setPendingProfile(profile);
+        setStage('confirm');
+      } else if (data.forceReset) {
         setStage('force-reset');
       } else if (data.hasPassword) {
         setStage('enter-password');

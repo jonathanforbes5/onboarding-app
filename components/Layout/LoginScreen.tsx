@@ -21,6 +21,10 @@ interface UserStatus {
   role: string;
   userKey?: string;
   email?: string;
+  bio?: string | null;
+  goal?: string | null;
+  avatarEmoji?: string | null;
+  avatarUrl?: string | null;
   serviceKeyAvailable?: boolean;
 }
 
@@ -64,6 +68,17 @@ export function LoginScreen() {
     cursor: 'pointer', textDecoration: 'underline', fontFamily: 'inherit',
   };
 
+  const profileFromStatus = (key: string, us: UserStatus): import('@/lib/auth').UserProfile => ({
+    email: us.email ?? `${key}@roofignite.com`,
+    displayName: us.displayName,
+    userKey: us.userKey ?? key,
+    role: us.role as 'super_admin' | 'user',
+    bio: us.bio ?? undefined,
+    goal: us.goal ?? undefined,
+    avatarEmoji: us.avatarEmoji ?? undefined,
+    avatarUrl: us.avatarUrl ?? undefined,
+  });
+
   /* ── Step 1: Check name ── */
   const handleNameSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,8 +96,7 @@ export function LoginScreen() {
       }
       setUserStatus(data);
       if (!data.serviceKeyAvailable) {
-        // No service key — try OTP flow if Resend is available, else confirm directly
-        await sendOtp(key);
+        await sendOtp(key, data);
       } else if (data.forceReset) {
         setStage('force-reset');
       } else if (data.hasPassword) {
@@ -104,8 +118,9 @@ export function LoginScreen() {
   };
 
   /* ── OTP helpers ── */
-  const sendOtp = async (userKey?: string) => {
+  const sendOtp = async (userKey?: string, statusOverride?: UserStatus) => {
     const key = userKey ?? name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
+    const us = statusOverride ?? userStatus;
     setResending(true);
     setError('');
     try {
@@ -116,32 +131,16 @@ export function LoginScreen() {
       });
       const d = await res.json();
       if (!res.ok) {
-        // OTP not available — fall back to name-confirm
-        const us = userStatus;
-        const profile: import('@/lib/auth').UserProfile = LOCAL_USERS[key] ?? {
-          email: (us?.email ?? `${key}@roofignite.com`),
-          displayName: us?.displayName ?? key,
-          userKey: us?.userKey ?? key,
-          role: (us?.role ?? 'user') as 'super_admin' | 'user',
-        };
-        setPendingProfile(profile);
-        setStage('confirm');
+        const profile = (us ? profileFromStatus(key, us) : null) ?? LOCAL_USERS[key];
+        if (profile) { setPendingProfile(profile); setStage('confirm'); }
         return;
       }
       setOtpToken(d.token);
       setOtpEmail(d.email);
       setStage('otp');
     } catch {
-      // Network error — fall back
-      const us = userStatus;
-      const profile: import('@/lib/auth').UserProfile = LOCAL_USERS[key] ?? {
-        email: us?.email ?? `${key}@roofignite.com`,
-        displayName: us?.displayName ?? key,
-        userKey: us?.userKey ?? key,
-        role: (us?.role ?? 'user') as 'super_admin' | 'user',
-      };
-      setPendingProfile(profile);
-      setStage('confirm');
+      const profile = (us ? profileFromStatus(key, us) : null) ?? LOCAL_USERS[key];
+      if (profile) { setPendingProfile(profile); setStage('confirm'); }
     } finally {
       setResending(false);
     }
@@ -231,8 +230,8 @@ export function LoginScreen() {
 
   const fallbackLogin = () => {
     const key = name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
-    const user = LOCAL_USERS[key];
-    if (user) { setPendingProfile(user); setStage('confirm'); }
+    const profile = (userStatus ? profileFromStatus(key, userStatus) : null) ?? LOCAL_USERS[key];
+    if (profile) { setPendingProfile(profile); setStage('confirm'); }
     else setError('Login failed — please try again.');
   };
 

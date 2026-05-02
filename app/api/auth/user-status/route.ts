@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
   const { data } = await client
     .from('allowed_users')
-    .select('email, display_name, role, user_key, password_hash, force_reset')
+    .select('email, display_name, role, user_key, password_hash, force_reset, bio, goal, avatar_emoji, avatar_url')
     .eq('user_key', name)
     .maybeSingle();
 
@@ -31,6 +31,10 @@ export async function GET(req: NextRequest) {
     role: data.role,
     userKey: data.user_key,
     email: data.email,
+    bio: data.bio ?? null,
+    goal: data.goal ?? null,
+    avatarEmoji: data.avatar_emoji ?? null,
+    avatarUrl: data.avatar_url ?? null,
     serviceKeyAvailable,
   });
 }

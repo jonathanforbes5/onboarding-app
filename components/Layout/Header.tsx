@@ -57,6 +57,7 @@ export function Header() {
     { id: 'sections',    label: 'Company',     icon: '📚' },
     { id: 'resources',   label: 'Resources',   icon: '📁' },
     { id: 'recordings',  label: 'Recordings',  icon: '🎬' },
+    { id: 'chat',        label: 'Ask RI',      icon: '🤖' },
   ] as const;
 
   // Super admins get an extra Admin tab
@@ -176,9 +177,10 @@ export function Header() {
               <SyncDot status={syncStatus} />
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0"
-                style={{ backgroundColor: userColor.bg, color: userColor.text }}
+                style={{ backgroundColor: currentUser.avatarEmoji ? 'transparent' : userColor.bg, color: userColor.text, fontSize: currentUser.avatarEmoji ? 16 : undefined }}
+                title={currentUser.bio ?? currentUser.displayName}
               >
-                {currentUser.displayName[0]}
+                {currentUser.avatarEmoji ?? currentUser.displayName[0]}
               </div>
               <span className="text-xs font-semibold text-white/75 hidden sm:inline">{currentUser.displayName}</span>
               <button

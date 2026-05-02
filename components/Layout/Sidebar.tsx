@@ -28,7 +28,7 @@ function formatMins(mins: number) {
 }
 
 export function Sidebar() {
-  const { currentSection, setCurrentSection, isCompleted, quizScores, sidebarOpen, setSidebarOpen, completedSections, setShowCurriculumMap } = useApp();
+  const { currentSection, setCurrentSection, isCompleted, quizScores, sidebarOpen, setSidebarOpen, completedSections, setShowCurriculumMap, ...state } = useApp();
   const pct = Math.round((completedSections.length / SECTIONS.length) * 100);
 
   const remainingMins = SECTIONS
@@ -129,6 +129,7 @@ export function Sidebar() {
                   const completed = isCompleted(section.id);
                   const active = currentSection === section.id;
                   const score = quizScores[section.id];
+                  const hasNote = !!(state as any).notes?.[section.id]?.text;
                   const Icon = ICONS[section.icon] || Circle;
 
                   return (
@@ -181,6 +182,7 @@ export function Sidebar() {
                               </span>
                             </>
                           )}
+                          {hasNote && <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" title="You have notes on this section" />}
                         </div>
                       </div>
 

@@ -57,6 +57,9 @@ create table if not exists allowed_users (
   display_name text not null,
   role         text not null check (role in ('super_admin', 'user')),
   user_key     text not null,
+  bio          text,
+  goal         text,
+  avatar_emoji text,
   created_at   timestamptz default now()
 );
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
 import teamData from '@/repo/data/team.json';
 
@@ -171,9 +171,25 @@ const TAB_GUIDE = [
   },
 ];
 
+interface PodManagerProfile {
+  display_name: string;
+  user_key: string;
+  bio?: string;
+  goal?: string;
+  avatar_emoji?: string;
+}
+
 export function OverviewTab() {
   const { currentUser, setShowSearch, setActiveTab, progressPercent, completedSections } = useApp();
   const userName = currentUser?.displayName ?? 'Pod Manager';
+  const [podManagers, setPodManagers] = useState<PodManagerProfile[]>([]);
+
+  useEffect(() => {
+    fetch('/api/pod-managers')
+      .then((r) => r.json())
+      .then((d) => setPodManagers(d.managers ?? []))
+      .catch(() => {});
+  }, []);
 
   const teamByTier = TIER_ORDER.reduce<Record<string, typeof teamData>>((acc, tier) => {
     acc[tier] = teamData.filter((m) => m.tier === tier);
@@ -494,6 +510,68 @@ export function OverviewTab() {
             );
           })}
         </div>
+
+        {/* ── Pod Manager Profiles ── */}
+        {podManagers.length > 0 && (
+          <div style={{ marginBottom: 28 }}>
+            <SectionTitle accent="#22C55E">Pod Managers</SectionTitle>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 8 }}>
+              {podManagers.map((pm) => {
+                const isMe = pm.user_key === currentUser?.userKey;
+                return (
+                  <div
+                    key={pm.user_key}
+                    style={{
+                      backgroundColor: isMe ? '#1A1600' : C.surf3,
+                      border: `1px solid ${isMe ? C.acc + '44' : C.border}`,
+                      borderRadius: 10,
+                      padding: '12px 14px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: pm.bio || pm.goal ? 8 : 0 }}>
+                      <div style={{
+                        width: 34, height: 34, borderRadius: '50%',
+                        backgroundColor: C.green + '22',
+                        border: `1.5px solid ${C.green}66`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: pm.avatar_emoji ? 18 : 13, fontWeight: 900, color: C.green, flexShrink: 0,
+                      }}>
+                        {pm.avatar_emoji ?? pm.display_name[0]}
+                      </div>
+                      <div>
+                        <div style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>
+                          {pm.display_name}
+                          {isMe && <span style={{ color: C.acc, fontSize: 10, fontWeight: 800, marginLeft: 6, verticalAlign: 'middle' }}>YOU</span>}
+                        </div>
+                        <div style={{ color: C.muted, fontSize: 11.5, marginTop: 1 }}>Pod Manager</div>
+                      </div>
+                    </div>
+                    {pm.bio && (
+                      <p style={{ color: '#aaa', fontSize: 12, margin: '0 0 4px', lineHeight: 1.5 }}>{pm.bio}</p>
+                    )}
+                    {pm.goal && (
+                      <div style={{ backgroundColor: C.green + '11', border: `1px solid ${C.green}22`, borderRadius: 6, padding: '5px 8px', marginTop: 4 }}>
+                        <span style={{ color: C.green, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>30-day goal: </span>
+                        <span style={{ color: '#aaa', fontSize: 12 }}>{pm.goal}</span>
+                      </div>
+                    )}
+                    {!pm.bio && !pm.goal && isMe && (
+                      <button
+                        onClick={() => {/* triggers profile modal via storage event */
+                          localStorage.removeItem(`ri_${pm.user_key}_profile_setup_seen`);
+                          window.location.reload();
+                        }}
+                        style={{ color: C.acc, fontSize: 11, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}
+                      >
+                        Set up your profile →
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* ── Slack Channels ── */}
         <div>

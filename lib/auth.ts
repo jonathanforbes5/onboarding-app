@@ -5,6 +5,9 @@ export interface UserProfile {
   displayName: string;
   userKey: string;
   role: 'super_admin' | 'user';
+  bio?: string;
+  goal?: string;
+  avatarEmoji?: string;
 }
 
 // Avatar colour per user key
@@ -49,7 +52,7 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
   try {
     const { data, error } = await supabase
       .from('allowed_users')
-      .select('email, display_name, role, user_key')
+      .select('email, display_name, role, user_key, bio, goal, avatar_emoji')
       .eq('email', email.toLowerCase())
       .maybeSingle();
 
@@ -60,6 +63,9 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
       displayName: data.display_name,
       role: data.role as 'super_admin' | 'user',
       userKey: data.user_key,
+      bio: data.bio ?? undefined,
+      goal: data.goal ?? undefined,
+      avatarEmoji: data.avatar_emoji ?? undefined,
     };
   } catch {
     return null;

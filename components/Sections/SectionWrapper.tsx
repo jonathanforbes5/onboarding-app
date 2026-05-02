@@ -1,6 +1,6 @@
 'use client';
-import React from 'react';
-import { Clock, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Clock, ChevronLeft, ChevronRight, CheckCircle, ArrowUp } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { SECTIONS } from '@/data/sections';
 import { Quiz } from '@/components/Interactive/Quiz';
@@ -13,6 +13,15 @@ interface SectionWrapperProps {
 
 export function SectionWrapper({ sectionId, children }: SectionWrapperProps) {
   const { setCurrentSection, markSectionComplete, isCompleted } = useApp();
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const main = document.querySelector('main');
+    if (!main) return;
+    const handler = () => setShowBackToTop(main.scrollTop > 400);
+    main.addEventListener('scroll', handler, { passive: true });
+    return () => main.removeEventListener('scroll', handler);
+  }, []);
   const section = SECTIONS.find((s) => s.id === sectionId)!;
   const completed = isCompleted(sectionId);
   const prevSection = SECTIONS.find((s) => s.id === sectionId - 1);
@@ -70,6 +79,17 @@ export function SectionWrapper({ sectionId, children }: SectionWrapperProps) {
           onComplete={handleComplete}
         />
       </div>
+
+      {/* Back to top */}
+      {showBackToTop && (
+        <button
+          onClick={() => document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 right-6 z-30 w-10 h-10 rounded-full bg-brand-black text-white flex items-center justify-center shadow-lg hover:bg-brand-yellow hover:text-brand-black transition-all"
+          title="Back to top"
+        >
+          <ArrowUp size={16} />
+        </button>
+      )}
 
       {/* Navigation */}
       <div className="flex items-center justify-between pt-4 border-t border-brand-gray-mid">

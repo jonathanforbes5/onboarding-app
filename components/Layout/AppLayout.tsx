@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { LoginScreen } from './LoginScreen';
@@ -12,10 +12,31 @@ import { RecordingsTab } from '@/components/Recordings/RecordingsTab';
 import { CompanyCurriculum } from '@/components/Sections/CompanyCurriculum';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
+import { ChatTab } from '@/components/Chat/ChatTab';
+import { ProfileSetupModal } from '@/components/Profile/ProfileSetupModal';
+import { ToastProvider } from '@/components/UI/Toast';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab } = useApp();
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
+
+  // Show profile setup modal on first login (if bio is unset and they haven't dismissed it)
+  useEffect(() => {
+    if (!currentUser) return;
+    const seen = localStorage.getItem(`ri_${currentUser.userKey}_profile_setup_seen`);
+    if (!seen && !currentUser.bio && !currentUser.avatarEmoji) {
+      const t = setTimeout(() => setShowProfileSetup(true), 1500);
+      return () => clearTimeout(t);
+    }
+  }, [currentUser?.userKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleProfileClose = () => {
+    setShowProfileSetup(false);
+    if (currentUser) {
+      try { localStorage.setItem(`ri_${currentUser.userKey}_profile_setup_seen`, '1'); } catch {}
+    }
+  };
 
   if (authLoading) {
     return (
@@ -45,16 +66,17 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   if (accessDenied) {
-    return <AccessDenied email={deniedEmail} />;
+    return <ToastProvider><AccessDenied email={deniedEmail} /></ToastProvider>;
   }
 
   if (!currentUser) {
-    return <LoginScreen />;
+    return <ToastProvider><LoginScreen /></ToastProvider>;
   }
 
   const isDark = activeTab !== 'sections';
 
   return (
+    <ToastProvider>
     <div
       className="min-h-screen font-sans"
       style={{ backgroundColor: isDark ? '#0A0A0A' : '#F5F5F5' }}
@@ -109,6 +131,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
+      {activeTab === 'chat' && (
+        <div className="pt-[42px]">
+          <ChatTab />
+        </div>
+      )}
+
       {activeTab === 'admin' && currentUser.role === 'super_admin' && (
         <div className="pt-[42px]">
           <AdminDashboard />
@@ -134,6 +162,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       <SearchModal />
       <NotesPanel />
+      {showProfileSetup && <ProfileSetupModal onClose={handleProfileClose} />}
 
       {/* Completion celebration modal */}
       {showCompletionCelebration && (
@@ -203,5 +232,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
     </div>
+    </ToastProvider>
   );
 }

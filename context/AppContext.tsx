@@ -11,7 +11,7 @@ import {
 } from '@/lib/syncService';
 
 export type { UserProfile };
-export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'chat';
 
 export interface Note {
   text: string;
@@ -52,6 +52,7 @@ export interface AppState {
 interface AppContextType extends AppState {
   logout: () => void;
   devLogin: () => void;
+  updateUserProfile: (fields: { bio?: string; goal?: string; avatarEmoji?: string }) => Promise<void>;
   setActiveTab: (tab: ActiveTab) => void;
   setCurrentSection: (id: number) => void;
   setSidebarOpen: (v: boolean) => void;
@@ -255,6 +256,35 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }
 
   // ── Auth actions ──────────────────────────────────────────
+  const updateUserProfile = useCallback(async (fields: { bio?: string; goal?: string; avatarEmoji?: string }) => {
+    const email = state.currentUser?.email;
+    if (!email) throw new Error('Not logged in');
+
+    const res = await fetch('/api/update-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        bio: fields.bio,
+        goal: fields.goal,
+        avatar_emoji: fields.avatarEmoji,
+      }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error ?? 'Failed to save profile');
+    }
+    setState((prev) => ({
+      ...prev,
+      currentUser: prev.currentUser ? {
+        ...prev.currentUser,
+        bio: fields.bio ?? prev.currentUser.bio,
+        goal: fields.goal ?? prev.currentUser.goal,
+        avatarEmoji: fields.avatarEmoji ?? prev.currentUser.avatarEmoji,
+      } : prev.currentUser,
+    }));
+  }, [state.currentUser?.email]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const logout = useCallback(() => {
     try { sessionStorage.removeItem(BYPASS_KEY); } catch {}
     authSignOut();
@@ -386,6 +416,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       ...state,
       logout,
       devLogin,
+      updateUserProfile,
       setActiveTab,
       setCurrentSection,
       setSidebarOpen,

@@ -41,33 +41,26 @@ export async function POST(req: NextRequest) {
 
   const client = new Anthropic({ apiKey });
 
-  let stream;
-  try {
-    stream = await client.messages.stream({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages,
-    });
-  } catch (err: any) {
-    const msg = err?.message ?? String(err);
-    const status = err?.status ?? 500;
-    return Response.json({ error: msg }, { status });
-  }
-
   const encoder = new TextEncoder();
   const readable = new ReadableStream({
-    async start(controller) {
-      try {
-        for await (const chunk of stream) {
-          if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-            controller.enqueue(encoder.encode(chunk.delta.text));
-          }
-        }
-      } catch {
-        // stream error — close cleanly
-      }
-      controller.close();
+    start(controller) {
+      const stream = client.messages.stream({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1024,
+        system: SYSTEM_PROMPT,
+        messages,
+      });
+
+      stream.on('text', (textDelta: string) => {
+        controller.enqueue(encoder.encode(textDelta));
+      });
+
+      stream.finalMessage()
+        .then(() => controller.close())
+        .catch((err: Error) => {
+          controller.enqueue(encoder.encode(`\n\n⚠️ Ask RI error: ${err.message}`));
+          controller.close();
+        });
     },
   });
 

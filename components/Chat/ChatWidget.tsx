@@ -254,7 +254,7 @@ export function ChatWidget({ userName = 'anonymous' }: { userName?: string }) {
       {/* Floating panel */}
       {open && (
         <div style={{
-          position: 'fixed', bottom: 80, right: 20, zIndex: 200,
+          position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)', right: 20, zIndex: 200,
           width: 360, maxWidth: 'calc(100vw - 40px)',
           height: 520, maxHeight: 'calc(100vh - 120px)',
           backgroundColor: C.surf, border: `1px solid ${C.border}`,
@@ -432,7 +432,7 @@ export function ChatWidget({ userName = 'anonymous' }: { userName?: string }) {
       <button
         onClick={() => setOpen((v) => !v)}
         style={{
-          position: 'fixed', bottom: 20, right: 20, zIndex: 200,
+          position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 20px)', right: 20, zIndex: 200,
           width: 52, height: 52, borderRadius: '50%',
           backgroundColor: C.acc, border: 'none',
           cursor: 'pointer', boxShadow: '0 4px 20px rgba(245,200,0,0.35), 0 2px 8px rgba(0,0,0,0.4)',

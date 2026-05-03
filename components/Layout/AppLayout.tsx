@@ -21,11 +21,12 @@ import { useApp } from '@/context/AppContext';
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, profileEditOpen, openProfileEdit, closeProfileEdit } = useApp();
 
-  // Auto-show profile setup once on first login if profile is empty
+  // Auto-show profile setup once if the user has no profile data saved yet
   useEffect(() => {
     if (!currentUser) return;
     const seen = localStorage.getItem(`ri_${currentUser.userKey}_profile_setup_seen`);
-    if (!seen && !currentUser.bio && !currentUser.avatarEmoji) {
+    const hasProfile = !!(currentUser.bio || currentUser.goal || currentUser.avatarEmoji || currentUser.avatarUrl);
+    if (!seen && !hasProfile) {
       const t = setTimeout(() => openProfileEdit(), 1500);
       return () => clearTimeout(t);
     }

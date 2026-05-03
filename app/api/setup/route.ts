@@ -123,6 +123,26 @@ end $$;
 create index if not exists idx_chat_logs_created on chat_logs(created_at desc);
 create index if not exists idx_chat_logs_user    on chat_logs(user_name);
 
+-- Search query logs
+create table if not exists search_logs (
+  id           uuid default gen_random_uuid() primary key,
+  user_name    text not null default 'anonymous',
+  query        text not null,
+  result_title text,
+  result_kind  text,
+  created_at   timestamptz default now()
+);
+
+alter table search_logs enable row level security;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'search_logs' and policyname = 'allow_all') then
+    create policy "allow_all" on search_logs for all using (true) with check (true); end if;
+end $$;
+
+create index if not exists idx_search_logs_created on search_logs(created_at desc);
+create index if not exists idx_search_logs_user    on search_logs(user_name);
+
 -- Ask RI knowledge corrections
 create table if not exists chat_knowledge (
   id           uuid default gen_random_uuid() primary key,

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const limit = Math.min(Number(searchParams.get('limit') ?? '50'), 200);
 
   try {
-    const [logsResult, knowledgeResult] = await Promise.all([
+    const [logsResult, knowledgeResult, searchResult] = await Promise.all([
       client
         .from('chat_logs')
         .select('id, user_name, question, answer, feedback, created_at')
@@ -26,14 +26,20 @@ export async function GET(req: NextRequest) {
         .select('id, question, answer, submitted_by, approved, created_at')
         .order('created_at', { ascending: false })
         .limit(50),
+      client
+        .from('search_logs')
+        .select('id, user_name, query, result_title, result_kind, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100),
     ]);
 
     return NextResponse.json({
       logs: logsResult.data ?? [],
       knowledge: knowledgeResult.data ?? [],
+      searchLogs: searchResult.data ?? [],
     });
   } catch (err) {
-    return NextResponse.json({ logs: [], knowledge: [], error: String(err) }, { status: 200 });
+    return NextResponse.json({ logs: [], knowledge: [], searchLogs: [], error: String(err) }, { status: 200 });
   }
 }
 

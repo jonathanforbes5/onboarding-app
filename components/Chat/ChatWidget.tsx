@@ -139,7 +139,7 @@ function TypingDot() {
 
 const CHAT_DISABLED = false;
 
-export function ChatWidget() {
+export function ChatWidget({ userName = 'anonymous' }: { userName?: string }) {
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput]     = useState('');
@@ -179,7 +179,7 @@ export function ChatWidget() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, userName }),
       });
 
       if (!res.ok || !res.body) {

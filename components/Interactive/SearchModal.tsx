@@ -123,7 +123,7 @@ function buildIndex(): SearchResult[] {
 const ALL_RESULTS = buildIndex();
 
 export function SearchModal() {
-  const { showSearch, searchQuery, setShowSearch, setSearchQuery, setCurrentSection, setActiveTab } = useApp();
+  const { showSearch, searchQuery, setShowSearch, setSearchQuery, setCurrentSection, setActiveTab, currentUser } = useApp();
   const inputRef = useRef<HTMLInputElement>(null);
   const [activeKind, setActiveKind] = useState<ResultKind | 'all'>('all');
 
@@ -172,6 +172,19 @@ export function SearchModal() {
       window.open(result.url, '_blank', 'noopener,noreferrer');
     } else if (result.tab) {
       setActiveTab(result.tab as any);
+    }
+    // Log the search query + result clicked (fire-and-forget)
+    if (searchQuery.trim().length >= 2) {
+      fetch('/api/search-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: searchQuery.trim(),
+          result_title: result.title,
+          result_kind: result.kind,
+          user_name: currentUser?.userKey ?? 'anonymous',
+        }),
+      }).catch(() => {});
     }
     setShowSearch(false);
   };

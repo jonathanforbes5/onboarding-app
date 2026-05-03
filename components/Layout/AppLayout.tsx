@@ -12,8 +12,7 @@ import { RecordingsTab } from '@/components/Recordings/RecordingsTab';
 import { CompanyCurriculum } from '@/components/Sections/CompanyCurriculum';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
-// PARKED: ChatWidget disabled — see docs/chatbot-parking-notes.md
-// import { ChatWidget } from '@/components/Chat/ChatWidget';
+import { ChatWidget } from '@/components/Chat/ChatWidget';
 import { ProfileSetupModal } from '@/components/Profile/ProfileSetupModal';
 import { ToastProvider } from '@/components/UI/Toast';
 import { useApp } from '@/context/AppContext';
@@ -158,7 +157,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <SearchModal />
       <NotesPanel />
       {profileEditOpen && <ProfileSetupModal onClose={handleProfileClose} />}
-      {/* PARKED: <ChatWidget /> — re-enable when chatbot relaunch is ready */}
+      <ChatWidget userName={currentUser?.userKey ?? 'anonymous'} />
 
       {/* Completion celebration modal */}
       {showCompletionCelebration && (

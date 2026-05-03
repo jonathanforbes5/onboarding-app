@@ -24,6 +24,15 @@ interface ChatKnowledge {
   created_at: string;
 }
 
+interface SearchLog {
+  id: string;
+  user_name: string;
+  query: string;
+  result_title: string | null;
+  result_kind: string | null;
+  created_at: string;
+}
+
 // ── Colour tokens ────────────────────────────────────────────
 const C = {
   bg:      '#0A0A0A',
@@ -377,9 +386,10 @@ function UserCard({
 function AskRIInsights() {
   const [logs, setLogs]           = useState<ChatLog[]>([]);
   const [knowledge, setKnowledge] = useState<ChatKnowledge[]>([]);
+  const [searchLogs, setSearchLogs] = useState<SearchLog[]>([]);
   const [loading, setLoading]     = useState(true);
   const [expanded, setExpanded]   = useState<string | null>(null);
-  const [tab, setTab]             = useState<'questions' | 'corrections'>('questions');
+  const [tab, setTab]             = useState<'questions' | 'corrections' | 'searches'>('questions');
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -389,6 +399,7 @@ function AskRIInsights() {
         const data = await res.json();
         setLogs(data.logs ?? []);
         setKnowledge(data.knowledge ?? []);
+        setSearchLogs(data.searchLogs ?? []);
       }
     } catch {
       // Supabase may not be configured
@@ -482,7 +493,8 @@ function AskRIInsights() {
       {/* Tabs */}
       <div style={{ display: 'flex', borderBottom: `1px solid ${C.border}` }}>
         {[
-          { id: 'questions' as const, label: `Recent Questions (${logs.length})` },
+          { id: 'questions' as const,   label: `Chat Questions (${logs.length})` },
+          { id: 'searches' as const,    label: `Search Queries (${searchLogs.length})` },
           { id: 'corrections' as const, label: `Corrections (${knowledge.length})` },
         ].map((t) => (
           <button
@@ -585,6 +597,61 @@ function AskRIInsights() {
                           </div>
                         </div>
                       )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {!loading && tab === 'searches' && (
+          <>
+            {searchLogs.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '30px 0', color: C.muted2, fontSize: 13 }}>
+                No search queries logged yet. Queries are recorded when someone clicks a result in the search bar.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {searchLogs.map((log) => {
+                  const date = new Date(log.created_at).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+                  });
+                  const kindColors: Record<string, string> = {
+                    section: '#F5C800', sop: '#4A90D9', resource: '#22C55E',
+                    recording: '#A78BFA', loom: '#F59E0B',
+                  };
+                  const kindColor = log.result_kind ? (kindColors[log.result_kind] ?? C.muted) : C.muted2;
+                  return (
+                    <div
+                      key={log.id}
+                      style={{
+                        backgroundColor: C.surf2,
+                        border: `1px solid ${C.border}`,
+                        borderRadius: 10,
+                        padding: '10px 14px',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: 12,
+                      }}
+                    >
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ color: C.text, fontSize: 13, fontWeight: 600, marginBottom: 3 }}>
+                          "{log.query}"
+                        </div>
+                        {log.result_title && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                            <span style={{ color: kindColor, fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', backgroundColor: kindColor + '18', padding: '1px 5px', borderRadius: 4 }}>
+                              {log.result_kind}
+                            </span>
+                            <span style={{ color: C.muted, fontSize: 11 }}>→ {log.result_title}</span>
+                          </div>
+                        )}
+                        <div style={{ color: C.muted2, fontSize: 10, display: 'flex', gap: 10 }}>
+                          <span>👤 {log.user_name}</span>
+                          <span>🕐 {date}</span>
+                        </div>
+                      </div>
                     </div>
                   );
                 })}

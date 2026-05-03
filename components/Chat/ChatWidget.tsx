@@ -29,17 +29,33 @@ const C = {
   acc: '#F5C800', green: '#22C55E',
 };
 
+const SECTION_TITLES: Record<number, string> = {
+  1: 'Company Vision & Growth', 2: 'The Contractor Industry', 3: 'Business Model & Offer',
+  4: 'How We Generate Results', 5: 'Sales Process & ICP', 6: 'Service Delivery Flow',
+  7: 'Organizational Structure', 8: 'Layer 1 vs Layer 2 Metrics', 9: 'KPI Diagnosis Playbook',
+  10: 'Culture & Performance', 11: 'Account Management Playbook', 12: 'Onboarding Call Mastery',
+  13: 'Tools & Systems',
+};
+
 function MessageBubble({ msg, onNavigate }: { msg: Message; onNavigate?: (href: string) => void }) {
   const isUser = msg.role === 'user';
 
   const escalateMatch = msg.content.match(/---ESCALATE---([\s\S]*?)---END---/);
-  const mainContent = escalateMatch
-    ? msg.content.replace(/---ESCALATE---([\s\S]*?)---END---/, '').trim()
-    : msg.content;
+  const sectionsMatch = msg.content.match(/---SECTIONS---([\s\S]*?)---END---/);
+
+  let mainContent = msg.content;
+  if (escalateMatch) mainContent = mainContent.replace(/---ESCALATE---([\s\S]*?)---END---/, '').trim();
+  if (sectionsMatch) mainContent = mainContent.replace(/---SECTIONS---([\s\S]*?)---END---/, '').trim();
+
   const escalateContent = escalateMatch ? escalateMatch[1].trim() : null;
+  const blockParts = sectionsMatch ? sectionsMatch[1].split(',').map((s) => s.trim()) : [];
+  const sectionIds: number[] = blockParts.map((s) => parseInt(s, 10)).filter((n) => !isNaN(n) && n >= 1 && n <= 13);
+  const tabLinks: { id: string; label: string }[] = blockParts
+    .filter((s) => s === 'resources' || s === 'recordings')
+    .map((t) => ({ id: t, label: t.charAt(0).toUpperCase() + t.slice(1) + ' tab' }));
 
   const renderInline = (text: string): React.ReactNode => {
-    const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[([^\]]+)\]\(([^)]+)\))/g);
+    const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g);
     return parts.map((part, i) => {
       if (!part) return null;
       if (part.startsWith('**') && part.endsWith('**'))
@@ -50,22 +66,6 @@ function MessageBubble({ msg, onNavigate }: { msg: Message; onNavigate?: (href: 
       if (linkMatch) {
         const href = linkMatch[2];
         const label = linkMatch[1];
-        const isPortal = href.startsWith('#section-') || href.startsWith('#tab-');
-        if (isPortal && onNavigate) {
-          return (
-            <button
-              key={i}
-              onClick={() => onNavigate(href)}
-              style={{
-                color: C.acc, textDecoration: 'underline', background: 'none', border: 'none',
-                cursor: 'pointer', padding: 0, font: 'inherit', fontSize: 'inherit',
-                display: 'inline-flex', alignItems: 'center', gap: 3,
-              }}
-            >
-              {label} <span style={{ fontSize: 10 }}>↗</span>
-            </button>
-          );
-        }
         return <a key={i} href={href} target="_blank" rel="noopener noreferrer" style={{ color: isUser ? '#000' : C.acc, textDecoration: 'underline' }}>{label}</a>;
       }
       return part;
@@ -126,6 +126,45 @@ function MessageBubble({ msg, onNavigate }: { msg: Message; onNavigate?: (href: 
         }}>
           {renderMarkdown(mainContent)}
         </div>
+        {(sectionIds.length > 0 || tabLinks.length > 0) && onNavigate && (
+          <div style={{ marginTop: 6, display: 'flex', flexDirection: 'column', gap: 5 }}>
+            {sectionIds.map((id) => (
+              <button
+                key={id}
+                onClick={() => onNavigate(`#section-${id}`)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  backgroundColor: C.surf3, border: `1px solid ${C.acc}44`,
+                  borderRadius: 8, padding: '8px 12px', cursor: 'pointer',
+                  color: C.text, fontSize: 12, fontWeight: 700, fontFamily: 'inherit',
+                  textAlign: 'left', gap: 8,
+                }}
+              >
+                <span>
+                  <span style={{ color: C.acc, marginRight: 6 }}>{String(id).padStart(2, '0')}</span>
+                  {SECTION_TITLES[id] ?? `Section ${id}`}
+                </span>
+                <span style={{ color: C.acc, fontSize: 14, flexShrink: 0 }}>→</span>
+              </button>
+            ))}
+            {tabLinks.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => onNavigate(`#tab-${t.id}`)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  backgroundColor: C.surf3, border: `1px solid ${C.border}`,
+                  borderRadius: 8, padding: '8px 12px', cursor: 'pointer',
+                  color: C.muted, fontSize: 12, fontWeight: 700, fontFamily: 'inherit',
+                  textAlign: 'left', gap: 8,
+                }}
+              >
+                <span>{t.label}</span>
+                <span style={{ fontSize: 14, flexShrink: 0 }}>→</span>
+              </button>
+            ))}
+          </div>
+        )}
         {escalateContent && (
           <div style={{ marginTop: 6, backgroundColor: '#1A1200', border: '1px solid #F5C80033', borderRadius: 8, padding: '8px 11px' }}>
             <div style={{ color: C.acc, fontSize: 9, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Suggested escalation</div>

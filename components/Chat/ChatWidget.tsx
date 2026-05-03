@@ -159,6 +159,13 @@ function TypingDot() {
 const CHAT_DISABLED = false;
 
 export function ChatWidget({ userName = 'anonymous', onNavigate }: { userName?: string; onNavigate?: (href: string) => void }) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput]     = useState('');
@@ -270,9 +277,24 @@ export function ChatWidget({ userName = 'anonymous', onNavigate }: { userName?: 
 
   return (
     <>
+      {/* Backdrop on mobile */}
+      {open && isMobile && (
+        <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 199 }} />
+      )}
+
       {/* Floating panel */}
       {open && (
-        <div style={{
+        <div style={isMobile ? {
+          position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 200,
+          height: '75vh',
+          backgroundColor: C.surf, border: `1px solid ${C.border}`,
+          borderRadius: '18px 18px 0 0',
+          boxShadow: '0 -4px 40px rgba(0,0,0,0.6)',
+          display: 'flex', flexDirection: 'column', overflow: 'hidden',
+          fontFamily: 'Inter, system-ui, sans-serif',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          animation: 'chatSlideUp 0.2s ease-out',
+        } : {
           position: 'fixed', bottom: 'calc(env(safe-area-inset-bottom, 0px) + 80px)', right: 20, zIndex: 200,
           width: 360, maxWidth: 'calc(100vw - 40px)',
           height: 520, maxHeight: 'calc(100vh - 120px)',

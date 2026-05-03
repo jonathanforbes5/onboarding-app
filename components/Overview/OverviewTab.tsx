@@ -37,6 +37,8 @@ const TIER_LABELS: Record<string, string> = {
 
 const TIER_ORDER = ['leadership', 'pod_managers', 'media_buying', 'va_management', 'sales'];
 
+const SECTIONS_TOTAL = 13;
+
 function SectionTitle({ children, accent }: { children: React.ReactNode; accent?: string }) {
   return (
     <div style={{ marginBottom: 16 }}>
@@ -55,84 +57,101 @@ function SectionTitle({ children, accent }: { children: React.ReactNode; accent?
   );
 }
 
-function TeamCard({ member }: { member: typeof teamData[0] }) {
-  const [expanded, setExpanded] = useState(false);
+interface MemberProfile {
+  display_name: string;
+  user_key: string;
+  role: string;
+  bio?: string;
+  goal?: string;
+  avatar_emoji?: string;
+  avatar_url?: string;
+}
+
+function TeamCard({
+  member,
+  profile,
+  isMe,
+  onEditProfile,
+}: {
+  member: typeof teamData[0];
+  profile?: MemberProfile;
+  isMe: boolean;
+  onEditProfile: () => void;
+}) {
   const accent = TIER_ACCENT[member.tier] ?? C.muted;
-  const hasDetails = (member as any).contact || (member as any).notes;
+  const hasProfile = !!(profile?.bio || profile?.goal || profile?.avatar_url || profile?.avatar_emoji);
 
   return (
     <div
       style={{
-        backgroundColor: C.surf3,
-        border: `1px solid ${C.border}`,
+        backgroundColor: isMe ? '#1A1600' : C.surf3,
+        border: `1px solid ${isMe ? C.acc + '44' : C.border}`,
         borderRadius: 10,
         padding: '12px 14px',
-        cursor: hasDetails ? 'pointer' : 'default',
         transition: 'border-color 0.15s',
       }}
-      onClick={() => hasDetails && setExpanded((e) => !e)}
-      onMouseEnter={(e) => hasDetails && (e.currentTarget.style.borderColor = accent + '55')}
-      onMouseLeave={(e) => (e.currentTarget.style.borderColor = C.border)}
+      onMouseEnter={(e) => (e.currentTarget.style.borderColor = accent + '55')}
+      onMouseLeave={(e) => (e.currentTarget.style.borderColor = isMe ? C.acc + '44' : C.border)}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {/* Avatar: photo > emoji > initial */}
         <div style={{
-          width: 36,
-          height: 36,
-          borderRadius: '50%',
-          backgroundColor: accent + '22',
+          width: 38, height: 38, borderRadius: '50%',
+          backgroundColor: profile?.avatar_url ? 'transparent' : (accent + '22'),
           border: `1.5px solid ${accent}66`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: 13,
-          fontWeight: 900,
-          color: accent,
-          flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: profile?.avatar_emoji ? 20 : 13, fontWeight: 900, color: accent,
+          flexShrink: 0, overflow: 'hidden',
         }}>
-          {(member as any).avatar_initial}
+          {profile?.avatar_url
+            ? <img src={profile.avatar_url} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            : (profile?.avatar_emoji ?? (member as any).avatar_initial)}
         </div>
+
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
             <span style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>{member.name}</span>
+            {isMe && (
+              <span style={{ color: C.acc, fontSize: 9, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase' }}>YOU</span>
+            )}
           </div>
-          <div style={{ color: C.muted, fontSize: 12, marginTop: 2 }}>{member.role}</div>
+          <div style={{ color: C.muted, fontSize: 12, marginTop: 1 }}>{member.role}</div>
         </div>
-        {hasDetails && (
-          <span style={{ color: C.muted2, fontSize: 11, flexShrink: 0 }}>
-            {expanded ? '▲' : '▼'}
-          </span>
+
+        {isMe && (
+          <button
+            onClick={onEditProfile}
+            style={{
+              color: C.acc, fontSize: 10, fontWeight: 700, background: 'none', border: `1px solid ${C.acc}44`,
+              borderRadius: 6, cursor: 'pointer', padding: '3px 8px', fontFamily: 'inherit', flexShrink: 0,
+              transition: 'all 0.1s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = C.acc + '22'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+          >
+            Edit
+          </button>
         )}
       </div>
 
-      {expanded && (
+      {/* Profile content */}
+      {hasProfile ? (
         <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
-          {(member as any).contact && (
-            <div style={{ marginBottom: 6 }}>
-              <span style={{ color: C.acc, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                How to contact:
-              </span>
-              <p style={{ color: '#ccc', fontSize: 12.5, margin: '3px 0 0', lineHeight: 1.5 }}>
-                {(member as any).contact}
-              </p>
-            </div>
+          {profile?.bio && (
+            <p style={{ color: '#bbb', fontSize: 12, margin: '0 0 6px', lineHeight: 1.5 }}>{profile.bio}</p>
           )}
-          {(member as any).notes && (
-            <div>
-              <span style={{ color: C.muted, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                Notes:
-              </span>
-              <p style={{ color: C.muted, fontSize: 12.5, margin: '3px 0 0', lineHeight: 1.5 }}>
-                {(member as any).notes}
-              </p>
+          {profile?.goal && (
+            <div style={{ backgroundColor: accent + '11', border: `1px solid ${accent}22`, borderRadius: 6, padding: '4px 8px' }}>
+              <span style={{ color: accent, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Goal: </span>
+              <span style={{ color: '#aaa', fontSize: 12 }}>{profile.goal}</span>
             </div>
-          )}
-          {(member as any).timezone && (
-            <p style={{ color: C.muted, fontSize: 11.5, marginTop: 4 }}>
-              🌏 {(member as any).timezone} · {(member as any).turnaround_hours}h turnaround
-            </p>
           )}
         </div>
-      )}
+      ) : isMe ? (
+        <p style={{ color: C.muted2, fontSize: 11, margin: '8px 0 0', fontStyle: 'italic' }}>
+          Click Edit to add your bio and goal.
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -151,7 +170,7 @@ const TAB_GUIDE = [
     label: 'Company',
     icon: '📚',
     color: '#F5C800',
-    desc: '11 training sections covering the business model, metrics, org structure, and tools. Quizzes after each.',
+    desc: '13 training sections covering the business model, metrics, org structure, and tools. Quizzes after each.',
     start: true,
   },
   {
@@ -172,27 +191,31 @@ const TAB_GUIDE = [
   },
 ];
 
-interface PodManagerProfile {
-  display_name: string;
-  user_key: string;
-  role?: string;
-  bio?: string;
-  goal?: string;
-  avatar_emoji?: string;
-  avatar_url?: string;
-}
-
 export function OverviewTab() {
-  const { currentUser, setShowSearch, setActiveTab, progressPercent, completedSections } = useApp();
+  const { currentUser, setShowSearch, setActiveTab, progressPercent, completedSections, openProfileEdit } = useApp();
   const userName = currentUser?.displayName ?? 'Pod Manager';
-  const [podManagers, setPodManagers] = useState<PodManagerProfile[]>([]);
+  const [profiles, setProfiles] = useState<MemberProfile[]>([]);
 
-  useEffect(() => {
+  const loadProfiles = () => {
     fetch('/api/pod-managers')
       .then((r) => r.json())
-      .then((d) => setPodManagers(d.managers ?? []))
+      .then((d) => setProfiles(d.managers ?? []))
       .catch(() => {});
-  }, []);
+  };
+
+  useEffect(() => { loadProfiles(); }, []);
+
+  // Reload profiles after profile edit modal closes so the card updates immediately
+  useEffect(() => {
+    if (!currentUser) return;
+    loadProfiles();
+  }, [currentUser?.bio, currentUser?.goal, currentUser?.avatarEmoji, currentUser?.avatarUrl]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Build lookup map: user_key → profile
+  const profileMap = profiles.reduce<Record<string, MemberProfile>>((acc, p) => {
+    acc[p.user_key] = p;
+    return acc;
+  }, {});
 
   const teamByTier = TIER_ORDER.reduce<Record<string, typeof teamData>>((acc, tier) => {
     acc[tier] = teamData.filter((m) => m.tier === tier);
@@ -317,7 +340,7 @@ export function OverviewTab() {
                 }} />
               </div>
               <div style={{ color: C.muted, fontSize: 11, marginTop: 6 }}>
-                {completedSections.length} of 11 sections complete · {11 - completedSections.length} remaining
+                {completedSections.length} of {SECTIONS_TOTAL} sections complete · {SECTIONS_TOTAL - completedSections.length} remaining
               </div>
             </div>
 
@@ -489,8 +512,7 @@ export function OverviewTab() {
         <div style={{ marginBottom: 28 }}>
           <SectionTitle>Team Directory</SectionTitle>
           <p style={{ color: C.muted, fontSize: 12.5, margin: '0 0 16px', lineHeight: 1.5 }}>
-            Click any card to see how to contact them and key notes.
-            Always use <strong style={{ color: C.text }}>ClickUp for tasks</strong> and <strong style={{ color: C.text }}>Slack for async comms</strong> — never route around the system.
+            Everyone on the team. Use <strong style={{ color: C.text }}>ClickUp for tasks</strong> and <strong style={{ color: C.text }}>Slack for async comms</strong>. Your own card shows your bio and goal — click <strong style={{ color: C.text }}>Edit</strong> to update it.
           </p>
           {TIER_ORDER.map((tier) => {
             const members = teamByTier[tier];
@@ -506,86 +528,19 @@ export function OverviewTab() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 8 }}>
                   {members.map((m) => (
-                    <TeamCard key={m.id} member={m} />
+                    <TeamCard
+                      key={m.id}
+                      member={m}
+                      profile={profileMap[m.id]}
+                      isMe={m.id === currentUser?.userKey}
+                      onEditProfile={openProfileEdit}
+                    />
                   ))}
                 </div>
               </div>
             );
           })}
         </div>
-
-        {/* ── Team Profiles ── */}
-        {podManagers.length > 0 && (
-          <div style={{ marginBottom: 28 }}>
-            <SectionTitle accent="#22C55E">Team Profiles</SectionTitle>
-            <p style={{ color: C.muted, fontSize: 12.5, margin: '0 0 14px', lineHeight: 1.5 }}>
-              Everyone on the pod manager team — bio, goal, and photo set from your profile.
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 8 }}>
-              {podManagers.map((pm) => {
-                const isMe = pm.user_key === currentUser?.userKey;
-                const roleLabel = pm.role === 'super_admin' ? 'Leadership' : 'Pod Manager';
-                const accentColor = pm.role === 'super_admin' ? C.acc : C.green;
-                return (
-                  <div
-                    key={pm.user_key}
-                    style={{
-                      backgroundColor: isMe ? '#1A1600' : C.surf3,
-                      border: `1px solid ${isMe ? C.acc + '44' : C.border}`,
-                      borderRadius: 10,
-                      padding: '12px 14px',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: pm.bio || pm.goal ? 8 : 0 }}>
-                      <div style={{
-                        width: 38, height: 38, borderRadius: '50%',
-                        backgroundColor: pm.avatar_url ? 'transparent' : (accentColor + '22'),
-                        border: `1.5px solid ${accentColor}66`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: pm.avatar_emoji ? 20 : 14, fontWeight: 900, color: accentColor, flexShrink: 0,
-                        overflow: 'hidden',
-                      }}>
-                        {pm.avatar_url
-                          ? <img src={pm.avatar_url} alt={pm.display_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          : (pm.avatar_emoji ?? pm.display_name[0])}
-                      </div>
-                      <div>
-                        <div style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>
-                          {pm.display_name}
-                          {isMe && <span style={{ color: C.acc, fontSize: 10, fontWeight: 800, marginLeft: 6, verticalAlign: 'middle' }}>YOU</span>}
-                        </div>
-                        <div style={{ color: accentColor, fontSize: 11, marginTop: 1, fontWeight: 600 }}>{roleLabel}</div>
-                      </div>
-                    </div>
-                    {pm.bio && (
-                      <p style={{ color: '#aaa', fontSize: 12, margin: '0 0 4px', lineHeight: 1.5 }}>{pm.bio}</p>
-                    )}
-                    {pm.goal && (
-                      <div style={{ backgroundColor: accentColor + '11', border: `1px solid ${accentColor}22`, borderRadius: 6, padding: '5px 8px', marginTop: 4 }}>
-                        <span style={{ color: accentColor, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Goal: </span>
-                        <span style={{ color: '#aaa', fontSize: 12 }}>{pm.goal}</span>
-                      </div>
-                    )}
-                    {!pm.bio && !pm.goal && isMe && (
-                      <button
-                        onClick={() => {
-                          localStorage.removeItem(`ri_${pm.user_key}_profile_setup_seen`);
-                          window.location.reload();
-                        }}
-                        style={{ color: C.acc, fontSize: 11, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontFamily: 'inherit', textDecoration: 'underline' }}
-                      >
-                        Set up your profile →
-                      </button>
-                    )}
-                    {!pm.bio && !pm.goal && !isMe && (
-                      <p style={{ color: C.muted2, fontSize: 11, margin: 0, fontStyle: 'italic' }}>Profile not yet set up</p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
         {/* ── Slack Channels ── */}
         <div>

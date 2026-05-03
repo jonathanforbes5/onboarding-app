@@ -14,7 +14,7 @@ export async function GET() {
 
   const { data, error } = await client
     .from('allowed_users')
-    .select('display_name, user_key, bio, goal, avatar_emoji, avatar_url')
+    .select('display_name, user_key, role, bio, goal, avatar_emoji, avatar_url')
     .order('display_name');
 
   if (error) return NextResponse.json({ managers: [] });

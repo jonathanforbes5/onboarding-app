@@ -6,6 +6,24 @@ import dayContent from '@/repo/data/day-content.json';
 import dayContentPod5 from '@/repo/data/day-content-pod5.json';
 import { SECTIONS } from '@/data/sections';
 
+interface ChatLog {
+  id: string;
+  user_name: string;
+  question: string;
+  answer: string;
+  feedback: 'up' | 'down' | null;
+  created_at: string;
+}
+
+interface ChatKnowledge {
+  id: string;
+  question: string;
+  answer: string;
+  submitted_by: string;
+  approved: boolean;
+  created_at: string;
+}
+
 // ── Colour tokens ────────────────────────────────────────────
 const C = {
   bg:      '#0A0A0A',
@@ -355,6 +373,287 @@ function UserCard({
   );
 }
 
+// ── Ask RI Insights panel ─────────────────────────────────────
+function AskRIInsights() {
+  const [logs, setLogs]           = useState<ChatLog[]>([]);
+  const [knowledge, setKnowledge] = useState<ChatKnowledge[]>([]);
+  const [loading, setLoading]     = useState(true);
+  const [expanded, setExpanded]   = useState<string | null>(null);
+  const [tab, setTab]             = useState<'questions' | 'corrections'>('questions');
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/chat-logs?limit=50');
+      if (res.ok) {
+        const data = await res.json();
+        setLogs(data.logs ?? []);
+        setKnowledge(data.knowledge ?? []);
+      }
+    } catch {
+      // Supabase may not be configured
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  async function toggleApproval(id: string, approved: boolean) {
+    await fetch('/api/admin/chat-logs', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, approved }),
+    });
+    setKnowledge((prev) => prev.map((k) => k.id === id ? { ...k, approved } : k));
+  }
+
+  const thumbsDown = logs.filter((l) => l.feedback === 'down');
+  const topQuestions = logs.slice(0, 10);
+
+  return (
+    <div
+      style={{
+        marginTop: 32,
+        backgroundColor: C.surf,
+        border: `1px solid ${C.border}`,
+        borderRadius: 16,
+        overflow: 'hidden',
+      }}
+    >
+      {/* Header */}
+      <div
+        style={{
+          background: `linear-gradient(135deg, #4A90D918 0%, transparent 70%)`,
+          borderBottom: `1px solid ${C.border}`,
+          padding: '16px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 10,
+        }}
+      >
+        <div>
+          <div style={{ color: C.blue, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 3 }}>
+            Ask RI — Intelligence
+          </div>
+          <h2 style={{ color: C.text, fontSize: 16, fontWeight: 900, margin: 0 }}>
+            What Pod Managers Are Asking
+          </h2>
+          <p style={{ color: C.muted, fontSize: 12, margin: '3px 0 0' }}>
+            Use this to identify training gaps and common confusion points.
+          </p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {thumbsDown.length > 0 && (
+            <div
+              style={{
+                backgroundColor: '#2A0000',
+                border: `1px solid ${C.red}44`,
+                borderRadius: 8,
+                padding: '5px 10px',
+                fontSize: 11,
+                color: C.red,
+                fontWeight: 700,
+              }}
+            >
+              👎 {thumbsDown.length} flagged
+            </div>
+          )}
+          <button
+            onClick={loadData}
+            disabled={loading}
+            style={{
+              backgroundColor: C.surf2,
+              border: `1px solid ${C.border}`,
+              borderRadius: 8,
+              padding: '7px 12px',
+              color: loading ? C.muted2 : C.text,
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: loading ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {loading ? '⟳' : '↻ Refresh'}
+          </button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', borderBottom: `1px solid ${C.border}` }}>
+        {[
+          { id: 'questions' as const, label: `Recent Questions (${logs.length})` },
+          { id: 'corrections' as const, label: `Corrections (${knowledge.length})` },
+        ].map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            style={{
+              padding: '10px 18px',
+              fontSize: 12,
+              fontWeight: 700,
+              border: 'none',
+              borderBottom: tab === t.id ? `2px solid ${C.blue}` : '2px solid transparent',
+              backgroundColor: 'transparent',
+              color: tab === t.id ? C.blue : C.muted,
+              cursor: 'pointer',
+              transition: 'all 0.1s',
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      <div style={{ padding: '16px 20px' }}>
+        {loading && (
+          <div style={{ textAlign: 'center', padding: '30px 0', color: C.muted, fontSize: 13 }}>
+            Loading Ask RI data…
+          </div>
+        )}
+
+        {!loading && tab === 'questions' && (
+          <>
+            {topQuestions.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '30px 0', color: C.muted2, fontSize: 13 }}>
+                No questions logged yet. Ask RI needs the ANTHROPIC_API_KEY configured and Supabase running.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {topQuestions.map((log) => {
+                  const isExpanded = expanded === log.id;
+                  const date = new Date(log.created_at).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+                  });
+                  return (
+                    <div
+                      key={log.id}
+                      style={{
+                        backgroundColor: C.surf2,
+                        border: `1px solid ${log.feedback === 'down' ? C.red + '44' : C.border}`,
+                        borderRadius: 10,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <div
+                        onClick={() => setExpanded(isExpanded ? null : log.id)}
+                        style={{
+                          padding: '10px 14px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: 10,
+                        }}
+                      >
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ color: C.text, fontSize: 13, fontWeight: 600, marginBottom: 2, lineHeight: 1.4 }}>
+                            {log.question}
+                          </div>
+                          <div style={{ color: C.muted2, fontSize: 10, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                            <span>👤 {log.user_name}</span>
+                            <span>🕐 {date}</span>
+                            {log.feedback === 'down' && <span style={{ color: C.red }}>👎 Flagged</span>}
+                            {log.feedback === 'up' && <span style={{ color: C.green }}>👍 Helpful</span>}
+                          </div>
+                        </div>
+                        <span style={{ color: C.muted2, fontSize: 12, flexShrink: 0 }}>
+                          {isExpanded ? '▲' : '▼'}
+                        </span>
+                      </div>
+                      {isExpanded && (
+                        <div
+                          style={{
+                            borderTop: `1px solid ${C.border}`,
+                            padding: '10px 14px',
+                            backgroundColor: C.surf3,
+                          }}
+                        >
+                          <div style={{ color: C.muted, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>
+                            AI Answer
+                          </div>
+                          <div
+                            style={{
+                              color: C.muted,
+                              fontSize: 12,
+                              lineHeight: 1.6,
+                              whiteSpace: 'pre-wrap',
+                              maxHeight: 300,
+                              overflowY: 'auto',
+                            }}
+                          >
+                            {log.answer}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {!loading && tab === 'corrections' && (
+          <>
+            {knowledge.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '30px 0', color: C.muted2, fontSize: 13 }}>
+                No corrections submitted yet. Pod managers can submit corrections when Ask RI gives a wrong answer.
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {knowledge.map((item) => (
+                  <div
+                    key={item.id}
+                    style={{
+                      backgroundColor: C.surf2,
+                      border: `1px solid ${item.approved ? C.green + '44' : C.border}`,
+                      borderRadius: 10,
+                      padding: '12px 14px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 8 }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ color: C.text, fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                          Q: {item.question}
+                        </div>
+                        <div style={{ color: C.muted, fontSize: 12, lineHeight: 1.5 }}>
+                          A: {item.answer}
+                        </div>
+                      </div>
+                      <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-end' }}>
+                        <button
+                          onClick={() => toggleApproval(item.id, !item.approved)}
+                          style={{
+                            padding: '4px 10px',
+                            borderRadius: 6,
+                            fontSize: 10,
+                            fontWeight: 800,
+                            border: `1px solid ${item.approved ? C.green + '44' : C.border}`,
+                            cursor: 'pointer',
+                            backgroundColor: item.approved ? '#0D2A0D' : C.surf3,
+                            color: item.approved ? C.green : C.muted,
+                          }}
+                        >
+                          {item.approved ? '✓ Approved' : 'Approve'}
+                        </button>
+                        <div style={{ color: C.muted2, fontSize: 10 }}>by {item.submitted_by}</div>
+                      </div>
+                    </div>
+                    <div style={{ color: C.muted2, fontSize: 10 }}>
+                      {new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {item.approved && ' · Will be injected into AI context'}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Main AdminDashboard ───────────────────────────────────────
 export function AdminDashboard() {
   const [progress, setProgress] = useState<AllUsersProgress>({});
@@ -559,6 +858,9 @@ export function AdminDashboard() {
             </ol>
           </div>
         )}
+
+        {/* Ask RI Insights */}
+        <AskRIInsights />
 
         {lastRefresh && (
           <p style={{ color: C.muted2, fontSize: 11, textAlign: 'center', marginTop: 24 }}>

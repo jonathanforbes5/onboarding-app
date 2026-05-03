@@ -59,3 +59,33 @@ create policy "allow_all" on quiz_scores       for all using (true) with check (
 create index if not exists idx_checklist_user on checklist_items(user_name);
 create index if not exists idx_sections_user  on section_completions(user_name);
 create index if not exists idx_quiz_user      on quiz_scores(user_name);
+
+-- ── Ask RI chat logs ────────────────────────────────────────
+-- One row per message exchange (question + AI answer)
+create table if not exists chat_logs (
+  id           uuid default gen_random_uuid() primary key,
+  user_name    text not null default 'anonymous',
+  question     text not null,
+  answer       text not null,
+  feedback     text check (feedback in ('up', 'down')) default null,
+  created_at   timestamptz default now()
+);
+
+alter table chat_logs enable row level security;
+create policy "allow_all" on chat_logs for all using (true) with check (true);
+create index if not exists idx_chat_logs_created on chat_logs(created_at desc);
+create index if not exists idx_chat_logs_user    on chat_logs(user_name);
+
+-- ── Ask RI knowledge corrections ───────────────────────────
+-- Approved Q&A pairs that get injected into the AI system prompt
+create table if not exists chat_knowledge (
+  id           uuid default gen_random_uuid() primary key,
+  question     text not null,
+  answer       text not null,
+  submitted_by text not null default 'anonymous',
+  approved     boolean not null default false,
+  created_at   timestamptz default now()
+);
+
+alter table chat_knowledge enable row level security;
+create policy "allow_all" on chat_knowledge for all using (true) with check (true);

@@ -18,7 +18,17 @@ import { ToastProvider } from '@/components/UI/Toast';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, profileEditOpen, openProfileEdit, closeProfileEdit } = useApp();
+  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, setCurrentSection, profileEditOpen, openProfileEdit, closeProfileEdit } = useApp();
+
+  const handleChatNavigate = (href: string) => {
+    if (href.startsWith('#section-')) {
+      const id = parseInt(href.replace('#section-', ''), 10);
+      if (!isNaN(id)) { setCurrentSection(id); setActiveTab('sections'); }
+    } else if (href.startsWith('#tab-')) {
+      const tab = href.replace('#tab-', '');
+      setActiveTab(tab as Parameters<typeof setActiveTab>[0]);
+    }
+  };
 
   // Auto-show profile setup once if the user has no profile data saved yet
   useEffect(() => {
@@ -157,7 +167,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <SearchModal />
       <NotesPanel />
       {profileEditOpen && <ProfileSetupModal onClose={handleProfileClose} />}
-      <ChatWidget userName={currentUser?.userKey ?? 'anonymous'} />
+      <ChatWidget userName={currentUser?.userKey ?? 'anonymous'} onNavigate={handleChatNavigate} />
 
       {/* Completion celebration modal */}
       {showCompletionCelebration && (

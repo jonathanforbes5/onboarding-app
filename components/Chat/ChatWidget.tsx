@@ -29,7 +29,7 @@ const C = {
   acc: '#F5C800', green: '#22C55E',
 };
 
-function MessageBubble({ msg }: { msg: Message }) {
+function MessageBubble({ msg, onNavigate }: { msg: Message; onNavigate?: (href: string) => void }) {
   const isUser = msg.role === 'user';
 
   const escalateMatch = msg.content.match(/---ESCALATE---([\s\S]*?)---END---/);
@@ -47,8 +47,27 @@ function MessageBubble({ msg }: { msg: Message }) {
       if (part.startsWith('`') && part.endsWith('`'))
         return <code key={i} style={{ backgroundColor: isUser ? 'rgba(0,0,0,0.1)' : '#2A2A2A', borderRadius: 4, padding: '1px 4px', fontSize: 11, fontFamily: 'monospace', color: isUser ? '#000' : C.acc }}>{part.slice(1, -1)}</code>;
       const linkMatch = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
-      if (linkMatch)
-        return <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer" style={{ color: isUser ? '#000' : C.acc, textDecoration: 'underline' }}>{linkMatch[1]}</a>;
+      if (linkMatch) {
+        const href = linkMatch[2];
+        const label = linkMatch[1];
+        const isPortal = href.startsWith('#section-') || href.startsWith('#tab-');
+        if (isPortal && onNavigate) {
+          return (
+            <button
+              key={i}
+              onClick={() => onNavigate(href)}
+              style={{
+                color: C.acc, textDecoration: 'underline', background: 'none', border: 'none',
+                cursor: 'pointer', padding: 0, font: 'inherit', fontSize: 'inherit',
+                display: 'inline-flex', alignItems: 'center', gap: 3,
+              }}
+            >
+              {label} <span style={{ fontSize: 10 }}>↗</span>
+            </button>
+          );
+        }
+        return <a key={i} href={href} target="_blank" rel="noopener noreferrer" style={{ color: isUser ? '#000' : C.acc, textDecoration: 'underline' }}>{label}</a>;
+      }
       return part;
     });
   };
@@ -139,7 +158,7 @@ function TypingDot() {
 
 const CHAT_DISABLED = false;
 
-export function ChatWidget({ userName = 'anonymous' }: { userName?: string }) {
+export function ChatWidget({ userName = 'anonymous', onNavigate }: { userName?: string; onNavigate?: (href: string) => void }) {
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput]     = useState('');
@@ -320,7 +339,7 @@ export function ChatWidget({ userName = 'anonymous' }: { userName?: string }) {
               <>
                 {messages.map((msg, i) => (
                   <div key={i}>
-                    <MessageBubble msg={msg} />
+                    <MessageBubble msg={msg} onNavigate={onNavigate} />
                     {msg.role === 'assistant' && msg.id && feedback?.msgId === msg.id && (
                       <div style={{ marginLeft: 31, marginTop: -6, marginBottom: 12 }}>
                         {feedback.mode === 'idle' && (
@@ -377,7 +396,7 @@ export function ChatWidget({ userName = 'anonymous' }: { userName?: string }) {
                   </div>
                 ))}
                 {loading && !streamText && <TypingDot />}
-                {streamText && <MessageBubble msg={{ role: 'assistant', content: streamText }} />}
+                {streamText && <MessageBubble msg={{ role: 'assistant', content: streamText }} onNavigate={onNavigate} />}
               </>
             )}
             <div ref={bottomRef} />

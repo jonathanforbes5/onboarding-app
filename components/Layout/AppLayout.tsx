@@ -14,6 +14,7 @@ import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { ChatWidget } from '@/components/Chat/ChatWidget';
 import { ProfileSetupModal } from '@/components/Profile/ProfileSetupModal';
+import { IntroVideoGate } from '@/components/Layout/IntroVideoGate';
 import { ToastProvider } from '@/components/UI/Toast';
 import { useApp } from '@/context/AppContext';
 
@@ -165,6 +166,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       )}
 
       <SearchModal />
+      <IntroVideoGate />
       <NotesPanel />
       {profileEditOpen && <ProfileSetupModal onClose={handleProfileClose} />}
       <ChatWidget userName={currentUser?.userKey ?? 'anonymous'} onNavigate={handleChatNavigate} />
@@ -191,7 +193,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               Training Complete
             </div>
             <h2 style={{ color: '#F5F5F5', fontSize: 26, fontWeight: 900, margin: '0 0 12px', letterSpacing: '-0.5px' }}>
-              All 13 Sections Done.
+              All 15 Sections Done.
             </h2>
             <p style={{ color: '#888', fontSize: 13, lineHeight: 1.7, margin: '0 0 24px' }}>
               You&apos;ve completed every section and passed all knowledge checks.

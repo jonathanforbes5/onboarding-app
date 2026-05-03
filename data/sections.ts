@@ -1203,6 +1203,114 @@ export const SECTIONS: SectionMeta[] = [
       },
     ],
   },
+  {
+    id: 14,
+    slug: 'mindset-and-communication',
+    title: 'Mindset & Communication',
+    subtitle: 'How to ask, who to go to, when to escalate',
+    estimatedTime: '10 min',
+    icon: 'Users',
+    quiz: [
+      {
+        question: 'A client says "I was promised 30 booked appointments per cycle." Your goal contract says 20. Who do you contact FIRST?',
+        options: [
+          'Mani — he runs sales accountability',
+          'Jonathan — relationship is at risk',
+          'The original closer — to understand what was actually said on the call',
+          'Oscar — all expectation issues escalate to the CEO',
+        ],
+        correctIndex: 2,
+        explanation: 'Always talk to the closer FIRST to find out what was actually promised. ONLY loop Mani after you have that context. Mani is the call of last resort on closer accountability — not the first call.',
+      },
+      {
+        question: 'You need a creative refresh for a Cycle 4 roofing client. What is the right order of operations?',
+        options: [
+          'Task Ken immediately — that\'s his job',
+          'Source organic from the client first → check FB / IG / GMB / Yelp / website → only then task Ken to fill gaps',
+          'Refresh the existing creative yourself',
+          'Wait for the media buyer to bring it up',
+        ],
+        correctIndex: 1,
+        explanation: 'Ken is a substitute, not a default. Always try organic content from the client first — be persistent and specific. Then check public assets (Yelp, GMB, Facebook, Instagram, website). Use Ken to fill gaps with AI-generated images that combine with organic.',
+      },
+      {
+        question: 'You need to ask Jon for help on a struggling account. What should your message look like?',
+        options: [
+          '"Klaus is having issues, can you take a look?"',
+          '"Quick call?"',
+          '"Klaus Larsen — CPA $358 vs $435 goal but Freq 3.24, CTR dropping. Asked Taylor for new creatives, he sent 10. Plan: ship them Monday + reduce budget 20%. OK?"',
+          '"This account is bad, help"',
+        ],
+        correctIndex: 2,
+        explanation: 'Lead with the issue, follow with the proposed action. Asking for permission to act is faster than asking what to do. Show your thinking — what you\'ve tried and what you propose next.',
+      },
+      {
+        question: 'A client calls Jon directly and threatens to cancel. You hadn\'t flagged the issue yet. What did you do wrong?',
+        options: [
+          'Nothing — clients sometimes go straight to Jon',
+          'You should have escalated to Jon BEFORE the client did. Tier 4 (relationship at risk) requires an immediate group chat with Jon (and Oscar if escalated).',
+          'You should have escalated to Oscar instead',
+          'You should have offered the client a discount',
+        ],
+        correctIndex: 1,
+        explanation: 'Jon should never be surprised by a client about to churn. The moment a relationship looks at risk, open a group chat with Jon, Oscar (if escalated), and the previous AM if relevant. Speed > formal waterfall.',
+      },
+    ],
+  },
+  {
+    id: 15,
+    slug: 'layered-thinking',
+    title: 'Layered Thinking',
+    subtitle: 'L1 outcomes → L2 drivers → L3 levers — diagnose like a doctor',
+    estimatedTime: '12 min',
+    icon: 'Stethoscope',
+    quiz: [
+      {
+        question: 'An account has Bookings green, CPA green, Pacing green, but Frequency 3.24 and CTR dropping. What do you do?',
+        options: [
+          'Nothing — Layer 1 is green',
+          'Refresh the creative now — Layer 2 fatigue signals will turn Layer 1 red next cycle',
+          'Increase budget — performance is strong',
+          'Switch to a new audience',
+        ],
+        correctIndex: 1,
+        explanation: 'Layer 1 green doesn\'t mean ignore Layer 2 forever. Watch Layer 2 trends to PREDICT Layer 1 problems before they hit. Frequency >2.5 = creative fatigue. Refresh now, while you still have margin.',
+      },
+      {
+        question: 'CPA is $338 vs $255 goal (red). Layer 2 shows: CPM high, CPC high, but booking rate 75% (green). What is the constraint?',
+        options: [
+          'The funnel — survey or VA',
+          'Front-end ad cost. Booking rate green means LP/survey/VA are fine. The bottleneck is volume, not conversion.',
+          'The client\'s capacity',
+          'The market is just expensive',
+        ],
+        correctIndex: 1,
+        explanation: 'When Layer 2 has a mix of green and red, attack the red. Booking rate green tells you the back-end is fine. CPM + CPC red means the ad itself is the bottleneck — Layer 3 lever is creative refresh, not funnel changes.',
+      },
+      {
+        question: 'Cycle was contracted at $262 CPA. Actual is $400. Using the 80% margin variance rule, what is the verdict?',
+        options: [
+          'Green — within tolerance',
+          'Red — above the ~$472 80% band, cycle is at risk',
+          'Orange — barely over',
+          'Need more data',
+        ],
+        correctIndex: 0,
+        explanation: '80% margin variance on $262 = up to ~$472 acceptable. $400 is within the band — green. The 80% rule prevents you from panicking on minor variance while still flagging real overruns.',
+      },
+      {
+        question: 'You spend 3 hours analysing an account that is hitting all goals. What did you waste?',
+        options: [
+          'Nothing — diligence matters',
+          'You boiled the ocean. Layer 1 green = stop. Spend that time on a red account where you can actually pull a lever.',
+          'You should have spent more time',
+          'You should have automated it',
+        ],
+        correctIndex: 1,
+        explanation: 'Layer 1 green = stop and move on. Time is a finite resource. Focus on accounts where you can actually pull a lever. Pulse-check the winners, attack the losers.',
+      },
+    ],
+  },
 ];
 
 export const SECTION_SEARCH_INDEX = SECTIONS.map((s) => ({

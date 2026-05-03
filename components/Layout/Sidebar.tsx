@@ -18,6 +18,7 @@ const PHASES = [
   { label: 'Delivery',    sections: [4, 5, 6],           color: '#22C55E' },
   { label: 'Operations',  sections: [7, 8, 9],           color: '#4A90D9' },
   { label: 'Mastery',     sections: [10, 11, 12, 13],   color: '#A78BFA' },
+  { label: 'Mindset',     sections: [14, 15],            color: '#F97316' },
 ];
 
 function formatMins(mins: number) {

@@ -148,6 +148,34 @@ export function SearchModal() {
     return () => window.removeEventListener('keydown', handler);
   }, [setShowSearch]);
 
+  // Log every search query (debounced) so we capture queries that don't end in a click —
+  // those are the strongest signal for missing content.
+  const lastLoggedQuery = useRef<string>('');
+  useEffect(() => {
+    if (!showSearch) return;
+    const q = searchQuery.trim();
+    if (q.length < 2) return;
+    if (q === lastLoggedQuery.current) return;
+    const t = setTimeout(() => {
+      lastLoggedQuery.current = q;
+      fetch('/api/search-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: q,
+          result_kind: 'query',
+          user_name: currentUser?.userKey ?? 'anonymous',
+        }),
+      }).catch(() => {});
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [searchQuery, showSearch, currentUser?.userKey]);
+
+  // Reset the dedup ref when modal closes so reopening logs again
+  useEffect(() => {
+    if (!showSearch) lastLoggedQuery.current = '';
+  }, [showSearch]);
+
   if (!showSearch) return null;
 
   const q = searchQuery.toLowerCase().trim();
@@ -173,7 +201,8 @@ export function SearchModal() {
     } else if (result.tab) {
       setActiveTab(result.tab as any);
     }
-    // Log the search query + result clicked (fire-and-forget)
+    // Log the click-through (separate row from the debounced query log) so we can
+    // distinguish queries-that-found-something from queries-that-didn't.
     if (searchQuery.trim().length >= 2) {
       fetch('/api/search-log', {
         method: 'POST',
@@ -181,7 +210,7 @@ export function SearchModal() {
         body: JSON.stringify({
           query: searchQuery.trim(),
           result_title: result.title,
-          result_kind: result.kind,
+          result_kind: `click:${result.kind}`,
           user_name: currentUser?.userKey ?? 'anonymous',
         }),
       }).catch(() => {});

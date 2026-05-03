@@ -16,6 +16,8 @@ import { S10_CulturePerformance } from '@/components/Sections/S10_CulturePerform
 import { S11_ToolsSystems } from '@/components/Sections/S11_ToolsSystems';
 import { S12_AccountManagement } from '@/components/Sections/S12_AccountManagement';
 import { S13_OnboardingCallMastery } from '@/components/Sections/S13_OnboardingCallMastery';
+import { S14_Mindset } from '@/components/Sections/S14_Mindset';
+import { S15_LayeredThinking } from '@/components/Sections/S15_LayeredThinking';
 
 const SECTION_MAP: Record<number, React.FC> = {
   1: S01_CompanyVision,
@@ -31,6 +33,8 @@ const SECTION_MAP: Record<number, React.FC> = {
   11: S12_AccountManagement,
   12: S13_OnboardingCallMastery,
   13: S11_ToolsSystems,
+  14: S14_Mindset,
+  15: S15_LayeredThinking,
 };
 
 function MainContent() {

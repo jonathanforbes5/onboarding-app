@@ -98,7 +98,7 @@ interface AppContextType extends AppState {
 }
 
 const SECTIONS_STORAGE_KEY = 'ri_onboarding_v1';
-const TOTAL_SECTIONS = 16;
+const TOTAL_SECTIONS = 19;
 const BYPASS_KEY = 'ri_bypass_profile';
 
 const defaultState: AppState = {

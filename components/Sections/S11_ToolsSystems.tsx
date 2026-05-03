@@ -3,6 +3,7 @@ import React from 'react';
 import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox, BulletList } from '@/components/UI/Card';
 import { ExpandableCard } from '@/components/Interactive/ExpandableCard';
+import { SlackChannels } from '@/components/Diagrams/SlackChannels';
 
 const TOOLS = [
   { name: 'Slack', category: 'Communication', priority: 'Day 1', icon: '💬', desc: 'Primary communication hub. All internal comms, client updates, team coordination. Your lifeline.', fluency: 'Must be fluent' },
@@ -342,6 +343,14 @@ export function S11_ToolsSystems() {
           </div>
         </div>
       </ExpandableCard>
+
+      {/* Slack channels */}
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Slack Channels — What Each One Is For</h3>
+        <Card border>
+          <SlackChannels />
+        </Card>
+      </div>
 
       {/* Glossary */}
       <ExpandableCard title="Key Terms Glossary" subtitle="Terms that confused Pod 1 managers in their first month">

@@ -443,24 +443,22 @@ export function WorksheetTab() {
           .ws-aside { position: fixed !important; top: 42px; left: 0; bottom: 0; z-index: 50; transform: translateX(-100%); transition: transform 0.22s ease; box-shadow: none; }
           .ws-aside.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.6); }
           .ws-hamburger { display: flex !important; }
-          .ws-overlay { display: block !important; }
         }
         @media (min-width: 769px) {
           .ws-aside { position: relative !important; transform: none !important; }
           .ws-hamburger { display: none !important; }
-          .ws-overlay { display: none !important; }
         }
       `}</style>
 
-      {/* Mobile overlay */}
-      <div
-        className="ws-overlay"
-        onClick={() => setMobileSidebarOpen(false)}
-        style={{
-          display: 'none',
-          position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)', zIndex: 49,
-        }}
-      />
+      {/* Mobile overlay — only render when sidebar is actually open */}
+      {mobileSidebarOpen && (
+        <div
+          onClick={() => setMobileSidebarOpen(false)}
+          style={{
+            position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)', zIndex: 49,
+          }}
+        />
+      )}
 
       {/* ───── Sidebar ───── */}
       <aside

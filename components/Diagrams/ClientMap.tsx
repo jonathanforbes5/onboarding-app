@@ -7,6 +7,7 @@ import {
   Marker,
 } from 'react-simple-maps';
 import { useApp } from '@/context/AppContext';
+import { STATE_TIER, TIER_COLORS, TIER_LABELS, type DifficultyTier } from '@/data/marketDifficulty';
 
 interface Client {
   name: string;
@@ -51,6 +52,7 @@ export function ClientMap() {
   const [data, setData]   = useState<MapData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<StatusFilter>('all');
+  const [showDifficulty, setShowDifficulty] = useState(false);
   const [hovered, setHovered] = useState<CityPoint | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const mapRef = useRef<HTMLDivElement>(null);
@@ -93,6 +95,29 @@ export function ClientMap() {
 
   return (
     <div className="space-y-3">
+      {/* View toggle */}
+      <div className="flex flex-wrap items-center gap-2 justify-between">
+        <label className="flex items-center gap-2 text-xs text-brand-gray cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={showDifficulty}
+            onChange={(e) => setShowDifficulty(e.target.checked)}
+            className="cursor-pointer"
+          />
+          <span className="font-bold">Show market difficulty fill</span>
+        </label>
+        {showDifficulty && (
+          <div className="flex flex-wrap gap-2 text-[10px]">
+            {(['avoid','hard','great','unknown'] as DifficultyTier[]).map(t => (
+              <span key={t} className="inline-flex items-center gap-1">
+                <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: TIER_COLORS[t] }} />
+                <span className="font-bold text-brand-gray">{TIER_LABELS[t]}</span>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Stat bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {STATUS_FILTERS.map(f => {
@@ -137,17 +162,22 @@ export function ClientMap() {
         >
           <Geographies geography="/us-states-10m.json">
             {({ geographies }: { geographies: any[] }) =>
-              geographies.map((geo: any) => (
-                <Geography
-                  key={geo.rsmKey}
-                  geography={geo}
-                  style={{
-                    default: { fill: '#1f1f1f', stroke: '#0A0A0A', strokeWidth: 0.5, outline: 'none' },
-                    hover:   { fill: '#2a2a2a', stroke: '#F5C800', strokeWidth: 0.5, outline: 'none' },
-                    pressed: { fill: '#1f1f1f', outline: 'none' },
-                  }}
-                />
-              ))
+              geographies.map((geo: any) => {
+                const stateName = geo.properties?.name as string | undefined;
+                const tier: DifficultyTier | undefined = stateName ? STATE_TIER[stateName] : undefined;
+                const baseFill = showDifficulty && tier ? TIER_COLORS[tier] : '#1f1f1f';
+                return (
+                  <Geography
+                    key={geo.rsmKey}
+                    geography={geo}
+                    style={{
+                      default: { fill: baseFill, stroke: '#0A0A0A', strokeWidth: 0.5, outline: 'none' },
+                      hover:   { fill: showDifficulty && tier ? baseFill : '#2a2a2a', stroke: '#F5C800', strokeWidth: 0.5, outline: 'none', filter: 'brightness(1.15)' },
+                      pressed: { fill: baseFill, outline: 'none' },
+                    }}
+                  />
+                );
+              })
             }
           </Geographies>
 

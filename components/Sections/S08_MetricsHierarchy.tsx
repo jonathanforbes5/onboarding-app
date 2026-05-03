@@ -2,174 +2,145 @@
 import React from 'react';
 import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox } from '@/components/UI/Card';
-import { MetricsHierarchy } from '@/components/Diagrams/MetricsHierarchy';
+import { LayeredThinking } from '@/components/Diagrams/LayeredThinking';
+import { MarketDifficulty } from '@/components/Diagrams/MarketDifficulty';
+import { useApp } from '@/context/AppContext';
 
 const LAYER1 = [
-  { metric: 'Total Booked Appts', target: 'vs. cycle target', note: 'The primary outcome — are we booking enough?' },
-  { metric: 'Target Achievement %', target: '≥ 80%', note: 'At 80% = bill at margin. Below = optimize, extend cycle.' },
-  { metric: 'Cost Per Booked Appt', target: '< $250', note: 'Compare vs. client\'s gross margin per job.' },
+  {
+    metric: 'Total Booked Appointments vs goal',
+    target: 'Within 80% of contracted goal',
+    note: '80% margin variance is the bar. Below = optimise, extend cycle, or re-baseline.',
+  },
+  {
+    metric: 'Cost Per Booked Appointment',
+    target: '$225–$250 in default markets — varies by market',
+    note: 'Easy markets (NY, most Midwest, San Diego, most FL, AL, Atlanta) routinely hit at or under. Hard markets carry an elevated goal baked into the contract. Always reference the market difficulty list before promising.',
+  },
+  {
+    metric: 'Compare CPA vs client gross margin per job',
+    target: 'CPA must be sustainable for THEM',
+    note: 'A $400 CPA is fine for a roofer doing $25K jobs. Lethal for a gutter shop doing $1.5K jobs. Their math is the actual constraint.',
+  },
 ];
 
+// Order is the one Oscar specified. "CTR" (without "Link") was removed — we only track Link CTR.
 const LAYER2 = [
-  { metric: 'CTR', target: '> 0.8%', fix: 'Refresh creative, test new hooks', owner: 'Ken' },
-  { metric: 'Cost Per Link Click', target: '< $6', fix: 'Improve CTR or adjust targeting', owner: 'Emmanuel' },
-  { metric: 'Survey CVR', target: '> 2.5%', fix: 'Simplify survey, reduce friction', owner: 'Emmanuel' },
-  { metric: 'VA Booking Rate', target: '> 30%', fix: 'Retrain VAs, review scripts', owner: 'Leila' },
-  { metric: 'Show Rate', target: '> 60%', fix: 'Improve reminder automations', owner: 'Emmanuel' },
-  { metric: 'Speed to Lead', target: '< 5 min', fix: 'Escalate to Leila immediately if > 15 min', owner: 'Leila' },
-  { metric: 'OSA Rate', target: '< 20%', fix: 'Audit zip codes vs targeting vs ASD', owner: 'Emmanuel' },
+  { metric: 'CPM',                    note: 'Cost to reach the audience. High CPM = expensive market or poor ad strength score.' },
+  { metric: 'Link CPC',               note: 'Cost per actual click to landing page. The cleanest cost signal.' },
+  { metric: 'Link CTR',               note: 'Driven by creative + copy + hook. The lever for fixing high CPC.' },
+  { metric: 'CPC (all)',              note: 'Cost per click including post engagement. Compare to Link CPC to see if eng-heavy creative is masking the truth.' },
+  { metric: 'CPA (all)',              note: 'Front-end Meta CPA — cost per Schedule event Meta sees, not contracted CPA.' },
+  { metric: 'Survey conversion rate', note: 'Driven by survey length + landing page + offer clarity. Test 7q vs 4q.' },
+  { metric: 'VA lead-to-book rate',   note: 'Driven by VA speed + script + lead quality. Owner: Leila.' },
+  { metric: 'OSA rate',               note: 'Out-of-Service-Area. Keep < 15%. Above = audit zip exclusions, ASD targeting, app placements.' },
+  { metric: 'Show rate',              note: 'Reminders + qualification + client-side follow-up. Often a sales-side problem, not a media one.' },
 ];
 
-const HEALTH_COLORS = [
-  { color: 'Green', hex: '#22C55E', threshold: '≥ 70% to target by Day 21', meaning: 'On track — celebrate with client, scale what\'s working' },
-  { color: 'Yellow', hex: '#F5C800', threshold: '40–70% to target by Day 14', meaning: 'Monitor closely — Layer 2 diagnosis needed, communicate proactively' },
-  { color: 'Red', hex: '#EF4444', threshold: '< 40% to target by Day 14', meaning: 'Immediate action — coordinate specialists, flag to Jonathan if unresolved 48hr' },
-  { color: 'Black', hex: '#111', threshold: 'Client threatening to cancel', meaning: 'Escalate to Jonathan immediately — before client reaches him first' },
+const LAYER3 = [
+  { lever: 'Creative refresh',          appliesTo: 'CPM / Link CPC / Link CTR fatigue',         detail: 'Source organic from client first. Then public assets (FB, IG, GMB, Yelp, website). Ken last as gap-filler.' },
+  { lever: 'Survey question count',     appliesTo: 'Survey conversion rate',                    detail: '7q vs 4q changes conversion materially. Test it.' },
+  { lever: 'Landing page headline',     appliesTo: 'Survey conversion rate',                    detail: 'Match-message between ad hook and LP hero.' },
+  { lever: 'Audience exclusions',       appliesTo: 'OSA rate',                                  detail: 'Out-of-area zips, app placements, broad vs lookalike.' },
+  { lever: 'Speed to lead < 5 min',     appliesTo: 'VA lead-to-book rate (under OSA umbrella)', detail: 'Non-negotiable. > 15min = escalate to Leila immediately. Treat as a Layer 3 OSA-adjacent lever.' },
+  { lever: 'Phone number trust',        appliesTo: 'VA lead-to-book rate',                      detail: 'CNAME / SHAKEN-STIR / double-call policy. Affects whether leads pick up at all.' },
+  { lever: 'Reminder cadence',          appliesTo: 'Show rate',                                 detail: 'SMS + email at 24h, 1h, day-of. Layer the reminders.' },
+  { lever: 'Pixel + CAPI conditioning', appliesTo: 'Front-end CPA (all)',                       detail: 'Advanced conditioning. Confirm Schedule events fire when VAs apply Qualified tag.' },
 ];
 
 export function S08_MetricsHierarchy() {
+  const { setCurrentSection } = useApp();
   return (
     <SectionWrapper sectionId={8}>
 
       {/* Intro */}
       <Card dark>
         <div className="text-brand-yellow text-xs font-black uppercase tracking-widest mb-2">Metrics Framework</div>
-        <h2 className="text-xl font-black text-white mb-2">Think in Layers</h2>
+        <h2 className="text-xl font-black text-white mb-2">Think Like A Doctor</h2>
         <p className="text-white/70 text-sm leading-relaxed">
-          Layer 1 tells you <em className="text-white">if</em> there&apos;s a problem.
-          Layer 2 tells you <em className="text-white">why</em>. Always check Layer 1 first — never dive into Layer 2 when Layer 1 looks fine.
+          <strong className="text-white">Layer 1</strong> tells you <em>if</em> there&apos;s a problem.
+          <strong className="text-white"> Layer 2</strong> tells you <em>why</em>.
+          <strong className="text-white"> Layer 3</strong> is the actual lever you pull.
+          Always check Layer 1 first — if it&apos;s green, stop. Don&apos;t boil the ocean.
         </p>
       </Card>
 
-      {/* Layer 1 vs Layer 2 split */}
+      {/* Layered thinking visual (shared with Section 15) */}
       <div>
-        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">The Two-Layer Framework</h3>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-brand-yellow p-4">
-            <div className="font-black text-xs uppercase tracking-widest text-brand-black/60 mb-2">Layer 1 — Outcomes</div>
-            <div className="font-black text-base mb-1">Did we book enough?</div>
-            <div className="text-xs text-brand-black/60 mb-3">Check these FIRST, every week</div>
-            {LAYER1.map((m) => (
-              <div key={m.metric} className="bg-black/10 rounded-lg p-2 mb-1">
-                <div className="font-black text-xs">{m.metric}</div>
-                <div className="text-[10px] text-brand-black/60 mt-0.5">{m.note}</div>
-              </div>
-            ))}
-          </div>
-          <div className="rounded-xl bg-brand-black p-4">
-            <div className="font-black text-xs uppercase tracking-widest text-white/40 mb-2">Layer 2 — Diagnosis</div>
-            <div className="font-black text-base text-white mb-1">Where is it breaking?</div>
-            <div className="text-xs text-white/40 mb-3">Only check when Layer 1 fails</div>
-            {[
-              { label: 'CTR < 0.8%', fix: 'Creative problem → Ken' },
-              { label: 'CPLC > $6', fix: 'Targeting or creative → Emmanuel' },
-              { label: 'Survey CVR < 2.5%', fix: 'Survey friction → Emmanuel' },
-              { label: 'Booking rate < 30%', fix: 'VA performance → Leila' },
-              { label: 'Show rate < 60%', fix: 'Reminders → Emmanuel' },
-            ].map((d) => (
-              <div key={d.label} className="flex items-start gap-2 mb-1">
-                <span className="text-red-400 text-xs flex-shrink-0 mt-0.5">↳</span>
-                <div>
-                  <span className="text-xs text-white font-bold">{d.label}</span>
-                  <span className="text-xs text-white/40 ml-1">→ {d.fix}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Core decision rule */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-brand-black rounded-xl p-4 text-center">
-          <div className="text-4xl mb-2">🟢</div>
-          <div className="font-black text-base text-white mb-1">Layer 1 looks good?</div>
-          <div className="text-sm text-white/60">Keep going. Don&apos;t overthink it. Celebrate with the client.</div>
-        </div>
-        <div className="bg-red-900 rounded-xl p-4 text-center">
-          <div className="text-4xl mb-2">🔴</div>
-          <div className="font-black text-base text-white mb-1">Layer 1 looks bad?</div>
-          <div className="text-sm text-white/60">Diagnose Layer 2. Find root cause. Prescribe. Coordinate.</div>
-        </div>
-      </div>
-
-      {/* The hierarchy diagram */}
-      <div>
-        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Full Metrics Hierarchy</h3>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">The Layered Model — Click Each Level</h3>
         <Card border>
-          <MetricsHierarchy />
+          <LayeredThinking />
         </Card>
+        <div className="mt-2 text-xs text-brand-gray">
+          See <button onClick={() => setCurrentSection(15)} className="underline font-bold text-brand-black">Section 15: Layered Thinking</button> for worked examples and the 80% margin variance rule.
+        </div>
       </div>
 
-      {/* Health color system */}
+      {/* Layer 1 */}
       <div>
-        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Account Health Colors</h3>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Layer 1 — Outcomes (check first, every audit)</h3>
         <div className="space-y-2">
-          {HEALTH_COLORS.map((h) => (
-            <div key={h.color} className="flex items-start gap-3 rounded-xl p-3 bg-white border border-brand-gray-mid">
-              <div
-                className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center font-black text-xs"
-                style={{ backgroundColor: h.hex, color: h.hex === '#F5C800' || h.hex === '#22C55E' ? '#111' : '#fff' }}
-              >{h.color}</div>
-              <div>
-                <div className="font-black text-xs text-brand-black">{h.threshold}</div>
-                <div className="text-xs text-brand-gray mt-0.5 leading-relaxed">{h.meaning}</div>
-              </div>
+          {LAYER1.map((m) => (
+            <div key={m.metric} className="rounded-xl bg-brand-yellow p-3">
+              <div className="font-black text-sm text-brand-black">{m.metric}</div>
+              <div className="text-xs font-bold text-brand-black/70 mt-0.5">Target: {m.target}</div>
+              <div className="text-xs text-brand-black/70 mt-1.5 leading-relaxed">{m.note}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Layer 2 full benchmark table */}
+      {/* Market difficulty (drives the CPA target) */}
       <div>
-        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Layer 2 Benchmarks — What Good Looks Like</h3>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Market Difficulty — Adjusts The CPA Bar</h3>
+        <Card border>
+          <MarketDifficulty />
+        </Card>
+        <div className="mt-2 text-xs text-brand-gray">
+          Layer 1 CPA targets shift by market. Always check this before promising a number on a sales call or onboarding setup. The Client Map (Section 7) shades states by tier so you can see the picture at a glance.
+        </div>
+      </div>
+
+      {/* Layer 2 */}
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Layer 2 — Drivers (only when Layer 1 is red)</h3>
         <div className="rounded-xl border border-brand-gray-mid overflow-hidden">
-          <div className="grid grid-cols-4 bg-brand-black text-white text-[10px] font-black uppercase tracking-widest">
-            <div className="p-3 col-span-1">Metric</div>
-            <div className="p-3 col-span-1 text-center">Target</div>
-            <div className="p-3 col-span-1">Fix if failing</div>
-            <div className="p-3 col-span-1 text-center">Owner</div>
+          <div className="grid grid-cols-12 bg-brand-black text-white text-[10px] font-black uppercase tracking-widest">
+            <div className="p-3 col-span-1 text-center">#</div>
+            <div className="p-3 col-span-3">Metric</div>
+            <div className="p-3 col-span-8">Why it matters / what drives it</div>
           </div>
           {LAYER2.map((m, i) => (
-            <div key={m.metric} className={`grid grid-cols-4 text-xs items-center ${i % 2 === 0 ? 'bg-white' : 'bg-brand-gray-light'}`}>
-              <div className="p-3 font-bold">{m.metric}</div>
-              <div className="p-3 text-center font-black text-green-600">{m.target}</div>
-              <div className="p-3 text-brand-gray">{m.fix}</div>
-              <div className="p-3 text-center">
-                <span className="bg-brand-black text-brand-yellow text-[10px] font-black px-2 py-0.5 rounded">{m.owner}</span>
-              </div>
+            <div key={m.metric} className={`grid grid-cols-12 text-xs items-start ${i % 2 === 0 ? 'bg-white' : 'bg-brand-gray-light'}`}>
+              <div className="p-3 col-span-1 text-center font-black text-brand-yellow bg-brand-black">{i + 1}</div>
+              <div className="p-3 col-span-3 font-black text-brand-black">{m.metric}</div>
+              <div className="p-3 col-span-8 text-brand-gray leading-relaxed">{m.note}</div>
             </div>
           ))}
         </div>
-        <div className="text-[10px] text-brand-gray/60 mt-2 text-center">Only audit Layer 2 when Layer 1 is failing — healthy outcomes = monthly check-in only</div>
+        <div className="text-[11px] text-brand-gray mt-2">
+          Order matters — work top to bottom. CPM and Link CPC are upstream of everything else. Survey CVR / book rate / show rate are funnel-side.
+        </div>
       </div>
 
-      {/* Diagnostic steps */}
+      {/* Layer 3 */}
       <div>
-        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Diagnostic Flow — 5 Steps</h3>
-        <div className="space-y-1">
-          {[
-            { step: '1', label: 'Check Layer 1', detail: 'Total bookings, Target %, Cost Per Booked Appt — every week' },
-            { step: '2', label: 'Good → keep going', detail: 'Communicate wins to the client. Scale what\'s working. Don\'t change things.' },
-            { step: '3', label: 'Bad → diagnose Layer 2', detail: 'CTR, CPLC, Survey CVR, Booking Rate, Show Rate, Speed to Lead, OSA' },
-            { step: '4', label: 'Identify root cause + task specialist', detail: 'Creative → Ken. Campaign/setup → Emmanuel/Mervin. VA → Leila. 48hr deadline.' },
-            { step: '5', label: 'Verify improvement', detail: 'Check Layer 1 again 3–5 days later. Loop until resolved.' },
-          ].map((s) => (
-            <div key={s.step} className="flex items-start gap-3 p-3 bg-white rounded-xl border border-brand-gray-mid">
-              <div className="w-7 h-7 rounded-lg bg-brand-black text-brand-yellow text-xs font-black flex items-center justify-center flex-shrink-0 mt-0.5">
-                {s.step}
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Layer 3 — Levers You Actually Pull</h3>
+        <div className="space-y-1.5">
+          {LAYER3.map((l) => (
+            <div key={l.lever} className="rounded-xl bg-white border border-brand-gray-mid px-3 py-2">
+              <div className="flex items-start justify-between gap-2 flex-wrap">
+                <span className="font-black text-sm text-brand-black">{l.lever}</span>
+                <span className="text-[10px] font-bold bg-brand-black text-brand-yellow px-2 py-0.5 rounded">{l.appliesTo}</span>
               </div>
-              <div>
-                <div className="font-black text-sm text-brand-black">{s.label}</div>
-                <div className="text-xs text-brand-gray mt-0.5">{s.detail}</div>
-              </div>
+              <div className="text-xs text-brand-gray mt-1">{l.detail}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <InfoBox type="tip" title="Think in Systems">
-        Layer 1 is the outcome. Layer 2 is the diagnosis. <strong>Everything is a data problem with a data solution.</strong> No emotion — just metrics, root causes, and prescriptions.
+      <InfoBox type="tip" title="The flow">
+        Layer 1 green → stop, monitor only. Layer 1 red → drill into Layer 2 for THAT specific metric (top-down: CPM first). Pick the biggest, easiest-to-solve Layer 2 driver. Reach into Layer 3 to pull the lever. Verify Layer 1 improves. Repeat. <strong>Don&apos;t boil the ocean.</strong>
       </InfoBox>
     </SectionWrapper>
   );

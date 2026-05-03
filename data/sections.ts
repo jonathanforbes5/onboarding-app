@@ -1311,6 +1311,71 @@ export const SECTIONS: SectionMeta[] = [
       },
     ],
   },
+  {
+    id: 16,
+    slug: 'revenue-partner-mindset',
+    title: 'Revenue Partner Mindset',
+    subtitle: '50% results / 50% narrative — owning churn before it happens',
+    estimatedTime: '14 min',
+    icon: 'Target',
+    quiz: [
+      {
+        question: 'A Cycle 3 client says "your leads suck." We hit appt goals last cycle, they closed 2 of 18. What is the FIRST move?',
+        options: [
+          'Apologise and offer the next cycle at a discount',
+          'Pause ads and rebuild targeting',
+          'Walk them through their last 10 appts — who picked up, who showed, who got a quote, who said no and why. Force them to look at their conversion data.',
+          'Tell them it is the market',
+        ],
+        correctIndex: 2,
+        explanation: 'The most common churn pattern in our Airtable. We hit appt goals; their sales process is the constraint. Surface the data — usually the leak is at THEIR step. Never agree the leads suck without data.',
+      },
+      {
+        question: 'On the onboarding call, when should you bring up the "little birdie" risk?',
+        options: [
+          'Never — it sounds paranoid',
+          'Only if the client mentions doubts',
+          'Right at the start — name it explicitly: "Within 30 days, somebody is going to tell you the leads suck. Bring it to me first." Get verbal yes.',
+          'After the first cycle, when trust is built',
+        ],
+        correctIndex: 2,
+        explanation: 'Pre-handle beats handle. The cost of awkwardness now is 30 seconds. The cost of NOT pre-handling is a save call mid-cycle that you will probably lose. Inoculate the client BEFORE the birdie shows up.',
+      },
+      {
+        question: 'A $700K/year roofing operator goes silent for 3 days mid-cycle. What does the playbook say?',
+        options: [
+          'Wait — they\'re probably busy',
+          'Day 1 ping, Day 2 call, Day 3 email Jon CC\'d, Day 5 escalate to a save call. Document every attempt.',
+          'Fire them as a client',
+          'Send a discount offer to re-engage',
+        ],
+        correctIndex: 1,
+        explanation: 'Silence is data. < $1M operators are highest narrative-collapse risk. Treat ghosting as a red signal, every time. Escalate fast — never chase quietly.',
+      },
+      {
+        question: 'A client refuses to pay despite hitting 95% of appt goal. They argue the relationship was bad and they shouldn\'t have to pay. What\'s the right move?',
+        options: [
+          'Negotiate — offer 50% off as a peace gesture',
+          'Stay neutral and factual: "Per the signed contract — here is the data, here is the threshold, here is the invoice." Make them argue the document, not the relationship.',
+          'Cancel the cycle',
+          'Escalate to Oscar before responding',
+        ],
+        correctIndex: 1,
+        explanation: 'Force them to argue the document, not the relationship. Capitulating trains them to negotiate every cycle. Charge per signed contract. If they refuse, escalate to Jon then Oscar — but lead with the contract, not the emotion.',
+      },
+      {
+        question: 'What is the "50/50" framing for the MOM job?',
+        options: [
+          '50% client work, 50% internal work',
+          '50% delivery, 50% reporting',
+          '50% results (Layer 1/2/3 work) + 50% narrative (pre-handling, reading mental state, inoculating against the birdie)',
+          '50% retention, 50% upsell',
+        ],
+        correctIndex: 2,
+        explanation: 'Most new MOMs over-index on results and under-index on narrative. Some of our best-delivering accounts have churned because the narrative collapsed. Owning the narrative IS the job.',
+      },
+    ],
+  },
 ];
 
 export const SECTION_SEARCH_INDEX = SECTIONS.map((s) => ({

@@ -60,8 +60,15 @@ create table if not exists allowed_users (
   bio          text,
   goal         text,
   avatar_emoji text,
+  avatar_url   text,
   created_at   timestamptz default now()
 );
+
+-- Idempotent migrations for existing deployments missing these columns
+alter table allowed_users add column if not exists bio          text;
+alter table allowed_users add column if not exists goal         text;
+alter table allowed_users add column if not exists avatar_emoji text;
+alter table allowed_users add column if not exists avatar_url   text;
 
 -- RLS
 alter table checklist_items    enable row level security;

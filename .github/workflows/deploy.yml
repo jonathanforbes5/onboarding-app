@@ -9,43 +9,5 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Resolve Vercel project and deploy
-        run: |
-          PROJECTS=$(curl -s "https://api.vercel.com/v9/projects?limit=100" \
-            -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}")
-
-          PROJECT_ID=$(echo "$PROJECTS" | python3 -c "
-          import sys, json
-          data = json.load(sys.stdin)
-          for p in data.get('projects', []):
-              repo = (p.get('link') or {}).get('repo', '')
-              if 'onboarding-app' in repo or 'onboarding' in p.get('name','').lower():
-                  print(p['id'])
-                  break
-          ")
-
-          ORG_ID=$(echo "$PROJECTS" | python3 -c "
-          import sys, json
-          data = json.load(sys.stdin)
-          for p in data.get('projects', []):
-              repo = (p.get('link') or {}).get('repo', '')
-              if 'onboarding-app' in repo or 'onboarding' in p.get('name','').lower():
-                  print(p.get('accountId',''))
-                  break
-          ")
-
-          echo "Project ID: $PROJECT_ID"
-          echo "Org ID: $ORG_ID"
-
-          if [ -z "$PROJECT_ID" ] || [ -z "$ORG_ID" ]; then
-            echo "Could not auto-detect project. Listing all projects:"
-            echo "$PROJECTS" | python3 -c "import sys,json; [print(p['name'], p['id']) for p in json.load(sys.stdin).get('projects',[])]"
-            exit 1
-          fi
-
-          VERCEL_ORG_ID=$ORG_ID VERCEL_PROJECT_ID=$PROJECT_ID \
-            npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      - name: Trigger Vercel deploy hook
+        run: curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_EE3Oia30h5MzARCR0QtFKSSDiI5W/KoBKdpa8wY"

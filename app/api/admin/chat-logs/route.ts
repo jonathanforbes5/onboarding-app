@@ -30,13 +30,14 @@ export async function GET(req: NextRequest) {
         .from('search_logs')
         .select('id, user_name, query, result_title, result_kind, created_at')
         .order('created_at', { ascending: false })
-        .limit(100),
+        .limit(100)
+        .then((r) => r), // table may not exist yet — handle below
     ]);
 
     return NextResponse.json({
       logs: logsResult.data ?? [],
       knowledge: knowledgeResult.data ?? [],
-      searchLogs: searchResult.data ?? [],
+      searchLogs: searchResult.error?.message?.includes('does not exist') ? [] : (searchResult.data ?? []),
     });
   } catch (err) {
     return NextResponse.json({ logs: [], knowledge: [], searchLogs: [], error: String(err) }, { status: 200 });

@@ -109,17 +109,39 @@ export function SOPsTab() {
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
         {/* Page header */}
-        <div style={{ marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '1.25rem' }}>
           <h1 style={{ color: '#F5F5F5', fontSize: 20, fontWeight: 900, margin: '0 0 6px' }}>
             Resources & SOPs
           </h1>
-          <p style={{ color: '#555', fontSize: 13, margin: 0 }}>
+          <p style={{ color: '#555', fontSize: 13, margin: '0 0 14px' }}>
             Everything you need in one place — quick-access resources, tools, and all standard operating procedures.
           </p>
+          {/* Jump nav */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {[
+              { label: '⚡ Quick Access', href: '#quick-access' },
+              { label: '🛠️ Tools', href: '#tools' },
+              { label: '📋 SOPs', href: '#sops' },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                style={{
+                  padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 700,
+                  backgroundColor: '#1A1A1A', border: '1px solid #2A2A2A', color: '#888',
+                  textDecoration: 'none', transition: 'all 0.1s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#F5C80055'; e.currentTarget.style.color = '#F5F5F5'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#2A2A2A'; e.currentTarget.style.color = '#888'; }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* ── Quick Access ── */}
-        <div style={{ marginBottom: '2.5rem' }}>
+        <div id="quick-access" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
           <SectionHeader icon="⚡" title="Quick Access" subtitle="Open these daily — know where they are." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8 }}>
             {sopData.resources.map((r) => (
@@ -162,7 +184,7 @@ export function SOPsTab() {
         </div>
 
         {/* ── Tools ── */}
-        <div style={{ marginBottom: '2.5rem' }}>
+        <div id="tools" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
           <SectionHeader icon="🛠️" title="Tools" subtitle="The core platforms you'll use every day." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8 }}>
             {sopData.tools.map((t) => (
@@ -205,7 +227,7 @@ export function SOPsTab() {
         </div>
 
         {/* ── SOPs ── */}
-        <div>
+        <div id="sops" style={{ scrollMarginTop: 60 }}>
           <SectionHeader icon="📋" title="Standard Operating Procedures" subtitle="Reference documents for every core process. Don't memorize — know where to find them." />
 
           {/* Filter pills */}

@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import dayContentPod4 from '@/repo/data/day-content.json';
 import dayContentPod5 from '@/repo/data/day-content-pod5.json';
@@ -377,6 +377,7 @@ function DayRow({
 // ----------- Main WorksheetTab -----------
 export function WorksheetTab() {
   const { currentDay, setCurrentDay, checklistItems, toggleChecklistItem, currentUser } = useApp();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const isLeadership = currentUser?.role === 'super_admin';
   // Leadership always sees Pod 5 (current cohort); Pod 5 users by key
@@ -434,10 +435,36 @@ export function WorksheetTab() {
         backgroundColor: C.bg,
         color: C.text,
         fontFamily: 'Inter, system-ui, sans-serif',
+        position: 'relative',
       }}
     >
+      <style>{`
+        @media (max-width: 768px) {
+          .ws-aside { position: fixed !important; top: 42px; left: 0; bottom: 0; z-index: 50; transform: translateX(-100%); transition: transform 0.22s ease; box-shadow: none; }
+          .ws-aside.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.6); }
+          .ws-hamburger { display: flex !important; }
+          .ws-overlay { display: block !important; }
+        }
+        @media (min-width: 769px) {
+          .ws-aside { position: relative !important; transform: none !important; }
+          .ws-hamburger { display: none !important; }
+          .ws-overlay { display: none !important; }
+        }
+      `}</style>
+
+      {/* Mobile overlay */}
+      <div
+        className="ws-overlay"
+        onClick={() => setMobileSidebarOpen(false)}
+        style={{
+          display: 'none',
+          position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)', zIndex: 49,
+        }}
+      />
+
       {/* ───── Sidebar ───── */}
       <aside
+        className={`ws-aside${mobileSidebarOpen ? ' open' : ''}`}
         style={{
           width: 248,
           flexShrink: 0,
@@ -526,7 +553,7 @@ export function WorksheetTab() {
                   day={d}
                   stats={allStats[days.indexOf(d)]}
                   isActive={d.day === currentDay}
-                  onClick={() => setCurrentDay(d.day)}
+                  onClick={() => { setCurrentDay(d.day); setMobileSidebarOpen(false); }}
                   dateInfo={dayDates[d.day]}
                 />
               ))}
@@ -536,11 +563,11 @@ export function WorksheetTab() {
       </aside>
 
       {/* ───── Main content ───── */}
-      <main style={{ flex: 1, overflowY: 'auto' }}>
+      <main style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
         <div
           style={{
             borderBottom: `1px solid ${C.border}`,
-            padding: '18px 28px 14px',
+            padding: '14px 16px 12px',
             backgroundColor: C.surf,
             position: 'sticky',
             top: 0,
@@ -553,9 +580,24 @@ export function WorksheetTab() {
               alignItems: 'flex-start',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
-              gap: 12,
+              gap: 10,
             }}
           >
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, flex: 1, minWidth: 0 }}>
+              {/* Mobile hamburger */}
+              <button
+                className="ws-hamburger"
+                onClick={() => setMobileSidebarOpen((v) => !v)}
+                style={{
+                  display: 'none', alignItems: 'center', justifyContent: 'center',
+                  width: 34, height: 34, borderRadius: 8, flexShrink: 0, marginTop: 2,
+                  backgroundColor: C.surf3, border: `1px solid ${C.border2}`, cursor: 'pointer', color: C.muted,
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+              </button>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
                 <span
@@ -613,6 +655,7 @@ export function WorksheetTab() {
               </h2>
               <p style={{ color: C.muted, fontSize: 13, margin: 0 }}>{currentDayData.subtitle}</p>
             </div>
+            </div>{/* end hamburger+title group */}
 
             <div
               style={{
@@ -660,7 +703,7 @@ export function WorksheetTab() {
           </div>
         </div>
 
-        <div style={{ padding: '20px 28px 40px' }}>
+        <div style={{ padding: '16px 16px 40px' }}>
           {currentDayData.sections.map((section) => (
             <SectionCard
               key={section.id}

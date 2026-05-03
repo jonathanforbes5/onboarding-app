@@ -2,7 +2,7 @@
 import React from 'react';
 import {
   Rocket, Building2, RefreshCw, TrendingUp, Users, Workflow,
-  Network, BarChart3, Stethoscope, Zap, Settings,
+  Network, BarChart3, Stethoscope, Zap, Settings, Target, Phone,
   CheckCircle, Trophy, ChevronRight, Clock, Play,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -10,7 +10,7 @@ import { SECTIONS } from '@/data/sections';
 
 const ICONS: Record<string, React.ElementType> = {
   Rocket, Building2, RefreshCw, TrendingUp, Users, Workflow,
-  Network, BarChart3, Stethoscope, Zap, Settings,
+  Network, BarChart3, Stethoscope, Zap, Settings, Target, Phone,
 };
 
 const SECTION_THEMES: Record<number, { accent: string; bg: string }> = {
@@ -25,13 +25,15 @@ const SECTION_THEMES: Record<number, { accent: string; bg: string }> = {
   9:  { accent: '#FBBF24', bg: '#1A1400' },
   10: { accent: '#C084FC', bg: '#150D1A' },
   11: { accent: '#94A3B8', bg: '#111418' },
+  12: { accent: '#EF4444', bg: '#1A0D0D' },
+  13: { accent: '#22D3EE', bg: '#0D181A' },
 };
 
 const LEARNING_PHASES = [
-  { label: 'Foundation', sections: [1, 2, 3], color: '#F5C800', desc: 'Company, industry, and business model' },
-  { label: 'Delivery',   sections: [4, 5, 6], color: '#22C55E', desc: 'How we generate results and manage clients' },
-  { label: 'Operations', sections: [7, 8, 9], color: '#4A90D9', desc: 'Team structure, metrics, and diagnosis' },
-  { label: 'Mastery',    sections: [10, 11],  color: '#A78BFA', desc: 'Culture, performance standards, and tools' },
+  { label: 'Foundation', sections: [1, 2, 3],        color: '#F5C800', desc: 'Company, industry, and business model' },
+  { label: 'Delivery',   sections: [4, 5, 6],         color: '#22C55E', desc: 'How we generate results and manage clients' },
+  { label: 'Operations', sections: [7, 8, 9],         color: '#4A90D9', desc: 'Team structure, metrics, and diagnosis' },
+  { label: 'Mastery',    sections: [10, 11, 12, 13], color: '#A78BFA', desc: 'Culture, performance standards, tools, and mastery' },
 ];
 
 export function CompanyCurriculum() {

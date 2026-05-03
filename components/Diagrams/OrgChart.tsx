@@ -18,9 +18,9 @@ const ORG: OrgNode = {
   reports: [
     {
       name: 'Mani',
-      title: 'Co-Founder / Director of Sales',
+      title: 'Co-Founder & Director of Sales / CRO',
       color: 'bg-brand-yellow text-brand-black',
-      detail: 'Manages acquisition and sales team. Responsible for new client flow. Note: always spell "Mani" — never "Manny".',
+      detail: 'Co-Founder and Chief Revenue Officer. Manages acquisition and sales team. Responsible for new client flow into your pod. Note: always spell "Mani" — never "Manny".',
       reports: [
         { name: 'AJ Asif', title: 'Setter', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Books qualified sales calls with potential clients.' },
         { name: 'Bronson Boyko', title: 'Closer', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Converts sales calls into paying clients.' },

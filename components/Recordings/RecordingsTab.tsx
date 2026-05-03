@@ -253,13 +253,34 @@ export function RecordingsTab() {
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
 
         {/* Header */}
-        <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{ marginBottom: '1.25rem' }}>
           <h1 style={{ color: '#F5F5F5', fontSize: 20, fontWeight: 900, margin: '0 0 6px' }}>
             Training Library
           </h1>
-          <p style={{ color: '#555', fontSize: 13, margin: 0 }}>
+          <p style={{ color: '#555', fontSize: 13, margin: '0 0 12px' }}>
             Structured training videos, service delivery walkthroughs, and 37 hands-on Loom walkthroughs from the Client Ongoing Management SOP — every scenario you'll face on live accounts.
           </p>
+          {/* Jump nav */}
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            {[
+              { label: '🎓 Training Videos', href: '#training-videos' },
+              { label: '🎬 Training Looms', href: '#training-looms' },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                style={{
+                  padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 700,
+                  backgroundColor: '#1A1A1A', border: '1px solid #2A2A2A', color: '#888',
+                  textDecoration: 'none', transition: 'all 0.1s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#F5C80055'; e.currentTarget.style.color = '#F5F5F5'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#2A2A2A'; e.currentTarget.style.color = '#888'; }}
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Filter */}
@@ -290,7 +311,7 @@ export function RecordingsTab() {
 
         {/* ── Training Videos ── */}
         {filteredTraining.length > 0 && (
-          <div style={{ marginBottom: '2.5rem' }}>
+          <div id="training-videos" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem' }}>
               <span style={{ fontSize: 16 }}>🎓</span>
               <h2 style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, margin: 0 }}>Training Videos</h2>
@@ -324,7 +345,7 @@ export function RecordingsTab() {
         )}
 
         {/* ── Training Looms ── */}
-        <div style={{ marginTop: '1rem' }}>
+        <div id="training-looms" style={{ marginTop: '1rem', scrollMarginTop: 60 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '0.75rem' }}>
             <span style={{ fontSize: 16 }}>🎬</span>
             <h2 style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, margin: 0 }}>Training Looms</h2>

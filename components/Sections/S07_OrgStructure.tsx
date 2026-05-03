@@ -147,24 +147,17 @@ export function S07_OrgStructure() {
                   className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center text-xs font-black"
                   style={{ backgroundColor: s.color, color: '#111' }}
                 >{s.name.charAt(0)}</div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <div className="font-black text-sm text-white">{s.name}</div>
                   <div className="text-xs font-bold" style={{ color: s.color }}>{s.role}</div>
-                  <div className="text-[10px] text-white/40 mt-0.5 italic">{s.note}</div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3 px-4 pb-3">
-                <div>
-                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Handles</div>
+              <div className="px-4 pb-3">
+                <div className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5">Handles</div>
+                <div className="flex flex-wrap gap-1.5">
                   {s.handles.map((h) => (
-                    <div key={h} className="text-xs text-white/60 flex items-start gap-1 mb-1">
-                      <span style={{ color: s.color }} className="flex-shrink-0">▸</span><span>{h}</span>
-                    </div>
+                    <span key={h} className="text-[11px] text-white/70 px-2 py-0.5 rounded-full" style={{ backgroundColor: `${s.color}18`, border: `1px solid ${s.color}30` }}>{h}</span>
                   ))}
-                </div>
-                <div>
-                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">How to Task</div>
-                  <div className="text-xs text-white/60 leading-relaxed">{s.howToTask}</div>
                 </div>
               </div>
             </div>

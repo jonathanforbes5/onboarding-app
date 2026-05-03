@@ -41,6 +41,7 @@ function MessageBubble({ msg }: { msg: Message }) {
   const renderInline = (text: string): React.ReactNode => {
     const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[([^\]]+)\]\(([^)]+)\))/g);
     return parts.map((part, i) => {
+      if (!part) return null;
       if (part.startsWith('**') && part.endsWith('**'))
         return <strong key={i} style={{ color: isUser ? '#000' : '#fff', fontWeight: 700 }}>{part.slice(2, -2)}</strong>;
       if (part.startsWith('`') && part.endsWith('`'))

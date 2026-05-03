@@ -181,7 +181,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               Training Complete
             </div>
             <h2 style={{ color: '#F5F5F5', fontSize: 26, fontWeight: 900, margin: '0 0 12px', letterSpacing: '-0.5px' }}>
-              All 11 Sections Done.
+              All 13 Sections Done.
             </h2>
             <p style={{ color: '#888', fontSize: 13, lineHeight: 1.7, margin: '0 0 24px' }}>
               You&apos;ve completed every section and passed all knowledge checks.

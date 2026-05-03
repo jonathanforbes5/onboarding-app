@@ -19,10 +19,10 @@ const TOOLS = [
 ];
 
 const INTERNAL = [
-  { name: 'Logbook', desc: 'Central truth for ALL lead data — every lead from every account documented by VAs with status and notes. Access via Leila (not Jonathan). Check daily for open (white) leads.', icon: '📓' },
-  { name: 'Account Master Dashboard', desc: 'Real-time account performance and cycle metrics. Track cycle #, days elapsed, bookings vs target, and billing status. Cole built and maintains this system.', icon: '📊' },
-  { name: 'Command Center', desc: 'Health score dashboard — your daily triage. Color-coded: 🟢 Healthy (monthly check-in) / 🟡 Watch / 🟠 Act Now / 🔴 Escalate to Jonathan. Accounts behind on bookings turn RED.', icon: '🖥️' },
-  { name: 'Custom GPT', desc: 'Paste Fathom transcript after every onboarding call → get structured client summary → post to #ops-manager-discussion in Slack → use for ClickUp task to Emmanuel and Mervin.', icon: '🤖' },
+  { name: 'Command Center', desc: 'Your #1 daily tool. Open this every morning — it\'s your entire account health dashboard. Color-coded: 🟢 Healthy / 🟡 Watch / 🟠 Act Now / 🔴 Escalate to Jonathan. The Logbook (all lead data) is accessible directly from within the Command Center.', icon: '🖥️', core: true },
+  { name: 'Client Check-In Sheet', desc: 'Shared Google Sheet where you log every client\'s cycle status, health color, and billing state after every onboarding call and every Monday/Thursday. Jonathan and Oscar monitor this across all pods — keep it current.', icon: '📋', core: true },
+  { name: 'ClickUp', desc: 'All specialist coordination happens here — setup tasks for Emmanuel, creative tasks for Ken, support tasks for Mervin. Always include: client name, GHL sub-account link, specific deadline. No ClickUp task = no work gets done.', icon: '✅', core: true },
+  { name: 'Logbook', desc: 'Central truth for ALL lead data. Accessible from within the Command Center. VAs document every lead with status and notes. Check daily for open (white) leads that need VA follow-up. Access granted by Leila.', icon: '📓', core: false },
 ];
 
 const PROFICIENCY = [
@@ -68,11 +68,14 @@ export function S11_ToolsSystems() {
         <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Internal Software & Dashboards</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {INTERNAL.map((tool) => (
-            <div key={tool.name} className="flex items-start gap-3 p-4 bg-white rounded-xl border-2 border-brand-black">
+            <div key={tool.name} className="flex items-start gap-3 p-4 bg-white rounded-xl" style={{ border: tool.core ? '2px solid #111' : '1px solid #E5E7EB' }}>
               <span className="text-2xl flex-shrink-0">{tool.icon}</span>
               <div>
-                <div className="font-black text-sm">{tool.name}</div>
-                <div className="text-xs text-brand-gray mt-0.5">{tool.desc}</div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <div className="font-black text-sm">{tool.name}</div>
+                  {tool.core && <span className="text-[9px] font-black uppercase tracking-widest bg-brand-black text-brand-yellow px-1.5 py-0.5 rounded">Core</span>}
+                </div>
+                <div className="text-xs text-brand-gray">{tool.desc}</div>
               </div>
             </div>
           ))}

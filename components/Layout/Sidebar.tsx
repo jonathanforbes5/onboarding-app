@@ -2,7 +2,7 @@
 import React from 'react';
 import {
   Rocket, Building2, RefreshCw, TrendingUp, Users, Workflow,
-  Network, BarChart3, Stethoscope, Zap, Settings,
+  Network, BarChart3, Stethoscope, Zap, Settings, Target, Phone,
   CheckCircle, Circle, Trophy, X, Clock,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
@@ -10,14 +10,14 @@ import { SECTIONS } from '@/data/sections';
 
 const ICONS: Record<string, React.ElementType> = {
   Rocket, Building2, RefreshCw, TrendingUp, Users, Workflow,
-  Network, BarChart3, Stethoscope, Zap, Settings,
+  Network, BarChart3, Stethoscope, Zap, Settings, Target, Phone,
 };
 
 const PHASES = [
-  { label: 'Foundation',  sections: [1, 2, 3],     color: '#F5C800' },
-  { label: 'Delivery',    sections: [4, 5, 6],     color: '#22C55E' },
-  { label: 'Operations',  sections: [7, 8, 9],     color: '#4A90D9' },
-  { label: 'Mastery',     sections: [10, 11],      color: '#A78BFA' },
+  { label: 'Foundation',  sections: [1, 2, 3],          color: '#F5C800' },
+  { label: 'Delivery',    sections: [4, 5, 6],           color: '#22C55E' },
+  { label: 'Operations',  sections: [7, 8, 9],           color: '#4A90D9' },
+  { label: 'Mastery',     sections: [10, 11, 12, 13],   color: '#A78BFA' },
 ];
 
 function formatMins(mins: number) {

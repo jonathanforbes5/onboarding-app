@@ -76,7 +76,7 @@ const DIFFICULT_CONVERSATIONS = [
 
 export function S12_AccountManagement() {
   return (
-    <SectionWrapper sectionId={12}>
+    <SectionWrapper sectionId={11}>
 
       {/* Intro */}
       <Card dark>

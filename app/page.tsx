@@ -28,9 +28,9 @@ const SECTION_MAP: Record<number, React.FC> = {
   8: S08_MetricsHierarchy,
   9: S09_KPIPlaybook,
   10: S10_CulturePerformance,
-  11: S11_ToolsSystems,
-  12: S12_AccountManagement,
-  13: S13_OnboardingCallMastery,
+  11: S12_AccountManagement,
+  12: S13_OnboardingCallMastery,
+  13: S11_ToolsSystems,
 };
 
 function MainContent() {

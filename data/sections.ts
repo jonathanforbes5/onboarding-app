@@ -926,7 +926,7 @@ export const SECTIONS: SectionMeta[] = [
     ],
   },
   {
-    id: 11,
+    id: 13,
     slug: 'tools-systems',
     title: 'Tools & Systems',
     subtitle: 'Your tech stack and proficiency timeline',
@@ -1008,7 +1008,7 @@ export const SECTIONS: SectionMeta[] = [
     ],
   },
   {
-    id: 12,
+    id: 11,
     slug: 'account-management',
     title: 'Account Management Playbook',
     subtitle: 'Daily rhythm, client ownership, and revenue protection',
@@ -1106,7 +1106,7 @@ export const SECTIONS: SectionMeta[] = [
     ],
   },
   {
-    id: 13,
+    id: 12,
     slug: 'onboarding-call',
     title: 'Onboarding Call Mastery',
     subtitle: 'Pre-call prep, asset gathering, post-call flow, and the Account Specific Document',

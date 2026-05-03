@@ -90,7 +90,7 @@ export function S04_HowWeGenerateResults() {
               </div>
               <div className="text-xs text-brand-gray mb-1">{item.desc}</div>
               <div className="text-[11px] text-red-600"><strong>If failing:</strong> {item.fail}</div>
-              <div className="text-[10px] text-brand-gray/60 mt-1">Owner: {item.owner}</div>
+              <div className="text-[10px] text-brand-gray mt-1">Owner: {item.owner}</div>
             </div>
           ))}
         </div>
@@ -222,7 +222,7 @@ export function S04_HowWeGenerateResults() {
               <div>
                 <div className="font-black text-sm">{f.factor}</div>
                 <div className="text-xs text-brand-black/60">→ {f.impact}</div>
-                <div className="text-xs text-brand-black/50 mt-0.5">{f.detail}</div>
+                <div className="text-xs text-brand-black/70 mt-0.5">{f.detail}</div>
               </div>
             </div>
           ))}

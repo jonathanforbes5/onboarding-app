@@ -110,14 +110,14 @@ export function S01_CompanyVision() {
               <div className="flex items-center justify-between mb-2">
                 <div>
                   <span className="font-black text-sm" style={{ color: n.color }}>{n.name}</span>
-                  <span className="ml-2 text-xs text-white/40">Avg ticket: {n.ticket}</span>
+                  <span className="ml-2 text-xs text-white/70">Avg ticket: {n.ticket}</span>
                 </div>
                 <span className="font-black text-sm text-white">{n.pct}%</span>
               </div>
               <div className="h-2 rounded-full bg-white/10 mb-2">
                 <div className="h-full rounded-full transition-all" style={{ width: `${n.pct}%`, backgroundColor: n.color }} />
               </div>
-              <p className="text-xs text-white/50">{n.note}</p>
+              <p className="text-xs text-white/75">{n.note}</p>
             </div>
           ))}
         </div>

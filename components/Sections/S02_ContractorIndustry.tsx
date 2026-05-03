@@ -103,7 +103,7 @@ export function S02_ContractorIndustry() {
             </div>
           ))}
         </div>
-        <div className="text-[10px] text-brand-gray/60 text-center">Bar width = agency revenue share · Right = avg job ticket</div>
+        <div className="text-[10px] text-brand-gray text-center">Bar width = agency revenue share · Right = avg job ticket</div>
       </div>
 
       {/* Vertical deep-dive tabs */}
@@ -135,7 +135,7 @@ export function S02_ContractorIndustry() {
                 ].map((s) => (
                   <div key={s.label} className="text-center">
                     <div className="font-black text-base" style={{ color: v.color }}>{s.value}</div>
-                    <div className="text-[10px] text-white/40 mt-0.5">{s.label}</div>
+                    <div className="text-[10px] text-white/70 mt-0.5">{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -163,21 +163,21 @@ export function S02_ContractorIndustry() {
           <div className="rounded-xl p-4 bg-brand-black text-white">
             <div className="text-brand-yellow font-black text-sm mb-1">📄 Insurance Job</div>
             <div className="text-2xl font-black text-white mb-1">$20K</div>
-            <div className="text-xs text-white/40 mb-3">Roof value</div>
+            <div className="text-xs text-white/70 mb-3">Roof value</div>
             <div className="space-y-1 text-xs text-white/60">
               <div>Insurance pays: <span className="text-white font-bold">$17–19K</span></div>
               <div>Customer pays: <span className="text-white font-bold">$1–3K</span> (deductible)</div>
-              <div className="mt-2 text-white/40">40%+ of roofing volume — adjuster approval adds time</div>
+              <div className="mt-2 text-white/70">40%+ of roofing volume — adjuster approval adds time</div>
             </div>
           </div>
           <div className="rounded-xl p-4 bg-brand-yellow">
             <div className="font-black text-sm mb-1">💳 Retail Job</div>
             <div className="text-2xl font-black mb-1">$20K</div>
-            <div className="text-xs text-brand-black/50 mb-3">Roof value</div>
+            <div className="text-xs text-brand-black/70 mb-3">Roof value</div>
             <div className="space-y-1 text-xs text-brand-black/60">
               <div>Customer pays: <span className="font-bold text-brand-black">Full $20K</span></div>
               <div>No adjuster: <span className="font-bold text-brand-black">Faster close</span></div>
-              <div className="mt-2 text-brand-black/40">Higher-value relationship — most referrals come from here</div>
+              <div className="mt-2 text-brand-black/70">Higher-value relationship — most referrals come from here</div>
             </div>
           </div>
         </div>
@@ -200,9 +200,9 @@ export function S02_ContractorIndustry() {
                   <span className="text-[10px] px-1.5 py-0.5 rounded font-bold" style={{ backgroundColor: `${t.color}33`, color: t.color }}>
                     {t.quotes}
                   </span>
-                  <span className="text-[10px] text-white/40">Priority: {t.priority}</span>
+                  <span className="text-[10px] text-white/70">Priority: {t.priority}</span>
                 </div>
-                <div className="text-xs text-white/50">{t.note}</div>
+                <div className="text-xs text-white/75">{t.note}</div>
               </div>
             </div>
           ))}

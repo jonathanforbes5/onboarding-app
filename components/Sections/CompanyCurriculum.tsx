@@ -24,9 +24,9 @@ const SECTION_THEMES: Record<number, { accent: string; bg: string }> = {
   8:  { accent: '#F87171', bg: '#1A0D0D' },
   9:  { accent: '#FBBF24', bg: '#1A1400' },
   10: { accent: '#C084FC', bg: '#150D1A' },
-  11: { accent: '#94A3B8', bg: '#111418' },
-  12: { accent: '#EF4444', bg: '#1A0D0D' },
-  13: { accent: '#22D3EE', bg: '#0D181A' },
+  11: { accent: '#EF4444', bg: '#1A0D0D' },
+  12: { accent: '#22D3EE', bg: '#0D181A' },
+  13: { accent: '#94A3B8', bg: '#111418' },
 };
 
 const LEARNING_PHASES = [
@@ -77,7 +77,7 @@ export function CompanyCurriculum() {
                   Company Training Curriculum
                 </div>
                 <h1 style={{ color: '#F5F5F5', fontSize: 28, fontWeight: 900, margin: '0 0 10px', letterSpacing: '-0.5px' }}>
-                  11 Sections · {totalTime} min total
+                  {SECTIONS.length} Sections · {totalTime} min total
                 </h1>
                 <p style={{ color: '#888', fontSize: 13, margin: 0, lineHeight: 1.6, maxWidth: 500 }}>
                   Everything you need to operate as a pod manager — business model, performance metrics,

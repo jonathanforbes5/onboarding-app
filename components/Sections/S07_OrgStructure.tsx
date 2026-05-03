@@ -110,7 +110,7 @@ export function S07_OrgStructure() {
             </div>
           ))}
         </div>
-        <div className="text-xs text-brand-gray/60 mt-2 text-center">Target: 25 accounts per pod × 5 pods = $1M/month</div>
+        <div className="text-xs text-brand-gray mt-2 text-center">Target: 25 accounts per pod × 5 pods = $1M/month</div>
       </div>
 
       {/* What you are / aren't */}
@@ -153,7 +153,7 @@ export function S07_OrgStructure() {
                 </div>
               </div>
               <div className="px-4 pb-3">
-                <div className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5">Handles</div>
+                <div className="text-[10px] font-black text-white/70 uppercase tracking-widest mb-1.5">Handles</div>
                 <div className="flex flex-wrap gap-1.5">
                   {s.handles.map((h) => (
                     <span key={h} className="text-[11px] text-white/70 px-2 py-0.5 rounded-full" style={{ backgroundColor: `${s.color}18`, border: `1px solid ${s.color}30` }}>{h}</span>

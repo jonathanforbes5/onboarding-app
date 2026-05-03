@@ -98,7 +98,7 @@ export function S03_BusinessModel() {
                   <div className="text-xl mb-1">{item.icon}</div>
                   <div className="font-black text-sm text-brand-black">{item.value}</div>
                   <div className="text-[10px] text-brand-gray mt-0.5">{item.label}</div>
-                  <div className="text-[10px] text-brand-gray/60 mt-0.5">{item.sub}</div>
+                  <div className="text-[10px] text-brand-gray mt-0.5">{item.sub}</div>
                 </div>
               ))}
             </div>
@@ -188,7 +188,7 @@ export function S03_BusinessModel() {
                 </div>
                 <div className="p-4 rounded-xl bg-brand-black text-white">
                   <div className="font-black text-sm text-brand-yellow mb-1">❄️ Winter Program</div>
-                  <div className="text-xs text-white/50 mb-2">November – February</div>
+                  <div className="text-xs text-white/80 mb-2">November – February</div>
                   <BulletList items={['Reduced retainer ~$1,500/cycle', 'Brand awareness only ($10–50/day)', 'Keeps pixel warm', 'Prevents cold start in Spring']} className="[&_span]:text-white/80" />
                 </div>
               </div>
@@ -233,9 +233,9 @@ export function S03_BusinessModel() {
             </div>
             <div className="p-5 space-y-4">
               <div className="text-center py-2">
-                <div className="text-white/50 text-xs uppercase tracking-widest mb-1">Base Salary</div>
+                <div className="text-white/80 text-xs uppercase tracking-widest mb-1">Base Salary</div>
                 <div className="text-4xl font-black text-brand-yellow">$6,000</div>
-                <div className="text-white/50 text-xs mt-1">CAD / month ($72,000/year) — direct deposit via Intuit</div>
+                <div className="text-white/80 text-xs mt-1">CAD / month ($72,000/year) — direct deposit via Intuit</div>
               </div>
 
               <div className="bg-white/5 rounded-xl p-4">
@@ -251,7 +251,7 @@ export function S03_BusinessModel() {
                           {tier.ote}
                         </div>
                       </div>
-                      <div className={`text-xs ${tier.highlight ? 'text-brand-black/60' : 'text-white/40'}`}>
+                      <div className={`text-xs ${tier.highlight ? 'text-brand-black/70' : 'text-white/70'}`}>
                         2% commission = {tier.monthly}/mo ({tier.annual}/yr) · Avg churn: {tier.churn}
                       </div>
                     </div>
@@ -269,11 +269,11 @@ export function S03_BusinessModel() {
           <div>
             <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">The Commission Formula</h3>
             <div className="bg-brand-black rounded-2xl p-5 text-center">
-              <div className="text-white/50 text-xs mb-3 uppercase tracking-widest">Monthly Commission</div>
+              <div className="text-white/80 text-xs mb-3 uppercase tracking-widest">Monthly Commission</div>
               <div className="text-3xl font-black text-brand-yellow mb-2">
                 [Book Size] × $4,000 × 2%
               </div>
-              <div className="text-white/40 text-xs mb-4">= $80/client/month at standard retainer</div>
+              <div className="text-white/75 text-xs mb-4">= $80/client/month at standard retainer</div>
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { n: '20 clients', val: '$1,600/mo' },
@@ -282,7 +282,7 @@ export function S03_BusinessModel() {
                 ].map((ex) => (
                   <div key={ex.n} className="bg-white/10 rounded-lg p-2">
                     <div className="text-brand-yellow font-black text-sm">{ex.val}</div>
-                    <div className="text-white/40 text-xs mt-0.5">{ex.n}</div>
+                    <div className="text-white/75 text-xs mt-0.5">{ex.n}</div>
                   </div>
                 ))}
               </div>
@@ -308,9 +308,9 @@ export function S03_BusinessModel() {
                   </div>
                 ))}
               </div>
-              <div className="text-[10px] text-white/30 text-center">Each retained cycle multiplies total earnings — retention IS the strategy</div>
+              <div className="text-[10px] text-white/75 text-center">Each retained cycle multiplies total earnings — retention IS the strategy</div>
               <div className="mt-3 bg-white/5 rounded-xl p-3 text-center">
-                <div className="text-white/50 text-xs mb-1">A single client retained through Cycle 10 is worth:</div>
+                <div className="text-white/80 text-xs mb-1">A single client retained through Cycle 10 is worth:</div>
                 <div className="text-brand-yellow font-black text-lg">$250 in milestones + $80/mo ongoing = $1,210 in Year 1</div>
               </div>
             </div>
@@ -419,7 +419,7 @@ export function S03_BusinessModel() {
                 <div key={g.phase} className={`rounded-xl p-4 ${g.color}`}>
                   <div className="flex items-center gap-2 mb-1">
                     <span className={`font-black text-sm ${g.color.includes('black') ? 'text-brand-yellow' : 'text-brand-black'}`}>{g.phase}</span>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${g.color.includes('yellow') ? 'bg-brand-black/10 text-brand-black/60' : g.color.includes('black') ? 'bg-white/10 text-white/50' : 'bg-white text-brand-gray'}`}>{g.label}</span>
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${g.color.includes('yellow') ? 'bg-brand-black/10 text-brand-black/60' : g.color.includes('black') ? 'bg-white/10 text-white/80' : 'bg-white text-brand-gray'}`}>{g.label}</span>
                   </div>
                   <p className={`text-xs ${g.color.includes('black') ? 'text-white/60' : 'text-brand-gray'}`}>{g.detail}</p>
                 </div>
@@ -438,7 +438,7 @@ export function S03_BusinessModel() {
               <div className="font-black text-sm text-brand-black">Full Compensation Document</div>
               <div className="text-xs text-brand-black/60">Complete terms, edge cases, key definitions — Version 4.0</div>
             </div>
-            <span className="text-brand-black/40 group-hover:text-brand-black text-sm">↗</span>
+            <span className="text-brand-black/70 group-hover:text-brand-black text-sm">↗</span>
           </a>
         </>
       )}

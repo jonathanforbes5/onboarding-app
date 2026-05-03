@@ -116,7 +116,7 @@ const POST_CALL_STEPS = [
 
 export function S13_OnboardingCallMastery() {
   return (
-    <SectionWrapper sectionId={13}>
+    <SectionWrapper sectionId={12}>
 
       {/* Intro */}
       <Card dark>

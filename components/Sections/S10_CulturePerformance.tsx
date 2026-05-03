@@ -198,7 +198,7 @@ export function S10_CulturePerformance() {
           Acquiring a client costs thousands in sales overhead. Retaining one costs time and care.
           <strong className="text-white"> Every cycle you preserve = compounding revenue for the agency AND for you.</strong>
         </div>
-        <div className="bg-white/5 rounded-xl p-3 text-xs text-white/50">
+        <div className="bg-white/5 rounded-xl p-3 text-xs text-white/80">
           Average client LTV (launched clients): $11,344. A client you keep through Cycle 10 is worth roughly $1,210 in Year 1 commissions alone — plus ongoing $80/month after that.
         </div>
       </Card>

@@ -162,7 +162,7 @@ export function S09_KPIPlaybook() {
                 <div>
                   <div className="font-black text-brand-gray uppercase tracking-widest text-[9px] mb-1">Prescription</div>
                   <div className="text-brand-black font-medium">{p.prescription}</div>
-                  <div className="text-[10px] text-brand-gray/60 mt-1">via: {p.via}</div>
+                  <div className="text-[10px] text-brand-gray mt-1">via: {p.via}</div>
                 </div>
               </div>
             </div>
@@ -269,12 +269,12 @@ export function S09_KPIPlaybook() {
             { time: '48+ hours', action: 'Escalate to Jonathan with evidence: "I\'ve followed up 3 times via [channels]. Here\'s the paper trail."', color: 'bg-red-900/40 text-red-300' },
           ].map((t) => (
             <div key={t.time} className={`rounded-xl p-3 ${t.color}`}>
-              <div className="font-black text-xs uppercase tracking-widest mb-0.5 opacity-60">{t.time}</div>
+              <div className="font-black text-xs uppercase tracking-widest mb-0.5 opacity-90">{t.time}</div>
               <div className="text-xs">{t.action}</div>
             </div>
           ))}
         </div>
-        <div className="mt-3 text-xs text-white/40">&quot;Still waiting&quot; is never an acceptable account status at any point.</div>
+        <div className="mt-3 text-xs text-white/75">&quot;Still waiting&quot; is never an acceptable account status at any point.</div>
       </div>
 
       <InfoBox type="warning" title="Critical Reminder">

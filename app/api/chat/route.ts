@@ -39,6 +39,9 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'No messages provided' }, { status: 400 });
   }
 
+  // Strip any extra fields (e.g. client-side `id`) — Anthropic only accepts role + content
+  const cleanMessages = messages.map(({ role, content }) => ({ role, content }));
+
   const client = new Anthropic({ apiKey });
 
   const encoder = new TextEncoder();
@@ -48,7 +51,7 @@ export async function POST(req: NextRequest) {
         model: 'claude-sonnet-4-6',
         max_tokens: 1024,
         system: SYSTEM_PROMPT,
-        messages,
+        messages: cleanMessages,
       });
 
       stream.on('text', (textDelta: string) => {

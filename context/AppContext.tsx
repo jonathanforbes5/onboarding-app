@@ -13,6 +13,28 @@ import {
 export type { UserProfile };
 export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin';
 
+const TAB_TO_PATH: Record<ActiveTab, string> = {
+  overview: '/',
+  worksheet: '/worksheet',
+  sections: '/company',
+  resources: '/resources',
+  recordings: '/recordings',
+  admin: '/admin',
+};
+
+function pathToTab(pathname: string): ActiveTab | null {
+  const slug = pathname.replace(/^\//, '').split('/')[0];
+  const map: Record<string, ActiveTab> = {
+    '': 'overview',
+    worksheet: 'worksheet',
+    company: 'sections',
+    resources: 'resources',
+    recordings: 'recordings',
+    admin: 'admin',
+  };
+  return map[slug] ?? null;
+}
+
 export interface Note {
   text: string;
   updatedAt: string;
@@ -73,7 +95,7 @@ interface AppContextType extends AppState {
 }
 
 const SECTIONS_STORAGE_KEY = 'ri_onboarding_v1';
-const TOTAL_SECTIONS = 11;
+const TOTAL_SECTIONS = 13;
 const BYPASS_KEY = 'ri_bypass_profile';
 
 const defaultState: AppState = {
@@ -320,8 +342,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
+  // ── URL sync: read path on mount to set initial tab ─────
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const tab = pathToTab(window.location.pathname);
+    if (tab) setState((prev) => ({ ...prev, activeTab: tab }));
+
+    const onPop = () => {
+      const t = pathToTab(window.location.pathname);
+      if (t) setState((prev) => ({ ...prev, activeTab: t }));
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
   // ── Navigation ────────────────────────────────────────────
   const setActiveTab = useCallback((tab: ActiveTab) => {
+    if (typeof window !== 'undefined') {
+      const path = TAB_TO_PATH[tab];
+      if (window.location.pathname !== path) {
+        window.history.pushState(null, '', path);
+      }
+    }
     setState((prev) => {
       if (prev.currentUser) {
         try { localStorage.setItem(`ri_${prev.currentUser.userKey}_activeTab`, tab); } catch {}

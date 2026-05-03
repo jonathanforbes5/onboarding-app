@@ -1007,6 +1007,202 @@ export const SECTIONS: SectionMeta[] = [
       },
     ],
   },
+  {
+    id: 12,
+    slug: 'account-management',
+    title: 'Account Management Playbook',
+    subtitle: 'Prioritization, proactive management, and retention',
+    estimatedTime: '12 min',
+    icon: 'BarChart2',
+    quiz: [
+      {
+        question: 'You have 8 accounts. One is in Week 3 with no appointments booked. Another has 6 bookings but their billing failed. A third is in Week 1 with normal volume. Which account gets your attention first?',
+        options: [
+          'Week 3 / no appointments — most urgent performance crisis',
+          'Billing failure — every paused day delays the cycle and creates a churn risk',
+          'Week 1 / normal — get ahead of problems before they start',
+          'All three simultaneously — use Slack templates',
+        ],
+        correctIndex: 1,
+        explanation: 'Billing failures = immediate action. Every day ads are paused costs real lead volume and delays the cycle clock. Call the client same-day. The Week 3 zero-booking account is a performance crisis (escalate to Jonathan), but the billing failure is operationally urgent right now — paused ads = zero leads.',
+      },
+      {
+        question: 'What is the 24-hour rule for proactive account management?',
+        options: [
+          'All client questions must be answered within 24 hours',
+          'Any account showing warning signs (CPB spike, CPL spike, billing failure, zero bookings after Day 5) must have a documented action or escalation within 24 hours of detection',
+          'You must post a Monday update within 24 hours of the week starting',
+          'Emmanuel must complete setup tasks within 24 hours',
+        ],
+        correctIndex: 1,
+        explanation: 'The 24-hour rule: if you detect a warning sign — CPB spike, CPL spike, billing failure, zero bookings past Day 5 — you must have a documented response (action taken or escalation in ClickUp/Slack) within 24 hours. Passive monitoring is not account management.',
+      },
+      {
+        question: 'A client tells you their billing will be late this month. They ask you to "hold the invoice." What do you do?',
+        options: [
+          'Agree to hold — client relationships come first',
+          'Pause their ads immediately until payment clears',
+          'Log it in the Client Check-In Sheet, inform Jonathan same day, and follow up in 48 hours',
+          'Send Emmanuel to handle the billing conversation',
+        ],
+        correctIndex: 2,
+        explanation: 'Billing issues always go to Jonathan same-day — you do not hold invoices unilaterally. Log it in the Client Check-In Sheet so it\'s visible, notify Jonathan, and follow up with the client in 48 hours. Never agree to invoice holds without authorization.',
+      },
+      {
+        question: 'When should you proactively propose a renewal or ad spend increase?',
+        options: [
+          'Only when the client asks about renewing',
+          '5–7 days before cycle end — review CPB, if healthy propose renewal + higher ad spend',
+          'After the invoice is paid',
+          'Only after 3 successful cycles',
+        ],
+        correctIndex: 1,
+        explanation: 'Proactive renewal = 5–7 days before cycle end. Review CPB (cost per booking). If it\'s healthy and trending well, propose renewal and suggest increasing ad spend — more spend = more leads = more appointments = higher chance of renewal. Waiting for the client to bring up renewal is reactive and loses deals.',
+      },
+      {
+        question: 'CASE STUDY: You have 12 accounts. Account A is in Cycle 4, $6K ad spend, 3 bookings Week 1. Account B is brand new (Day 2), $3K spend, setup just launched. Account C is Cycle 2, solid results, but the owner hasn\'t responded in 5 days. Which account gets the most attention today?',
+        options: [
+          'Account A — most revenue, must protect it',
+          'Account B — new accounts need the most hands-on setup time',
+          'Account C — silent clients churn. 5 days of silence is a retention risk that needs to be addressed today.',
+          'All equal — apply standard weekly check-in protocol',
+        ],
+        correctIndex: 2,
+        explanation: 'Client silence = churn signal. Account C has gone quiet for 5 days with no response — this is a red flag. Reach out via their preferred channel today. Don\'t wait until Monday\'s update. Account A has a low Week 1 booking count worth investigating, but Account C\'s silence is an active churn risk that degrades silently until it\'s too late.',
+      },
+      {
+        question: 'What is the correct account health color system, and who can see it?',
+        options: [
+          'Red/Yellow/Green — visible only to you',
+          'Green (on track) / Yellow (caution, watch closely) / Red (at risk, escalate immediately) — updated weekly and visible to Jonathan in the Client Check-In Sheet',
+          'On Track / Behind / Critical — only updated monthly',
+          'A/B/C/D tier — updated after every cycle only',
+        ],
+        correctIndex: 1,
+        explanation: 'The health color system: Green = on track, Yellow = caution/watch, Red = at risk/escalate immediately. Updated weekly. Jonathan and Oscar use the Client Check-In Sheet to monitor across all pods. An outdated or inaccurate health color misleads leadership and hides real problems.',
+      },
+      {
+        question: 'CASE STUDY: A client\'s CPB jumped from $155 to $310 between Week 2 and Week 3. What is your step-by-step response?',
+        options: [
+          'Immediately order a full creative refresh from Ken',
+          'Increase ad spend by 30% to generate more volume',
+          'Context check (holiday? billing issue? campaign change?) → check frequency → run Post-Andromeda duplicate protocol → wait 48 hours → escalate to creative refresh only if needed',
+          'Call the client to explain the performance drop',
+        ],
+        correctIndex: 2,
+        explanation: 'Diagnostic protocol for CPB spikes: (1) Context check — holiday week? Billing disruption? Recent campaign change? (2) Check creative frequency (if high, creative fatigue). (3) Run Post-Andromeda duplicate protocol — 50/50 shot, low risk. (4) Wait 48 hours. (5) If still elevated → escalate to full creative refresh. Never jump straight to creative refresh or budget changes without diagnosing first.',
+      },
+      {
+        question: 'After a successful cycle, what are the three revenue-generating actions you must always take?',
+        options: [
+          'Invoice → rest → prepare next cycle brief',
+          'Request a written or video testimonial + ask for referrals + propose renewal proactively 5–7 days before cycle end',
+          'Offer 10% discount on next cycle + send a Loom recap + wait for client to confirm',
+          'Post to #ops-manager-discussion + add to Client Check-In Sheet + email Jonathan',
+        ],
+        correctIndex: 1,
+        explanation: 'After every successful cycle: (1) Request testimonial — written or video. (2) Ask if they know other contractors who\'d benefit (referral). (3) Propose renewal 5–7 days early. If CPB is healthy, suggest increasing ad spend. These three actions compound revenue. Skipping them leaves money on the table every cycle.',
+      },
+    ],
+  },
+  {
+    id: 13,
+    slug: 'onboarding-call-mastery',
+    title: 'Onboarding Call Mastery',
+    subtitle: 'Pre-call prep, asset gathering, and post-call execution',
+    estimatedTime: '10 min',
+    icon: 'Phone',
+    quiz: [
+      {
+        question: 'When must you send the pre-onboarding checklist email AND GHL follow-up text to a new client?',
+        options: [
+          'On the day of the onboarding call, 1 hour before',
+          '24 hours before the call — assets on Day 1 = faster launch = faster cashflow',
+          '48 hours before the call',
+          'After the onboarding call once you know what they need',
+        ],
+        correctIndex: 1,
+        explanation: 'Send the pre-onboarding checklist email AND a follow-up text via GHL 24 hours before the call. Assets on Day 1 = faster launch = faster cashflow. Chasing assets post-call is a week of delays and a poor first impression.',
+      },
+      {
+        question: 'A client tells you during the onboarding call that their ad spend will be $3,500/month, but the signed contract says $4,000. What do you do?',
+        options: [
+          'Launch at $3,500 — the client knows their budget',
+          'Accept $3,500 and note the discrepancy in the ClickUp task',
+          'Escalate to Jonathan before launch — the ad spend must match the signed contract exactly',
+          'Split the difference and launch at $3,750',
+        ],
+        correctIndex: 2,
+        explanation: 'The daily ad spend must match the signed contract exactly. If there is any discrepancy on the call, escalate to Jonathan before launch — do not make unilateral decisions about spend. Launching at the wrong spend creates billing errors and contractual issues.',
+      },
+      {
+        question: 'A client doesn\'t have a Facebook Business Manager. What do you do?',
+        options: [
+          'Create one for them — it\'s faster and more reliable',
+          'Create a temporary BM under the agency account until they set one up',
+          'Guide them to create their own BM. Never create a BM for a client — legal liability.',
+          'Ask Emmanuel to create it via ClickUp',
+        ],
+        correctIndex: 2,
+        explanation: 'NEVER create a Facebook Business Manager for a client. BMs must be owned by the client — not the agency. Legal liability. If they don\'t have one, guide them step-by-step to create it themselves. If their page isn\'t in a BM: client → Page Settings → Page Access → add you individually with "Run Ads" permission.',
+      },
+      {
+        question: 'What is the KRS / Gutter Shutter franchise rate, and when do you check for it?',
+        options: [
+          '$4,000/cycle — same as all other clients',
+          '$3,300/cycle — check the closer call notes before every onboarding call',
+          '$2,500/cycle — check after the first call',
+          '$5,000/cycle — premium franchise rate',
+        ],
+        correctIndex: 1,
+        explanation: 'Klaus Roofing Systems (KRS) and Gutter Shutter franchise partners have a retainer rate of $3,300/cycle — not $4,000. Always check the closer call notes before every onboarding call. Billing a franchise client at the wrong rate is a contractual violation.',
+      },
+      {
+        question: 'It\'s 30 minutes after your onboarding call ends. What should already be posted to Slack?',
+        options: [
+          'Nothing yet — do the Slack post as part of the 1-hour window',
+          'A quick "call done" message in #internal-team',
+          'The structured Custom GPT summary (from Fathom transcript) posted to #post-onboarding-discussion',
+          'A Loom video walkthrough of the call highlights',
+        ],
+        correctIndex: 2,
+        explanation: 'Within 30 minutes of call end: post the structured Custom GPT summary to #post-onboarding-discussion. The flow is: Fathom transcript → paste into Custom GPT → structured summary → post. This keeps Jonathan and the team looped in immediately. By 30 minutes, this should already be done.',
+      },
+      {
+        question: 'During the onboarding call, a client says they\'re available for appointments "most days." What do you do?',
+        options: [
+          'Log "most days" in the Account Specific Document',
+          'Get exact availability: which days, which hours, and how much advance notice they need before a booking',
+          'Tell VAs to schedule Monday–Friday 9am–5pm by default',
+          'Ask Jonathan to follow up for scheduling details',
+        ],
+        correctIndex: 1,
+        explanation: '"Most days" is not specific enough. You need exact days, exact hours, and advance notice required before a booking. VAs book directly into the client\'s calendar — vague availability = missed bookings and unhappy clients. Pin it down on the call.',
+      },
+      {
+        question: 'CASE STUDY: Your onboarding call just ended at 11am. By noon you\'ve posted the Custom GPT summary. By 11:45am you\'ve texted the client. It\'s now 12:15pm and you still haven\'t created the ClickUp task for Emmanuel. Is this acceptable?',
+        options: [
+          'Yes — you have until end of business day',
+          'Yes — within 1 hour means 1 hour from the last action',
+          'No — the ClickUp task to Emmanuel must be assigned within 1 hour of the call ending, meaning by noon',
+          'No, but within 2 hours is acceptable if you were handling the Slack post',
+        ],
+        correctIndex: 2,
+        explanation: 'Within 1 hour of the call means 1 hour from when the call ended — in this case, noon. It\'s 12:15pm and the ClickUp task isn\'t done. This is a protocol violation. The task to Emmanuel (with client name, GHL sub-account link, 48hr deadline) must be submitted within that 1-hour window, no exceptions.',
+      },
+      {
+        question: 'What is the Account Specific Document, and what happens if it\'s outdated?',
+        options: [
+          'A ClickUp template for account setups — if outdated, just update ClickUp',
+          'A document VAs use on every call containing service area, Q&A, hours, calendar link, and client details — if outdated, VAs give wrong information to homeowners, increasing no-shows and OSA rate',
+          'A sales document for the closer team — only relevant pre-close',
+          'A backup copy of the GHL sub-account settings',
+        ],
+        correctIndex: 1,
+        explanation: 'The Account Specific Document is the bible VAs use on every call. It contains service area (zip codes), hours, services, Q&A, calendar link, and communication notes. An outdated document = VAs giving wrong information to homeowners. When anything changes (service area, hours, pricing), update immediately and notify Leila so VAs are rebriefed.',
+      },
+    ],
+  },
 ];
 
 export const SECTION_SEARCH_INDEX = SECTIONS.map((s) => ({

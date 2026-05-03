@@ -14,6 +14,8 @@ import { S08_MetricsHierarchy } from '@/components/Sections/S08_MetricsHierarchy
 import { S09_KPIPlaybook } from '@/components/Sections/S09_KPIPlaybook';
 import { S10_CulturePerformance } from '@/components/Sections/S10_CulturePerformance';
 import { S11_ToolsSystems } from '@/components/Sections/S11_ToolsSystems';
+import { S12_AccountManagement } from '@/components/Sections/S12_AccountManagement';
+import { S13_OnboardingCallMastery } from '@/components/Sections/S13_OnboardingCallMastery';
 
 const SECTION_MAP: Record<number, React.FC> = {
   1: S01_CompanyVision,
@@ -27,6 +29,8 @@ const SECTION_MAP: Record<number, React.FC> = {
   9: S09_KPIPlaybook,
   10: S10_CulturePerformance,
   11: S11_ToolsSystems,
+  12: S12_AccountManagement,
+  13: S13_OnboardingCallMastery,
 };
 
 function MainContent() {

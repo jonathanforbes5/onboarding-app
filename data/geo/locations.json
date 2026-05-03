@@ -1,0 +1,618 @@
+{
+  "Akron, OH": {
+    "lat": 41.083064,
+    "lng": -81.518485
+  },
+  "Arizona": {
+    "lat": 34.395342,
+    "lng": -111.763275
+  },
+  "Arkansas": {
+    "lat": 35.2048883,
+    "lng": -92.4479108
+  },
+  "Atlanta": {
+    "lat": 33.7544657,
+    "lng": -84.3898151
+  },
+  "Atlanta, GA": {
+    "lat": 33.7544657,
+    "lng": -84.3898151
+  },
+  "Auburn, MA": {
+    "lat": 42.1945465,
+    "lng": -71.8358095
+  },
+  "Aurora, CO": {
+    "lat": 39.7405111,
+    "lng": -104.830994
+  },
+  "Austin, TX": {
+    "lat": 30.2711286,
+    "lng": -97.7436995
+  },
+  "Belleville, NJ": {
+    "lat": 40.7937116,
+    "lng": -74.1501438
+  },
+  "Bismarck, AR": {
+    "lat": 34.3162035,
+    "lng": -93.1707339
+  },
+  "Boise, ID": {
+    "lat": 43.6166163,
+    "lng": -116.200886
+  },
+  "Boston, MA": {
+    "lat": 42.3588336,
+    "lng": -71.0578303
+  },
+  "Bradenton, FL": {
+    "lat": 27.4989278,
+    "lng": -82.5748194
+  },
+  "Branford, Connecticut": {
+    "lat": 41.2795414,
+    "lng": -72.8150989
+  },
+  "Broward County / Miami, FL": {
+    "lat": 25.7889875,
+    "lng": -80.2092149
+  },
+  "Buffalo, NY": {
+    "lat": 42.8864163,
+    "lng": -78.8781493
+  },
+  "Capitola, California": {
+    "lat": 36.9762927,
+    "lng": -121.954057
+  },
+  "Central Alabama": {
+    "lat": 32.6823521,
+    "lng": -86.0974659
+  },
+  "Central FL": {
+    "lat": 28.5428195,
+    "lng": -81.3789214
+  },
+  "Central Florida": {
+    "lat": 28.599591,
+    "lng": -81.1971284
+  },
+  "Central Maryland": {
+    "lat": 39.3024296,
+    "lng": -76.6230322
+  },
+  "Central Valley, CA": {
+    "lat": 38.0,
+    "lng": -121.4
+  },
+  "Charleston, SC": {
+    "lat": 32.7884363,
+    "lng": -79.9399309
+  },
+  "Charlotte, NC": {
+    "lat": 35.2272086,
+    "lng": -80.8430827
+  },
+  "Chicago market": {
+    "lat": 38.5915328,
+    "lng": -90.2517581
+  },
+  "Chicago, IL": {
+    "lat": 41.8755616,
+    "lng": -87.6244212
+  },
+  "Chicagoland, IL": {
+    "lat": 41.8755506,
+    "lng": -87.6244372
+  },
+  "Cincinnati, OH": {
+    "lat": 39.1014537,
+    "lng": -84.5124602
+  },
+  "Clarksville, TN": {
+    "lat": 36.5277607,
+    "lng": -87.3588703
+  },
+  "Clearwater, FL": {
+    "lat": 27.9658533,
+    "lng": -82.8001026
+  },
+  "Colorado Springs, CO": {
+    "lat": 38.8339578,
+    "lng": -104.825348
+  },
+  "Columbus, OH": {
+    "lat": 39.9622601,
+    "lng": -83.0007065
+  },
+  "Columbus, Ohio": {
+    "lat": 39.9622601,
+    "lng": -83.0007065
+  },
+  "Connecticut": {
+    "lat": 41.6500201,
+    "lng": -72.7342163
+  },
+  "Cumming, GA": {
+    "lat": 34.2073196,
+    "lng": -84.1401926
+  },
+  "DFW, TX": {
+    "lat": 32.8965195,
+    "lng": -97.0465221
+  },
+  "Dallas, TX": {
+    "lat": 32.7762719,
+    "lng": -96.7968559
+  },
+  "Denver": {
+    "lat": 39.7392364,
+    "lng": -104.984862
+  },
+  "Denver Metro, CO": {
+    "lat": 39.714955,
+    "lng": -104.9841523
+  },
+  "Denver, CO": {
+    "lat": 39.7392364,
+    "lng": -104.984862
+  },
+  "Douglasville, GA": {
+    "lat": 33.7514966,
+    "lng": -84.7477136
+  },
+  "Eugene, OR": {
+    "lat": 44.0505054,
+    "lng": -123.0950506
+  },
+  "FL": {
+    "lat": 27.7567667,
+    "lng": -81.4639835
+  },
+  "Fairfax, VA": {
+    "lat": 38.8462236,
+    "lng": -77.3063733
+  },
+  "Fargo-Moorhead": {
+    "lat": 46.8898259,
+    "lng": -96.7743832
+  },
+  "Flint, MI": {
+    "lat": 43.0161693,
+    "lng": -83.6900211
+  },
+  "Florida": {
+    "lat": 27.7567667,
+    "lng": -81.4639835
+  },
+  "Fort Lauderdale, FL": {
+    "lat": 26.1223084,
+    "lng": -80.1433786
+  },
+  "Fort Myers, FL": {
+    "lat": 26.640628,
+    "lng": -81.8723084
+  },
+  "Fresno, CA": {
+    "lat": 36.7394421,
+    "lng": -119.78483
+  },
+  "Georgia": {
+    "lat": 32.3293809,
+    "lng": -83.1137366
+  },
+  "Georgia & North Carolina": {
+    "lat": 34.8131996,
+    "lng": -78.8234742
+  },
+  "Georgia + South Carolina": {
+    "lat": 33.5015248,
+    "lng": -81.9678931
+  },
+  "Gibsonton, FL": {
+    "lat": 27.8497857,
+    "lng": -82.3817515
+  },
+  "Glendale, AZ": {
+    "lat": 33.5386858,
+    "lng": -112.185994
+  },
+  "Hemet, CA": {
+    "lat": 33.7475203,
+    "lng": -116.9719684
+  },
+  "Hill Country, TX": {
+    "lat": 29.5824497,
+    "lng": -98.4908512
+  },
+  "Houston, TX": {
+    "lat": 29.7589382,
+    "lng": -95.3676974
+  },
+  "Indiana": {
+    "lat": 40.3270127,
+    "lng": -86.1746933
+  },
+  "Jacksonville, FL": {
+    "lat": 30.3262247,
+    "lng": -81.6579179
+  },
+  "Kansas City, MO": {
+    "lat": 39.100105,
+    "lng": -94.5781416
+  },
+  "Kentucky": {
+    "lat": 37.5726028,
+    "lng": -85.1551411
+  },
+  "LA, CA": {
+    "lat": 34.0536909,
+    "lng": -118.242766
+  },
+  "Las Vegas, NV": {
+    "lat": 36.1674263,
+    "lng": -115.1484131
+  },
+  "Lee Summit, MO": {
+    "lat": 38.9107156,
+    "lng": -94.3821295
+  },
+  "Lee-Collier County": {
+    "lat": 25.9493192,
+    "lng": -81.3630101
+  },
+  "Lincoln, NE": {
+    "lat": 40.8088861,
+    "lng": -96.7077751
+  },
+  "London, ON": {
+    "lat": 39.625602,
+    "lng": -85.9202594
+  },
+  "Long Beach, CA": {
+    "lat": 33.7690164,
+    "lng": -118.191604
+  },
+  "Longwood, FL": {
+    "lat": 28.7012172,
+    "lng": -81.3461738
+  },
+  "Louisana": {
+    "lat": 29.9230819,
+    "lng": -94.0181218
+  },
+  "MO": {
+    "lat": 38.7604815,
+    "lng": -92.5617875
+  },
+  "Maine": {
+    "lat": 45.709097,
+    "lng": -68.8590201
+  },
+  "Massachusetts": {
+    "lat": 42.3788774,
+    "lng": -72.032366
+  },
+  "Miami, FL": {
+    "lat": 25.7741566,
+    "lng": -80.1935973
+  },
+  "Miami-Dade County, FLORIDA": {
+    "lat": 25.6364246,
+    "lng": -80.4989467
+  },
+  "Middleborough, MA": {
+    "lat": 41.8931576,
+    "lng": -70.9111517
+  },
+  "Minneapolis, MN": {
+    "lat": 44.9772995,
+    "lng": -93.2654692
+  },
+  "Missouri": {
+    "lat": 38.7604815,
+    "lng": -92.5617875
+  },
+  "NJ": {
+    "lat": 40.0757384,
+    "lng": -74.4041622
+  },
+  "NJ/PA/DE": {
+    "lat": 40.0107742,
+    "lng": -75.0420323
+  },
+  "NW Arkansas": {
+    "lat": 36.0740389,
+    "lng": -94.1893727
+  },
+  "NY": {
+    "lat": 43.1561681,
+    "lng": -75.8449946
+  },
+  "Nashua, NH": {
+    "lat": 42.7656251,
+    "lng": -71.4677032
+  },
+  "Nashville": {
+    "lat": 36.1622767,
+    "lng": -86.7742984
+  },
+  "Nashville, TN": {
+    "lat": 36.1622767,
+    "lng": -86.7742984
+  },
+  "Nebraska": {
+    "lat": 41.7370229,
+    "lng": -99.5873816
+  },
+  "New Jersey": {
+    "lat": 40.0757384,
+    "lng": -74.4041622
+  },
+  "New Orleans, LA": {
+    "lat": 29.9561422,
+    "lng": -90.0733934
+  },
+  "New York": {
+    "lat": 40.7127281,
+    "lng": -74.0060152
+  },
+  "Newark, DE": {
+    "lat": 39.6828358,
+    "lng": -75.7515682
+  },
+  "Norfolk, VA": {
+    "lat": 36.8493695,
+    "lng": -76.2899539
+  },
+  "North Carolina": {
+    "lat": 35.6729639,
+    "lng": -79.0392919
+  },
+  "North Dakota": {
+    "lat": 47.6201461,
+    "lng": -100.540737
+  },
+  "North Ohio": {
+    "lat": 33.5864665,
+    "lng": -112.2693947
+  },
+  "North-west Wisconsin": {
+    "lat": 43.0607114,
+    "lng": -87.9368657
+  },
+  "Northern Virginia, VA": {
+    "lat": 38.8408718,
+    "lng": -77.1144703
+  },
+  "OKC, Oklahoma": {
+    "lat": 35.3848053,
+    "lng": -97.6053443
+  },
+  "Oklahoma City, OK": {
+    "lat": 35.4729886,
+    "lng": -97.5170536
+  },
+  "Oregon": {
+    "lat": 43.9792797,
+    "lng": -120.737257
+  },
+  "Orlando FL": {
+    "lat": 28.5479786,
+    "lng": -81.4127842
+  },
+  "Orlando, FL": {
+    "lat": 28.5421218,
+    "lng": -81.379045
+  },
+  "Palm FL": {
+    "lat": 26.6423668,
+    "lng": -80.0561423
+  },
+  "Paramus, NJ": {
+    "lat": 40.9452911,
+    "lng": -74.0735899
+  },
+  "Philadelphia, PA": {
+    "lat": 39.9527237,
+    "lng": -75.1635262
+  },
+  "Phoenix, AZ": {
+    "lat": 33.4484367,
+    "lng": -112.074141
+  },
+  "Pickerington, OH": {
+    "lat": 39.8842304,
+    "lng": -82.7535049
+  },
+  "Pinellas County, FL": {
+    "lat": 27.8778904,
+    "lng": -82.7329309
+  },
+  "Pittsburgh, PA": {
+    "lat": 40.4406968,
+    "lng": -80.0025666
+  },
+  "Portland, OR": {
+    "lat": 45.5202471,
+    "lng": -122.674194
+  },
+  "Quad Cities": {
+    "lat": 41.5139197,
+    "lng": -90.492917
+  },
+  "Raleigh / Triangle, NC": {
+    "lat": 35.8610445,
+    "lng": -78.7117482
+  },
+  "Raleigh, NC": {
+    "lat": 35.7803977,
+    "lng": -78.6390989
+  },
+  "Richmond": {
+    "lat": 37.5385087,
+    "lng": -77.43428
+  },
+  "Rochester, NY": {
+    "lat": 43.157285,
+    "lng": -77.615214
+  },
+  "Rockaway, NJ": {
+    "lat": 40.9012101,
+    "lng": -74.5143232
+  },
+  "SE Nebraska": {
+    "lat": 46.72066,
+    "lng": -117.1795969
+  },
+  "SEATTLE, WA": {
+    "lat": 47.6038321,
+    "lng": -122.330062
+  },
+  "ST LOUIS COUNTY": {
+    "lat": 38.6398744,
+    "lng": -90.5188128
+  },
+  "Salem, NC": {
+    "lat": 35.6996425,
+    "lng": -81.6914551
+  },
+  "Salt Lake City, UT": {
+    "lat": 40.7596198,
+    "lng": -111.886797
+  },
+  "San Diego, CA": {
+    "lat": 32.7174202,
+    "lng": -117.162772
+  },
+  "Seattle, WA": {
+    "lat": 47.6038321,
+    "lng": -122.330062
+  },
+  "Smithton, PA": {
+    "lat": 40.1539613,
+    "lng": -79.7411535
+  },
+  "South Carolina": {
+    "lat": 33.6874388,
+    "lng": -80.4363743
+  },
+  "South FL": {
+    "lat": 43.9296783,
+    "lng": -108.0037064
+  },
+  "South Florida": {
+    "lat": 37.1670484,
+    "lng": -94.8463851
+  },
+  "Southern New Hampshire": {
+    "lat": 43.0374605,
+    "lng": -71.4478392
+  },
+  "Southwest FL": {
+    "lat": 26.0664709,
+    "lng": -80.4159695
+  },
+  "Southwest Florida": {
+    "lat": 26.0664709,
+    "lng": -80.4159695
+  },
+  "Space Coast FL": {
+    "lat": 29.602534,
+    "lng": -81.2847758
+  },
+  "Spokane, WA": {
+    "lat": 47.6571934,
+    "lng": -117.42351
+  },
+  "Sylvester, GA": {
+    "lat": 31.5261739,
+    "lng": -83.8365961
+  },
+  "Tampa, FL": {
+    "lat": 27.9449854,
+    "lng": -82.4583107
+  },
+  "Tampa/St Pete FL": {
+    "lat": 27.7386758,
+    "lng": -82.7495686
+  },
+  "Tennessee": {
+    "lat": 35.7730076,
+    "lng": -86.2820081
+  },
+  "Texas City, TX": {
+    "lat": 29.396013,
+    "lng": -94.9175485
+  },
+  "Texas Hill Country": {
+    "lat": 29.4760877,
+    "lng": -98.7454759
+  },
+  "Tinley Park, IL": {
+    "lat": 41.5733669,
+    "lng": -87.7844944
+  },
+  "Toronto": {
+    "lat": 41.9048584,
+    "lng": -90.8640346
+  },
+  "Toronto, ON": {
+    "lat": 39.7594645,
+    "lng": -87.5011149
+  },
+  "Tucson, AZ": {
+    "lat": 32.2228765,
+    "lng": -110.974847
+  },
+  "Tulsa, OK": {
+    "lat": 36.1563122,
+    "lng": -95.9927516
+  },
+  "Virginia": {
+    "lat": 37.1232245,
+    "lng": -78.4927721
+  },
+  "Virginia Beach, VA": {
+    "lat": 36.8496579,
+    "lng": -75.9760751
+  },
+  "Washington State": {
+    "lat": 47.2868352,
+    "lng": -120.212613
+  },
+  "Waterbury, CT": {
+    "lat": 41.5538091,
+    "lng": -73.0438362
+  },
+  "West Virginia": {
+    "lat": 38.4758406,
+    "lng": -80.8408415
+  },
+  "Western CT": {
+    "lat": 34.700962,
+    "lng": -92.3368343
+  },
+  "Westport, CT": {
+    "lat": 41.1414855,
+    "lng": -73.3578955
+  },
+  "Wichita, KS": {
+    "lat": 37.6922361,
+    "lng": -97.3375448
+  },
+  "Willamette Valley, OR": {
+    "lat": 44.9086731,
+    "lng": -123.0022929
+  },
+  "Woodinville, WA": {
+    "lat": 47.7545827,
+    "lng": -122.1588902
+  },
+  "massachusetts": {
+    "lat": 42.3788774,
+    "lng": -72.032366
+  }
+}

@@ -3,6 +3,7 @@ import React from 'react';
 import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox } from '@/components/UI/Card';
 import { OrgChart } from '@/components/Diagrams/OrgChart';
+import { ClientMap } from '@/components/Diagrams/ClientMap';
 
 const PODS = [
   { label: 'Pod 1', managers: 'Gianmarco & Gregory', started: 'Mar 3, 2026', clients: '20–30', isYou: false },
@@ -77,6 +78,14 @@ export function S07_OrgStructure() {
         <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Company Structure</h3>
         <Card border>
           <OrgChart />
+        </Card>
+      </div>
+
+      {/* Client map */}
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Where Our Clients Are</h3>
+        <Card border>
+          <ClientMap />
         </Card>
       </div>
 

@@ -7,15 +7,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 const USERS = [
-  { email: 'jonathan@roofignite.com', display_name: 'Jonathan', role: 'super_admin', user_key: 'jonathan' },
-  { email: 'oscar@roofignite.com',    display_name: 'Oscar',    role: 'super_admin', user_key: 'oscar' },
-  { email: 'mani@roofignite.com',     display_name: 'Mani',     role: 'super_admin', user_key: 'mani' },
-  { email: 'cole@roofignite.com',     display_name: 'Cole',     role: 'super_admin', user_key: 'cole' },
-  { email: 'tyler@roofignite.com',    display_name: 'Tyler',    role: 'user',        user_key: 'tyler' },
-  { email: 'sam@roofignite.com',      display_name: 'Sam',      role: 'user',        user_key: 'sam' },
-  { email: 'ksenia@roofignite.com',   display_name: 'Ksenia',   role: 'user',        user_key: 'ksenia' },
-  { email: 'adeen@roofignite.com',    display_name: 'Adeen',    role: 'user',        user_key: 'adeen' },
-  { email: 'patrick@roofignite.com',  display_name: 'Patrick',  role: 'user',        user_key: 'patrick' },
+  { email: 'jonathan@roofignite.com',  display_name: 'Jonathan',  role: 'super_admin', user_key: 'jonathan' },
+  { email: 'oscar@roofignite.com',     display_name: 'Oscar',     role: 'super_admin', user_key: 'oscar' },
+  { email: 'mani@roofignite.com',      display_name: 'Mani',      role: 'super_admin', user_key: 'mani' },
+  { email: 'cole@roofignite.com',      display_name: 'Cole',      role: 'super_admin', user_key: 'cole' },
+  { email: 'tyler@roofignite.com',     display_name: 'Tyler',     role: 'user',        user_key: 'tyler' },
+  { email: 'sam@roofignite.com',       display_name: 'Sam',       role: 'user',        user_key: 'sam' },
+  { email: 'ksenia@roofignite.com',    display_name: 'Ksenia',    role: 'user',        user_key: 'ksenia' },
+  { email: 'adeen@roofignite.com',     display_name: 'Adeen',     role: 'user',        user_key: 'adeen' },
+  { email: 'patrick@roofignite.com',   display_name: 'Patrick',   role: 'user',        user_key: 'patrick' },
+  { email: 'gianmarco@roofignite.com', display_name: 'Gianmarco', role: 'user',        user_key: 'gianmarco' },
+  { email: 'gregory@roofignite.com',   display_name: 'Gregory',   role: 'user',        user_key: 'gregory' },
+  { email: 'kyle@roofignite.com',      display_name: 'Kyle',      role: 'user',        user_key: 'kyle' },
+  { email: 'abdullah@roofignite.com',  display_name: 'Abdullah',  role: 'user',        user_key: 'abdullah' },
 ];
 
 export async function GET(req: NextRequest) {

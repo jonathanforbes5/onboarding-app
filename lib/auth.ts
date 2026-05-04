@@ -28,15 +28,19 @@ export const USER_COLORS: Record<string, { bg: string; text: string }> = {
 // Static user list used for staging bypass (when Supabase is not configured).
 // Leadership roles: jonathan, oscar, mani. All others are pod managers (user).
 export const LOCAL_USERS: Record<string, UserProfile> = {
-  jonathan: { email: 'jonathan@roofignite.com', displayName: 'Jonathan', userKey: 'jonathan', role: 'super_admin' },
-  oscar:    { email: 'oscar@roofignite.com',     displayName: 'Oscar',   userKey: 'oscar',    role: 'super_admin' },
-  mani:     { email: 'mani@roofignite.com',      displayName: 'Mani',    userKey: 'mani',     role: 'super_admin' },
-  sam:      { email: 'sam@roofignite.com',        displayName: 'Sam',     userKey: 'sam',      role: 'user' },
-  cole:     { email: 'cole@roofignite.com',       displayName: 'Cole',    userKey: 'cole',     role: 'super_admin' },
-  tyler:    { email: 'tyler@roofignite.com',      displayName: 'Tyler',   userKey: 'tyler',    role: 'user' },
-  ksenia:   { email: 'ksenia@roofignite.com',     displayName: 'Ksenia',  userKey: 'ksenia',   role: 'user' },
-  adeen:    { email: 'adeen@roofignite.com',      displayName: 'Adeen',   userKey: 'adeen',    role: 'user' },
-  patrick:  { email: 'patrick@roofignite.com',    displayName: 'Patrick', userKey: 'patrick',  role: 'user' },
+  jonathan:  { email: 'jonathan@roofignite.com',  displayName: 'Jonathan',  userKey: 'jonathan',  role: 'super_admin' },
+  oscar:     { email: 'oscar@roofignite.com',     displayName: 'Oscar',     userKey: 'oscar',     role: 'super_admin' },
+  mani:      { email: 'mani@roofignite.com',      displayName: 'Mani',      userKey: 'mani',      role: 'super_admin' },
+  cole:      { email: 'cole@roofignite.com',      displayName: 'Cole',      userKey: 'cole',      role: 'super_admin' },
+  sam:       { email: 'sam@roofignite.com',       displayName: 'Sam',       userKey: 'sam',       role: 'user' },
+  tyler:     { email: 'tyler@roofignite.com',     displayName: 'Tyler',     userKey: 'tyler',     role: 'user' },
+  ksenia:    { email: 'ksenia@roofignite.com',    displayName: 'Ksenia',    userKey: 'ksenia',    role: 'user' },
+  adeen:     { email: 'adeen@roofignite.com',     displayName: 'Adeen',     userKey: 'adeen',     role: 'user' },
+  patrick:   { email: 'patrick@roofignite.com',   displayName: 'Patrick',   userKey: 'patrick',   role: 'user' },
+  gianmarco: { email: 'gianmarco@roofignite.com', displayName: 'Gianmarco', userKey: 'gianmarco', role: 'user' },
+  gregory:   { email: 'gregory@roofignite.com',   displayName: 'Gregory',   userKey: 'gregory',   role: 'user' },
+  kyle:      { email: 'kyle@roofignite.com',      displayName: 'Kyle',      userKey: 'kyle',      role: 'user' },
+  abdullah:  { email: 'abdullah@roofignite.com',  displayName: 'Abdullah',  userKey: 'abdullah',  role: 'user' },
 };
 
 export function getUserColor(userKey: string) {

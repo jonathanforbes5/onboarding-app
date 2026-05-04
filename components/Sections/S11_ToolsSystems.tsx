@@ -4,6 +4,7 @@ import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox, BulletList } from '@/components/UI/Card';
 import { ExpandableCard } from '@/components/Interactive/ExpandableCard';
 import { SlackChannels } from '@/components/Diagrams/SlackChannels';
+import { LoomSlot } from '@/components/Diagrams/LoomSlot';
 
 const TOOLS = [
   { name: 'Slack', category: 'Communication', priority: 'Day 1', icon: '💬', desc: 'Primary communication hub. All internal comms, client updates, team coordination. Your lifeline.', fluency: 'Must be fluent' },
@@ -350,6 +351,30 @@ export function S11_ToolsSystems() {
         <Card border>
           <SlackChannels />
         </Card>
+      </div>
+
+      {/* ClickUp walkthrough */}
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Loom — How To Use ClickUp</h3>
+        <LoomSlot
+          slotKey="s13_clickup_walkthrough"
+          title="ClickUp walkthrough"
+          subtitle="How to task Emmanuel, Mervin, Bren, Ken — exact format every time"
+          recordedBy="Cole or Tyler"
+          length="—"
+        />
+      </div>
+
+      {/* Preferences setup */}
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Loom — Preferences Setup (GHL + Calendar)</h3>
+        <LoomSlot
+          slotKey="s13_preferences_setup"
+          title="Preferences walkthrough"
+          subtitle="Day-1 setup of your GHL preferences, calendar integration, and notification settings"
+          recordedBy="Oscar"
+          length="—"
+        />
       </div>
 
       {/* Glossary */}

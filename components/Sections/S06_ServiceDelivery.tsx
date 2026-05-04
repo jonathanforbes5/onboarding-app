@@ -3,6 +3,7 @@ import React from 'react';
 import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox, BulletList } from '@/components/UI/Card';
 import { ExpandableCard } from '@/components/Interactive/ExpandableCard';
+import { LoomSlot } from '@/components/Diagrams/LoomSlot';
 
 const PHASES = [
   { num: 1, label: 'Lead & Close',        owner: 'Sales team → pod assignment',         yours: false },
@@ -25,6 +26,21 @@ export function S06_ServiceDelivery() {
           close the cycle, and lock in renewal. Specialists support you — but <strong className="text-brand-yellow">every outcome is on you</strong>.
         </p>
       </Card>
+
+      {/* End-to-end customer journey walkthrough */}
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">End-to-End Customer Journey — Walkthrough</h3>
+        <p className="text-xs text-brand-gray mb-2">
+          Watch this BEFORE your first onboarding call. Oscar walks the full journey from B2B lead → sales call → close → handoff → onboarding → setup → cycle 1 → renewal → eventual offboarding. The whole picture in one pass.
+        </p>
+        <LoomSlot
+          slotKey="s06_customer_journey"
+          title="Customer Journey — Lead to Offboarding"
+          subtitle="The full pipeline from B2B lead in to client offboarding"
+          recordedBy="Oscar"
+          length="—"
+        />
+      </div>
 
       {/* Phase flow */}
       <div>

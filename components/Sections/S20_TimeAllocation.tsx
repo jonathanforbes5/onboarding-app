@@ -2,6 +2,7 @@
 import React from 'react';
 import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox } from '@/components/UI/Card';
+import { LoomSlot } from '@/components/Diagrams/LoomSlot';
 
 interface Task {
   task: string;
@@ -165,6 +166,17 @@ export function S20_TimeAllocation() {
         <Card border>
           <TaskTable items={POD_MANAGER_THINKING} ownerLabel="Owner" />
         </Card>
+      </div>
+
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Loom — How To Prep A Report Efficiently</h3>
+        <LoomSlot
+          slotKey="s20_report_prep"
+          title="Report prep walkthrough"
+          subtitle="The exact flow to assemble a pod-meeting or cycle-end report fast"
+          recordedBy="Cole or Tyler"
+          length="—"
+        />
       </div>
 
       <InfoBox type="info" title="Watch out for">

@@ -3,6 +3,7 @@ import React from 'react';
 import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox } from '@/components/UI/Card';
 import { RevenuePartnerScenarios } from '@/components/Diagrams/RevenuePartnerScenarios';
+import { LoomSlot } from '@/components/Diagrams/LoomSlot';
 
 const REVENUE_TIERS = [
   {
@@ -137,6 +138,17 @@ export function S16_RevenuePartnerMindset() {
         <Card border>
           <RevenuePartnerScenarios />
         </Card>
+      </div>
+
+      <div>
+        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">Loom — How To Approach A Client Call</h3>
+        <LoomSlot
+          slotKey="s16_approaching_client_calls"
+          title="Approaching client calls"
+          subtitle="Tone, framing, what to bring — the difference between a defensive call and a partner call"
+          recordedBy="Oscar"
+          length="—"
+        />
       </div>
 
       <InfoBox type="warning" title="The bar">

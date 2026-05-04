@@ -3,15 +3,19 @@ import { createClient } from '@supabase/supabase-js';
 
 // Source of truth for known users — if Supabase is missing a row, auto-insert from here
 const KNOWN_USERS: Record<string, { email: string; displayName: string; role: 'super_admin' | 'user' }> = {
-  jonathan: { email: 'jonathan@roofignite.com', displayName: 'Jonathan', role: 'super_admin' },
-  oscar:    { email: 'oscar@roofignite.com',    displayName: 'Oscar',    role: 'super_admin' },
-  mani:     { email: 'mani@roofignite.com',     displayName: 'Mani',     role: 'super_admin' },
-  cole:     { email: 'cole@roofignite.com',     displayName: 'Cole',     role: 'super_admin' },
-  sam:      { email: 'sam@roofignite.com',      displayName: 'Sam',      role: 'user' },
-  tyler:    { email: 'tyler@roofignite.com',    displayName: 'Tyler',    role: 'user' },
-  ksenia:   { email: 'ksenia@roofignite.com',   displayName: 'Ksenia',   role: 'user' },
-  adeen:    { email: 'adeen@roofignite.com',    displayName: 'Adeen',    role: 'user' },
-  patrick:  { email: 'patrick@roofignite.com',  displayName: 'Patrick',  role: 'user' },
+  jonathan:  { email: 'jonathan@roofignite.com',  displayName: 'Jonathan',  role: 'super_admin' },
+  oscar:     { email: 'oscar@roofignite.com',     displayName: 'Oscar',     role: 'super_admin' },
+  mani:      { email: 'mani@roofignite.com',      displayName: 'Mani',      role: 'super_admin' },
+  cole:      { email: 'cole@roofignite.com',      displayName: 'Cole',      role: 'super_admin' },
+  sam:       { email: 'sam@roofignite.com',       displayName: 'Sam',       role: 'user' },
+  tyler:     { email: 'tyler@roofignite.com',     displayName: 'Tyler',     role: 'user' },
+  ksenia:    { email: 'ksenia@roofignite.com',    displayName: 'Ksenia',    role: 'user' },
+  adeen:     { email: 'adeen@roofignite.com',     displayName: 'Adeen',     role: 'user' },
+  patrick:   { email: 'patrick@roofignite.com',   displayName: 'Patrick',   role: 'user' },
+  gianmarco: { email: 'gianmarco@roofignite.com', displayName: 'Gianmarco', role: 'user' },
+  gregory:   { email: 'gregory@roofignite.com',   displayName: 'Gregory',   role: 'user' },
+  kyle:      { email: 'kyle@roofignite.com',      displayName: 'Kyle',      role: 'user' },
+  abdullah:  { email: 'abdullah@roofignite.com',  displayName: 'Abdullah',  role: 'user' },
 };
 
 export async function GET(req: NextRequest) {

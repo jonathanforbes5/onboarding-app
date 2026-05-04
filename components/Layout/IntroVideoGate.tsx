@@ -24,11 +24,22 @@ function toEmbed(url: string) {
 
 export function IntroVideoGate() {
   const { currentUser } = useApp();
-  const url = (process.env.NEXT_PUBLIC_INTRO_VIDEO_URL as string | undefined) ?? FALLBACK_URL;
-  const isPlaceholder = url.includes('PLACEHOLDER');
+  const envUrl = (process.env.NEXT_PUBLIC_INTRO_VIDEO_URL as string | undefined);
 
+  const [remoteUrl, setRemoteUrl] = useState<string | null>(null);
   const [shown, setShown] = useState(false);
   const [secondsElapsed, setSecondsElapsed] = useState(0);
+
+  // Check media_links for an admin-set intro video — that takes priority over the env var.
+  useEffect(() => {
+    fetch('/api/media-links?slot=intro_video')
+      .then(r => r.ok ? r.json() : null)
+      .then(j => setRemoteUrl(j?.link?.url ?? null))
+      .catch(() => {});
+  }, []);
+
+  const url = remoteUrl ?? envUrl ?? FALLBACK_URL;
+  const isPlaceholder = url.includes('PLACEHOLDER');
 
   useEffect(() => {
     if (!currentUser) return;

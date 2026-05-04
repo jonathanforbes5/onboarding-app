@@ -22,6 +22,7 @@ import { S16_RevenuePartnerMindset } from '@/components/Sections/S16_RevenuePart
 import { S17_WeeklyRhythm } from '@/components/Sections/S17_WeeklyRhythm';
 import { S18_OtherDepartments } from '@/components/Sections/S18_OtherDepartments';
 import { S19_BrandPartners } from '@/components/Sections/S19_BrandPartners';
+import { S20_TimeAllocation } from '@/components/Sections/S20_TimeAllocation';
 
 const SECTION_MAP: Record<number, React.FC> = {
   1: S01_CompanyVision,
@@ -43,6 +44,7 @@ const SECTION_MAP: Record<number, React.FC> = {
   17: S17_WeeklyRhythm,
   18: S18_OtherDepartments,
   19: S19_BrandPartners,
+  20: S20_TimeAllocation,
 };
 
 function MainContent() {

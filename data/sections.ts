@@ -1538,6 +1538,60 @@ export const SECTIONS: SectionMeta[] = [
       },
     ],
   },
+  {
+    id: 20,
+    slug: 'time-allocation',
+    title: 'Time Allocation',
+    subtitle: 'How long each task should actually take',
+    estimatedTime: '6 min',
+    icon: 'Clock',
+    quiz: [
+      {
+        question: 'A media buyer says GHL setup will take 3 hours. What does that signal?',
+        options: [
+          'Normal — GHL setups are slow',
+          'Something is off. Standard is 30–60 min. 3 hrs = a process gap, missing assets, or a tool issue. Surface it.',
+          'They are being thorough',
+          'You should help them',
+        ],
+        correctIndex: 1,
+        explanation: 'GHL setup should be under an hour. If it\'s blowing past, the cause is usually missing assets, an A2P issue, or someone learning a new flow. Diagnose it — don\'t just absorb the delay into the cycle.',
+      },
+      {
+        question: 'A client asks for a recurring weekly meeting. What is the right response?',
+        options: [
+          'Schedule it — they are the customer',
+          'Decline politely. Set up an automated weekly report instead. Reserve synchronous time for accounts that need it.',
+          'Schedule it but only attend half the time',
+          'Have a VA take it',
+        ],
+        correctIndex: 1,
+        explanation: 'Recurring weekly client meetings scale terribly across 20–30 accounts. Auto-reports do the feel-good work without eating your week. Save your synchronous time for actual escalations.',
+      },
+      {
+        question: 'A client says "let\'s hop on a call" for a quick question. Default move?',
+        options: [
+          'Always say yes',
+          'Always say no',
+          'Nudge to text first ("happy to answer right now over Slack — what\'s the question?"). Calls only when the conversation actually needs it.',
+          'Schedule for next week',
+        ],
+        correctIndex: 2,
+        explanation: 'Text gives an immediate answer + a paper trail. Phone calls scale poorly. Nudge first, take the call when text legitimately won\'t work.',
+      },
+      {
+        question: 'You are getting consistent 60-min escalation calls with one client. What does that mean?',
+        options: [
+          'Their issues are deeper than usual',
+          'You are not closing them efficiently. Address the issue, plan the action, end the call. 30+ min is occasional — never a habit.',
+          'They need more attention',
+          'You should escalate to Jon',
+        ],
+        correctIndex: 1,
+        explanation: 'Some calls do stretch — that\'s fine occasionally. But with 20–30 accounts, recurring 60-min escalations are unsustainable. Be efficient: diagnose, plan the action, end the call. Long calls are usually a sign you\'re absorbing emotion instead of solving the problem.',
+      },
+    ],
+  },
 ];
 
 export const SECTION_SEARCH_INDEX = SECTIONS.map((s) => ({

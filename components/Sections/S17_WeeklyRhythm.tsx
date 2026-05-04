@@ -42,12 +42,14 @@ export function S17_WeeklyRhythm() {
         </p>
         <div className="space-y-3">
           <LoomSlot
+            slotKey="s17_cole_day"
             title="Cole&apos;s typical day"
             subtitle="Morning checks → account triage → specialist coordination"
             recordedBy="Cole"
             length="6:00"
           />
           <LoomSlot
+            slotKey="s17_tyler_day"
             title="Tyler&apos;s typical day"
             subtitle="How Tyler runs Pod 2 alongside Cole — different angle on the same job"
             recordedBy="Tyler"

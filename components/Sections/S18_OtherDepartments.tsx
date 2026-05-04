@@ -141,6 +141,7 @@ export function S18_OtherDepartments() {
               </div>
             </Card>
             <LoomSlot
+              slotKey={`s18_${d.id}`}
               title={`${d.name} — Day-in-the-life`}
               subtitle={`Recorded by ${d.recordedBy}`}
               recordedBy={d.recordedBy}

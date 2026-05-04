@@ -1,9 +1,12 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface LoomSlotProps {
-  /** Loom share or embed URL. When unset, shows a friendly placeholder. */
+  /** Loom share or embed URL. When unset, falls back to remote slotKey lookup, then placeholder. */
   url?: string;
+  /** Stable identifier — when set, fetches the URL from media_links table at runtime.
+   *  Lets admins paste new Looms via /admin without redeploying. */
+  slotKey?: string;
   title: string;
   subtitle?: string;
   recordedBy?: string;
@@ -18,8 +21,22 @@ function toEmbed(url: string) {
   return url;
 }
 
-export function LoomSlot({ url, title, subtitle, recordedBy, length }: LoomSlotProps) {
-  const filled = !!url && !url.includes('PLACEHOLDER');
+export function LoomSlot({ url, slotKey, title, subtitle, recordedBy, length }: LoomSlotProps) {
+  const [remoteUrl, setRemoteUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(!!slotKey && !url);
+
+  useEffect(() => {
+    if (!slotKey || url) { setLoading(false); return; }
+    let cancelled = false;
+    fetch(`/api/media-links?slot=${encodeURIComponent(slotKey)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(j => { if (!cancelled) { setRemoteUrl(j?.link?.url ?? null); setLoading(false); } })
+      .catch(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [slotKey, url]);
+
+  const effectiveUrl = url ?? remoteUrl ?? undefined;
+  const filled = !!effectiveUrl && !effectiveUrl.includes('PLACEHOLDER');
 
   return (
     <div className="rounded-xl overflow-hidden border" style={{ borderColor: filled ? '#F5C80055' : '#E5E7EB', backgroundColor: filled ? '#0A0A0A' : '#fafafa' }}>
@@ -43,7 +60,7 @@ export function LoomSlot({ url, title, subtitle, recordedBy, length }: LoomSlotP
       {filled ? (
         <div style={{ position: 'relative', paddingTop: '56.25%', backgroundColor: '#000' }}>
           <iframe
-            src={toEmbed(url!)}
+            src={toEmbed(effectiveUrl!)}
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
             allow="autoplay; fullscreen"
             allowFullScreen
@@ -52,9 +69,14 @@ export function LoomSlot({ url, title, subtitle, recordedBy, length }: LoomSlotP
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center text-center px-4 py-8 gap-1">
-          <div className="text-[10px] font-black uppercase tracking-widest text-brand-gray">Loom not yet recorded</div>
+          <div className="text-[10px] font-black uppercase tracking-widest text-brand-gray">
+            {loading ? 'Checking for Loom…' : 'Loom not yet recorded'}
+          </div>
           <div className="text-xs text-brand-gray max-w-md">
-            Placeholder — will go live once {recordedBy ?? 'the owner'} records it.
+            {loading
+              ? ' '
+              : <>Placeholder — admins can paste a URL via <span className="font-mono">/admin → Media Links</span>{slotKey ? <> (slot: <span className="font-mono">{slotKey}</span>)</> : null}.</>
+            }
           </div>
         </div>
       )}

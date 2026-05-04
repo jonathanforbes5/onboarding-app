@@ -389,7 +389,11 @@ function AskRIInsights() {
   const [searchLogs, setSearchLogs] = useState<SearchLog[]>([]);
   const [loading, setLoading]     = useState(true);
   const [expanded, setExpanded]   = useState<string | null>(null);
-  const [tab, setTab]             = useState<'questions' | 'corrections' | 'searches'>('questions');
+  const [tab, setTab]             = useState<'questions' | 'corrections' | 'searches' | 'media'>('questions');
+  const [mediaLinks, setMediaLinks] = useState<Record<string, { url: string; title?: string; updated_at?: string; updated_by?: string }>>({});
+  const [mediaForm,  setMediaForm]  = useState<{ slot_key: string; url: string; title: string }>({ slot_key: '', url: '', title: '' });
+  const [mediaSaving, setMediaSaving] = useState(false);
+  const [mediaMsg,    setMediaMsg]    = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -408,6 +412,50 @@ function AskRIInsights() {
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  const loadMedia = useCallback(async () => {
+    try {
+      const res = await fetch('/api/media-links');
+      if (res.ok) {
+        const j = await res.json();
+        setMediaLinks(j.links ?? {});
+      }
+    } catch {}
+  }, []);
+  useEffect(() => { loadMedia(); }, [loadMedia]);
+
+  async function saveMediaLink() {
+    if (!mediaForm.slot_key.trim() || !mediaForm.url.trim()) {
+      setMediaMsg('Slot key and URL are required.');
+      return;
+    }
+    setMediaSaving(true);
+    setMediaMsg(null);
+    try {
+      const res = await fetch('/api/media-links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...mediaForm, updated_by: 'admin' }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        setMediaMsg(`Error: ${j.error ?? 'unknown'}`);
+      } else {
+        setMediaMsg(`Saved: ${j.slot_key}`);
+        setMediaForm({ slot_key: '', url: '', title: '' });
+        await loadMedia();
+      }
+    } catch (e) {
+      setMediaMsg(`Error: ${String(e)}`);
+    }
+    setMediaSaving(false);
+  }
+
+  async function deleteMediaLink(slot: string) {
+    if (!confirm(`Remove the Loom for slot "${slot}"? The placeholder will reappear in its place.`)) return;
+    await fetch(`/api/media-links?slot=${encodeURIComponent(slot)}`, { method: 'DELETE' });
+    await loadMedia();
+  }
 
   async function toggleApproval(id: string, approved: boolean) {
     await fetch('/api/admin/chat-logs', {
@@ -496,6 +544,7 @@ function AskRIInsights() {
           { id: 'questions' as const,   label: `Chat Questions (${logs.length})` },
           { id: 'searches' as const,    label: `Search Queries (${searchLogs.length})` },
           { id: 'corrections' as const, label: `Corrections (${knowledge.length})` },
+          { id: 'media' as const,       label: `Media Links (${Object.keys(mediaLinks).length})` },
         ].map((t) => (
           <button
             key={t.id}
@@ -609,10 +658,42 @@ function AskRIInsights() {
           <>
             {searchLogs.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '30px 0', color: C.muted2, fontSize: 13 }}>
-                No search queries logged yet. Queries are recorded when someone clicks a result in the search bar.
+                No search queries logged yet. Queries are recorded as users type (debounced) and again when they click a result.
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
+                  <button
+                    onClick={() => {
+                      const headers = ['created_at', 'user_name', 'query', 'result_kind', 'result_title'];
+                      const escape = (s: any) => {
+                        const v = s == null ? '' : String(s);
+                        return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+                      };
+                      const rows = searchLogs.map((l: any) => [
+                        l.created_at, l.user_name, l.query, l.result_kind ?? '', l.result_title ?? '',
+                      ].map(escape).join(','));
+                      const csv = [headers.join(','), ...rows].join('\n');
+                      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `search-logs-${new Date().toISOString().slice(0, 10)}.csv`;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                      URL.revokeObjectURL(url);
+                    }}
+                    style={{
+                      backgroundColor: C.surf2, border: `1px solid ${C.border}`, color: C.text,
+                      borderRadius: 8, padding: '6px 12px', fontSize: 11, fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ⬇ Download CSV ({searchLogs.length} rows)
+                  </button>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {searchLogs.map((log) => {
                   const date = new Date(log.created_at).toLocaleDateString('en-US', {
                     month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
@@ -656,6 +737,7 @@ function AskRIInsights() {
                   );
                 })}
               </div>
+              </>
             )}
           </>
         )}
@@ -715,6 +797,98 @@ function AskRIInsights() {
               </div>
             )}
           </>
+        )}
+
+        {tab === 'media' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 12, padding: 14 }}>
+              <div style={{ color: C.text, fontSize: 13, fontWeight: 800, marginBottom: 8 }}>Add or update a Loom slot</div>
+              <div style={{ color: C.muted, fontSize: 11, marginBottom: 10, lineHeight: 1.5 }}>
+                Paste a Loom share URL. The placeholder for the matching slot key flips to a live embed within seconds — no redeploy needed.
+                <br />
+                Known slots: <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10 }}>intro_video, s17_cole_day, s17_tyler_day, s18_sales, s18_media-buying, s18_creative, s18_va, s18_finance, s18_ops</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: 8, alignItems: 'start' }}>
+                <input
+                  placeholder="slot_key (e.g. intro_video)"
+                  value={mediaForm.slot_key}
+                  onChange={(e) => setMediaForm((f) => ({ ...f, slot_key: e.target.value }))}
+                  style={{ padding: '8px 10px', borderRadius: 8, border: `1px solid ${C.border}`, backgroundColor: C.surf3, color: C.text, fontSize: 12, fontFamily: 'ui-monospace, monospace' }}
+                />
+                <input
+                  placeholder="https://www.loom.com/share/..."
+                  value={mediaForm.url}
+                  onChange={(e) => setMediaForm((f) => ({ ...f, url: e.target.value }))}
+                  style={{ padding: '8px 10px', borderRadius: 8, border: `1px solid ${C.border}`, backgroundColor: C.surf3, color: C.text, fontSize: 12 }}
+                />
+                <input
+                  placeholder="title (optional)"
+                  value={mediaForm.title}
+                  onChange={(e) => setMediaForm((f) => ({ ...f, title: e.target.value }))}
+                  style={{ gridColumn: '1 / span 2', padding: '8px 10px', borderRadius: 8, border: `1px solid ${C.border}`, backgroundColor: C.surf3, color: C.text, fontSize: 12 }}
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 10 }}>
+                <button
+                  onClick={saveMediaLink}
+                  disabled={mediaSaving}
+                  style={{
+                    padding: '7px 14px', borderRadius: 8, border: 'none',
+                    backgroundColor: '#F5C800', color: '#000', fontWeight: 800, fontSize: 12,
+                    cursor: mediaSaving ? 'not-allowed' : 'pointer', opacity: mediaSaving ? 0.6 : 1,
+                  }}
+                >
+                  {mediaSaving ? 'Saving…' : 'Save / update'}
+                </button>
+                {mediaMsg && <div style={{ color: mediaMsg.startsWith('Error') ? '#EF4444' : C.green, fontSize: 11 }}>{mediaMsg}</div>}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {Object.keys(mediaLinks).length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '24px 0', color: C.muted2, fontSize: 13 }}>
+                  No Loom slots populated yet. Use the form above to set the first one.
+                </div>
+              ) : Object.entries(mediaLinks).sort((a, b) => a[0].localeCompare(b[0])).map(([slot, info]: any) => (
+                <div key={slot} style={{
+                  backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 10,
+                  padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 12,
+                }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ color: C.text, fontSize: 12, fontWeight: 700, fontFamily: 'ui-monospace, monospace' }}>{slot}</div>
+                    {info.title && <div style={{ color: C.muted, fontSize: 11 }}>{info.title}</div>}
+                    <div style={{ color: C.muted2, fontSize: 10, marginTop: 2, wordBreak: 'break-all' }}>
+                      <a href={info.url} target="_blank" rel="noopener noreferrer" style={{ color: C.blue }}>{info.url}</a>
+                    </div>
+                    {info.updated_at && (
+                      <div style={{ color: C.muted2, fontSize: 9, marginTop: 2 }}>
+                        Updated {new Date(info.updated_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        {info.updated_by ? ` · by ${info.updated_by}` : ''}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setMediaForm({ slot_key: slot, url: info.url, title: info.title ?? '' })}
+                    style={{
+                      padding: '5px 10px', borderRadius: 6, border: `1px solid ${C.border}`,
+                      backgroundColor: C.surf3, color: C.text, fontSize: 10, fontWeight: 700, cursor: 'pointer',
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => deleteMediaLink(slot)}
+                    style={{
+                      padding: '5px 10px', borderRadius: 6, border: `1px solid #EF444444`,
+                      backgroundColor: '#2A0D0D', color: '#EF4444', fontSize: 10, fontWeight: 700, cursor: 'pointer',
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

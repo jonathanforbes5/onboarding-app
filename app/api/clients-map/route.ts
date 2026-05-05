@@ -67,7 +67,24 @@ export async function GET() {
 
   const token = process.env.AIRTABLE_TOKEN;
   if (!token) {
-    return NextResponse.json({ error: 'AIRTABLE_TOKEN not set' }, { status: 500 });
+    // Diagnostic: tell us *which* env vars made it to this function so we can pinpoint why
+    // AIRTABLE_TOKEN is missing while other vars (eg ANTHROPIC_API_KEY) are not.
+    const visibleKeys = Object.keys(process.env)
+      .filter((k) => /AIRTABLE|SUPABASE|ANTHROPIC|VERCEL/i.test(k))
+      .sort();
+    return NextResponse.json({
+      error: 'AIRTABLE_TOKEN not set',
+      diagnostic: {
+        VERCEL_ENV:    process.env.VERCEL_ENV ?? null,
+        VERCEL_REGION: process.env.VERCEL_REGION ?? null,
+        VERCEL_GIT_COMMIT_SHA: (process.env.VERCEL_GIT_COMMIT_SHA ?? '').slice(0, 7),
+        airtable_present_in_env: 'AIRTABLE_TOKEN' in process.env,
+        airtable_value_length: (process.env.AIRTABLE_TOKEN ?? '').length,
+        anthropic_value_length: (process.env.ANTHROPIC_API_KEY ?? '').length,
+        supabase_url_value_length: (process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').length,
+        relevantEnvKeys: visibleKeys,
+      },
+    }, { status: 500 });
   }
 
   try {

@@ -23,10 +23,10 @@ function toMiroEmbed(raw: string) {
     return `https://miro.com/app/live-embed/${boardMatch[1]}/?embedMode=view_only_without_ui`;
   }
 
-  // Public board share: https://miro.com/welcomeonboard/<token>
-  const welcomeMatch = raw.match(/miro\.com\/welcomeonboard\/([A-Za-z0-9_=-]+)/);
-  if (welcomeMatch) {
-    return `https://miro.com/app/live-embed/${welcomeMatch[1]}/?embedMode=view_only_without_ui`;
+  // welcomeonboard tokens are NOT board IDs — they're invite tokens. Embedding
+  // them produces a broken iframe. Tell the user to paste the embed URL instead.
+  if (/miro\.com\/welcomeonboard\//.test(raw)) {
+    return 'about:blank#welcomeonboard-not-supported';
   }
 
   // Fallback — pass through, in case Oscar pasted an embed URL we don't recognise
@@ -73,15 +73,29 @@ export function MiroBoard({ url, slotKey, title, subtitle, caption }: MiroBoardP
         </div>
       </div>
       {filled ? (
-        <div style={{ position: 'relative', paddingTop: '62%', backgroundColor: '#000' }}>
-          <iframe
-            src={toMiroEmbed(effectiveUrl!)}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
-            allow="fullscreen; clipboard-read; clipboard-write"
-            allowFullScreen
-            title={title}
-          />
-        </div>
+        toMiroEmbed(effectiveUrl!) === 'about:blank#welcomeonboard-not-supported' ? (
+          <div className="px-4 py-8 text-center text-xs text-brand-gray space-y-2">
+            <div className="font-black uppercase tracking-widest text-brand-black">welcomeonboard URL not embeddable</div>
+            <div className="max-w-md mx-auto leading-relaxed">
+              In Miro: <strong>Share</strong> (top right) → <strong>Embed</strong> tab → copy the iframe <span className="font-mono">src=</span> URL
+              (it starts with <span className="font-mono">https://miro.com/app/live-embed/...</span>) and paste THAT into{' '}
+              <span className="font-mono">/admin → Media Links → s06_miro_journey</span>.
+            </div>
+            <a href={effectiveUrl} target="_blank" rel="noopener noreferrer" className="inline-block underline font-bold text-brand-black mt-2">
+              Open the board in Miro ↗
+            </a>
+          </div>
+        ) : (
+          <div style={{ position: 'relative', paddingTop: '62%', backgroundColor: '#000' }}>
+            <iframe
+              src={toMiroEmbed(effectiveUrl!)}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
+              allow="fullscreen; clipboard-read; clipboard-write"
+              allowFullScreen
+              title={title}
+            />
+          </div>
+        )
       ) : (
         <div className="flex flex-col items-center justify-center text-center px-4 py-10 gap-1.5">
           <div className="text-[10px] font-black uppercase tracking-widest text-brand-gray">

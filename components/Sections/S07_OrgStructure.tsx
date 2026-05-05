@@ -4,6 +4,7 @@ import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox } from '@/components/UI/Card';
 import { OrgChart } from '@/components/Diagrams/OrgChart';
 import { ClientMap } from '@/components/Diagrams/ClientMap';
+import { useApp } from '@/context/AppContext';
 
 const PODS = [
   { label: 'Pod 1', managers: 'Gianmarco & Gregory', started: 'Mar 3, 2026', clients: '20–30', isYou: false },
@@ -70,8 +71,20 @@ const ESCALATION = [
 ];
 
 export function S07_OrgStructure() {
+  const { setCurrentSection } = useApp();
   return (
     <SectionWrapper sectionId={7}>
+
+      {/* Big-picture cross-link */}
+      <button
+        onClick={() => { setCurrentSection(6); setTimeout(() => document.getElementById('big-picture')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80); }}
+        className="w-full text-left rounded-xl px-4 py-3 flex items-center gap-3 transition-colors"
+        style={{ backgroundColor: '#1A1600', border: '1px solid #F5C80055' }}
+      >
+        <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: '#F5C800', color: '#000' }}>Big picture</span>
+        <span className="text-sm font-bold text-white flex-1">See the Customer Journey + Org Map together (Section 6)</span>
+        <span className="text-brand-yellow">→</span>
+      </button>
 
       {/* Org chart */}
       <div>

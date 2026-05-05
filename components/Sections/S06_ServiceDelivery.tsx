@@ -4,6 +4,7 @@ import { SectionWrapper } from './SectionWrapper';
 import { Card, InfoBox, BulletList } from '@/components/UI/Card';
 import { ExpandableCard } from '@/components/Interactive/ExpandableCard';
 import { LoomSlot } from '@/components/Diagrams/LoomSlot';
+import { MiroBoard } from '@/components/Diagrams/MiroBoard';
 
 const PHASES = [
   { num: 1, label: 'Lead & Close',        owner: 'Sales team → pod assignment',         yours: false },
@@ -27,19 +28,31 @@ export function S06_ServiceDelivery() {
         </p>
       </Card>
 
-      {/* End-to-end customer journey walkthrough */}
-      <div>
-        <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">End-to-End Customer Journey — Walkthrough</h3>
-        <p className="text-xs text-brand-gray mb-2">
-          Watch this BEFORE your first onboarding call. Oscar walks the full journey from B2B lead → sales call → close → handoff → onboarding → setup → cycle 1 → renewal → eventual offboarding. The whole picture in one pass.
+      {/* THE BIG PICTURE — Miro board + Loom walkthrough */}
+      <div id="big-picture">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-[10px] font-black uppercase tracking-widest bg-brand-yellow text-brand-black px-2 py-0.5 rounded">START HERE</span>
+          <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray">The Big Picture — Customer Journey + Who Does What</h3>
+        </div>
+        <p className="text-xs text-brand-gray mb-3">
+          Before anything else, watch this Loom and explore the Miro board. It maps the full customer journey from B2B lead to offboarding AND who in the company owns each stage. If a section of the portal feels disconnected, come back to this — it&apos;s the connective tissue.
         </p>
-        <LoomSlot
-          slotKey="s06_customer_journey"
-          title="Customer Journey — Lead to Offboarding"
-          subtitle="The full pipeline from B2B lead in to client offboarding"
-          recordedBy="Oscar"
-          length="—"
-        />
+
+        <div className="space-y-3">
+          <MiroBoard
+            slotKey="s06_miro_journey"
+            title="Customer Journey + Org Map (Miro)"
+            subtitle="The full system in one board — pan, zoom, click into any node"
+            caption="interactive"
+          />
+          <LoomSlot
+            slotKey="s06_journey_loom"
+            title="Walkthrough of the Big Picture"
+            subtitle="Oscar walks the Miro board end-to-end — required first watch"
+            recordedBy="Oscar"
+            length="—"
+          />
+        </div>
       </div>
 
       {/* Phase flow */}

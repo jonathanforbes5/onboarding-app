@@ -465,7 +465,7 @@ export const SECTIONS: SectionMeta[] = [
     slug: 'service-delivery',
     title: 'Service Delivery Flow',
     subtitle: 'Phase-by-phase client journey from close to renewal',
-    estimatedTime: '12 min',
+    estimatedTime: '1 hr',
     icon: 'Workflow',
     quiz: [
       {
@@ -574,7 +574,7 @@ export const SECTIONS: SectionMeta[] = [
     slug: 'org-structure',
     title: 'Organizational Structure',
     subtitle: 'Team hierarchy, pods, and your role as quarterback',
-    estimatedTime: '10 min',
+    estimatedTime: '1 hr',
     icon: 'Network',
     quiz: [
       {

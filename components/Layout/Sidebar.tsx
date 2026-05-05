@@ -29,13 +29,21 @@ function formatMins(mins: number) {
   return m === 0 ? `${h}h` : `${h}h ${m}m`;
 }
 
+// Parses "12 min" / "1 hr" / "1.5 hr" / "90 min" to minutes.
+function parseEstimate(s: string): number {
+  const m = s.trim().match(/^([\d.]+)\s*(hr|hrs|hour|hours|m|min|mins|minute|minutes)?/i);
+  if (!m) return 0;
+  const n = parseFloat(m[1]);
+  return /hr|hour/i.test(m[2] ?? '') ? Math.round(n * 60) : Math.round(n);
+}
+
 export function Sidebar() {
   const { currentSection, setCurrentSection, isCompleted, quizScores, sidebarOpen, setSidebarOpen, completedSections, setShowCurriculumMap, ...state } = useApp();
   const pct = Math.round((completedSections.length / SECTIONS.length) * 100);
 
   const remainingMins = SECTIONS
     .filter((s) => !isCompleted(s.id))
-    .reduce((acc, s) => acc + parseInt(s.estimatedTime), 0);
+    .reduce((acc, s) => acc + parseEstimate(s.estimatedTime), 0);
 
   const currentPhase = PHASES.find((p) => p.sections.includes(currentSection));
 

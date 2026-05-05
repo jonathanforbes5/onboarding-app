@@ -38,11 +38,12 @@ interface MapData {
   generatedAt: number;
 }
 
+// Churned clients are intentionally hidden from the map view — they're history,
+// not current business. Showing them inflates the picture.
 const STATUS_FILTERS = [
-  { id: 'all',       label: 'All',       color: '#F5C800' },
-  { id: 'active',    label: 'Active',    color: '#22C55E' },
-  { id: 'churned',   label: 'Churned',   color: '#EF4444' },
-  { id: 'preLaunch', label: 'Pre-Launch', color: '#A78BFA' },
+  { id: 'all',       label: 'All Current', color: '#F5C800' },
+  { id: 'active',    label: 'Active',      color: '#22C55E' },
+  { id: 'preLaunch', label: 'Pre-Launch',  color: '#A78BFA' },
 ] as const;
 type StatusFilter = typeof STATUS_FILTERS[number]['id'];
 
@@ -76,9 +77,10 @@ export function ClientMap() {
   }
 
   const filterCount = (p: CityPoint): number => {
-    if (filter === 'all')       return p.total;
+    // 'All' = current business only. Churned is excluded from every count and
+    // marker so the map reflects who we're actively working with.
+    if (filter === 'all')       return p.active + p.preLaunch + p.paused;
     if (filter === 'active')    return p.active;
-    if (filter === 'churned')   return p.churned;
     if (filter === 'preLaunch') return p.preLaunch;
     return 0;
   };
@@ -122,9 +124,8 @@ export function ClientMap() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {STATUS_FILTERS.map(f => {
           const count = f.id === 'all'
-            ? data.totals.clients
+            ? data.totals.active + data.totals.preLaunch
             : f.id === 'active' ? data.totals.active
-            : f.id === 'churned' ? data.totals.churned
             : data.totals.preLaunch;
           return (
             <button
@@ -185,10 +186,9 @@ export function ClientMap() {
             const count = filterCount(p);
             const r = Math.min(18, 5 + Math.sqrt(count) * 2.2);
             const color =
-              filter === 'churned' ? '#EF4444' :
               filter === 'preLaunch' ? '#A78BFA' :
               filter === 'active' ? '#22C55E' :
-              p.churned > p.active ? '#EF4444' :
+              // 'all' = current business — colour by what dominates active vs pre-launch.
               p.preLaunch > p.active ? '#A78BFA' :
               '#F5C800';
             return (
@@ -236,7 +236,6 @@ export function ClientMap() {
             </div>
             <div className="text-xs text-white space-y-0.5">
               {hovered.active > 0      && <div><span className="text-green-400">●</span> Active: <strong>{hovered.active}</strong></div>}
-              {hovered.churned > 0     && <div><span className="text-red-400">●</span> Churned: <strong>{hovered.churned}</strong></div>}
               {hovered.preLaunch > 0   && <div><span className="text-purple-400">●</span> Pre-launch: <strong>{hovered.preLaunch}</strong></div>}
               {hovered.paused > 0      && <div><span className="text-orange-400">●</span> Paused: <strong>{hovered.paused}</strong></div>}
             </div>
@@ -250,20 +249,23 @@ export function ClientMap() {
                 <span className="text-brand-yellow font-black">Pod:</span> {hovered.pods.join(', ')}
               </div>
             )}
-            {isAdmin && hovered.clients.length > 0 && (
-              <div className="text-[10px] text-white/60 mt-1.5 pt-1.5 border-t border-white/10">
-                {hovered.clients.slice(0, 4).map((c, i) => (
-                  <div key={i} className="truncate">
-                    <span style={{
-                      color: c.status === 'Active' ? '#22C55E' :
-                             c.status === 'Churned' ? '#EF4444' :
-                             c.status === 'Pre-Launch' ? '#A78BFA' : '#888'
-                    }}>●</span> {c.name}
-                  </div>
-                ))}
-                {hovered.clients.length > 4 && <div className="text-white/40 italic">+{hovered.clients.length - 4} more</div>}
-              </div>
-            )}
+            {isAdmin && (() => {
+              const currentClients = hovered.clients.filter((c) => c.status !== 'Churned');
+              if (currentClients.length === 0) return null;
+              return (
+                <div className="text-[10px] text-white/60 mt-1.5 pt-1.5 border-t border-white/10">
+                  {currentClients.slice(0, 4).map((c, i) => (
+                    <div key={i} className="truncate">
+                      <span style={{
+                        color: c.status === 'Active' ? '#22C55E' :
+                               c.status === 'Pre-Launch' ? '#A78BFA' : '#888'
+                      }}>●</span> {c.name}
+                    </div>
+                  ))}
+                  {currentClients.length > 4 && <div className="text-white/40 italic">+{currentClients.length - 4} more</div>}
+                </div>
+              );
+            })()}
           </div>
         )}
       </div>

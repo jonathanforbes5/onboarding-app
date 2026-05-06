@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import sopData from '@/repo/data/sops.json';
+import { ClientMap } from '@/components/Diagrams/ClientMap';
 
 type FilterTag = 'all' | 'client' | 'creative' | 'process' | 'onboarding';
 
@@ -119,6 +120,7 @@ export function SOPsTab() {
           {/* Jump nav */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {[
+              { label: '🗺️ Clientele At A Glance', href: '#clientele' },
               { label: '⚡ Quick Access', href: '#quick-access' },
               { label: '🛠️ Tools', href: '#tools' },
               { label: '📋 SOPs', href: '#sops' },
@@ -137,6 +139,19 @@ export function SOPsTab() {
                 {link.label}
               </a>
             ))}
+          </div>
+        </div>
+
+        {/* ── Clientele At A Glance ── */}
+        <div id="clientele" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
+          <SectionHeader icon="🗺️" title="RoofIgnite Clientele At A Glance" subtitle="Live view of every active and pre-launch account, by city. Click a state or dot for full client profiles (admin only)." />
+          <div style={{
+            backgroundColor: '#141414',
+            border: '1px solid #2A2A2A',
+            borderRadius: 14,
+            padding: 14,
+          }}>
+            <ClientMap />
           </div>
         </div>
 

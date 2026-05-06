@@ -9,16 +9,29 @@ import {
 import { useApp } from '@/context/AppContext';
 import { STATE_TIER, TIER_COLORS, TIER_LABELS, type DifficultyTier } from '@/data/marketDifficulty';
 
-interface Client {
-  name: string;
-  status: string;
-  pod?: string;
-  am?: string;
-  niche?: string;
+interface ClientProfile {
+  recordId:        string;
+  businessName:    string;
+  clientName?:     string;
+  signedContract?: string;
+  clientAiStatus?: boolean;
+  apptsExpectation?: string;
+  generalLocation?: string;
+  communication?:  string;
+  cc?:             string;
+  mgmtFee?:        string;
+  startDate?:      string;
+  stripeCustomerId?: string;
+  stripeEmail?:    string;
+  pod?:            string;
+  primaryCsm?:     string;
+  status:          string;
+  niche?:          string;
 }
 
 interface CityPoint {
   loc: string;
+  state?: string;
   lat: number;
   lng: number;
   active: number;
@@ -29,7 +42,7 @@ interface CityPoint {
   ams: string[];
   niches: string[];
   pods: string[];
-  clients: Client[];
+  clients: ClientProfile[];
 }
 
 interface MapData {
@@ -56,6 +69,12 @@ export function ClientMap() {
   const [showDifficulty, setShowDifficulty] = useState(false);
   const [hovered, setHovered] = useState<CityPoint | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [selection, setSelection] = useState<
+    | { kind: 'city';  point: CityPoint }
+    | { kind: 'state'; name: string }
+    | null
+  >(null);
+  const [openClientId, setOpenClientId] = useState<string | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -171,9 +190,10 @@ export function ClientMap() {
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
+                    onClick={isAdmin && stateName ? () => { setSelection({ kind: 'state', name: stateName }); setOpenClientId(null); } : undefined}
                     style={{
-                      default: { fill: baseFill, stroke: '#0A0A0A', strokeWidth: 0.5, outline: 'none' },
-                      hover:   { fill: showDifficulty && tier ? baseFill : '#2a2a2a', stroke: '#F5C800', strokeWidth: 0.5, outline: 'none', filter: 'brightness(1.15)' },
+                      default: { fill: baseFill, stroke: '#0A0A0A', strokeWidth: 0.5, outline: 'none', cursor: isAdmin ? 'pointer' : 'default' },
+                      hover:   { fill: showDifficulty && tier ? baseFill : '#2a2a2a', stroke: '#F5C800', strokeWidth: 0.5, outline: 'none', filter: 'brightness(1.15)', cursor: isAdmin ? 'pointer' : 'default' },
                       pressed: { fill: baseFill, outline: 'none' },
                     }}
                   />
@@ -197,6 +217,7 @@ export function ClientMap() {
                 coordinates={[p.lng, p.lat]}
                 onMouseEnter={(e: any) => handleEnter(p, e)}
                 onMouseMove={(e: any) => handleEnter(p, e)}
+                onClick={isAdmin ? () => { setSelection({ kind: 'city', point: p }); setOpenClientId(null); } : undefined}
                 style={{ default: { cursor: 'pointer' } } as any}
               >
                 {/* Pulse ring */}
@@ -259,19 +280,104 @@ export function ClientMap() {
                       <span style={{
                         color: c.status === 'Active' ? '#22C55E' :
                                c.status === 'Pre-Launch' ? '#A78BFA' : '#888'
-                      }}>●</span> {c.name}
+                      }}>●</span> {c.businessName}
                     </div>
                   ))}
                   {currentClients.length > 4 && <div className="text-white/40 italic">+{currentClients.length - 4} more</div>}
                 </div>
               );
             })()}
+            {isAdmin && (
+              <div className="text-[10px] text-brand-yellow/80 mt-1.5 pt-1.5 border-t border-white/10 italic">Click for full profiles →</div>
+            )}
           </div>
         )}
       </div>
 
+      {/* Selection panel — admin-only — list + expandable profiles */}
+      {isAdmin && selection && (() => {
+        const clients: ClientProfile[] = (
+          selection.kind === 'city'
+            ? selection.point.clients
+            : data.points.filter((pt) => pt.state === selection.name).flatMap((pt) => pt.clients)
+        ).filter((c) => c.status !== 'Churned');
+
+        const heading = selection.kind === 'city'
+          ? `Clients in ${selection.point.loc}`
+          : `Clients in ${selection.name}`;
+
+        return (
+          <div className="rounded-xl border border-brand-gray-mid bg-white overflow-hidden">
+            <div className="flex items-center justify-between px-3 py-2 bg-brand-black text-white">
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-brand-yellow">{selection.kind === 'city' ? 'City' : 'State'}</div>
+                <div className="font-black text-sm">{heading}</div>
+                <div className="text-[10px] text-white/60">{clients.length} current client{clients.length === 1 ? '' : 's'}</div>
+              </div>
+              <button
+                onClick={() => { setSelection(null); setOpenClientId(null); }}
+                className="text-white/70 hover:text-white text-xs font-bold"
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            {clients.length === 0 ? (
+              <div className="px-3 py-6 text-center text-xs text-brand-gray">
+                No current clients here. (Churned clients are hidden — see Airtable for history.)
+              </div>
+            ) : (
+              <div className="divide-y divide-brand-gray-mid">
+                {clients.map((c) => {
+                  const isOpen = openClientId === c.recordId;
+                  const statusColor =
+                    c.status === 'Active'      ? '#22C55E' :
+                    c.status === 'Pre-Launch'  ? '#A78BFA' :
+                    c.status === 'Paused'      ? '#F97316' : '#888';
+                  return (
+                    <div key={c.recordId}>
+                      <button
+                        onClick={() => setOpenClientId(isOpen ? null : c.recordId)}
+                        className="w-full text-left px-3 py-2 hover:bg-brand-gray-light transition-colors flex items-center gap-3"
+                      >
+                        <span style={{ color: statusColor }}>●</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-black text-sm text-brand-black truncate">{c.businessName}</div>
+                          <div className="text-[11px] text-brand-gray truncate">
+                            {c.clientName ? `${c.clientName} · ` : ''}{c.pod ?? '—'} · {c.primaryCsm ?? '—'} · {c.niche ?? '—'}
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-brand-gray flex-shrink-0">{isOpen ? '▲' : '▼'}</span>
+                      </button>
+                      {isOpen && (
+                        <div className="bg-brand-gray-light px-3 py-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-[11px]">
+                          <ProfileField label="Status"            value={c.status} />
+                          <ProfileField label="Niche"             value={c.niche} />
+                          <ProfileField label="Signed Contract"   value={c.signedContract} />
+                          <ProfileField label="Client AI Status"  value={c.clientAiStatus == null ? undefined : (c.clientAiStatus ? 'Yes' : 'No')} />
+                          <ProfileField label="Appts Expectation" value={c.apptsExpectation} />
+                          <ProfileField label="MGMT Fee"          value={c.mgmtFee} />
+                          <ProfileField label="Communication"     value={c.communication} />
+                          <ProfileField label="CC"                value={c.cc} />
+                          <ProfileField label="Start Date"        value={c.startDate} />
+                          <ProfileField label="General Location"  value={c.generalLocation} />
+                          <ProfileField label="Pod"               value={c.pod} />
+                          <ProfileField label="Primary CSM"       value={c.primaryCsm} />
+                          <ProfileField label="Stripe Email"      value={c.stripeEmail} mono />
+                          <ProfileField label="Stripe Customer ID" value={c.stripeCustomerId} mono />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
       <div className="flex items-center justify-between text-[10px] text-brand-gray">
-        <span>Showing {visible.length} cities · {visibleTotal} clients</span>
+        <span>Showing {visible.length} cities · {visibleTotal} clients{isAdmin ? ' · click any state or dot to see profiles' : ''}</span>
         <span>Live from Airtable · refreshed every 5 min</span>
       </div>
 
@@ -282,6 +388,17 @@ export function ClientMap() {
           <span className="font-mono">{data.totals.unmatchedLocs.slice(0, 5).join(', ')}{data.totals.unmatchedLocs.length > 5 ? '…' : ''}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+function ProfileField({ label, value, mono }: { label: string; value?: string; mono?: boolean }) {
+  return (
+    <div className="flex items-baseline gap-2 min-w-0">
+      <span className="text-[9px] font-black uppercase tracking-widest text-brand-gray flex-shrink-0 w-24">{label}</span>
+      <span className={`text-brand-black truncate ${mono ? 'font-mono text-[10px]' : ''}`} title={value ?? '—'}>
+        {value && value.trim() ? value : <span className="text-brand-gray italic">—</span>}
+      </span>
     </div>
   );
 }

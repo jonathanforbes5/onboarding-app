@@ -21,6 +21,77 @@ function normalize(loc: string): string {
   return out.replace(/\s+/g, ' ');
 }
 
+// ── State parsing ─────────────────────────────────────────────────────
+const STATE_BY_ABBR: Record<string, string> = {
+  AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
+  CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia',
+  HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa', KS: 'Kansas',
+  KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland', MA: 'Massachusetts',
+  MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana',
+  NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico',
+  NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma',
+  OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina',
+  SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont',
+  VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming',
+};
+const STATE_NAMES = new Set(Object.values(STATE_BY_ABBR).map(s => s.toLowerCase()));
+
+const KNOWN_REGION_TO_STATE: Record<string, string> = {
+  'bay area':            'California',
+  'central valley':      'California',
+  'socal':               'California',
+  'so cal':              'California',
+  'norcal':              'California',
+  'central fl':          'Florida',
+  'central florida':     'Florida',
+  'swfl':                'Florida',
+  'central md':          'Maryland',
+  'central maryland':    'Maryland',
+  'central alabama':     'Alabama',
+  'hill country':        'Texas',
+  'dfw':                 'Texas',
+  'fargo-moorhead':      'North Dakota',
+  'quad cities':         'Iowa',
+  'chicago market':      'Illinois',
+  'chicagoland':         'Illinois',
+  'denver metro':        'Colorado',
+  'philadelphia/nj/de':  'Pennsylvania',
+  'tristate':            'New York',
+  'ne ohio':             'Ohio',
+  'kc':                  'Missouri',
+  'kcmo':                'Missouri',
+};
+
+function stateForLocation(raw: string): string | null {
+  const s = raw.toLowerCase().trim();
+  if (!s) return null;
+
+  // 1) Plain state name
+  if (STATE_NAMES.has(s)) {
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+  }
+
+  // 2) "City, ST" or "Region, ST"
+  const abbrMatch = raw.match(/,\s*([A-Z]{2})\b/);
+  if (abbrMatch && STATE_BY_ABBR[abbrMatch[1]]) {
+    return STATE_BY_ABBR[abbrMatch[1]];
+  }
+
+  // 3) Embedded state name like "Bay Area, California"
+  for (const name of Array.from(STATE_NAMES)) {
+    if (s.includes(name)) {
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+  }
+
+  // 4) Known regions
+  for (const [region, state] of Object.entries(KNOWN_REGION_TO_STATE)) {
+    if (s.includes(region)) return state;
+  }
+
+  return null;
+}
+
 interface AirtableRecord {
   id: string;
   fields: Record<string, any>;
@@ -40,23 +111,44 @@ async function fetchAll(table: string, token: string): Promise<AirtableRecord[]>
   return all;
 }
 
-interface CityPoint {
-  loc: string;
-  lat: number;
-  lng: number;
-  active: number;
-  churned: number;
-  preLaunch: number;
-  paused: number;
-  total: number;
-  ams: string[];          // Primary CSM names
-  niches: string[];
-  pods: string[];
-  clients: { name: string; status: string; pod?: string; am?: string; niche?: string }[];
+// Per-client profile fields surfaced to the client. Sensitive fields (email,
+// Stripe IDs) are still here — admin-only render gating is on the frontend.
+interface ClientProfile {
+  recordId:        string;
+  businessName:    string;
+  clientName?:     string;
+  signedContract?: string;
+  clientAiStatus?: boolean;
+  apptsExpectation?: string;
+  generalLocation?: string;
+  communication?:  string;
+  cc?:             string;
+  mgmtFee?:        string;
+  startDate?:      string;
+  stripeCustomerId?: string;
+  stripeEmail?:    string;
+  pod?:            string;
+  primaryCsm?:     string;
+  status:          string;
+  niche?:          string;
 }
 
-// Cache the response in-memory for 5 minutes — Airtable data rarely flips and we'd rather not
-// hammer the API every time someone opens the section.
+interface CityPoint {
+  loc:        string;
+  state?:     string;
+  lat:        number;
+  lng:        number;
+  active:     number;
+  churned:    number;
+  preLaunch:  number;
+  paused:     number;
+  total:      number;
+  ams:        string[];
+  niches:     string[];
+  pods:       string[];
+  clients:    ClientProfile[];
+}
+
 let cache: { at: number; payload: any } | null = null;
 const CACHE_MS = 5 * 60 * 1000;
 
@@ -67,8 +159,6 @@ export async function GET() {
 
   const token = process.env.AIRTABLE_TOKEN;
   if (!token) {
-    // Diagnostic: tell us *which* env vars made it to this function so we can pinpoint why
-    // AIRTABLE_TOKEN is missing while other vars (eg ANTHROPIC_API_KEY) are not.
     const visibleKeys = Object.keys(process.env)
       .filter((k) => /AIRTABLE|SUPABASE|ANTHROPIC|VERCEL/i.test(k))
       .sort();
@@ -76,16 +166,9 @@ export async function GET() {
       error: 'AIRTABLE_TOKEN not set',
       diagnostic: {
         VERCEL_ENV:    process.env.VERCEL_ENV ?? null,
-        VERCEL_REGION: process.env.VERCEL_REGION ?? null,
-        VERCEL_GIT_COMMIT_SHA: (process.env.VERCEL_GIT_COMMIT_SHA ?? '').slice(0, 7),
-        VERCEL_PROJECT_ID:   process.env.VERCEL_PROJECT_ID ?? null,
         VERCEL_PROJECT_NAME: process.env.VERCEL_PROJECT_NAME ?? null,
-        VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL ?? null,
-        VERCEL_DEPLOYMENT_ID: process.env.VERCEL_DEPLOYMENT_ID ?? null,
         airtable_present_in_env: 'AIRTABLE_TOKEN' in process.env,
         airtable_value_length: (process.env.AIRTABLE_TOKEN ?? '').length,
-        anthropic_value_length: (process.env.ANTHROPIC_API_KEY ?? '').length,
-        supabase_url_value_length: (process.env.NEXT_PUBLIC_SUPABASE_URL ?? '').length,
         relevantEnvKeys: visibleKeys,
       },
     }, { status: 500 });
@@ -98,8 +181,8 @@ export async function GET() {
       fetchAll(TEAM_TABLE, token),
     ]);
 
-    const podName = new Map<string, string>(pods.map(p => [p.id, (p.fields['Pod Name'] ?? 'Unknown') as string]));
-    const teamName = new Map<string, string>(team.map(t => [t.id, (t.fields['Name'] ?? 'Unknown') as string]));
+    const podName  = new Map<string, string>(pods.map(p => [p.id, (p.fields['Pod Name'] ?? 'Unknown') as string]));
+    const teamName = new Map<string, string>(team.map(t => [t.id, (t.fields['Name']     ?? 'Unknown') as string]));
 
     const byLoc = new Map<string, CityPoint>();
     let unmatched = 0;
@@ -120,7 +203,9 @@ export async function GET() {
       let p = byLoc.get(norm);
       if (!p) {
         p = {
-          loc: norm, lat: coords.lat, lng: coords.lng,
+          loc: norm,
+          state: stateForLocation(norm) ?? undefined,
+          lat: coords.lat, lng: coords.lng,
           active: 0, churned: 0, preLaunch: 0, paused: 0, total: 0,
           ams: [], niches: [], pods: [], clients: [],
         };
@@ -134,24 +219,36 @@ export async function GET() {
       else if (status === 'Paused') p.paused++;
       p.total++;
 
-      const csmIds = (f['Primary CSM'] as string[] | undefined) ?? [];
-      const am = csmIds.map(id => teamName.get(id)).filter(Boolean) as string[];
-      for (const a of am) if (!p.ams.includes(a)) p.ams.push(a);
+      const csmIds   = (f['Primary CSM'] as string[] | undefined) ?? [];
+      const amNames  = csmIds.map(id => teamName.get(id)).filter(Boolean) as string[];
+      for (const a of amNames) if (!p.ams.includes(a)) p.ams.push(a);
 
       const niche = f['Niche'] as string | undefined;
       if (niche && !p.niches.includes(niche)) p.niches.push(niche);
 
-      const podIds = (f['Pod'] as string[] | undefined) ?? [];
+      const podIds    = (f['Pod'] as string[] | undefined) ?? [];
       const podLabels = podIds.map(id => podName.get(id)).filter(Boolean) as string[];
       for (const pd of podLabels) if (!p.pods.includes(pd)) p.pods.push(pd);
 
       const business = f['Business Name'] as string | undefined;
       if (business) {
         p.clients.push({
-          name: business,
+          recordId:         rec.id,
+          businessName:     business,
+          clientName:       f['Client Name']        as string | undefined,
+          signedContract:   f['Signed Contract']    as string | undefined,
+          clientAiStatus:   f['Client AI Status']   as boolean | undefined,
+          apptsExpectation: f['Appts Expectation']  as string | undefined,
+          generalLocation:  rawLoc,
+          communication:    f['Communication']      as string | undefined,
+          cc:               f['CC']                 as string | undefined,
+          mgmtFee:          f['MGMT Fee']           as string | undefined,
+          startDate:        f['Start Date']         as string | undefined,
+          stripeCustomerId: f['Stripe Customer ID'] as string | undefined,
+          stripeEmail:      f['Stripe Email']       as string | undefined,
+          pod:              podLabels[0],
+          primaryCsm:       amNames[0],
           status,
-          pod: podLabels[0],
-          am: am[0],
           niche,
         });
       }

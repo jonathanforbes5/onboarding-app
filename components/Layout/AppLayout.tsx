@@ -22,7 +22,7 @@ import { ToastProvider } from '@/components/UI/Toast';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, setCurrentSection, profileEditOpen, openProfileEdit, closeProfileEdit } = useApp();
+  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, setCurrentSection, profileEditOpen, openProfileEdit, closeProfileEdit, previewMode } = useApp();
 
   const handleChatNavigate = (href: string) => {
     if (href.startsWith('#section-')) {
@@ -145,7 +145,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {activeTab === 'admin' && currentUser.role === 'super_admin' && (
+      {activeTab === 'admin' && currentUser.role === 'super_admin' && !previewMode && (
         <div className="pt-[42px]">
           <AdminDashboard />
         </div>

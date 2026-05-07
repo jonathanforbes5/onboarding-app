@@ -76,6 +76,7 @@ export interface AppState {
   showCurriculumMap: boolean;
   showCompletionCelebration: boolean;
   profileEditOpen: boolean;
+  previewMode: boolean;
 }
 
 interface AppContextType extends AppState {
@@ -98,6 +99,7 @@ interface AppContextType extends AppState {
   setShowCompletionCelebration: (v: boolean) => void;
   openProfileEdit: () => void;
   closeProfileEdit: () => void;
+  setPreviewMode: (v: boolean) => void;
   progressPercent: number;
   isBookmarked: (id: number) => boolean;
   isCompleted: (id: number) => boolean;
@@ -128,6 +130,7 @@ const defaultState: AppState = {
   showCurriculumMap: true,
   showCompletionCelebration: false,
   profileEditOpen: false,
+  previewMode: false,
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -505,6 +508,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setShowCompletionCelebration = useCallback((v: boolean) => setState((p) => ({ ...p, showCompletionCelebration: v })), []);
   const openProfileEdit  = useCallback(() => setState((p) => ({ ...p, profileEditOpen: true })), []);
   const closeProfileEdit = useCallback(() => setState((p) => ({ ...p, profileEditOpen: false })), []);
+  const setPreviewMode   = useCallback((v: boolean) => setState((p) => ({ ...p, previewMode: v })), []);
 
   const progressPercent = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
   const isBookmarked    = (id: number) => state.bookmarks.includes(id);
@@ -532,6 +536,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setShowCompletionCelebration,
       openProfileEdit,
       closeProfileEdit,
+      setPreviewMode,
       progressPercent,
       isBookmarked,
       isCompleted,

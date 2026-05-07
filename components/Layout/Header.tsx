@@ -1,37 +1,13 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, FileText, Bookmark, Menu, X, LogOut } from 'lucide-react';
+import { Search, FileText, Bookmark, Menu, X, LogOut, ChevronDown, Eye, EyeOff } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { getUserColor } from '@/lib/auth';
 import { SECTIONS } from '@/data/sections';
 
-// Sync indicator dot
-function SyncDot({ status }: { status: string }) {
-  const cfg: Record<string, { bg: string; title: string }> = {
-    syncing: { bg: '#F59E0B', title: 'Syncing…' },
-    synced:  { bg: '#22C55E', title: 'Synced'   },
-    offline: { bg: '#EF4444', title: 'Offline — using local data' },
-    idle:    { bg: '#444',    title: 'Not syncing' },
-  };
-  const c = cfg[status] ?? cfg.idle;
-  return (
-    <div
-      title={c.title}
-      style={{
-        width: 7,
-        height: 7,
-        borderRadius: '50%',
-        backgroundColor: c.bg,
-        animation: status === 'syncing' ? 'pulse 1s infinite' : 'none',
-      }}
-    />
-  );
-}
-
 export function Header() {
   const {
     progressPercent,
-    completedSections,
     setShowSearch,
     setShowNotes,
     sidebarOpen,
@@ -44,53 +20,91 @@ export function Header() {
     showCurriculumMap,
     setShowCurriculumMap,
     logout,
+    previewMode,
+    setPreviewMode,
   } = useApp();
 
-  const userColor     = currentUser ? getUserColor(currentUser.userKey) : null;
-  const isSuperAdmin  = currentUser?.role === 'super_admin';
+  const userColor    = currentUser ? getUserColor(currentUser.userKey) : null;
+  const isSuperAdmin = currentUser?.role === 'super_admin';
+  // In preview mode, pretend we're a regular user
+  const effectiveAdmin = isSuperAdmin && !previewMode;
 
-  const [bookmarksOpen, setBookmarksOpen] = useState(false);
-  const bookmarkRef = useRef<HTMLDivElement>(null);
+  const [bookmarksOpen,  setBookmarksOpen]  = useState(false);
+  const [communityOpen,  setCommunityOpen]  = useState(false);
+  const bookmarkRef  = useRef<HTMLDivElement>(null);
+  const communityRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!bookmarksOpen) return;
     const handler = (e: MouseEvent) => {
-      if (!bookmarkRef.current?.contains(e.target as Node)) setBookmarksOpen(false);
+      if (!bookmarkRef.current?.contains(e.target as Node))  setBookmarksOpen(false);
+      if (!communityRef.current?.contains(e.target as Node)) setCommunityOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [bookmarksOpen]);
+  }, []);
 
-  const isPod5User = currentUser?.userKey === 'ksenia' || currentUser?.userKey === 'adeen';
+  const isPod5User     = currentUser?.userKey === 'ksenia' || currentUser?.userKey === 'adeen';
   const canSeeWorksheet = isPod5User || isSuperAdmin;
 
-  const allTabs = [
-    { id: 'overview',       label: 'Overview',       icon: '🏠' },
+  // Primary tabs — always in the bar
+  const primaryTabs = [
+    { id: 'overview',   label: 'Overview',   icon: '🏠' },
     ...(canSeeWorksheet ? [{ id: 'worksheet', label: 'Worksheet', icon: '📋' }] : []),
-    { id: 'sections',       label: 'Company',        icon: '📚' },
-    { id: 'resources',      label: 'Resources',      icon: '📁' },
-    { id: 'recordings',     label: 'Recordings',     icon: '🎬' },
-    { id: 'announcements',  label: "What's New",     icon: '📣' },
-    { id: 'feedback',       label: 'Feedback',       icon: '💡' },
-    { id: 'roadmap',        label: 'Roadmap',        icon: '🗺️' },
-    ...(isSuperAdmin ? [{ id: 'admin', label: 'Admin', icon: '📊' }] : []),
+    { id: 'sections',   label: 'Company',    icon: '📚' },
+    { id: 'resources',  label: 'Resources',  icon: '📁' },
+    { id: 'recordings', label: 'Recordings', icon: '🎬' },
   ] as const;
-  const tabs = allTabs;
+
+  // Community tabs — tucked into the dropdown
+  const communityTabs = [
+    { id: 'announcements', label: "What's New", icon: '📣' },
+    { id: 'feedback',      label: 'Feedback',   icon: '💡' },
+    { id: 'roadmap',       label: 'Roadmap',    icon: '🗺️' },
+    ...(effectiveAdmin ? [{ id: 'admin', label: 'Admin', icon: '📊' }] : []),
+  ] as const;
+
+  const communityActive = ['announcements', 'feedback', 'roadmap', 'admin'].includes(activeTab);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-brand-black text-white shadow-lg">
-      {/* Progress line */}
+      {/* Training progress line */}
       <div className="h-0.5 bg-white/10">
         <div
           className="h-full bg-brand-yellow transition-all duration-500"
           style={{ width: activeTab === 'sections' ? `${progressPercent}%` : '0%' }}
         />
-        {/* Curriculum map back button indicator */}
       </div>
 
+      {/* Preview mode banner */}
+      {previewMode && (
+        <div style={{
+          backgroundColor: '#1A0E00',
+          borderBottom: '1px solid #F5C80033',
+          padding: '4px 12px',
+          fontSize: 11,
+          fontWeight: 700,
+          color: '#F5C800',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+        }}>
+          <Eye size={12} />
+          Previewing as pod manager —
+          <button
+            onClick={() => setPreviewMode(false)}
+            style={{ color: '#F5C800', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700 }}
+          >
+            exit preview
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 px-3 py-2">
-        {/* ── Left: Logo ── */}
-        <div className="flex items-center gap-2 flex-shrink-0 min-w-0">
+
+        {/* ── Left: sidebar toggle + logo ── */}
+        <div className="flex items-center gap-1.5 flex-shrink-0">
           {activeTab === 'sections' && !showCurriculumMap && (
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -106,17 +120,15 @@ export function Header() {
               title="Back to curriculum"
             >
               <Menu size={15} />
-              <span className="hidden md:inline">Curriculum</span>
             </button>
           )}
-          {/* Roof Ignite logo */}
           <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
         </div>
 
-        {/* ── Center: Tabs ── */}
-        <div className="flex-1 flex items-center justify-center">
+        {/* ── Center: primary tabs + community dropdown ── */}
+        <div className="flex-1 flex items-center justify-center min-w-0">
           <div className="flex items-center gap-0.5 bg-white/10 rounded-lg p-0.5">
-            {tabs.map((tab) => (
+            {primaryTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as Parameters<typeof setActiveTab>[0])}
@@ -130,20 +142,88 @@ export function Header() {
                 <span className="hidden sm:inline">{tab.label}</span>
               </button>
             ))}
+
+            {/* Community dropdown */}
+            <div className="relative" ref={communityRef}>
+              <button
+                onClick={() => setCommunityOpen((v) => !v)}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
+                  communityActive
+                    ? 'bg-brand-yellow text-brand-black'
+                    : 'text-white/55 hover:text-white'
+                }`}
+              >
+                <span className="text-[13px]">
+                  {communityActive
+                    ? (communityTabs.find((t) => t.id === activeTab)?.icon ?? '✦')
+                    : '✦'}
+                </span>
+                <span className="hidden sm:inline">
+                  {communityActive
+                    ? (communityTabs.find((t) => t.id === activeTab)?.label ?? 'More')
+                    : 'More'}
+                </span>
+                <ChevronDown size={11} className={`transition-transform ${communityOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {communityOpen && (
+                <div style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 6px)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  backgroundColor: '#1A1A1A',
+                  border: '1px solid #333',
+                  borderRadius: 12,
+                  overflow: 'hidden',
+                  minWidth: 160,
+                  zIndex: 100,
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                }}>
+                  {communityTabs.map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => { setActiveTab(tab.id as Parameters<typeof setActiveTab>[0]); setCommunityOpen(false); }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        width: '100%',
+                        padding: '10px 14px',
+                        textAlign: 'left',
+                        background: activeTab === tab.id ? '#F5C80018' : 'transparent',
+                        borderBottom: '1px solid #2A2A2A',
+                        cursor: 'pointer',
+                        transition: 'background 0.1s',
+                      }}
+                      onMouseEnter={(e) => { if (activeTab !== tab.id) e.currentTarget.style.backgroundColor = '#2A2A2A'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = activeTab === tab.id ? '#F5C80018' : 'transparent'; }}
+                    >
+                      <span style={{ fontSize: 14 }}>{tab.icon}</span>
+                      <span style={{
+                        fontSize: 12, fontWeight: 700,
+                        color: activeTab === tab.id ? '#F5C800' : '#CCC',
+                      }}>
+                        {tab.label}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* ── Right: Actions + user ── */}
+        {/* ── Right: search, section tools, user ── */}
         <div className="flex items-center gap-0.5 flex-shrink-0">
-          {/* Global search — always visible */}
           <button
             onClick={() => setShowSearch(true)}
-            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1"
+            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
             title="Search (⌘K)"
           >
             <Search size={15} />
-            <span className="hidden md:inline text-xs text-white/40">⌘K</span>
           </button>
+
           {activeTab === 'sections' && (
             <>
               {bookmarks.length > 0 && (
@@ -157,7 +237,7 @@ export function Header() {
                     <span className="text-xs text-brand-yellow font-bold hidden sm:inline">{bookmarks.length}</span>
                   </button>
                   {bookmarksOpen && (
-                    <div className="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl shadow-xl border border-brand-gray-mid overflow-hidden z-50 animate-fade-in">
+                    <div className="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl shadow-xl border border-brand-gray-mid overflow-hidden z-50">
                       <div className="px-3 py-2 bg-brand-gray-light border-b border-brand-gray-mid">
                         <span className="text-xs font-bold text-brand-black uppercase tracking-wide">Bookmarks</span>
                       </div>
@@ -195,7 +275,11 @@ export function Header() {
             <div className="flex items-center gap-1.5 ml-1 pl-1.5 border-l border-white/10">
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0 overflow-hidden"
-                style={{ backgroundColor: currentUser.avatarUrl || currentUser.avatarEmoji ? 'transparent' : userColor.bg, color: userColor.text, fontSize: currentUser.avatarEmoji ? 16 : undefined }}
+                style={{
+                  backgroundColor: currentUser.avatarUrl || currentUser.avatarEmoji ? 'transparent' : userColor.bg,
+                  color: userColor.text,
+                  fontSize: currentUser.avatarEmoji ? 16 : undefined,
+                }}
                 title={currentUser.bio ?? currentUser.displayName}
               >
                 {currentUser.avatarUrl ? (
@@ -203,6 +287,20 @@ export function Header() {
                 ) : (currentUser.avatarEmoji ?? currentUser.displayName[0])}
               </div>
               <span className="text-xs font-semibold text-white/75 hidden sm:inline">{currentUser.displayName}</span>
+
+              {/* Preview toggle — super admins only */}
+              {isSuperAdmin && (
+                <button
+                  onClick={() => setPreviewMode(!previewMode)}
+                  className="p-1 rounded hover:bg-white/10 transition-colors"
+                  title={previewMode ? 'Exit pod manager preview' : 'Preview as pod manager'}
+                >
+                  {previewMode
+                    ? <EyeOff size={13} className="text-brand-yellow" />
+                    : <Eye size={13} className="text-white/35 hover:text-white/80" />}
+                </button>
+              )}
+
               <button
                 onClick={logout}
                 className="p-1 rounded hover:bg-white/10 transition-colors"

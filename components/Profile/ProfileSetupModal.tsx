@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useRef } from 'react';
 import { useApp } from '@/context/AppContext';
-import { X, Camera, Smile } from 'lucide-react';
+import { X, Camera, Smile, Brain } from 'lucide-react';
 
 const AVATAR_EMOJIS = [
   '🦊','🚀','⚡','🎯','🔥','💡','🏆','🦁','🐺','🌊',
@@ -46,6 +46,13 @@ export function ProfileSetupModal({ onClose }: { onClose: () => void }) {
   const [photoLoading, setPhotoLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Quiz reminder preference (default true)
+  const getQuizPref = () => {
+    if (!currentUser) return true;
+    try { return localStorage.getItem(`ri_${currentUser.userKey}_quiz_reminder`) !== 'false'; } catch { return true; }
+  };
+  const [quizReminder, setQuizReminder] = useState(getQuizPref);
+
   if (!currentUser) return null;
 
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +80,10 @@ export function ProfileSetupModal({ onClose }: { onClose: () => void }) {
         avatarEmoji: avatarTab === 'emoji' ? avatar : '',
         avatarUrl: avatarTab === 'photo' ? avatarUrl : '',
       });
+      // Persist quiz reminder pref
+      if (currentUser) {
+        try { localStorage.setItem(`ri_${currentUser.userKey}_quiz_reminder`, quizReminder ? 'true' : 'false'); } catch {}
+      }
       onClose();
     } catch (e: any) {
       setError(e?.message ?? 'Failed to save profile');
@@ -256,6 +267,44 @@ export function ProfileSetupModal({ onClose }: { onClose: () => void }) {
             onFocus={(e) => (e.currentTarget.style.borderColor = C.acc)}
             onBlur={(e) => (e.currentTarget.style.borderColor = C.border)}
           />
+        </div>
+
+        {/* Quiz reminder toggle */}
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ color: C.muted, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', display: 'block', marginBottom: 8 }}>
+            Preferences
+          </label>
+          <div
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              backgroundColor: C.bg, border: `1px solid ${C.border}`, borderRadius: 10,
+              padding: '12px 14px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Brain size={16} color={quizReminder ? '#F5C800' : C.muted} />
+              <div>
+                <div style={{ color: C.text, fontSize: 13, fontWeight: 700 }}>Quiz reminders</div>
+                <div style={{ color: C.muted, fontSize: 11 }}>Occasional knowledge-check prompts while browsing</div>
+              </div>
+            </div>
+            <button
+              onClick={() => setQuizReminder(v => !v)}
+              style={{
+                width: 40, height: 22, borderRadius: 11, border: 'none', cursor: 'pointer',
+                backgroundColor: quizReminder ? '#F5C800' : '#2A2A2A',
+                position: 'relative', transition: 'background-color 0.2s', flexShrink: 0,
+              }}
+            >
+              <div style={{
+                width: 16, height: 16, borderRadius: '50%', backgroundColor: '#fff',
+                position: 'absolute', top: 3,
+                left: quizReminder ? 21 : 3,
+                transition: 'left 0.2s',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+              }} />
+            </button>
+          </div>
         </div>
 
         {error && <p style={{ color: '#EF4444', fontSize: 12, marginBottom: 12 }}>{error}</p>}

@@ -193,28 +193,12 @@ const TAB_GUIDE = [
     desc: `${LOOMS_TOTAL}+ training videos and Loom walkthroughs. Real onboarding calls, account reviews, and live diagnostic sessions.`,
   },
   {
-    id: 'announcements',
-    label: "What's New",
-    icon: '📣',
+    id: 'community',
+    label: 'Community Widget',
+    icon: '✦',
     color: '#F97316',
     badge: null,
-    desc: 'Portal updates, new features, and announcements from leadership. Check here before asking if something changed.',
-  },
-  {
-    id: 'feedback',
-    label: 'Feedback',
-    icon: '💡',
-    color: '#A78BFA',
-    badge: null,
-    desc: 'Submit ideas and vote on improvements anonymously. Your input directly shapes what gets built into this portal.',
-  },
-  {
-    id: 'roadmap',
-    label: 'Roadmap',
-    icon: '🗺️',
-    color: '#06B6D4',
-    badge: null,
-    desc: "See what's planned, in progress, and shipped. Know what's coming before it arrives.",
+    desc: "The floating tab on the right edge of the screen. Opens a panel with What's New (announcements), Ideas (submit feedback & bug reports), and Roadmap — without leaving your current page.",
   },
 ];
 
@@ -402,7 +386,7 @@ export function OverviewTab() {
             {TAB_GUIDE.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => tab.id !== 'community' && setActiveTab(tab.id as any)}
                 style={{
                   display: 'flex',
                   gap: 12,
@@ -411,7 +395,7 @@ export function OverviewTab() {
                   borderRadius: 12,
                   padding: '14px 16px',
                   textAlign: 'left',
-                  cursor: 'pointer',
+                  cursor: tab.id === 'community' ? 'default' : 'pointer',
                   transition: 'border-color 0.15s, background-color 0.15s',
                 }}
                 onMouseEnter={(e) => {

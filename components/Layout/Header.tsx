@@ -1,10 +1,9 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, FileText, Bookmark, Menu, X, LogOut, ChevronDown, Eye, EyeOff, Bug } from 'lucide-react';
+import { Search, FileText, Bookmark, Menu, X, LogOut, ChevronDown, Eye, EyeOff } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { getUserColor } from '@/lib/auth';
 import { SECTIONS } from '@/data/sections';
-import { BugReportModal } from '@/components/UI/BugReportModal';
 
 export function Header() {
   const {
@@ -23,6 +22,7 @@ export function Header() {
     logout,
     previewMode,
     setPreviewMode,
+    openProfileEdit,
   } = useApp();
 
   const userColor    = currentUser ? getUserColor(currentUser.userKey) : null;
@@ -32,7 +32,6 @@ export function Header() {
 
   const [bookmarksOpen,  setBookmarksOpen]  = useState(false);
   const [communityOpen,  setCommunityOpen]  = useState(false);
-  const [bugReportOpen,  setBugReportOpen]  = useState(false);
   const bookmarkRef  = useRef<HTMLDivElement>(null);
   const communityRef = useRef<HTMLDivElement>(null);
 
@@ -57,15 +56,12 @@ export function Header() {
     { id: 'recordings', label: 'Recordings', icon: '🎬' },
   ] as const;
 
-  // Community tabs — tucked into the dropdown
+  // More dropdown — only admin when applicable
   const communityTabs = [
-    { id: 'announcements', label: "What's New", icon: '📣' },
-    { id: 'feedback',      label: 'Feedback',   icon: '💡' },
-    { id: 'roadmap',       label: 'Roadmap',    icon: '🗺️' },
     ...(effectiveAdmin ? [{ id: 'admin', label: 'Admin', icon: '📊' }] : []),
   ] as const;
 
-  const communityActive = ['announcements', 'feedback', 'roadmap', 'admin'].includes(activeTab);
+  const communityActive = ['admin'].includes(activeTab);
 
   return (
   <>
@@ -146,8 +142,8 @@ export function Header() {
               </button>
             ))}
 
-            {/* Community dropdown */}
-            <div className="relative" ref={communityRef}>
+            {/* More dropdown — only shown when there are items (i.e. admin) */}
+            {communityTabs.length > 0 && <div className="relative" ref={communityRef}>
               <button
                 onClick={() => setCommunityOpen((v) => !v)}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap ${
@@ -208,26 +204,9 @@ export function Header() {
                       </span>
                     </button>
                   ))}
-
-                  {/* Bug report — always at the bottom */}
-                  <button
-                    onClick={() => { setCommunityOpen(false); setBugReportOpen(true); }}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: 10,
-                      width: '100%', padding: '10px 14px',
-                      textAlign: 'left', background: 'transparent',
-                      borderTop: '1px solid #2A2A2A',
-                      cursor: 'pointer', transition: 'background 0.1s',
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#2A2A2A'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
-                  >
-                    <Bug size={13} color="#EF4444" />
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#888' }}>Report a bug</span>
-                  </button>
                 </div>
               )}
-            </div>
+            </div>}
           </div>
         </div>
 
@@ -290,20 +269,26 @@ export function Header() {
           {/* User pill */}
           {currentUser && userColor && (
             <div className="flex items-center gap-1.5 ml-1 pl-1.5 border-l border-white/10">
-              <div
-                className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0 overflow-hidden"
+              <button
+                onClick={openProfileEdit}
+                className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black flex-shrink-0 overflow-hidden hover:ring-2 hover:ring-brand-yellow/50 transition-all"
                 style={{
                   backgroundColor: currentUser.avatarUrl || currentUser.avatarEmoji ? 'transparent' : userColor.bg,
                   color: userColor.text,
                   fontSize: currentUser.avatarEmoji ? 16 : undefined,
+                  border: 'none', cursor: 'pointer', padding: 0,
                 }}
-                title={currentUser.bio ?? currentUser.displayName}
+                title="Edit profile"
               >
                 {currentUser.avatarUrl ? (
                   <img src={currentUser.avatarUrl} alt={currentUser.displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (currentUser.avatarEmoji ?? currentUser.displayName[0])}
-              </div>
-              <span className="text-xs font-semibold text-white/75 hidden sm:inline">{currentUser.displayName}</span>
+              </button>
+              <button
+                onClick={openProfileEdit}
+                className="text-xs font-semibold text-white/75 hidden sm:inline hover:text-white/100 transition-colors bg-transparent border-none cursor-pointer p-0"
+                title="Edit profile"
+              >{currentUser.displayName}</button>
 
               {/* Preview toggle — super admins only */}
               {isSuperAdmin && (
@@ -331,7 +316,6 @@ export function Header() {
       </div>
     </header>
 
-    {bugReportOpen && <BugReportModal onClose={() => setBugReportOpen(false)} />}
   </>
   );
 }

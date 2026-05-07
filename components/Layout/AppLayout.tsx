@@ -20,6 +20,9 @@ import { ProfileSetupModal } from '@/components/Profile/ProfileSetupModal';
 import { IntroVideoGate } from '@/components/Layout/IntroVideoGate';
 import { ToastProvider } from '@/components/UI/Toast';
 import { BackToTop } from '@/components/UI/BackToTop';
+import { CommunityWidget } from '@/components/Community/CommunityWidget';
+import { AnnouncementModal } from '@/components/Announcements/AnnouncementModal';
+import { QuizPrompt } from '@/components/UI/QuizPrompt';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -192,6 +195,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <NotesPanel />
       {profileEditOpen && <ProfileSetupModal onClose={handleProfileClose} />}
       <BackToTop />
+      <CommunityWidget />
+      <AnnouncementModal />
+      <QuizPrompt />
       <ChatWidget userName={currentUser?.userKey ?? 'anonymous'} onNavigate={handleChatNavigate} />
 
       {/* Completion celebration modal */}

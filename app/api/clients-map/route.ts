@@ -304,15 +304,15 @@ export async function GET() {
       if (business) {
         const clientCycles = cyclesByAccount.get(rec.id) ?? [];
         const cyclesTotal  = clientCycles.length;
+        // All "lifetime" totals are computed from raw ad spend / lead / appt
+        // sums — ratio of totals, not average of ratios. This is the only
+        // honest way to report lifetime CPL/CPA across cycles of different sizes.
         const totalBilled  = clientCycles.reduce((s, c) => s + (c.billingAmount ?? 0), 0);
         const totalAdSpend = clientCycles.reduce((s, c) => s + (c.adSpend ?? 0), 0);
-        const cplsWithVal  = clientCycles.filter(c => typeof c.cpl === 'number');
-        const avgCpl       = cplsWithVal.length ? cplsWithVal.reduce((s, c) => s + (c.cpl ?? 0), 0) / cplsWithVal.length : undefined;
-        // CPA = ad spend / appointments booked, computed per cycle then averaged
-        const cpas         = clientCycles
-          .map(c => (c.adSpend && c.appts && c.appts > 0) ? c.adSpend / c.appts : null)
-          .filter((v): v is number => v != null);
-        const avgCpa       = cpas.length ? cpas.reduce((s, v) => s + v, 0) / cpas.length : undefined;
+        const totalLeads   = clientCycles.reduce((s, c) => s + (c.totalLeads ?? 0), 0);
+        const totalAppts   = clientCycles.reduce((s, c) => s + (c.appts ?? 0), 0);
+        const avgCpl       = totalLeads > 0 ? totalAdSpend / totalLeads : undefined;
+        const avgCpa       = totalAppts > 0 ? totalAdSpend / totalAppts : undefined;
 
         p.clients.push({
           recordId:         rec.id,

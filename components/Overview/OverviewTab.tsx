@@ -314,41 +314,6 @@ export function OverviewTab() {
           </div>
         </button>
 
-        {/* ── Big Picture pin ── */}
-        <button
-          onClick={() => { setActiveTab('sections'); setCurrentSection(6); setTimeout(() => document.getElementById('big-picture')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80); }}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            background: `linear-gradient(135deg, #1A1600 0%, #141414 80%)`,
-            border: `1.5px solid ${C.acc}66`,
-            borderRadius: 14,
-            padding: '14px 18px',
-            cursor: 'pointer',
-            marginBottom: 20,
-            textAlign: 'left',
-            transition: 'all 0.15s',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.borderColor = C.acc; }}
-          onMouseLeave={(e) => { e.currentTarget.style.borderColor = C.acc + '66'; }}
-        >
-          <span style={{
-            fontSize: 10, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: '#000', backgroundColor: C.acc, padding: '3px 8px', borderRadius: 6, flexShrink: 0,
-          }}>
-            Watch first
-          </span>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ color: C.text, fontSize: 13, fontWeight: 800 }}>The Big Picture — Customer Journey + Who Does What</div>
-            <div style={{ color: C.muted, fontSize: 11, marginTop: 2 }}>
-              Interactive Miro board + Loom walkthrough. The connective tissue across every other section.
-            </div>
-          </div>
-          <span style={{ color: C.acc, fontSize: 16, flexShrink: 0 }}>→</span>
-        </button>
-
         {/* ── Training Progress ── */}
         <div style={{ marginBottom: 24 }}>
           <SectionTitle>Training Progress</SectionTitle>

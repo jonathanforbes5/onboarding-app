@@ -395,7 +395,10 @@ export function ClientMap() {
 
           {visible.map((p) => {
             const count = filterCount(p);
-            const r = Math.min(18, 5 + Math.sqrt(count) * 2.2);
+            // Markers shrink as zoom increases so dense areas (East Coast / South FL)
+            // become clickable when zoomed in. Pulse ring also shrinks proportionally.
+            const zoomScale = 1 / Math.max(1, Math.sqrt(zoomCenter.zoom));
+            const r = Math.max(2.5, Math.min(18, 5 + Math.sqrt(count) * 2.2) * zoomScale);
             const color =
               filter === 'preLaunch' ? '#A78BFA' :
               filter === 'active' ? '#22C55E' :
@@ -411,16 +414,16 @@ export function ClientMap() {
                 onClick={isAdmin ? () => { setSelection({ kind: 'city', point: p }); setOpenClientId(null); } : undefined}
                 style={{ default: { cursor: 'pointer' } } as any}
               >
-                {/* Pulse ring */}
-                <circle r={r + 4} fill={color} opacity={0.15}>
-                  <animate attributeName="r" from={r} to={r + 8} dur="1.6s" repeatCount="indefinite" />
+                {/* Pulse ring — scales with marker so dense zoomed-in areas stay readable */}
+                <circle r={r + 4 * zoomScale} fill={color} opacity={0.15}>
+                  <animate attributeName="r" from={r} to={r + 8 * zoomScale} dur="1.6s" repeatCount="indefinite" />
                   <animate attributeName="opacity" from="0.4" to="0" dur="1.6s" repeatCount="indefinite" />
                 </circle>
-                <circle r={r} fill={color} opacity={0.85} stroke="#0A0A0A" strokeWidth={1} />
+                <circle r={r} fill={color} opacity={0.85} stroke="#0A0A0A" strokeWidth={Math.max(0.4, zoomScale)} />
                 <text
                   textAnchor="middle"
-                  y={3}
-                  style={{ fontFamily: 'Inter, sans-serif', fontSize: 10, fontWeight: 900, fill: '#0A0A0A', pointerEvents: 'none' }}
+                  y={3 * zoomScale}
+                  style={{ fontFamily: 'Inter, sans-serif', fontSize: Math.max(6, 10 * zoomScale), fontWeight: 900, fill: '#0A0A0A', pointerEvents: 'none' }}
                 >
                   {count}
                 </text>
@@ -563,7 +566,10 @@ export function ClientMap() {
                           {/* Lifetime stats — pulled from Billing Cycles */}
                           {(c.cyclesTotal ?? 0) > 0 && (
                             <div className="rounded-lg bg-brand-black p-2.5">
-                              <div className="text-[10px] font-black uppercase tracking-widest text-brand-yellow mb-1.5">Lifetime — across {c.cyclesTotal} cycle{c.cyclesTotal === 1 ? '' : 's'}</div>
+                              <div className="flex items-baseline justify-between flex-wrap gap-1 mb-1.5">
+                                <div className="text-[10px] font-black uppercase tracking-widest text-brand-yellow">Lifetime — across {c.cyclesTotal} cycle{c.cyclesTotal === 1 ? '' : 's'}</div>
+                                <div className="text-[9px] text-white/40 italic">CPL / CPA = ad spend ÷ leads/appts (totals, not avg of ratios)</div>
+                              </div>
                               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]">
                                 <div>
                                   <div className="text-white/50 uppercase font-black tracking-widest">Total billed</div>
@@ -574,11 +580,11 @@ export function ClientMap() {
                                   <div className="text-white font-black text-sm">{fmtMoney(c.totalAdSpend)}</div>
                                 </div>
                                 <div>
-                                  <div className="text-white/50 uppercase font-black tracking-widest">Avg CPL</div>
+                                  <div className="text-white/50 uppercase font-black tracking-widest">CPL (ad spend)</div>
                                   <div className="text-white font-black text-sm">{c.avgCpl != null ? `$${c.avgCpl.toFixed(0)}` : '—'}</div>
                                 </div>
                                 <div>
-                                  <div className="text-white/50 uppercase font-black tracking-widest">Avg CPA</div>
+                                  <div className="text-white/50 uppercase font-black tracking-widest">CPA (ad spend)</div>
                                   <div className="text-white font-black text-sm">{c.avgCpa != null ? `$${c.avgCpa.toFixed(0)}` : '—'}</div>
                                 </div>
                               </div>
@@ -615,23 +621,28 @@ export function ClientMap() {
                                         <span className="text-[10px] text-brand-gray">{cycleOpen ? '▲' : '▼'}</span>
                                       </button>
                                       {cycleOpen && (
-                                        <div className="px-2.5 py-2 bg-brand-gray-light border-t border-brand-gray-mid grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1 text-[10px]">
-                                          <CycleStat label="Ad spend"     value={fmtMoney(cy.adSpend)} />
-                                          <CycleStat label="Billing amt"  value={fmtMoney(cy.billingAmount)} />
-                                          <CycleStat label="Monthly bdgt" value={fmtMoney(cy.monthlyBudget)} />
-                                          <CycleStat label="Total leads"  value={fmtNum(cy.totalLeads)} />
-                                          <CycleStat label="Appts"        value={cy.appts != null ? `${cy.appts} / ${cy.apptGoal ?? '?'}` : '—'} />
-                                          <CycleStat label="Est booked"   value={fmtNum(cy.estBooked)} />
-                                          <CycleStat label="CPL"          value={cy.cpl != null ? `$${cy.cpl.toFixed(2)}` : '—'} sub={cy.cplGoal ? `goal $${cy.cplGoal}` : undefined} />
-                                          <CycleStat label="CPA (calc)"   value={cy.adSpend && cy.appts ? `$${(cy.adSpend / cy.appts).toFixed(0)}` : '—'} />
-                                          <CycleStat label="Link CTR"     value={fmtPct(cy.linkCtr)} />
-                                          <CycleStat label="Link CPC"     value={cy.linkCpc != null ? `$${cy.linkCpc.toFixed(2)}` : '—'} />
-                                          <CycleStat label="CPM"          value={cy.cpm != null ? `$${cy.cpm.toFixed(0)}` : '—'} />
-                                          <CycleStat label="Frequency"    value={fmtNum(cy.frequency, 2)} />
-                                          <CycleStat label="OSA %"        value={fmtPct(cy.osaPct)} />
-                                          <CycleStat label="Survey %"     value={fmtPct(cy.surveyPct)} />
-                                          <CycleStat label="Good to bill" value={cy.goodToBill ?? '—'} />
-                                          <CycleStat label="Billed"       value={cy.billed ?? '—'} />
+                                        <div className="px-2.5 py-2 bg-brand-gray-light border-t border-brand-gray-mid space-y-2">
+                                          {/* Headline — most important top-down (Oscar's report order) */}
+                                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1 text-[10px]">
+                                            <CycleStat label="Ad spend"     value={fmtMoney(cy.adSpend)} />
+                                            <CycleStat label="Leads"        value={fmtNum(cy.totalLeads)} />
+                                            <CycleStat label="Appts / goal" value={cy.appts != null ? `${cy.appts} / ${cy.apptGoal ?? '?'}` : '—'} />
+                                            <CycleStat label="CPA (calc)"   value={cy.adSpend && cy.appts ? `$${(cy.adSpend / cy.appts).toFixed(0)}` : '—'} sub="ad spend ÷ appts" />
+                                            <CycleStat label="CPL"          value={cy.cpl != null ? `$${cy.cpl.toFixed(2)}` : '—'} sub={cy.cplGoal ? `goal $${cy.cplGoal}` : undefined} />
+                                            <CycleStat label="Est booked"   value={fmtNum(cy.estBooked)} />
+                                            <CycleStat label="Billing amt"  value={fmtMoney(cy.billingAmount)} />
+                                            <CycleStat label="Billed"       value={cy.billed ?? '—'} sub={cy.goodToBill ? `good to bill: ${cy.goodToBill}` : undefined} />
+                                          </div>
+                                          {/* Ad-quality details — secondary */}
+                                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1 text-[10px] pt-1.5 border-t border-brand-gray-mid">
+                                            <CycleStat label="Link CTR"     value={fmtPct(cy.linkCtr)} />
+                                            <CycleStat label="Link CPC"     value={cy.linkCpc != null ? `$${cy.linkCpc.toFixed(2)}` : '—'} />
+                                            <CycleStat label="CPM"          value={cy.cpm != null ? `$${cy.cpm.toFixed(0)}` : '—'} />
+                                            <CycleStat label="Frequency"    value={fmtNum(cy.frequency, 2)} />
+                                            <CycleStat label="OSA %"        value={fmtPct(cy.osaPct)} />
+                                            <CycleStat label="Survey %"     value={fmtPct(cy.surveyPct)} />
+                                            <CycleStat label="Monthly bdgt" value={fmtMoney(cy.monthlyBudget)} />
+                                          </div>
                                         </div>
                                       )}
                                     </div>

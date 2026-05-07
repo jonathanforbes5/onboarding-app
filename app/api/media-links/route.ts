@@ -93,10 +93,13 @@ export async function POST(req: NextRequest) {
 
   const { error } = await supabase.from('media_links').upsert(row, { onConflict: 'slot_key' });
 
-  if (error?.message?.includes('does not exist')) {
+  // Catch both "table doesn't exist" AND "column doesn't exist in schema cache"
+  // — Supabase reports them with different error strings.
+  const needsMigration = error && /does not exist|Could not find the .* column/i.test(error.message);
+  if (needsMigration) {
     await ensureTable();
     const retry = await supabase.from('media_links').upsert(row, { onConflict: 'slot_key' });
-    if (retry.error) return NextResponse.json({ error: retry.error.message }, { status: 500 });
+    if (retry.error) return NextResponse.json({ error: retry.error.message, hint: 'Run: alter table media_links add column if not exists transcript text;' }, { status: 500 });
   } else if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

@@ -156,16 +156,19 @@ export function Header() {
             </button>
           )}
           {/* Logo: left on desktop, absolutely centered on mobile */}
-          <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto hidden sm:block" />
+          <button onClick={() => navigate('overview')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}>
+            <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto hidden sm:block" />
+          </button>
         </div>
 
         {/* Logo centered absolutely on mobile only */}
-        <img
-          src="/logo.png"
-          alt="Roof Ignite"
-          className="h-7 w-auto sm:hidden absolute left-1/2 -translate-x-1/2"
-          style={{ pointerEvents: 'none' }}
-        />
+        <button
+          onClick={() => navigate('overview')}
+          className="sm:hidden absolute left-1/2 -translate-x-1/2"
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+        >
+          <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
+        </button>
 
         {/* ── Center: primary tabs — desktop only ── */}
         <div className="flex-1 hidden sm:flex items-center justify-center min-w-0">

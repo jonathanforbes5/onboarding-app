@@ -198,25 +198,41 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Listen for sign-in / sign-out events.
+    //
+    // IMPORTANT: Supabase re-fires SIGNED_IN every time the tab regains focus
+    // (it does this to refresh the session token in the background). If we
+    // re-run handleAuthUser on every focus, we (a) flash authLoading:true which
+    // unmounts the active tab content, and (b) reset currentSection / scroll /
+    // form state. So we only act on a SIGNED_IN when the user actually changes
+    // (e.g., a brand-new sign-in or an account switch).
+    let lastHandledEmail: string | null = null;
+
     // Check existing session first
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user?.email) {
+        lastHandledEmail = session.user.email;
         handleAuthUser(session.user.email);
       } else {
         setState((prev) => ({ ...prev, authLoading: false }));
       }
     });
-
-    // Listen for sign-in / sign-out events
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session?.user?.email) {
-        handleAuthUser(session.user.email);
+      const email = session?.user?.email ?? null;
+
+      if (event === 'SIGNED_IN' && email) {
+        if (email === lastHandledEmail) return; // tab refocus — ignore
+        lastHandledEmail = email;
+        handleAuthUser(email);
       } else if (event === 'SIGNED_OUT') {
+        lastHandledEmail = null;
         setState((prev) => ({
           ...defaultState,
           ...loadSectionsLocal(),
           authLoading: false,
         }));
+      } else if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') {
+        // No-op — the token has been silently refreshed; user state is unchanged.
       }
     });
 

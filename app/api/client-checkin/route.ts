@@ -73,7 +73,9 @@ async function getAccessToken(): Promise<string> {
   const secret = process.env.GOOGLE_CLIENT_SECRET;
   const refresh = process.env.GOOGLE_REFRESH_TOKEN;
   if (!id || !secret || !refresh) {
-    throw new Error('Missing GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET / GOOGLE_REFRESH_TOKEN');
+    const visibleKeys = Object.keys(process.env).filter((k) => /GOOGLE|VERCEL_PROJECT|VERCEL_ENV/i.test(k)).sort();
+    const project = process.env.VERCEL_PROJECT_NAME ?? 'unknown';
+    throw new Error(`Missing Google creds on project=${project}. Visible: ${JSON.stringify(visibleKeys)}. Lengths: id=${(id ?? '').length} secret=${(secret ?? '').length} refresh=${(refresh ?? '').length}`);
   }
   const body = new URLSearchParams({
     client_id: id,

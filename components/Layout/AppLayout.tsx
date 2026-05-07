@@ -19,6 +19,7 @@ import { ChatWidget } from '@/components/Chat/ChatWidget';
 import { ProfileSetupModal } from '@/components/Profile/ProfileSetupModal';
 import { IntroVideoGate } from '@/components/Layout/IntroVideoGate';
 import { ToastProvider } from '@/components/UI/Toast';
+import { BackToTop } from '@/components/UI/BackToTop';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
@@ -190,6 +191,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <IntroVideoGate />
       <NotesPanel />
       {profileEditOpen && <ProfileSetupModal onClose={handleProfileClose} />}
+      <BackToTop />
       <ChatWidget userName={currentUser?.userKey ?? 'anonymous'} onNavigate={handleChatNavigate} />
 
       {/* Completion celebration modal */}

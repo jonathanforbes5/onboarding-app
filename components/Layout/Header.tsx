@@ -1,9 +1,10 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, FileText, Bookmark, Menu, X, LogOut, ChevronDown, Eye, EyeOff } from 'lucide-react';
+import { Search, FileText, Bookmark, Menu, X, LogOut, ChevronDown, Eye, EyeOff, Bug } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { getUserColor } from '@/lib/auth';
 import { SECTIONS } from '@/data/sections';
+import { BugReportModal } from '@/components/UI/BugReportModal';
 
 export function Header() {
   const {
@@ -31,6 +32,7 @@ export function Header() {
 
   const [bookmarksOpen,  setBookmarksOpen]  = useState(false);
   const [communityOpen,  setCommunityOpen]  = useState(false);
+  const [bugReportOpen,  setBugReportOpen]  = useState(false);
   const bookmarkRef  = useRef<HTMLDivElement>(null);
   const communityRef = useRef<HTMLDivElement>(null);
 
@@ -66,6 +68,7 @@ export function Header() {
   const communityActive = ['announcements', 'feedback', 'roadmap', 'admin'].includes(activeTab);
 
   return (
+  <>
     <header className="fixed top-0 left-0 right-0 z-40 bg-brand-black text-white shadow-lg">
       {/* Training progress line */}
       <div className="h-0.5 bg-white/10">
@@ -200,14 +203,28 @@ export function Header() {
                       onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = activeTab === tab.id ? '#F5C80018' : 'transparent'; }}
                     >
                       <span style={{ fontSize: 14 }}>{tab.icon}</span>
-                      <span style={{
-                        fontSize: 12, fontWeight: 700,
-                        color: activeTab === tab.id ? '#F5C800' : '#CCC',
-                      }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: activeTab === tab.id ? '#F5C800' : '#CCC' }}>
                         {tab.label}
                       </span>
                     </button>
                   ))}
+
+                  {/* Bug report — always at the bottom */}
+                  <button
+                    onClick={() => { setCommunityOpen(false); setBugReportOpen(true); }}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10,
+                      width: '100%', padding: '10px 14px',
+                      textAlign: 'left', background: 'transparent',
+                      borderTop: '1px solid #2A2A2A',
+                      cursor: 'pointer', transition: 'background 0.1s',
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#2A2A2A'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+                  >
+                    <Bug size={13} color="#EF4444" />
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#888' }}>Report a bug</span>
+                  </button>
                 </div>
               )}
             </div>
@@ -313,5 +330,8 @@ export function Header() {
         </div>
       </div>
     </header>
+
+    {bugReportOpen && <BugReportModal onClose={() => setBugReportOpen(false)} />}
+  </>
   );
 }

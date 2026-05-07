@@ -165,32 +165,56 @@ const TAB_GUIDE = [
     label: 'Worksheet',
     icon: '📋',
     color: '#22C55E',
-    desc: 'Day-by-day onboarding plan for your first 10 days. Built specifically for new pods (like Pod 5) — daily tasks, checklists, and milestones to get fully operational fast.',
-    start: true,
+    badge: 'Week 1',
+    desc: 'Your day-by-day onboarding plan for the first 10 days. Daily tasks, checklists, and milestones to get fully operational fast.',
   },
   {
     id: 'sections',
-    label: 'Company',
+    label: 'Company Training',
     icon: '📚',
     color: '#F5C800',
-    desc: `${SECTIONS_TOTAL} training sections covering the business model, metrics, org structure, mindset, and tools. Quizzes after each.`,
-    start: true,
+    badge: 'Week 1',
+    desc: `${SECTIONS_TOTAL} sections covering business model, metrics, org structure, mindset, and tools. Work through them in order and pass each quiz to mark it done.`,
   },
   {
     id: 'resources',
     label: 'Resources',
     icon: '📁',
     color: '#4A90D9',
-    desc: 'Every SOP, tool link, and quick-access resource in one place. Reference daily.',
-    start: false,
+    badge: null,
+    desc: 'Every SOP, tool link, and checklist in one place. Bookmark the ones you use daily — onboarding call prep, cycle close, client handoff.',
   },
   {
     id: 'recordings',
     label: 'Recordings',
     icon: '🎬',
     color: '#A78BFA',
-    desc: `Training videos, service delivery walkthroughs, and ${LOOMS_TOTAL}+ Loom walkthroughs for live account scenarios.`,
-    start: false,
+    badge: null,
+    desc: `${LOOMS_TOTAL}+ training videos and Loom walkthroughs. Real onboarding calls, account reviews, and live diagnostic sessions.`,
+  },
+  {
+    id: 'announcements',
+    label: "What's New",
+    icon: '📣',
+    color: '#F97316',
+    badge: null,
+    desc: 'Portal updates, new features, and announcements from leadership. Check here before asking if something changed.',
+  },
+  {
+    id: 'feedback',
+    label: 'Feedback',
+    icon: '💡',
+    color: '#A78BFA',
+    badge: null,
+    desc: 'Submit ideas and vote on improvements anonymously. Your input directly shapes what gets built into this portal.',
+  },
+  {
+    id: 'roadmap',
+    label: 'Roadmap',
+    icon: '🗺️',
+    color: '#06B6D4',
+    badge: null,
+    desc: "See what's planned, in progress, and shipped. Know what's coming before it arrives.",
   },
 ];
 
@@ -416,7 +440,7 @@ export function OverviewTab() {
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                     <span style={{ color: C.text, fontSize: 13, fontWeight: 700 }}>{tab.label}</span>
-                    {tab.start && (
+                    {tab.badge && (
                       <span style={{
                         backgroundColor: tab.color,
                         color: '#000',
@@ -427,7 +451,7 @@ export function OverviewTab() {
                         letterSpacing: '0.04em',
                         textTransform: 'uppercase',
                       }}>
-                        Week 1
+                        {tab.badge}
                       </span>
                     )}
                   </div>

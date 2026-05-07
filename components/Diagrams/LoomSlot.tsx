@@ -23,14 +23,21 @@ function toEmbed(url: string) {
 
 export function LoomSlot({ url, slotKey, title, subtitle, recordedBy, length }: LoomSlotProps) {
   const [remoteUrl, setRemoteUrl] = useState<string | null>(null);
+  const [transcript, setTranscript] = useState<string | null>(null);
   const [loading, setLoading] = useState(!!slotKey && !url);
+  const [transcriptOpen, setTranscriptOpen] = useState(false);
 
   useEffect(() => {
-    if (!slotKey || url) { setLoading(false); return; }
+    if (!slotKey) { setLoading(false); return; }
     let cancelled = false;
     fetch(`/api/media-links?slot=${encodeURIComponent(slotKey)}`)
       .then(r => r.ok ? r.json() : null)
-      .then(j => { if (!cancelled) { setRemoteUrl(j?.link?.url ?? null); setLoading(false); } })
+      .then(j => {
+        if (cancelled) return;
+        if (!url) setRemoteUrl(j?.link?.url ?? null);
+        setTranscript(j?.link?.transcript ?? null);
+        setLoading(false);
+      })
       .catch(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [slotKey, url]);
@@ -58,15 +65,59 @@ export function LoomSlot({ url, slotKey, title, subtitle, recordedBy, length }: 
         </div>
       </div>
       {filled ? (
-        <div style={{ position: 'relative', paddingTop: '56.25%', backgroundColor: '#000' }}>
-          <iframe
-            src={toEmbed(effectiveUrl!)}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            title={title}
-          />
-        </div>
+        <>
+          <div style={{ position: 'relative', paddingTop: '56.25%', backgroundColor: '#000' }}>
+            <iframe
+              src={toEmbed(effectiveUrl!)}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }}
+              allow="autoplay; fullscreen"
+              allowFullScreen
+              title={title}
+            />
+          </div>
+          {transcript && (
+            <div style={{ borderTop: '1px solid #F5C80022' }}>
+              <button
+                onClick={() => setTranscriptOpen((v) => !v)}
+                style={{
+                  width: '100%',
+                  padding: '8px 12px',
+                  background: 'transparent',
+                  border: 'none',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  color: '#F5C800',
+                  fontSize: 11,
+                  fontWeight: 800,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span>📝 {transcriptOpen ? 'Hide transcript' : 'Read transcript'}</span>
+                <span style={{ color: '#888', fontWeight: 600, fontSize: 10, textTransform: 'none', letterSpacing: 'normal' }}>
+                  {transcript.split(/\s+/).length} words
+                </span>
+              </button>
+              {transcriptOpen && (
+                <div style={{
+                  maxHeight: 320,
+                  overflowY: 'auto',
+                  padding: '8px 12px 14px',
+                  fontSize: 12,
+                  lineHeight: 1.6,
+                  color: '#ccc',
+                  whiteSpace: 'pre-wrap',
+                  fontFamily: 'system-ui, sans-serif',
+                }}>
+                  {transcript}
+                </div>
+              )}
+            </div>
+          )}
+        </>
       ) : (
         <div className="flex flex-col items-center justify-center text-center px-4 py-8 gap-1">
           <div className="text-[10px] font-black uppercase tracking-widest text-brand-gray">

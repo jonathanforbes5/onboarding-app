@@ -8,9 +8,11 @@ create table if not exists media_links (
   slot_key   text primary key,
   url        text not null,
   title      text,
+  transcript text,
   updated_at timestamptz default now(),
   updated_by text
 );
+alter table media_links add column if not exists transcript text;
 alter table media_links enable row level security;
 do $$ begin
   if not exists (select 1 from pg_policies where tablename = 'media_links' and policyname = 'allow_all') then
@@ -43,7 +45,7 @@ export async function GET(req: NextRequest) {
   const slot = req.nextUrl.searchParams.get('slot');
 
   try {
-    const q = supabase.from('media_links').select('slot_key, url, title, updated_at, updated_by');
+    const q = supabase.from('media_links').select('slot_key, url, title, transcript, updated_at, updated_by');
     const { data, error } = slot ? await q.eq('slot_key', slot).maybeSingle() : await q;
 
     if (error?.message?.includes('does not exist')) {
@@ -65,18 +67,29 @@ export async function POST(req: NextRequest) {
   const supabase = client();
   if (!supabase) return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
 
-  const body = await req.json() as { slot_key: string; url: string; title?: string; updated_by?: string };
-  if (!body.slot_key || !body.url) {
-    return NextResponse.json({ error: 'slot_key and url required' }, { status: 400 });
+  const body = await req.json() as { slot_key: string; url?: string; title?: string; transcript?: string; updated_by?: string };
+  if (!body.slot_key) {
+    return NextResponse.json({ error: 'slot_key required' }, { status: 400 });
   }
 
-  const row = {
+  // Allow partial updates — if url isn't passed, leave it alone (we'll fetch existing).
+  let existingUrl: string | null = null;
+  if (!body.url) {
+    const existing = await supabase.from('media_links').select('url').eq('slot_key', body.slot_key.trim()).maybeSingle();
+    existingUrl = (existing.data as any)?.url ?? null;
+    if (!existingUrl) {
+      return NextResponse.json({ error: 'url required for new slot' }, { status: 400 });
+    }
+  }
+
+  const row: any = {
     slot_key:   body.slot_key.trim(),
-    url:        body.url.trim(),
-    title:      body.title?.trim() ?? null,
+    url:        (body.url ?? existingUrl)!.trim(),
     updated_by: body.updated_by ?? 'admin',
     updated_at: new Date().toISOString(),
   };
+  if (body.title      !== undefined) row.title      = body.title?.trim() ?? null;
+  if (body.transcript !== undefined) row.transcript = body.transcript ?? null;
 
   const { error } = await supabase.from('media_links').upsert(row, { onConflict: 'slot_key' });
 

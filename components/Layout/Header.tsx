@@ -45,6 +45,7 @@ export function Header() {
   }, []);
 
   const isPod5User     = currentUser?.userKey === 'ksenia' || currentUser?.userKey === 'adeen';
+  // In preview mode we simulate pod 5 specifically (so worksheet is always visible)
   const canSeeWorksheet = isPod5User || isSuperAdmin;
 
   // Primary tabs — always in the bar
@@ -90,7 +91,7 @@ export function Header() {
           gap: 8,
         }}>
           <Eye size={12} />
-          Previewing as pod manager —
+          Previewing as Pod 5 manager (Ksenia / Adeen) —
           <button
             onClick={() => setPreviewMode(false)}
             style={{ color: '#F5C800', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700 }}
@@ -295,7 +296,7 @@ export function Header() {
                 <button
                   onClick={() => setPreviewMode(!previewMode)}
                   className="p-1 rounded hover:bg-white/10 transition-colors"
-                  title={previewMode ? 'Exit pod manager preview' : 'Preview as pod manager'}
+                  title={previewMode ? 'Exit Pod 5 preview' : 'Preview as Pod 5 manager (Ksenia / Adeen)'}
                 >
                   {previewMode
                     ? <EyeOff size={13} className="text-brand-yellow" />

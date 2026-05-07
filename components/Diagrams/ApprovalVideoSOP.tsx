@@ -6,92 +6,112 @@ interface VideoSection {
   num: string;
   duration: string;
   title: string;
-  whatToCover: string[];
+  show: string;
+  explain: string[];
   watchOut: string;
 }
 
+// Explicit "show this → explain this → watch out for that" framework. Drawn
+// from the 3 reference Looms (Oscar / Cole / Tyler) — they all hit the same
+// beats with their own delivery. The pattern: SHOW the artefact, EXPLAIN it
+// while showing, then move on. Don't ask. Don't hedge.
 const SECTIONS: VideoSection[] = [
   {
     num: '1',
-    duration: '~15 sec',
-    title: 'Intro',
-    whatToCover: [
+    duration: '~10–15 sec',
+    title: 'Hook + Intro',
+    show: 'Yourself, on camera, energy on.',
+    explain: [
       'Greet by first name. Use the business name.',
-      'Tell them what they\'re about to see (the ads, landing page, survey, booking flow).',
+      'State what they\'re about to see (photos → ads → landing page → survey → booking → CRM).',
       'State the deadline + launch date explicitly. "Reply with approval or changes by Friday — we launch Monday."',
     ],
-    watchOut: 'Don\'t hedge. No "hopefully" or "we think this might work." You\'re the expert. You built this. Stand behind it.',
+    watchOut: 'Don\'t hedge. No "hopefully" or "we think this might work." You built this. Stand behind it.',
   },
   {
     num: '2',
-    duration: '~1 min',
-    title: 'The Ad Creatives',
-    whatToCover: [
-      'Show every approved ad variant — image / video, headline, primary text.',
-      'Explain WHY you chose each angle (storm, financing, free roof inspection, etc.).',
-      'Mention the placements (FB Feed, IG Feed, Stories, Reels — the 6 approved).',
-      'For the engagement ad (e.g. the $10K-roof headline): explicitly frame it as an ENGAGEMENT ad that makes the other ads perform better. Position the client as the best of three and address common shady industry practices + why prices differ drastically.',
-      'Reaffirm what Tyler and Cole tell their clients: "this engagement ad lifts the others — that\'s the role it plays in the set."',
-      'If creative came from public assets (Yelp / GMB / Facebook page), name the source so they don\'t panic about copyright.',
-      'If you used Ken AI-generated creative, say so explicitly so they know.',
+    duration: '~30–45 sec',
+    title: 'Show the Photos / Creatives',
+    show: 'Cycle through every approved image / video used in the ad set.',
+    explain: [
+      'Mix of real (their assets, public photos from FB/IG/GMB/Yelp) + AI-generated (Ken). Name the sources.',
+      'Branded trucks / completed projects / homeowner shots — name what each photo accomplishes.',
+      'If you\'re scaling spend, ask the client for MORE photos so creatives don\'t fatigue ("we\'re spending a lot, we don\'t want our ads to fatigue").',
     ],
-    watchOut: 'NEVER use the deprecated "New Roof Starting at $9,999" headline. We stopped using it — confirm it\'s removed before launch. If a media buyer auto-added it, tell them to strip it and re-verify.',
+    watchOut: 'NEVER use the deprecated "New Roof Starting at $9,999" headline. We stopped using it — confirm removed. If a media buyer auto-added it, strip it and re-verify before recording.',
   },
   {
     num: '3',
     duration: '~1 min',
-    title: 'The Landing Page',
-    whatToCover: [
-      'Click the actual ad → land on the page. Walk through it as a homeowner would.',
-      'Show the hero, the trust signals, the value proposition.',
-      'Hover over anything custom (their logo, their phone number, their service area).',
+    title: 'Show the Ad Copy Variants',
+    show: 'Each ad copy in the campaign — read or summarise. Tell them to pause if they want to read in full.',
+    explain: [
+      'Storytelling angle: positions the client as the best of three options, addresses shady industry practices, explains why prices differ drastically.',
+      'Engagement angle (e.g. the $10K-roof hook): explicitly frame as an ENGAGEMENT ad that LIFTS the other ads. It\'s a "one-two punch" — the engagement ad creates the impressions, the storytelling ad converts.',
+      'Insurance angle (if running): how you handle the insurance process so they "just pay the deductible".',
+      'Why we don\'t change proven copy — "this is tested across our client base, we don\'t recommend changing anything about these".',
     ],
-    watchOut: 'Confirm the phone number on the LP is YOUR tracking number, not their main line. Phone-number issues are the #1 launch-day surprise.',
+    watchOut: 'Don\'t reuse copy that\'s saturated in nearby clients. 4+ active clients in same metro on same copy = swap to another proven angle (US Shingles Specific, Thousands Less, etc.) before recording.',
   },
   {
     num: '4',
     duration: '~1 min',
-    title: 'The Survey',
-    whatToCover: [
-      'Walk through every survey question they\'ll see.',
-      'READ each question OUT LOUD as you scroll. Clients on phones can\'t always read the screen — speaking the questions guides them mentally.',
-      'Explain WHY each question is there ("we filter out renters at this step", "this question disqualifies anyone outside your service area", etc.).',
-      'Show the OSA logic if you\'re excluding zips.',
+    title: 'Show the Landing Page + Survey',
+    show: 'Click an actual ad → land on the page → scroll down through every survey question.',
+    explain: [
+      'READ EACH SURVEY QUESTION OUT LOUD as you scroll. Clients on phones can\'t always read the screen — speaking it guides them mentally.',
+      'WHY each question is there ("filters out renters", "disqualifies out-of-area", etc.).',
+      'OSA logic if you\'re excluding zips.',
+      'Mobile-first framing — "most of your traffic is on mobile, so I\'m showing you the mobile view".',
     ],
-    watchOut: 'Clients later complain "the leads suck" 90% of the time when they didn\'t see the survey upfront. Reading it aloud + explaining each question pre-handles that objection.',
+    watchOut: 'Confirm the phone number on the LP is YOUR tracking number bought on behalf of their business — NOT their main line. Phone-number issues are the #1 launch-day surprise.',
   },
   {
     num: '5',
     duration: '~30 sec',
-    title: 'The Booking + Reminder Flow',
-    whatToCover: [
-      'Show the calendar embed — what days/times are bookable.',
-      'Show the confirmation email and SMS template.',
-      'Mention the 24h, 1h, day-of reminder cadence.',
-      'Say who\'s calling the leads and how fast (Leila\'s VA team, < 5 min speed-to-lead).',
+    title: 'Show the Booking Page + Scroll-Down Trust',
+    show: 'Pick a time → answer the last 2 qualifying questions → request appointment. Then scroll back up to show what they see if they don\'t book immediately.',
+    explain: [
+      'NOT auto-booked into their calendar — VA still has to call and qualify before it lands in their calendar.',
+      'The 24h / 1h / day-of reminder cadence on confirmation.',
+      'Trust elements on the page: real Google reviews you pulled from their page, business blurb, completed-work photos. "If they don\'t book up top, this might convert them on the way down."',
     ],
-    watchOut: 'Confirm the calendar is connected to THEIR calendar (Google / Outlook). Double-bookings on day 1 destroy trust.',
+    watchOut: 'Service-area callout: name SPECIFIC CITIES, not vague regions. "Tucson & Douglas homeowners" — not "Southern Arizona." Validate via ChatGPT before recording if unsure.',
   },
   {
     num: '6',
-    duration: '~30 sec',
-    title: 'The CRM / Where Leads Land',
-    whatToCover: [
-      'Show the GHL pipeline — qualified → contacted → booked → showed → sold.',
-      'Tell them the THREE qualifying questions VAs ask every lead: (1) How old is your roof? (2) Do you have any leaks or damage? (3) Are you looking to get it done before the next season (e.g. summer)?',
-      'Show that they have access (or the team member they nominated does).',
-      'If they have their own CRM that we\'re linking to (Zapier / API hookup), explain what flows where and what stays in GHL.',
-      'Mention where they can pull reports themselves so they don\'t have to ask you.',
+    duration: '~15 sec',
+    title: 'Show the Thank-You Page',
+    show: 'The thank-you page after booking submission.',
+    explain: [
+      'The phone number on the page is the tracking number we bought on behalf of their business.',
+      'Caller ID is set so leads see the company name when our team calls.',
+      'A team photo / recap of social proof reinforces the booking decision.',
     ],
-    watchOut: 'If they don\'t have GHL access yet, send the invite IMMEDIATELY after the call. Never tell them "I\'ll set you up later."',
+    watchOut: 'Confirm the GHL sub-account time zone is set correctly (Settings → Business Profile). A wrong time zone makes the calendar embed look broken.',
   },
   {
     num: '7',
-    duration: '~15 sec',
+    duration: '~1 min',
+    title: 'Show the CRM — With a Real Lead Example',
+    show: 'Open a real client\'s GHL pipeline OR a recent live lead from another client. Walk through the timeline.',
+    explain: [
+      'Lead arrives → confirmation email + text fire instantly (show the timestamps).',
+      'VA calls within 5 minutes (show the actual call timestamp).',
+      'THE 3 QUALIFYING QUESTIONS the VA asks every lead: (1) How old is your roof? (2) Any leaks or damage? (3) Looking to get it done before the next season (e.g. summer)?',
+      'Once qualified → VA confirms appointment on the phone, texts the time/date to the homeowner, and books into the client\'s calendar.',
+      'If the client has their own CRM (Zapier hookup): explain what flows where — leads sync into their system, appointment notifications go via SMS to their phone.',
+    ],
+    watchOut: 'If they don\'t have GHL access yet, send the invite IMMEDIATELY after the video. Never tell them "I\'ll set you up later" — that becomes a chase.',
+  },
+  {
+    num: '8',
+    duration: '~10–15 sec',
     title: 'Outro — The Ask',
-    whatToCover: [
+    show: 'Yourself, one last time.',
+    explain: [
       'Restate the deadline + launch date.',
-      'Make the ask binary: "Reply with the word APPROVED, or list any changes you want."',
+      'Make the ask BINARY: "Reply with the word APPROVED, or list any changes you want."',
       'Tell them what happens next ("Once you approve, ads go live by [time/date].").',
     ],
     watchOut: 'Don\'t end with "let me know what you think". That invites unstructured feedback. Force a binary: approve, or specific changes.',
@@ -222,14 +242,23 @@ export function ApprovalVideoSOP() {
       </div>
 
       <div>
-        <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Reference examples — three different styles, same premise</h4>
+        <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Reference examples — three different styles, same framework</h4>
         <p className="text-xs text-brand-gray mb-2">
-          Each of us has our own delivery — Cole, Tyler, Oscar all hit the same beats but with personal style. Watch all three and find what fits you.
+          Three of us delivering the same approval-video framework. Different vertical, different style, same beats. Each Loom has a transcript below the embed (📝 toggle) so you can scan it instead of watching if you&apos;re short on time. <strong>Cole&apos;s example is HVAC — the framework is identical regardless of vertical.</strong>
         </p>
-        <div className="grid sm:grid-cols-3 gap-2">
-          <LoomSlot slotKey="s06_approval_example_1" title="Reference #1" subtitle="Exemplary structure" />
-          <LoomSlot slotKey="s06_approval_example_2" title="Reference #2" subtitle="Exemplary structure" />
-          <LoomSlot slotKey="s06_approval_example_3" title="Reference #3" subtitle="Exemplary structure" />
+        <div className="space-y-3">
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-brand-yellow mb-1">#1 — Oscar (roofing)</div>
+            <LoomSlot slotKey="s06_approval_example_1" title="Oscar — Roof Ignite" subtitle="Florida, 2 ad angles, Zapier-into-client-CRM example" />
+          </div>
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-brand-yellow mb-1">#2 — Cole (HVAC — same framework, different vertical)</div>
+            <LoomSlot slotKey="s06_approval_example_2" title="Cole — Emergency HVAC" subtitle="15 ads w/ same wording, scheduling-page caveat, real client CRM" />
+          </div>
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-brand-yellow mb-1">#3 — Tyler (roofing)</div>
+            <LoomSlot slotKey="s06_approval_example_3" title="Tyler — AG Exterior Solutions" subtitle="Nashville, 3 ad angles incl insurance + engagement, real call timestamps" />
+          </div>
         </div>
       </div>
 
@@ -259,16 +288,23 @@ export function ApprovalVideoSOP() {
                   <div className="text-[10px] text-white/60">{s.duration}</div>
                 </div>
               </div>
-              <div className="px-3 py-2 space-y-1.5">
-                <ul className="space-y-1">
-                  {s.whatToCover.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-brand-black">
-                      <span className="text-brand-yellow flex-shrink-0">▸</span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="text-[11px] text-red-700 italic border-l-2 border-red-300 pl-2 mt-1.5">
+              <div className="px-3 py-2 space-y-2">
+                <div className="rounded-lg bg-brand-gray-light px-2.5 py-1.5">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-gray">Show: </span>
+                  <span className="text-xs text-brand-black font-bold">{s.show}</span>
+                </div>
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-brand-gray mb-1">Make sure to explain:</div>
+                  <ul className="space-y-1">
+                    {s.explain.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs text-brand-black">
+                        <span className="text-brand-yellow flex-shrink-0">▸</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="text-[11px] text-red-700 italic border-l-2 border-red-300 pl-2">
                   Watch out: {s.watchOut}
                 </div>
               </div>

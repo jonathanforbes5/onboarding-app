@@ -14,40 +14,45 @@ export function BackToTop() {
   if (!visible) return null;
 
   return (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      title="Back to top"
-      style={{
-        position: 'fixed',
-        bottom: 'calc(env(safe-area-inset-bottom, 0px) + 88px)',
-        right: 20,
-        zIndex: 48,
-        width: 38,
-        height: 38,
-        borderRadius: '50%',
-        backgroundColor: '#1A1A1A',
-        border: '1px solid #333',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-        transition: 'opacity 0.2s, transform 0.2s',
-        animation: 'fadeInUp 0.2s ease',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = '#2A2A2A';
-        e.currentTarget.style.borderColor = '#F5C80066';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = '#1A1A1A';
-        e.currentTarget.style.borderColor = '#333';
-        e.currentTarget.style.transform = 'translateY(0)';
-      }}
-    >
-      <ChevronUp size={16} color="#888" />
-      <style>{`@keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }`}</style>
-    </button>
+    <>
+      <style>{`
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .back-to-top {
+          position: fixed;
+          bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+          right: 20px;
+          z-index: 43;
+          width: 38px; height: 38px;
+          border-radius: 50%;
+          background-color: #1A1A1A;
+          border: 1px solid #333;
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+          animation: fadeInUp 0.2s ease;
+          transition: background-color 0.15s, border-color 0.15s, transform 0.15s;
+        }
+        .back-to-top:hover {
+          background-color: #2A2A2A;
+          border-color: rgba(245,200,0,0.4);
+          transform: translateY(-2px);
+        }
+        /* On mobile, shift to left so it doesn't clash with right-side FABs */
+        @media (max-width: 640px) {
+          .back-to-top {
+            right: auto;
+            left: 16px;
+            bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+          }
+        }
+      `}</style>
+      <button
+        className="back-to-top"
+        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        title="Back to top"
+      >
+        <ChevronUp size={16} color="#888" />
+      </button>
+    </>
   );
 }

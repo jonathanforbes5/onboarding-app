@@ -45,8 +45,8 @@ export function Header() {
   }, []);
 
   const isPod5User     = currentUser?.userKey === 'ksenia' || currentUser?.userKey === 'adeen';
-  // In preview mode we simulate pod 5 specifically (so worksheet is always visible)
-  const canSeeWorksheet = isPod5User || isSuperAdmin;
+  // Worksheet only for pod 5 users, or super_admin when actively previewing as pod 5
+  const canSeeWorksheet = isPod5User || (isSuperAdmin && previewMode);
 
   // Primary tabs — always in the bar
   const primaryTabs = [

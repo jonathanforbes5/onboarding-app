@@ -393,7 +393,8 @@ export function CommunityWidget() {
           ))}
         </div>
 
-        {/* Content area */}
+        {/* Content area — roadmap scrolls horizontally, others vertically */}
+        {activeTab !== 'roadmap' && (
         <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
 
           {/* ── What's New ───────────────────────────────── */}
@@ -408,46 +409,41 @@ export function CommunityWidget() {
                 <p style={{ fontSize: 13, margin: 0 }}>No announcements yet — check back soon.</p>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
                 {announcements.map((a, idx) => (
                   <div key={a.id} style={{
-                    backgroundColor: '#161616',
-                    border: idx === 0 ? '1px solid #F5C80033' : '1px solid #1E1E1E',
-                    borderRadius: 12, overflow: 'hidden',
+                    padding: '18px 0',
+                    borderBottom: '1px solid #1C1C1C',
                   }}>
-                    {idx === 0 && <div style={{ height: 2, backgroundColor: '#F5C800' }} />}
-                    <div style={{ padding: '14px 16px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 8 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                          {idx === 0 && (
-                            <span style={{ backgroundColor: '#F5C800', color: '#000', fontSize: 8, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '2px 6px', borderRadius: 20 }}>
-                              New
-                            </span>
-                          )}
-                          <span style={{ color: '#555', fontSize: 11 }}>by {a.created_by}</span>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 3, color: '#3A3A3A', fontSize: 11 }}>
-                          <Calendar size={10} />
-                          <span>{timeAgo(a.created_at)}</span>
-                        </div>
-                      </div>
-                      <h3 style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.35 }}>
-                        {a.title}
-                      </h3>
-                      <p style={{ color: '#777', fontSize: 12, lineHeight: 1.7, margin: '0 0 8px', whiteSpace: 'pre-wrap' }}>
-                        {a.body}
-                      </p>
-                      {a.image_url && (
-                        <img src={a.image_url} alt="" style={{ width: '100%', borderRadius: 8, marginBottom: 8, display: 'block' }} />
-                      )}
-                      {a.loom_url && <LoomEmbed url={a.loom_url} />}
-                      {a.link_url && (
-                        <a href={a.link_url} target="_blank" rel="noopener noreferrer"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8, color: '#F5C800', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
-                          <ExternalLink size={12} /> View more
-                        </a>
+                    {/* Date + badge row */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                      <span style={{ color: '#444', fontSize: 11 }}>
+                        {new Date(a.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </span>
+                      {idx === 0 && (
+                        <span style={{ backgroundColor: '#F5C800', color: '#000', fontSize: 8, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '2px 6px', borderRadius: 20 }}>
+                          New
+                        </span>
                       )}
                     </div>
+                    {/* Title */}
+                    <h3 style={{ color: '#F0F0F0', fontSize: 15, fontWeight: 800, margin: '0 0 10px', lineHeight: 1.35 }}>
+                      {a.title}
+                    </h3>
+                    {/* Body */}
+                    <p style={{ color: '#888', fontSize: 12, lineHeight: 1.75, margin: '0 0 10px', whiteSpace: 'pre-wrap' }}>
+                      {a.body}
+                    </p>
+                    {a.image_url && (
+                      <img src={a.image_url} alt="" style={{ width: '100%', borderRadius: 8, marginBottom: 10, display: 'block' }} />
+                    )}
+                    {a.loom_url && <LoomEmbed url={a.loom_url} />}
+                    {a.link_url && (
+                      <a href={a.link_url} target="_blank" rel="noopener noreferrer"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8, color: '#F5C800', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>
+                        <ExternalLink size={12} /> View more
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>
@@ -576,48 +572,46 @@ export function CommunityWidget() {
                   <p style={{ fontSize: 12, margin: 0 }}>No ideas yet — be the first!</p>
                 </div>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
                   {feedItems.map(item => {
                     const s = STATUS_LABELS[item.status] ?? STATUS_LABELS.open;
                     return (
                       <div key={item.id} style={{
-                        display: 'flex', gap: 10, alignItems: 'flex-start',
-                        backgroundColor: '#161616', border: '1px solid #1E1E1E',
-                        borderRadius: 10, padding: '12px 14px',
+                        display: 'flex', gap: 12, alignItems: 'flex-start',
+                        padding: '14px 0',
+                        borderBottom: '1px solid #1C1C1C',
                       }}>
+                        {/* Frill-style vote box */}
                         <button onClick={() => vote(item.id)} disabled={votingId === item.id}
                           style={{
-                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
-                            minWidth: 36, padding: '5px 6px', borderRadius: 8,
-                            backgroundColor: item.hasVoted ? '#F5C80022' : '#1A1A1A',
-                            border: item.hasVoted ? '1px solid #F5C80066' : '1px solid #2A2A2A',
+                            display: 'flex', flexDirection: 'column', alignItems: 'center',
+                            justifyContent: 'center', gap: 1,
+                            width: 44, minHeight: 52, padding: '6px 4px', borderRadius: 8,
+                            backgroundColor: item.hasVoted ? '#1A1400' : '#1A1A1A',
+                            border: `1.5px solid ${item.hasVoted ? '#F5C80066' : '#2A2A2A'}`,
                             cursor: votingId === item.id ? 'wait' : 'pointer',
-                            flexShrink: 0,
+                            flexShrink: 0, transition: 'all 0.15s',
                           }}>
-                          <ChevronUp size={14} color={item.hasVoted ? '#F5C800' : '#444'} />
-                          <span style={{ color: item.hasVoted ? '#F5C800' : '#444', fontSize: 11, fontWeight: 800 }}>
+                          <ChevronUp size={15} color={item.hasVoted ? '#F5C800' : '#666'} />
+                          <span style={{ color: item.hasVoted ? '#F5C800' : '#CCC', fontSize: 14, fontWeight: 800, lineHeight: 1 }}>
                             {item.vote_count}
                           </span>
                         </button>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 6, marginBottom: 4, flexWrap: 'wrap' }}>
-                            <h4 style={{ color: '#F0F0F0', fontSize: 13, fontWeight: 700, margin: 0, lineHeight: 1.3, flex: 1 }}>
-                              {item.title}
-                            </h4>
-                            <span style={{ backgroundColor: s.bg, color: s.color, fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 20, border: `1px solid ${s.color}33`, whiteSpace: 'nowrap' }}>
-                              {s.label}
-                            </span>
-                          </div>
+                          <h4 style={{ color: '#ECECEC', fontSize: 13, fontWeight: 700, margin: '0 0 4px', lineHeight: 1.35 }}>
+                            {item.title}
+                          </h4>
                           {item.description && (
-                            <p style={{ color: '#555', fontSize: 11, margin: '0 0 3px', lineHeight: 1.5 }}>{item.description}</p>
+                            <p style={{ color: '#666', fontSize: 11, margin: '0 0 6px', lineHeight: 1.5 }}>{item.description}</p>
                           )}
                           <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
                             {item.category && (
-                              <span style={{ backgroundColor: '#1A1A1A', color: '#555', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 20, border: '1px solid #2A2A2A' }}>
-                                {item.category}
-                              </span>
+                              <span style={{ color: '#555', fontSize: 10, fontWeight: 600 }}>#{item.category}</span>
                             )}
-                            <span style={{ color: '#333', fontSize: 10 }}>{timeAgo(item.created_at)}</span>
+                            <span style={{ backgroundColor: s.bg, color: s.color, fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 10, border: `1px solid ${s.color}22` }}>
+                              {s.label}
+                            </span>
+                            <span style={{ color: '#3A3A3A', fontSize: 10, marginLeft: 'auto' }}>{timeAgo(item.created_at)}</span>
                           </div>
                         </div>
                       </div>
@@ -628,66 +622,70 @@ export function CommunityWidget() {
             </div>
           )}
 
-          {/* ── Roadmap ───────────────────────────────── */}
-          {activeTab === 'roadmap' && (
-            roadmapLoading ? (
-              <div style={{ display: 'flex', justifyContent: 'center', paddingTop: 40 }}>
-                <div style={{ width: 28, height: 28, border: '3px solid #222', borderTopColor: '#06B6D4', borderRadius: '50%', animation: 'cw-spin 0.8s linear infinite' }} />
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        </div>
+        )}
+
+        {/* ── Roadmap: horizontal kanban ─────────────────── */}
+        {activeTab === 'roadmap' && (
+          roadmapLoading ? (
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <div style={{ width: 28, height: 28, border: '3px solid #222', borderTopColor: '#06B6D4', borderRadius: '50%', animation: 'cw-spin 0.8s linear infinite' }} />
+            </div>
+          ) : roadmapItems.length === 0 ? (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', color: '#3A3A3A' }}>
+              <Map size={32} color="#2A2A2A" style={{ marginBottom: 8 }} />
+              <p style={{ fontSize: 12, margin: 0 }}>No roadmap items yet.</p>
+            </div>
+          ) : (
+            <div style={{ flex: 1, overflowX: 'auto', overflowY: 'hidden' }}>
+              <div style={{
+                display: 'flex', gap: 10, padding: '14px 16px',
+                alignItems: 'flex-start', minWidth: 'max-content', minHeight: '100%',
+              }}>
                 {ROADMAP_COLS.map(col => {
                   const colItems = roadmapItems.filter(i => i.status === col.key);
                   return (
-                    <div key={col.key}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10, paddingBottom: 8, borderBottom: `1px solid ${col.color}22` }}>
-                        <div style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: col.color, flexShrink: 0 }} />
-                        <span style={{ color: col.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{col.label}</span>
-                        <span style={{ marginLeft: 'auto', backgroundColor: `${col.color}18`, color: col.color, fontSize: 10, fontWeight: 700, padding: '1px 7px', borderRadius: 20 }}>
-                          {colItems.length}
-                        </span>
+                    <div key={col.key} style={{ width: 196, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                      {/* Column header */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
+                        <div style={{ width: 10, height: 10, borderRadius: '50%', border: `2px solid ${col.color}`, flexShrink: 0 }} />
+                        <span style={{ color: '#CCC', fontSize: 12, fontWeight: 700 }}>{col.label}</span>
+                        <span style={{ marginLeft: 'auto', color: '#444', fontSize: 11, fontWeight: 700 }}>({colItems.length})</span>
                       </div>
-                      {colItems.length === 0 ? (
-                        <div style={{ padding: '14px 12px', textAlign: 'center', border: '1px dashed #1E1E1E', borderRadius: 8, color: '#2A2A2A', fontSize: 11 }}>
-                          Nothing here yet
-                        </div>
-                      ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                          {colItems.map(item => (
-                            <div key={item.id} style={{
-                              backgroundColor: '#161616', border: '1px solid #1E1E1E',
-                              borderRadius: 10, padding: '12px 14px',
-                            }}>
-                              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: item.description ? 6 : 0 }}>
-                                <h4 style={{ color: '#F0F0F0', fontSize: 13, fontWeight: 700, margin: 0, lineHeight: 1.3 }}>{item.title}</h4>
-                                {item.category && (
-                                  <span style={{ backgroundColor: '#1A1A1A', color: '#444', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 20, border: '1px solid #222', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                                    {item.category}
-                                  </span>
-                                )}
-                              </div>
-                              {item.description && (
-                                <p style={{ color: '#555', fontSize: 11, margin: '0 0 4px', lineHeight: 1.5 }}>{item.description}</p>
+                      {/* Cards */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {colItems.length === 0 ? (
+                          <div style={{ padding: '20px 12px', textAlign: 'center', border: '1px dashed #1E1E1E', borderRadius: 10, color: '#2A2A2A', fontSize: 11 }}>
+                            Nothing yet
+                          </div>
+                        ) : colItems.map(item => (
+                          <div key={item.id} style={{
+                            backgroundColor: '#161616', border: '1px solid #222',
+                            borderRadius: 10, padding: '12px 14px',
+                          }}>
+                            <h4 style={{ color: '#E8E8E8', fontSize: 12, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.35 }}>
+                              {item.title}
+                            </h4>
+                            {item.description && (
+                              <p style={{ color: '#555', fontSize: 11, margin: '0 0 6px', lineHeight: 1.5 }}>{item.description}</p>
+                            )}
+                            <div style={{ display: 'flex', gap: 5, alignItems: 'center', flexWrap: 'wrap' }}>
+                              {item.category && (
+                                <span style={{ color: '#555', fontSize: 10, fontWeight: 600 }}>#{item.category}</span>
                               )}
-                              <span style={{ color: '#2A2A2A', fontSize: 10 }}>{timeAgo(item.updated_at)}</span>
+                              <span style={{ color: '#2A2A2A', fontSize: 10, marginLeft: 'auto' }}>{timeAgo(item.updated_at)}</span>
                             </div>
-                          ))}
-                        </div>
-                      )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   );
                 })}
-                {roadmapItems.length === 0 && (
-                  <div style={{ textAlign: 'center', padding: '40px 20px', color: '#3A3A3A' }}>
-                    <Map size={32} color="#2A2A2A" style={{ display: 'block', margin: '0 auto 8px' }} />
-                    <p style={{ fontSize: 12, margin: 0 }}>No roadmap items yet.</p>
-                  </div>
-                )}
               </div>
-            )
-          )}
+            </div>
+          )
+        )}
 
-        </div>
       </div>
     </>
   );

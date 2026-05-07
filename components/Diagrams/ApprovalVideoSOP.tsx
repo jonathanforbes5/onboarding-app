@@ -153,6 +153,130 @@ const PRECHECK = [
   'Loom is set to ≤5 min — script the bullets above before recording',
 ];
 
+interface CommonMistake {
+  rank: number;
+  mistake: string;
+  why: string;
+  fix: string;
+  severity: 'critical' | 'high' | 'medium';
+  sourceCase?: string;
+}
+
+// Ranked by impact, drawn from real Slack feedback Oscar gave to pod managers.
+// Critical = breaks the launch / costs trust the moment client watches it.
+// High    = silently kills the cycle 14–28 days later.
+// Medium  = nitpicky but the difference between 90% approval and 100%.
+const COMMON_MISTAKES: CommonMistake[] = [
+  {
+    rank: 1,
+    severity: 'critical',
+    mistake: 'Deprecated "$9,999 new roof" headline still showing in the ads',
+    why: 'We stopped using that copy. Some media buyers still auto-add it. If the client sees it on the approval video, you look unprepared. If launch happens with it, performance suffers because the headline is no longer aligned with the rest of the funnel.',
+    fix: 'Pre-record check: open every ad in the campaign and confirm the headline is removed. If you find it, ping Emmanuel/Mervin/Bren in ClickUp to strip it from every ad and re-verify before recording.',
+    sourceCase: 'Gregory / Castillo, Abdullah / Sunridge',
+  },
+  {
+    rank: 2,
+    severity: 'critical',
+    mistake: 'Advantage+ Placements or Advantage+ Audience left ON',
+    why: 'These auto-enabled features expand placements beyond the 6 approved ones and can hijack targeting. They quietly hurt CPA and inflate OSA. Often re-enabled silently when a media buyer duplicates a campaign.',
+    fix: 'Pre-record check: verify both Advantage+ toggles are OFF in Meta Ads Manager. Specifically check after any campaign duplication.',
+    sourceCase: 'Abdullah / Sunridge',
+  },
+  {
+    rank: 3,
+    severity: 'critical',
+    mistake: 'Service-area callout too broad ("Southern Arizona", "Tristate")',
+    why: 'Homeowners don\'t identify with vague regions. "Southern Arizona homeowners" doesn\'t resonate the way "Tucson & Douglas homeowners" does. CTR drops, lead quality drops, the client thinks the targeting is off.',
+    fix: 'Use specific cities or county names. Validate the callout via ChatGPT against the actual ZIP / radius / cities being targeted. Ask: "what callout will resonate with homeowners in these specific areas?"',
+    sourceCase: 'Abdullah / Sunridge ("Southern Arizona" → "Tucson & Douglas")',
+  },
+  {
+    rank: 4,
+    severity: 'high',
+    mistake: 'Copy saturation — same proven copy as 4+ active clients in the same metro',
+    why: 'Meta auctions you against your own clients. Same audience sees similar ads from different brands. CPMs rise, CTR drops, all clients in the metro suffer.',
+    fix: 'Before launch, check the active client list in the metro. If 4+ clients are running the same copy, swap to a different proven angle ("US Shingles Specific", "Thousands Less", etc.) and scrub the old client details out before pasting.',
+    sourceCase: 'Sam / Vertical Roofing (Tampa)',
+  },
+  {
+    rank: 5,
+    severity: 'high',
+    mistake: 'Engagement-ad framing missing — client thinks the $10K headline is what we\'re promising',
+    why: 'The $10K headline is an ENGAGEMENT ad. Without explanation, the client panics ("you can\'t deliver a $10K roof") OR uses it against you mid-cycle ("you said roofs were $10K"). Pre-handle by framing the role of the ad explicitly.',
+    fix: 'When walking the engagement ad: "this is an engagement ad — its job is to lift the others. It positions you as the best of three options, addresses common shady industry practices, and explains why prices differ drastically. Tyler and Cole frame this the same way to all their clients."',
+    sourceCase: 'Sam / Vertical Roofing, Gregory / Castillo',
+  },
+  {
+    rank: 6,
+    severity: 'high',
+    mistake: 'Survey questions shown but not read aloud',
+    why: 'Clients on phones can\'t always read fast enough. Speaking the questions guides them mentally and is what pre-handles the "your leads suck" objection 90% of the time. They saw + heard the survey upfront — they can\'t claim surprise mid-cycle.',
+    fix: 'Read every survey question OUT LOUD as you scroll. Explain WHY each one is there ("filters out renters", "out-of-area exclusion", etc.).',
+    sourceCase: 'Gregory / Castillo',
+  },
+  {
+    rank: 7,
+    severity: 'high',
+    mistake: 'CRM walkthrough doesn\'t surface the 3 VA qualifying questions',
+    why: 'When a "leads suck" complaint comes mid-cycle, the client claims they didn\'t know what was being asked. Surfacing the 3 questions in the approval video creates the receipt.',
+    fix: 'In the CRM section, explicitly say: "After the lead submits, our VA team calls within 5 minutes and asks three things — (1) How old is your roof? (2) Any leaks or damage? (3) Are you looking to get this done before the next season?"',
+    sourceCase: 'Gregory / Castillo, Sam / Vertical Roofing',
+  },
+  {
+    rank: 8,
+    severity: 'high',
+    mistake: 'Phone number on landing page is client\'s main line, not the tracking number',
+    why: 'Calls go to the wrong place. Lead attribution breaks. Worst case: the client picks up and is confused by the "spam" calls.',
+    fix: 'Hover over the phone number on the LP during recording. State explicitly: "this is a tracking number we bought on behalf of your business — calls route to our team within 5 minutes."',
+    sourceCase: 'General pattern',
+  },
+  {
+    rank: 9,
+    severity: 'high',
+    mistake: 'GoHighLevel sub-account time zone is wrong',
+    why: 'Calendar embed shows the wrong times. Bookings land on the wrong slots. Client sees a broken calendar in the approval video and loses confidence.',
+    fix: 'Open Settings → Business Profile in the GHL sub-account and confirm the time zone matches the client\'s actual location BEFORE recording.',
+    sourceCase: 'Abdullah / Sunridge',
+  },
+  {
+    rank: 10,
+    severity: 'medium',
+    mistake: 'Hedging language ("hopefully", "we think", "this might work")',
+    why: 'Hedging signals you don\'t trust your own setup. Clients pick up on it instantly and translate it into permission to push back later. You built this — stand behind it.',
+    fix: 'Replace hedging with confidence: "this WILL perform" / "we\'re running our proven angle" / "this is what works." If you genuinely have doubts, fix the underlying issue before recording — don\'t paper over with hedge words.',
+  },
+  {
+    rank: 11,
+    severity: 'medium',
+    mistake: 'Asking for "thoughts" instead of a binary approval',
+    why: 'Open-ended asks invite scope-creep feedback. Clients send back rambling lists of "what about this", which delay launch and never have clean closure.',
+    fix: 'End with: "Reply with the word APPROVED, or list any specific changes you want." Force binary.',
+  },
+  {
+    rank: 12,
+    severity: 'medium',
+    mistake: 'Going over 5 minutes',
+    why: 'Clients skip. Loom analytics show drop-off after ~4–5 minutes for product walkthroughs. The longer the video, the lower the chance they finish — and incomplete watches mean they didn\'t see the survey or CRM section, which means they didn\'t pre-handle the objections.',
+    fix: 'Script the bullets before recording. If you can\'t fit it in 5 min, you\'re explaining too much. Tighten the explanation per section, not the section count.',
+  },
+  {
+    rank: 13,
+    severity: 'medium',
+    mistake: 'Telling the client "I\'ll set you up with GHL access later"',
+    why: 'Becomes a chase. Client either nags you for it or — worse — pulls back from active engagement because they can\'t see the pipeline.',
+    fix: 'Send the GHL invite IMMEDIATELY after recording. The video closes with "I just sent you an invite to [email]" — never with a promise to do it later.',
+  },
+  {
+    rank: 14,
+    severity: 'medium',
+    mistake: 'Brief/rushed intros that skip framing what they\'re about to see',
+    why: 'New hires often dive straight into "so here are the photos" without setting context. The client doesn\'t know what to expect or what an approval looks like.',
+    fix: 'Open with: "I\'m going to walk you through everything we built — photos, ads, landing page, survey, booking, CRM — then ask for your green light." Sets the path.',
+    sourceCase: 'Abdullah / Sunridge (original)',
+  },
+];
+
 interface CaseStudy {
   id: string;
   client: string;
@@ -333,6 +457,46 @@ export function ApprovalVideoSOP() {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      <div id="common-mistakes" style={{ scrollMarginTop: 60 }}>
+        <h4 className="font-black text-xs uppercase tracking-widest text-brand-gray mb-2">Common mistakes — ranked by impact</h4>
+        <p className="text-xs text-brand-gray mb-2">
+          Drawn from every approval-video Oscar has reviewed. Critical = breaks trust on the spot. High = silently kills the cycle 14–28 days later. Medium = the difference between 90% approval and 100%.
+        </p>
+        <div className="space-y-1.5">
+          {COMMON_MISTAKES.map((m) => {
+            const sevColor = m.severity === 'critical' ? '#7F1D1D' : m.severity === 'high' ? '#EA580C' : '#94A3B8';
+            const sevBg    = m.severity === 'critical' ? '#FEE2E2' : m.severity === 'high' ? '#FFEDD5' : '#F1F5F9';
+            return (
+              <div key={m.rank} className="rounded-xl border border-brand-gray-mid bg-white overflow-hidden">
+                <div className="flex items-start gap-3 px-3 py-2.5">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black"
+                       style={{ backgroundColor: sevBg, color: sevColor }}>
+                    {m.rank}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className="font-black text-sm text-brand-black">{m.mistake}</span>
+                      <span className="text-[9px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded"
+                            style={{ backgroundColor: sevColor, color: '#fff' }}>
+                        {m.severity}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-brand-gray mb-1.5"><strong className="text-brand-black">Why it matters:</strong> {m.why}</div>
+                    <div className="text-[11px] text-brand-black bg-green-50 border border-green-200 rounded px-2 py-1.5">
+                      <span className="font-black uppercase tracking-widest text-[9px] text-green-800">Fix: </span>
+                      {m.fix}
+                    </div>
+                    {m.sourceCase && (
+                      <div className="text-[10px] text-brand-gray italic mt-1.5">Surfaced from: {m.sourceCase}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

@@ -102,8 +102,16 @@
       "id": "google_workspace",
       "title": "Google Workspace",
       "description": "Docs, Sheets, and Drive for reporting and documentation. Logbook and Client Check-In Sheet live here.",
-      "url": "https://workspace.google.com",
+      "url": "https://drive.google.com",
       "icon": "📊",
+      "category": "tool"
+    },
+    {
+      "id": "quickbooks",
+      "title": "QuickBooks (Employee)",
+      "description": "Employee login portal for time tracking, paystubs, and tax documents. TODO[OSCAR]: confirm exact employee login URL.",
+      "url": "https://accounts.intuit.com",
+      "icon": "💵",
       "category": "tool"
     },
     {

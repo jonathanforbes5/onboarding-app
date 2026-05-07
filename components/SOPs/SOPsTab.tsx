@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import sopData from '@/repo/data/sops.json';
 import { ClientMap } from '@/components/Diagrams/ClientMap';
 import { ApprovalVideoSOP } from '@/components/Diagrams/ApprovalVideoSOP';
+import { useApp } from '@/context/AppContext';
 
 function Collapsible({ id, icon, title, subtitle, accent, children }: {
   id?: string;
@@ -140,6 +141,7 @@ function SectionHeader({ icon, title, subtitle }: SectionHeaderProps) {
 }
 
 export function SOPsTab() {
+  const { setActiveTab, setCurrentSection } = useApp();
   const [activeFilter, setActiveFilter] = useState<FilterTag>('all');
 
   const filteredSOPs = sopData.sops.filter((sop) => {
@@ -196,12 +198,53 @@ export function SOPsTab() {
         <div id="quick-access" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
           <SectionHeader icon="⚡" title="Quick Access" subtitle="Open these daily — know where they are." />
 
+          {/* Big Picture — internal navigation card. Highest-priority quick-access. */}
+          <button
+            onClick={() => {
+              setActiveTab('sections');
+              setCurrentSection(6);
+              setTimeout(() => document.getElementById('big-picture')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+            }}
+            style={{
+              width: '100%',
+              display: 'flex', alignItems: 'center', gap: 12,
+              background: 'linear-gradient(135deg, #1A1600 0%, #141414 80%)',
+              border: '1px solid #F5C80066',
+              borderRadius: 12,
+              padding: '14px 16px',
+              marginBottom: 12,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              textAlign: 'left',
+              transition: 'border-color 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#F5C800'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#F5C80066'; }}
+          >
+            <span style={{ fontSize: 20 }}>🎯</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800 }}>The Big Picture — Customer Journey + Who Does What</span>
+                <span style={{
+                  fontSize: 9, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase',
+                  color: '#000', backgroundColor: '#F5C800', padding: '2px 6px', borderRadius: 4,
+                }}>
+                  Watch first
+                </span>
+              </div>
+              <div style={{ color: '#888', fontSize: 11, marginTop: 3 }}>
+                Interactive Miro board + Loom walkthrough. The connective tissue across every other section. Re-watch any time work feels disconnected.
+              </div>
+            </div>
+            <span style={{ color: '#F5C800', fontSize: 14, fontWeight: 800 }}>→</span>
+          </button>
+
           {/* Client Map — collapsible, closed by default */}
           <Collapsible
             id="clientele"
             icon="🗺️"
             title="RoofIgnite Clientele At A Glance"
-            subtitle="Live map of every active and pre-launch account. Click a state or dot for full client profiles (admin only)."
+            subtitle="Live map. Click a state or dot for full client profiles (admin)."
             accent="#F5C800"
           >
             <ClientMap />

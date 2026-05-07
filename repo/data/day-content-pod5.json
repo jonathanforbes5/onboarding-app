@@ -15,23 +15,66 @@
       "unlock_condition": "none",
       "sections": [
         {
-          "id": "p5d1-orientation",
-          "title": "Company Foundations Presentation",
+          "id": "p5d1-bigpicture",
+          "title": "FIRST: Watch The Big Picture (Section 6)",
           "type": "session",
-          "instruction": "Work through the Company tab in this portal. The presentation is long — take your time, split across Day 1 and Day 2 morning if needed. Complete every quiz with at least 80%.",
+          "instruction": "Before anything else — open Company → Section 6 → 'The Big Picture' (yellow START HERE badge). Watch the Loom walkthrough end-to-end and pan around the Miro board. This is the connective tissue across every other section. Re-open it whenever something feels disconnected.",
           "items": [
-            "Open the Company tab in this portal and start from Section 1",
-            "Company history: Mani and Oscar founding story, Roof Ignite brand and mission",
-            "Three niches: Roofing (primary 80–90%), HVAC, Gutters — ticket sizes, sales cycles, seasonality",
-            "Client ICP: $2.5M+ revenue, 3+ years in business, growth-minded, $3K+/month ad spend",
-            "28-day cycle model: setup fees ($1.5K–$5K), retainer ($4K + 10% ad spend), 80% margin rule",
-            "Full funnel: Ads → Landing Page → Survey → GHL CRM → VA call → Booked Appointment",
-            "Your role: Revenue Retention Engine — quarterback, not the doer",
-            "Layer 1 vs. Layer 2 metrics framework — how you diagnose performance",
-            "Monday/Thursday status updates → Tuesday/Friday review calls structure",
-            "Culture: radical ownership, no egos, feedback-first",
-            "Complete each section knowledge quiz — minimum 80% to pass",
-            "Growth roadmap: 5 pods → $1M/month target by end of summer 2026"
+            "Open Company → Section 6: Service Delivery → scroll to 'The Big Picture' card at the top",
+            "Watch the Loom walkthrough end-to-end (~45 min). Optional: 1.5x speed",
+            "Pan + zoom the Miro board — explore the customer journey from B2B lead to offboarding AND who owns each stage",
+            "Shortcut: from Overview tab, click the yellow 'WATCH FIRST' card right under search"
+          ]
+        },
+        {
+          "id": "p5d1-orientation",
+          "title": "Company Foundations — Sections 1–13",
+          "type": "session",
+          "instruction": "Work through Sections 1–13 in order. Take your time, split across Day 1 and Day 2 morning if needed. Complete every quiz with at least 80%.",
+          "items": [
+            "Section 1: Company Vision & Growth — Mani + Oscar founding story, $300K → $1M/month roadmap, retention math",
+            "Section 2: The Contractor Industry — Roofing (primary 80–90%), HVAC, Gutters — markets, psychology, seasonality",
+            "Section 3: Business Model & Offer — 28-day cycle, setup fees, $4K + 10% retainer, 80% margin rule, KRS / Gutter Shutter pricing",
+            "Section 4: How We Generate Results — Full funnel: Ads → LP → Survey → GHL → VA → Booked Appointment",
+            "Section 5: Sales Process & ICP — How clients are closed before they reach you",
+            "Section 6: Service Delivery Flow — already started with the Big Picture above; finish the rest of the section",
+            "Section 7: Organizational Structure — your role as quarterback, the specialist team, the live client map",
+            "Section 8: Layer 1 / 2 / 3 Metrics — Layer 1 first, drill Layer 2 only when L1 is red, pull Layer 3 levers",
+            "Section 9: KPI Diagnosis Playbook — red/yellow/green account triage",
+            "Section 10: Culture & Performance — what radical ownership actually looks like in practice",
+            "Section 11: Account Management Playbook",
+            "Section 12: Onboarding Call Mastery",
+            "Section 13: Tools & Systems — your tech stack + the four key Slack channels",
+            "Complete each section knowledge quiz — minimum 80% to pass before moving on"
+          ]
+        },
+        {
+          "id": "p5d1-mindset",
+          "title": "Mindset & Context — Sections 14–20",
+          "type": "session",
+          "instruction": "These are NEW required sections covering how you think, how you communicate, how you spend your week, and the broader business context. Newer pod managers tend to skip these; it's a mistake. They're the difference between a pod manager who delivers AND keeps clients vs one who only delivers.",
+          "items": [
+            "Section 14: Mindset & Communication — How to ask a question, who-to-go-to-for-what (pod-aware), 6-tier escalation matrix",
+            "Section 15: Layered Thinking — L1/L2/L3 framework with worked examples from a real audit report",
+            "Section 16: Revenue Partner Mindset — 50% results / 50% narrative, the 'little birdie', revenue-tier psychology, 6 churn-scenario role-plays",
+            "Section 17: Weekly Rhythm — Mon-Sat schedule + your daily 0–30 min morning routine",
+            "Section 18: Other Departments — Sales, Media Buying, Creative, VA, Finance, Ops — what each one actually does",
+            "Section 19: Brand Partners — KRS, Gutter Shutter, Stonegrove preferred-partner relationships + pricing",
+            "Section 20: Time Allocation — how long each task should actually take",
+            "Complete the quiz on each — same 80% bar"
+          ]
+        },
+        {
+          "id": "p5d1-approval-sop",
+          "title": "Read the Pre-Launch Approval Video SOP",
+          "type": "session",
+          "instruction": "This is the single highest-leverage SOP in the portal. The approval video is what pre-handles 90% of mid-cycle 'your leads suck' conversations. You'll record one for every client before launch.",
+          "items": [
+            "Open Resources tab → Standard Operating Procedures → expand 'Pre-Launch Approval Video — SOP'",
+            "Watch all 3 reference examples (Oscar / Cole HVAC / Tyler) — different styles, same framework",
+            "Read the 8-step 'Show this → Explain this' framework",
+            "Read the 14 ranked Common Mistakes (critical / high / medium)",
+            "Skim the 4 case studies (Castillo, Vertical Roofing, Sunridge, Horizon) — see how Oscar gives feedback in real reviews"
           ]
         },
         {
@@ -56,10 +99,17 @@
           "items": [
             "Request Logbook access from Leila (NOT Jonathan — Leila owns the Logbook)",
             "Confirm ClickUp access (all tasks, comms, media buyer coordination live here)",
-            "Get added to relevant Slack channels: #internal-team, #ops-manager-discussion",
+            "Get added to: #ops-manager-discussion (your Mon/Thu status updates land here)",
+            "Get added to: #manager-discussion (VA management coordination — Leila, Aica, Pamela)",
+            "Get added to: #onboarding-feedback-channel (post-onboarding-call QA scorecards from the bot)",
+            "Get added to: #onboarding-cracks (cracks bot fires at 7:30 AM daily; respond in-thread when one of yours is flagged)",
+            "Get added to: #post-onboarding-discussion (post-onboarding QA summaries)",
+            "Get added to: #internal-team (team-wide notices)",
+            "Confirm you'll be added to per-client channels as your accounts come online",
             "Log into GoHighLevel (GHL) — confirm sub-account access",
             "Log into Meta Business Manager — confirm partner access to client accounts",
-            "Access Command Center — understand the health status dashboard"
+            "Access Command Center — understand the health status dashboard",
+            "Open the BambooHR org chart from the Overview tab and skim the full company structure"
           ]
         },
         {
@@ -208,6 +258,18 @@
       "quiz_id": "day4",
       "unlock_condition": "day3_quiz_passed",
       "sections": [
+        {
+          "id": "p5d4-bigpicture-rewatch",
+          "title": "Re-watch The Big Picture (Section 6) with operating-rhythm lens",
+          "type": "session",
+          "instruction": "You watched it cold on Day 1. Now you've absorbed Sections 1–20 + recorded one approval video — re-open the Big Picture with a different question in mind: 'when in the week do I touch each stage?' This is what locks the operating rhythm in.",
+          "items": [
+            "Re-open Company → Section 6 → 'The Big Picture' Loom + Miro board",
+            "As you re-watch, map each stage of the customer journey to the day-of-week you'd touch it (Mon report-prep, Tue pod meeting, Wed/Thu execution, Fri pod meeting + close-out, Sat wrap)",
+            "Cross-reference Section 17 (Weekly Rhythm) — does your mental model match the published cadence?",
+            "Note any gaps you find, post them in #ops-manager-discussion — Jon answers them or feeds them back into the Miro board"
+          ]
+        },
         {
           "id": "p5d4-update",
           "title": "Your First Monday/Thursday Status Update",

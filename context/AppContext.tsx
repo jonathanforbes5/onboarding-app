@@ -11,7 +11,7 @@ import {
 } from '@/lib/syncService';
 
 export type { UserProfile };
-export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'announcements' | 'feedback' | 'roadmap';
 
 const TAB_TO_PATH: Record<ActiveTab, string> = {
   overview: '/',
@@ -20,6 +20,9 @@ const TAB_TO_PATH: Record<ActiveTab, string> = {
   resources: '/resources',
   recordings: '/recordings',
   admin: '/admin',
+  announcements: '/announcements',
+  feedback: '/feedback',
+  roadmap: '/roadmap',
 };
 
 function pathToTab(pathname: string): ActiveTab | null {
@@ -31,6 +34,9 @@ function pathToTab(pathname: string): ActiveTab | null {
     resources: 'resources',
     recordings: 'recordings',
     admin: 'admin',
+    announcements: 'announcements',
+    feedback: 'feedback',
+    roadmap: 'roadmap',
   };
   return map[slug] ?? null;
 }
@@ -365,13 +371,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // ── URL sync: read path on mount to set initial tab ─────
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const tab = pathToTab(window.location.pathname);
-    if (tab) setState((prev) => ({ ...prev, activeTab: tab }));
 
-    const onPop = () => {
-      const t = pathToTab(window.location.pathname);
-      if (t) setState((prev) => ({ ...prev, activeTab: t }));
-    };
+    function syncFromPath(pathname: string) {
+      const parts = pathname.replace(/^\//, '').split('/');
+      const slug = parts[0];
+      if (slug === 'company' && parts[1]) {
+        const id = parseInt(parts[1], 10);
+        if (!isNaN(id) && id >= 1 && id <= 20) {
+          setState((prev) => ({ ...prev, activeTab: 'sections', currentSection: id, showCurriculumMap: false }));
+          return;
+        }
+      }
+      const tab = pathToTab(pathname);
+      if (tab) setState((prev) => ({ ...prev, activeTab: tab }));
+    }
+
+    syncFromPath(window.location.pathname);
+    const onPop = () => syncFromPath(window.location.pathname);
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
@@ -393,8 +409,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const setCurrentSection = useCallback((id: number) => {
+    if (typeof window !== 'undefined') {
+      const path = `/company/${id}`;
+      if (window.location.pathname !== path) {
+        window.history.pushState(null, '', path);
+      }
+    }
     setState((prev) => {
-      const next = { ...prev, currentSection: id, showCurriculumMap: false };
+      const next = { ...prev, currentSection: id, showCurriculumMap: false, activeTab: 'sections' as ActiveTab };
       persistSectionsLocal(next);
       return next;
     });

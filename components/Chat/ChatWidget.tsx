@@ -34,7 +34,9 @@ const SECTION_TITLES: Record<number, string> = {
   4: 'How We Generate Results', 5: 'Sales Process & ICP', 6: 'Service Delivery Flow',
   7: 'Organizational Structure', 8: 'Layer 1 vs Layer 2 Metrics', 9: 'KPI Diagnosis Playbook',
   10: 'Culture & Performance', 11: 'Account Management Playbook', 12: 'Onboarding Call Mastery',
-  13: 'Tools & Systems',
+  13: 'Tools & Systems', 14: 'Mindset & Communication', 15: 'Layered Thinking',
+  16: 'Revenue Partner Mindset', 17: 'Weekly Rhythm', 18: 'Other Departments',
+  19: 'Brand Partners', 20: 'Time Allocation',
 };
 
 function MessageBubble({ msg, onNavigate }: { msg: Message; onNavigate?: (href: string) => void }) {

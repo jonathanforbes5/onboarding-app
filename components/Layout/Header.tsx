@@ -65,11 +65,14 @@ export function Header() {
   const canSeeWorksheet = isPod5User || isSuperAdmin;
 
   const allTabs = [
-    { id: 'overview',   label: 'Overview',   icon: '🏠' },
+    { id: 'overview',       label: 'Overview',       icon: '🏠' },
     ...(canSeeWorksheet ? [{ id: 'worksheet', label: 'Worksheet', icon: '📋' }] : []),
-    { id: 'sections',   label: 'Company',    icon: '📚' },
-    { id: 'resources',  label: 'Resources',  icon: '📁' },
-    { id: 'recordings', label: 'Recordings', icon: '🎬' },
+    { id: 'sections',       label: 'Company',        icon: '📚' },
+    { id: 'resources',      label: 'Resources',      icon: '📁' },
+    { id: 'recordings',     label: 'Recordings',     icon: '🎬' },
+    { id: 'announcements',  label: "What's New",     icon: '📣' },
+    { id: 'feedback',       label: 'Feedback',       icon: '💡' },
+    { id: 'roadmap',        label: 'Roadmap',        icon: '🗺️' },
     ...(isSuperAdmin ? [{ id: 'admin', label: 'Admin', icon: '📊' }] : []),
   ] as const;
   const tabs = allTabs;

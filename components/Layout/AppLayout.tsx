@@ -10,6 +10,9 @@ import { AdminDashboard } from '@/components/Admin/AdminDashboard';
 import { SOPsTab } from '@/components/SOPs/SOPsTab';
 import { RecordingsTab } from '@/components/Recordings/RecordingsTab';
 import { CompanyCurriculum } from '@/components/Sections/CompanyCurriculum';
+import { AnnouncementsTab } from '@/components/Announcements/AnnouncementsTab';
+import { FeedbackTab } from '@/components/Feedback/FeedbackTab';
+import { RoadmapTab } from '@/components/Roadmap/RoadmapTab';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { ChatWidget } from '@/components/Chat/ChatWidget';
@@ -145,6 +148,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {activeTab === 'admin' && currentUser.role === 'super_admin' && (
         <div className="pt-[42px]">
           <AdminDashboard />
+        </div>
+      )}
+
+      {activeTab === 'announcements' && (
+        <div className="pt-[42px]">
+          <AnnouncementsTab />
+        </div>
+      )}
+
+      {activeTab === 'feedback' && (
+        <div className="pt-[42px]">
+          <FeedbackTab />
+        </div>
+      )}
+
+      {activeTab === 'roadmap' && (
+        <div className="pt-[42px]">
+          <RoadmapTab />
         </div>
       )}
 

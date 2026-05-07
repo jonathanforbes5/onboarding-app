@@ -10,7 +10,7 @@ import { SECTIONS } from '@/data/sections';
 
 const ICONS: Record<string, React.ElementType> = {
   Rocket, Building2, RefreshCw, TrendingUp, Users, Workflow,
-  Network, BarChart3, Stethoscope, Zap, Settings, Target, Phone,
+  Network, BarChart3, Stethoscope, Zap, Settings, Target, Phone, Clock,
 };
 
 const SECTION_THEMES: Record<number, { accent: string; bg: string }> = {
@@ -27,13 +27,22 @@ const SECTION_THEMES: Record<number, { accent: string; bg: string }> = {
   11: { accent: '#EF4444', bg: '#1A0D0D' },
   12: { accent: '#22D3EE', bg: '#0D181A' },
   13: { accent: '#94A3B8', bg: '#111418' },
+  14: { accent: '#F97316', bg: '#1A0E00' },
+  15: { accent: '#F97316', bg: '#1A0E00' },
+  16: { accent: '#F97316', bg: '#1A0E00' },
+  17: { accent: '#06B6D4', bg: '#001A1A' },
+  18: { accent: '#06B6D4', bg: '#001A1A' },
+  19: { accent: '#06B6D4', bg: '#001A1A' },
+  20: { accent: '#06B6D4', bg: '#001A1A' },
 };
 
 const LEARNING_PHASES = [
-  { label: 'Foundation', sections: [1, 2, 3],        color: '#F5C800', desc: 'Company, industry, and business model' },
-  { label: 'Delivery',   sections: [4, 5, 6],         color: '#22C55E', desc: 'How we generate results and manage clients' },
-  { label: 'Operations', sections: [7, 8, 9],         color: '#4A90D9', desc: 'Team structure, metrics, and diagnosis' },
-  { label: 'Mastery',    sections: [10, 11, 12, 13], color: '#A78BFA', desc: 'Culture, performance standards, tools, and mastery' },
+  { label: 'Foundation', sections: [1, 2, 3],         color: '#F5C800', desc: 'Company, industry, and business model' },
+  { label: 'Delivery',   sections: [4, 5, 6],          color: '#22C55E', desc: 'How we generate results and manage clients' },
+  { label: 'Operations', sections: [7, 8, 9],          color: '#4A90D9', desc: 'Team structure, metrics, and diagnosis' },
+  { label: 'Mastery',    sections: [10, 11, 12, 13],  color: '#A78BFA', desc: 'Culture, performance standards, tools, and mastery' },
+  { label: 'Mindset',    sections: [14, 15, 16],       color: '#F97316', desc: 'Communication, layered thinking, and revenue partner mindset' },
+  { label: 'Context',    sections: [17, 18, 19, 20],  color: '#06B6D4', desc: 'Weekly rhythm, other departments, brand partners, time allocation' },
 ];
 
 export function CompanyCurriculum() {

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import sopData from '@/repo/data/sops.json';
 import { ClientMap } from '@/components/Diagrams/ClientMap';
+import { ApprovalVideoSOP } from '@/components/Diagrams/ApprovalVideoSOP';
 
 type FilterTag = 'all' | 'client' | 'creative' | 'process' | 'onboarding';
 
@@ -122,6 +123,7 @@ export function SOPsTab() {
             {[
               { label: '🗺️ Clientele At A Glance', href: '#clientele' },
               { label: '⚡ Quick Access', href: '#quick-access' },
+              { label: '🎬 Approval Video SOP', href: '#approval-video' },
               { label: '🛠️ Tools', href: '#tools' },
               { label: '📋 SOPs', href: '#sops' },
             ].map((link) => (
@@ -195,6 +197,19 @@ export function SOPsTab() {
                 </div>
               </a>
             ))}
+          </div>
+        </div>
+
+        {/* ── Approval Video SOP ── */}
+        <div id="approval-video" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
+          <SectionHeader icon="🎬" title="Pre-Launch Approval Video — SOP" subtitle="The Loom you send the client before launch. Pre-handles 90% of mid-cycle objections." />
+          <div style={{
+            backgroundColor: '#141414',
+            border: '1px solid #2A2A2A',
+            borderRadius: 14,
+            padding: 14,
+          }}>
+            <ApprovalVideoSOP />
           </div>
         </div>
 

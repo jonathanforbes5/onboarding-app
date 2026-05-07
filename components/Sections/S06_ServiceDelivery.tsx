@@ -5,6 +5,7 @@ import { Card, InfoBox, BulletList } from '@/components/UI/Card';
 import { ExpandableCard } from '@/components/Interactive/ExpandableCard';
 import { LoomSlot } from '@/components/Diagrams/LoomSlot';
 import { MiroBoard } from '@/components/Diagrams/MiroBoard';
+import { ApprovalVideoSOP } from '@/components/Diagrams/ApprovalVideoSOP';
 
 const PHASES = [
   { num: 1, label: 'Lead & Close',        owner: 'Sales team → pod assignment',         yours: false },
@@ -144,6 +145,11 @@ export function S06_ServiceDelivery() {
             Every day a client isn&apos;t launched = delayed cashflow. Keeping the build moving is your responsibility — not just waiting on it.
           </InfoBox>
         </div>
+      </ExpandableCard>
+
+      {/* Approval video SOP — between build and launch */}
+      <ExpandableCard title="Pre-Launch Approval Video — SOP" subtitle="The Loom you send the client before launch — pre-handles 90% of mid-cycle objections" defaultOpen>
+        <ApprovalVideoSOP />
       </ExpandableCard>
 
       {/* Optimization rhythm */}

@@ -251,7 +251,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   async function handleAuthUser(email: string) {
     setState((prev) => ({ ...prev, authLoading: true, syncStatus: 'syncing' }));
 
-    const profile = await getUserProfileByEmail(email);
+    let profile = await getUserProfileByEmail(email);
 
     if (!profile) {
       // Email not in allowed_users
@@ -266,6 +266,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
 
     const userKey = profile.userKey;
+
+    // Merge any locally-backed-up profile fields (cover the case where Supabase
+    // write succeeded in React state but the DB update failed silently).
+    try {
+      const backup = JSON.parse(localStorage.getItem(`ri_${userKey}_profile_backup`) ?? '{}');
+      if (backup.bio && !profile.bio) profile = { ...profile, bio: backup.bio };
+      if (backup.goal && !profile.goal) profile = { ...profile, goal: backup.goal };
+      if (backup.avatarEmoji && !profile.avatarEmoji) profile = { ...profile, avatarEmoji: backup.avatarEmoji };
+      if (backup.avatarUrl && !profile.avatarUrl) profile = { ...profile, avatarUrl: backup.avatarUrl };
+    } catch {}
 
     // Load local checklist immediately
     const localChecklist = loadChecklistLocal(userKey);
@@ -340,10 +350,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         avatarEmoji: fields.avatarEmoji ?? prev.currentUser.avatarEmoji,
         avatarUrl: fields.avatarUrl ?? prev.currentUser.avatarUrl,
       } : prev.currentUser;
-      // Persist to sessionStorage for bypass mode
       try {
+        // Persist for bypass/staging mode
         const bypass = localStorage.getItem('ri_bypass_profile');
         if (bypass && updated) localStorage.setItem('ri_bypass_profile', JSON.stringify(updated));
+        // Always keep a local backup so profile survives if Supabase write fails
+        if (updated) {
+          localStorage.setItem(
+            `ri_${updated.userKey}_profile_backup`,
+            JSON.stringify({ bio: updated.bio, goal: updated.goal, avatarEmoji: updated.avatarEmoji, avatarUrl: updated.avatarUrl }),
+          );
+        }
       } catch {}
       return { ...prev, currentUser: updated };
     });

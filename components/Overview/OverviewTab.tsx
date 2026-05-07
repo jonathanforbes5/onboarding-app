@@ -228,6 +228,23 @@ export function OverviewTab() {
     return acc;
   }, {});
 
+  // For the current user's own card, always use live AppContext state so edits
+  // reflect instantly without waiting for an API re-fetch.
+  const getProfile = (memberId: string): MemberProfile | undefined => {
+    if (memberId === currentUser?.userKey) {
+      return {
+        display_name: currentUser.displayName,
+        user_key: currentUser.userKey,
+        role: currentUser.role,
+        bio: currentUser.bio,
+        goal: currentUser.goal,
+        avatar_emoji: currentUser.avatarEmoji,
+        avatar_url: currentUser.avatarUrl,
+      };
+    }
+    return profileMap[memberId];
+  };
+
   const teamByTier = TIER_ORDER.reduce<Record<string, typeof teamData>>((acc, tier) => {
     acc[tier] = teamData.filter((m) => m.tier === tier);
     return acc;
@@ -592,7 +609,7 @@ export function OverviewTab() {
                     <TeamCard
                       key={m.id}
                       member={m}
-                      profile={profileMap[m.id]}
+                      profile={getProfile(m.id)}
                       isMe={m.id === currentUser?.userKey}
                       onEditProfile={openProfileEdit}
                     />

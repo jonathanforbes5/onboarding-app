@@ -5,9 +5,136 @@ import {
   Geographies,
   Geography,
   Marker,
+  ZoomableGroup,
 } from 'react-simple-maps';
 import { useApp } from '@/context/AppContext';
 import { STATE_TIER, TIER_COLORS, TIER_LABELS, type DifficultyTier } from '@/data/marketDifficulty';
+
+interface CycleSnapshot {
+  label?:         string;
+  number?:        number;
+  startDate?:     string;
+  endDate?:       string;
+  adSpend?:       number;
+  billingAmount?: number;
+  monthlyBudget?: number;
+  apptGoal?:      number;
+  appts?:         number;
+  estBooked?:     number;
+  totalLeads?:    number;
+  cpl?:           number;
+  cplGoal?:       number;
+  osaPct?:        number;
+  linkCtr?:       number;
+  linkCpc?:       number;
+  cpm?:           number;
+  frequency?:     number;
+  surveyPct?:     number;
+  goodToBill?:    string;
+  billed?:        string;
+}
+
+// State name → approximate centroid + suggested zoom for the search-and-jump feature.
+const STATE_CENTROIDS: Record<string, { lat: number; lng: number; zoom: number }> = {
+  Alabama: { lat: 32.8067, lng: -86.7911, zoom: 4 },
+  Alaska:  { lat: 61.3707, lng: -152.4044, zoom: 2.5 },
+  Arizona: { lat: 33.7298, lng: -111.4312, zoom: 4 },
+  Arkansas:{ lat: 34.9697, lng: -92.3731, zoom: 4 },
+  California:{ lat: 36.7783, lng: -119.4179, zoom: 3 },
+  Colorado:{ lat: 39.0598, lng: -105.3111, zoom: 4 },
+  Connecticut:{ lat: 41.5978, lng: -72.7554, zoom: 6 },
+  Delaware:{ lat: 39.3185, lng: -75.5071, zoom: 6 },
+  Florida: { lat: 27.7663, lng: -81.6868, zoom: 3.5 },
+  Georgia: { lat: 33.0406, lng: -83.6431, zoom: 4 },
+  Hawaii:  { lat: 21.0943, lng: -157.4983, zoom: 4 },
+  Idaho:   { lat: 44.2405, lng: -114.4788, zoom: 3.5 },
+  Illinois:{ lat: 40.3495, lng: -88.9861, zoom: 4 },
+  Indiana: { lat: 39.8494, lng: -86.2583, zoom: 4 },
+  Iowa:    { lat: 42.0115, lng: -93.2105, zoom: 4 },
+  Kansas:  { lat: 38.5266, lng: -96.7265, zoom: 4 },
+  Kentucky:{ lat: 37.6681, lng: -84.6701, zoom: 4 },
+  Louisiana:{ lat: 31.1695, lng: -91.8678, zoom: 4 },
+  Maine:   { lat: 44.6939, lng: -69.3819, zoom: 4 },
+  Maryland:{ lat: 39.0639, lng: -76.8021, zoom: 5 },
+  Massachusetts:{ lat: 42.2302, lng: -71.5301, zoom: 5 },
+  Michigan:{ lat: 43.3266, lng: -84.5361, zoom: 4 },
+  Minnesota:{ lat: 45.6945, lng: -93.9002, zoom: 3.5 },
+  Mississippi:{ lat: 32.7416, lng: -89.6787, zoom: 4 },
+  Missouri:{ lat: 38.4561, lng: -92.2884, zoom: 4 },
+  Montana: { lat: 46.9219, lng: -110.4544, zoom: 3 },
+  Nebraska:{ lat: 41.1254, lng: -98.2681, zoom: 4 },
+  Nevada:  { lat: 38.3135, lng: -117.0554, zoom: 3.5 },
+  'New Hampshire':{ lat: 43.4525, lng: -71.5639, zoom: 5 },
+  'New Jersey':   { lat: 40.2989, lng: -74.5210, zoom: 5 },
+  'New Mexico':   { lat: 34.8405, lng: -106.2485, zoom: 4 },
+  'New York':     { lat: 42.1657, lng: -74.9481, zoom: 4 },
+  'North Carolina':{ lat: 35.6301, lng: -79.8064, zoom: 4 },
+  'North Dakota': { lat: 47.5289, lng: -99.7840, zoom: 3.5 },
+  Ohio:    { lat: 40.3888, lng: -82.7649, zoom: 4 },
+  Oklahoma:{ lat: 35.5653, lng: -96.9289, zoom: 4 },
+  Oregon:  { lat: 44.5720, lng: -122.0709, zoom: 4 },
+  Pennsylvania:{ lat: 40.5908, lng: -77.2098, zoom: 4 },
+  'Rhode Island':{ lat: 41.6809, lng: -71.5118, zoom: 7 },
+  'South Carolina':{ lat: 33.8569, lng: -80.9450, zoom: 4 },
+  'South Dakota':  { lat: 44.2998, lng: -99.4388, zoom: 3.5 },
+  Tennessee:{ lat: 35.7478, lng: -86.6923, zoom: 4 },
+  Texas:    { lat: 31.0545, lng: -97.5635, zoom: 3 },
+  Utah:     { lat: 40.1500, lng: -111.8624, zoom: 4 },
+  Vermont:  { lat: 44.0459, lng: -72.7107, zoom: 5 },
+  Virginia: { lat: 37.7693, lng: -78.1700, zoom: 4 },
+  Washington:{ lat: 47.4009, lng: -121.4905, zoom: 4 },
+  'West Virginia':{ lat: 38.4912, lng: -80.9545, zoom: 4 },
+  Wisconsin:{ lat: 44.2685, lng: -89.6165, zoom: 4 },
+  Wyoming: { lat: 42.7559, lng: -107.3025, zoom: 3.5 },
+};
+
+const STATE_ABBR: Record<string, string> = {
+  AL:'Alabama', AK:'Alaska', AZ:'Arizona', AR:'Arkansas', CA:'California', CO:'Colorado',
+  CT:'Connecticut', DE:'Delaware', FL:'Florida', GA:'Georgia', HI:'Hawaii', ID:'Idaho',
+  IL:'Illinois', IN:'Indiana', IA:'Iowa', KS:'Kansas', KY:'Kentucky', LA:'Louisiana',
+  ME:'Maine', MD:'Maryland', MA:'Massachusetts', MI:'Michigan', MN:'Minnesota', MS:'Mississippi',
+  MO:'Missouri', MT:'Montana', NE:'Nebraska', NV:'Nevada', NH:'New Hampshire', NJ:'New Jersey',
+  NM:'New Mexico', NY:'New York', NC:'North Carolina', ND:'North Dakota', OH:'Ohio',
+  OK:'Oklahoma', OR:'Oregon', PA:'Pennsylvania', RI:'Rhode Island', SC:'South Carolina',
+  SD:'South Dakota', TN:'Tennessee', TX:'Texas', UT:'Utah', VT:'Vermont', VA:'Virginia',
+  WA:'Washington', WV:'West Virginia', WI:'Wisconsin', WY:'Wyoming',
+};
+
+function resolveState(query: string): string | null {
+  const q = query.trim();
+  if (!q) return null;
+  // Abbreviation match (case-insensitive)
+  const upper = q.toUpperCase();
+  if (STATE_ABBR[upper]) return STATE_ABBR[upper];
+  // Exact name match (case-insensitive)
+  for (const name of Object.keys(STATE_CENTROIDS)) {
+    if (name.toLowerCase() === q.toLowerCase()) return name;
+  }
+  // Prefix match
+  for (const name of Object.keys(STATE_CENTROIDS)) {
+    if (name.toLowerCase().startsWith(q.toLowerCase())) return name;
+  }
+  return null;
+}
+
+function fmtMoney(n?: number) {
+  if (n == null) return '—';
+  return n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+}
+function fmtPct(n?: number) {
+  if (n == null) return '—';
+  return (n * 100).toFixed(1) + '%';
+}
+function fmtNum(n?: number, dp = 0) {
+  if (n == null) return '—';
+  return n.toLocaleString('en-US', { maximumFractionDigits: dp });
+}
+function fmtDate(s?: string) {
+  if (!s) return '—';
+  const d = new Date(s);
+  if (Number.isNaN(d.getTime())) return s;
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+}
 
 interface ClientProfile {
   recordId:        string;
@@ -27,6 +154,12 @@ interface ClientProfile {
   primaryCsm?:     string;
   status:          string;
   niche?:          string;
+  cycles?:         CycleSnapshot[];
+  cyclesTotal?:    number;
+  totalBilled?:    number;
+  totalAdSpend?:   number;
+  avgCpl?:         number;
+  avgCpa?:         number;
 }
 
 interface CityPoint {
@@ -75,7 +208,21 @@ export function ClientMap() {
     | null
   >(null);
   const [openClientId, setOpenClientId] = useState<string | null>(null);
+  const [openCycle, setOpenCycle] = useState<string | null>(null);
+  const [zoomCenter, setZoomCenter] = useState<{ coordinates: [number, number]; zoom: number }>({ coordinates: [-96, 38], zoom: 1 });
+  const [stateSearch, setStateSearch] = useState('');
   const mapRef = useRef<HTMLDivElement>(null);
+
+  const matchedState = stateSearch ? resolveState(stateSearch) : null;
+  const goToState = (name: string) => {
+    const c = STATE_CENTROIDS[name];
+    if (!c) return;
+    setZoomCenter({ coordinates: [c.lng, c.lat], zoom: c.zoom });
+    setSelection({ kind: 'state', name });
+    setOpenClientId(null);
+    setStateSearch('');
+  };
+  const resetZoom = () => setZoomCenter({ coordinates: [-96, 38], zoom: 1 });
 
   useEffect(() => {
     fetch('/api/clients-map')
@@ -167,6 +314,43 @@ export function ClientMap() {
         })}
       </div>
 
+      {/* State search + zoom controls */}
+      <div className="flex flex-wrap gap-2 items-center">
+        <div className="relative flex-1 min-w-[200px]">
+          <input
+            type="text"
+            value={stateSearch}
+            onChange={(e) => setStateSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && matchedState) goToState(matchedState);
+              if (e.key === 'Escape') setStateSearch('');
+            }}
+            placeholder="🔍 Jump to state — type name or 2-letter code (e.g. FL, Florida, NC, NY)"
+            className="w-full px-3 py-2 rounded-lg text-xs border border-brand-gray-mid focus:border-brand-yellow focus:outline-none"
+          />
+          {stateSearch && matchedState && (
+            <button
+              onClick={() => goToState(matchedState)}
+              className="absolute right-1 top-1/2 -translate-y-1/2 px-2 py-1 rounded bg-brand-yellow text-brand-black text-[10px] font-black"
+            >
+              Go to {matchedState} →
+            </button>
+          )}
+          {stateSearch && !matchedState && (
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-red-500">No match</span>
+          )}
+        </div>
+        {(zoomCenter.zoom !== 1 || zoomCenter.coordinates[0] !== -96) && (
+          <button
+            onClick={resetZoom}
+            className="px-3 py-2 rounded-lg text-xs font-bold bg-brand-gray-light hover:bg-brand-gray-mid transition-colors"
+          >
+            ↺ Reset zoom
+          </button>
+        )}
+        <span className="text-[10px] text-brand-gray hidden sm:inline">scroll to zoom · drag to pan</span>
+      </div>
+
       {/* Map */}
       <div
         ref={mapRef}
@@ -180,6 +364,13 @@ export function ClientMap() {
           height={560}
           style={{ width: '100%', height: 'auto' }}
         >
+          <ZoomableGroup
+            center={zoomCenter.coordinates}
+            zoom={zoomCenter.zoom}
+            minZoom={1}
+            maxZoom={8}
+            onMoveEnd={(p: any) => setZoomCenter({ coordinates: p.coordinates, zoom: p.zoom })}
+          >
           <Geographies geography="/us-states-10m.json">
             {({ geographies }: { geographies: any[] }) =>
               geographies.map((geo: any) => {
@@ -236,6 +427,7 @@ export function ClientMap() {
               </Marker>
             );
           })}
+          </ZoomableGroup>
         </ComposableMap>
 
         {/* Tooltip */}
@@ -350,21 +542,104 @@ export function ClientMap() {
                         <span className="text-[10px] text-brand-gray flex-shrink-0">{isOpen ? '▲' : '▼'}</span>
                       </button>
                       {isOpen && (
-                        <div className="bg-brand-gray-light px-3 py-2.5 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-[11px]">
-                          <ProfileField label="Status"            value={c.status} />
-                          <ProfileField label="Niche"             value={c.niche} />
-                          <ProfileField label="Signed Contract"   value={c.signedContract} />
-                          <ProfileField label="Client AI Status"  value={c.clientAiStatus == null ? undefined : (c.clientAiStatus ? 'Yes' : 'No')} />
-                          <ProfileField label="Appts Expectation" value={c.apptsExpectation} />
-                          <ProfileField label="MGMT Fee"          value={c.mgmtFee} />
-                          <ProfileField label="Communication"     value={c.communication} />
-                          <ProfileField label="CC"                value={c.cc} />
-                          <ProfileField label="Start Date"        value={c.startDate} />
-                          <ProfileField label="General Location"  value={c.generalLocation} />
-                          <ProfileField label="Pod"               value={c.pod} />
-                          <ProfileField label="Primary CSM"       value={c.primaryCsm} />
-                          <ProfileField label="Stripe Email"      value={c.stripeEmail} mono />
-                          <ProfileField label="Stripe Customer ID" value={c.stripeCustomerId} mono />
+                        <div className="bg-brand-gray-light px-3 py-3 space-y-3">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-[11px]">
+                            <ProfileField label="Status"            value={c.status} />
+                            <ProfileField label="Niche"             value={c.niche} />
+                            <ProfileField label="Signed Contract"   value={c.signedContract} />
+                            <ProfileField label="Client AI Status"  value={c.clientAiStatus == null ? undefined : (c.clientAiStatus ? 'Yes' : 'No')} />
+                            <ProfileField label="Appts Expectation" value={c.apptsExpectation} />
+                            <ProfileField label="MGMT Fee"          value={c.mgmtFee} />
+                            <ProfileField label="Communication"     value={c.communication} />
+                            <ProfileField label="CC"                value={c.cc} />
+                            <ProfileField label="Start Date"        value={c.startDate} />
+                            <ProfileField label="General Location"  value={c.generalLocation} />
+                            <ProfileField label="Pod"               value={c.pod} />
+                            <ProfileField label="Primary CSM"       value={c.primaryCsm} />
+                            <ProfileField label="Stripe Email"      value={c.stripeEmail} mono />
+                            <ProfileField label="Stripe Customer ID" value={c.stripeCustomerId} mono />
+                          </div>
+
+                          {/* Lifetime stats — pulled from Billing Cycles */}
+                          {(c.cyclesTotal ?? 0) > 0 && (
+                            <div className="rounded-lg bg-brand-black p-2.5">
+                              <div className="text-[10px] font-black uppercase tracking-widest text-brand-yellow mb-1.5">Lifetime — across {c.cyclesTotal} cycle{c.cyclesTotal === 1 ? '' : 's'}</div>
+                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]">
+                                <div>
+                                  <div className="text-white/50 uppercase font-black tracking-widest">Total billed</div>
+                                  <div className="text-white font-black text-sm">{fmtMoney(c.totalBilled)}</div>
+                                </div>
+                                <div>
+                                  <div className="text-white/50 uppercase font-black tracking-widest">Total ad spend</div>
+                                  <div className="text-white font-black text-sm">{fmtMoney(c.totalAdSpend)}</div>
+                                </div>
+                                <div>
+                                  <div className="text-white/50 uppercase font-black tracking-widest">Avg CPL</div>
+                                  <div className="text-white font-black text-sm">{c.avgCpl != null ? `$${c.avgCpl.toFixed(0)}` : '—'}</div>
+                                </div>
+                                <div>
+                                  <div className="text-white/50 uppercase font-black tracking-widest">Avg CPA</div>
+                                  <div className="text-white font-black text-sm">{c.avgCpa != null ? `$${c.avgCpa.toFixed(0)}` : '—'}</div>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Per-cycle breakdown */}
+                          {c.cycles && c.cycles.length > 0 && (
+                            <div>
+                              <div className="text-[10px] font-black uppercase tracking-widest text-brand-gray mb-1.5">
+                                Cycles ({c.cycles.length}) — most recent first
+                              </div>
+                              <div className="space-y-1">
+                                {c.cycles.map((cy, i) => {
+                                  const cycleKey = `${c.recordId}-${i}`;
+                                  const cycleOpen = openCycle === cycleKey;
+                                  const onPace = cy.appts != null && cy.apptGoal != null && cy.apptGoal > 0 ? cy.appts / cy.apptGoal : null;
+                                  const paceColor = onPace == null ? '#6B7280' : onPace >= 0.8 ? '#22C55E' : onPace >= 0.5 ? '#F59E0B' : '#EF4444';
+                                  return (
+                                    <div key={cycleKey} className="rounded-lg bg-white border border-brand-gray-mid overflow-hidden">
+                                      <button
+                                        onClick={() => setOpenCycle(cycleOpen ? null : cycleKey)}
+                                        className="w-full text-left px-2.5 py-1.5 flex items-center gap-2 hover:bg-brand-gray-light transition-colors"
+                                      >
+                                        <span className="font-black text-[11px] text-brand-black flex-shrink-0">{cy.label ?? `Cycle ${cy.number ?? '?'}`}</span>
+                                        <span className="text-[10px] text-brand-gray flex-shrink-0">{fmtDate(cy.startDate)} → {fmtDate(cy.endDate)}</span>
+                                        <span className="flex-1 text-right text-[10px]">
+                                          {cy.appts != null && cy.apptGoal != null && (
+                                            <span className="font-bold" style={{ color: paceColor }}>
+                                              {cy.appts}/{cy.apptGoal} appts
+                                            </span>
+                                          )}
+                                        </span>
+                                        <span className="text-[10px] text-brand-gray">{cycleOpen ? '▲' : '▼'}</span>
+                                      </button>
+                                      {cycleOpen && (
+                                        <div className="px-2.5 py-2 bg-brand-gray-light border-t border-brand-gray-mid grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-1 text-[10px]">
+                                          <CycleStat label="Ad spend"     value={fmtMoney(cy.adSpend)} />
+                                          <CycleStat label="Billing amt"  value={fmtMoney(cy.billingAmount)} />
+                                          <CycleStat label="Monthly bdgt" value={fmtMoney(cy.monthlyBudget)} />
+                                          <CycleStat label="Total leads"  value={fmtNum(cy.totalLeads)} />
+                                          <CycleStat label="Appts"        value={cy.appts != null ? `${cy.appts} / ${cy.apptGoal ?? '?'}` : '—'} />
+                                          <CycleStat label="Est booked"   value={fmtNum(cy.estBooked)} />
+                                          <CycleStat label="CPL"          value={cy.cpl != null ? `$${cy.cpl.toFixed(2)}` : '—'} sub={cy.cplGoal ? `goal $${cy.cplGoal}` : undefined} />
+                                          <CycleStat label="CPA (calc)"   value={cy.adSpend && cy.appts ? `$${(cy.adSpend / cy.appts).toFixed(0)}` : '—'} />
+                                          <CycleStat label="Link CTR"     value={fmtPct(cy.linkCtr)} />
+                                          <CycleStat label="Link CPC"     value={cy.linkCpc != null ? `$${cy.linkCpc.toFixed(2)}` : '—'} />
+                                          <CycleStat label="CPM"          value={cy.cpm != null ? `$${cy.cpm.toFixed(0)}` : '—'} />
+                                          <CycleStat label="Frequency"    value={fmtNum(cy.frequency, 2)} />
+                                          <CycleStat label="OSA %"        value={fmtPct(cy.osaPct)} />
+                                          <CycleStat label="Survey %"     value={fmtPct(cy.surveyPct)} />
+                                          <CycleStat label="Good to bill" value={cy.goodToBill ?? '—'} />
+                                          <CycleStat label="Billed"       value={cy.billed ?? '—'} />
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -388,6 +663,16 @@ export function ClientMap() {
           <span className="font-mono">{data.totals.unmatchedLocs.slice(0, 5).join(', ')}{data.totals.unmatchedLocs.length > 5 ? '…' : ''}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+function CycleStat({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div className="min-w-0">
+      <div className="text-[8px] font-black uppercase tracking-widest text-brand-gray">{label}</div>
+      <div className="font-bold text-[11px] text-brand-black truncate">{value}</div>
+      {sub && <div className="text-[9px] text-brand-gray italic">{sub}</div>}
     </div>
   );
 }

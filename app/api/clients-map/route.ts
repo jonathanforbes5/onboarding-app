@@ -6,6 +6,7 @@ const BASE_ID          = 'appu7PwZohLkR6Wvi';
 const MAIN_TABLE       = 'tblkuc7mLefV3ng4h';
 const PODS_TABLE       = 'tblNDev0V8qpGo1aq';
 const TEAM_TABLE       = 'tbluywa1vBDeqtzPC';
+const CYCLES_TABLE     = 'tblie3xZrU6aF16IV';
 
 const SYNONYMS: Record<string, string> = {
   Conneticut: 'Connecticut',
@@ -131,6 +132,36 @@ interface ClientProfile {
   primaryCsm?:     string;
   status:          string;
   niche?:          string;
+  cycles?:         CycleSnapshot[];
+  cyclesTotal?:    number;
+  totalBilled?:    number;
+  totalAdSpend?:   number;
+  avgCpl?:         number;
+  avgCpa?:         number;
+}
+
+interface CycleSnapshot {
+  label?:          string;
+  number?:         number;
+  startDate?:      string;
+  endDate?:        string;
+  adSpend?:        number;
+  billingAmount?:  number;
+  monthlyBudget?:  number;
+  apptGoal?:       number;
+  appts?:          number;
+  estBooked?:      number;
+  totalLeads?:     number;
+  cpl?:            number;
+  cplGoal?:        number;
+  osaPct?:         number;
+  linkCtr?:        number;
+  linkCpc?:        number;
+  cpm?:            number;
+  frequency?:      number;
+  surveyPct?:      number;
+  goodToBill?:     string;
+  billed?:         string;
 }
 
 interface CityPoint {
@@ -175,14 +206,53 @@ export async function GET() {
   }
 
   try {
-    const [main, pods, team] = await Promise.all([
-      fetchAll(MAIN_TABLE, token),
-      fetchAll(PODS_TABLE, token),
-      fetchAll(TEAM_TABLE, token),
+    const [main, pods, team, cycles] = await Promise.all([
+      fetchAll(MAIN_TABLE,   token),
+      fetchAll(PODS_TABLE,   token),
+      fetchAll(TEAM_TABLE,   token),
+      fetchAll(CYCLES_TABLE, token),
     ]);
 
     const podName  = new Map<string, string>(pods.map(p => [p.id, (p.fields['Pod Name'] ?? 'Unknown') as string]));
     const teamName = new Map<string, string>(team.map(t => [t.id, (t.fields['Name']     ?? 'Unknown') as string]));
+
+    // Index cycles by Account record ID (linked record)
+    const cyclesByAccount = new Map<string, CycleSnapshot[]>();
+    for (const c of cycles) {
+      const f = c.fields;
+      const accountIds = (f['Account'] as string[] | undefined) ?? [];
+      const snap: CycleSnapshot = {
+        label:          f['Cycle Label']            as string | undefined,
+        number:         f['Cycle Number']           as number | undefined,
+        startDate:      f['Cycle Start Date']       as string | undefined,
+        endDate:        f['Cycle End Date (Actual)'] as string | undefined,
+        adSpend:        f['Ad Spend']               as number | undefined,
+        billingAmount:  f['Billing Amount']         as number | undefined,
+        monthlyBudget:  f['Monthly Budget']         as number | undefined,
+        apptGoal:       f['Appointment Goal']       as number | undefined,
+        appts:          f['Appointments Booked']    as number | undefined,
+        estBooked:      f['Est Booked']             as number | undefined,
+        totalLeads:     f['Total Leads']            as number | undefined,
+        cpl:            f['CPL']                    as number | undefined,
+        cplGoal:        f['CPL Goal']               as number | undefined,
+        osaPct:         f['OSA %']                  as number | undefined,
+        linkCtr:        f['Link CTR']               as number | undefined,
+        linkCpc:        f['Link CPC']               as number | undefined,
+        cpm:            f['CPM']                    as number | undefined,
+        frequency:      f['Frequency']              as number | undefined,
+        surveyPct:      f['Survey %']               as number | undefined,
+        goodToBill:     f['Good to Bill']           as string | undefined,
+        billed:         f['Billed']                 as string | undefined,
+      };
+      for (const id of accountIds) {
+        if (!cyclesByAccount.has(id)) cyclesByAccount.set(id, []);
+        cyclesByAccount.get(id)!.push(snap);
+      }
+    }
+    // Sort cycles by number desc within each account (most recent first)
+    for (const arr of Array.from(cyclesByAccount.values())) {
+      arr.sort((a, b) => (b.number ?? 0) - (a.number ?? 0));
+    }
 
     const byLoc = new Map<string, CityPoint>();
     let unmatched = 0;
@@ -232,6 +302,18 @@ export async function GET() {
 
       const business = f['Business Name'] as string | undefined;
       if (business) {
+        const clientCycles = cyclesByAccount.get(rec.id) ?? [];
+        const cyclesTotal  = clientCycles.length;
+        const totalBilled  = clientCycles.reduce((s, c) => s + (c.billingAmount ?? 0), 0);
+        const totalAdSpend = clientCycles.reduce((s, c) => s + (c.adSpend ?? 0), 0);
+        const cplsWithVal  = clientCycles.filter(c => typeof c.cpl === 'number');
+        const avgCpl       = cplsWithVal.length ? cplsWithVal.reduce((s, c) => s + (c.cpl ?? 0), 0) / cplsWithVal.length : undefined;
+        // CPA = ad spend / appointments booked, computed per cycle then averaged
+        const cpas         = clientCycles
+          .map(c => (c.adSpend && c.appts && c.appts > 0) ? c.adSpend / c.appts : null)
+          .filter((v): v is number => v != null);
+        const avgCpa       = cpas.length ? cpas.reduce((s, v) => s + v, 0) / cpas.length : undefined;
+
         p.clients.push({
           recordId:         rec.id,
           businessName:     business,
@@ -250,6 +332,12 @@ export async function GET() {
           primaryCsm:       amNames[0],
           status,
           niche,
+          cycles:           clientCycles,
+          cyclesTotal,
+          totalBilled,
+          totalAdSpend,
+          avgCpl,
+          avgCpa,
         });
       }
     }

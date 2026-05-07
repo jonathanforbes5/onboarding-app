@@ -38,7 +38,14 @@ const LEARNING_PHASES = [
 
 export function CompanyCurriculum() {
   const { setCurrentSection, isCompleted, quizScores, completedSections, progressPercent } = useApp();
-  const totalTime = SECTIONS.reduce((acc, s) => acc + parseInt(s.estimatedTime), 0);
+  // Parse "X min" / "X hr" / "X.5 hr" — without this, "1 hr" gets read as 1 min.
+  const parseEstimate = (s: string): number => {
+    const m = s.trim().match(/^([\d.]+)\s*(hr|hrs|hour|hours|m|min|mins|minute|minutes)?/i);
+    if (!m) return 0;
+    const n = parseFloat(m[1]);
+    return /hr|hour/i.test(m[2] ?? '') ? Math.round(n * 60) : Math.round(n);
+  };
+  const totalTime = SECTIONS.reduce((acc, s) => acc + parseEstimate(s.estimatedTime), 0);
   const lastIncomplete = SECTIONS.find((s) => !isCompleted(s.id));
 
   return (

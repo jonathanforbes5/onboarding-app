@@ -4,6 +4,56 @@ import sopData from '@/repo/data/sops.json';
 import { ClientMap } from '@/components/Diagrams/ClientMap';
 import { ApprovalVideoSOP } from '@/components/Diagrams/ApprovalVideoSOP';
 
+function Collapsible({ id, icon, title, subtitle, accent, children }: {
+  id?: string;
+  icon: string;
+  title: string;
+  subtitle?: string;
+  accent: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div id={id} style={{
+      backgroundColor: '#0F0F0F',
+      border: `1px solid ${accent}33`,
+      borderRadius: 12,
+      overflow: 'hidden',
+      marginBottom: 12,
+      scrollMarginTop: 60,
+    }}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          width: '100%',
+          padding: '14px 16px',
+          background: 'transparent',
+          border: 'none',
+          textAlign: 'left',
+          cursor: 'pointer',
+          color: '#F5F5F5',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 12,
+          fontFamily: 'inherit',
+        }}
+      >
+        <span style={{ fontSize: 20 }}>{icon}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800 }}>{title}</div>
+          {subtitle && <div style={{ color: '#888', fontSize: 11, marginTop: 2 }}>{subtitle}</div>}
+        </div>
+        <span style={{ color: accent, fontSize: 12, fontWeight: 800 }}>{open ? '▲ Hide' : '▼ View'}</span>
+      </button>
+      {open && (
+        <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${accent}22` }}>
+          <div style={{ paddingTop: 12 }}>{children}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 type FilterTag = 'all' | 'client' | 'creative' | 'process' | 'onboarding';
 
 const TAG_LABELS: Record<FilterTag, string> = {
@@ -121,9 +171,7 @@ export function SOPsTab() {
           {/* Jump nav */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {[
-              { label: '🗺️ Clientele At A Glance', href: '#clientele' },
               { label: '⚡ Quick Access', href: '#quick-access' },
-              { label: '🎬 Approval Video SOP', href: '#approval-video' },
               { label: '🛠️ Tools', href: '#tools' },
               { label: '📋 SOPs', href: '#sops' },
             ].map((link) => (
@@ -144,22 +192,21 @@ export function SOPsTab() {
           </div>
         </div>
 
-        {/* ── Clientele At A Glance ── */}
-        <div id="clientele" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
-          <SectionHeader icon="🗺️" title="RoofIgnite Clientele At A Glance" subtitle="Live view of every active and pre-launch account, by city. Click a state or dot for full client profiles (admin only)." />
-          <div style={{
-            backgroundColor: '#141414',
-            border: '1px solid #2A2A2A',
-            borderRadius: 14,
-            padding: 14,
-          }}>
-            <ClientMap />
-          </div>
-        </div>
-
         {/* ── Quick Access ── */}
         <div id="quick-access" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
           <SectionHeader icon="⚡" title="Quick Access" subtitle="Open these daily — know where they are." />
+
+          {/* Client Map — collapsible, closed by default */}
+          <Collapsible
+            id="clientele"
+            icon="🗺️"
+            title="RoofIgnite Clientele At A Glance"
+            subtitle="Live map of every active and pre-launch account. Click a state or dot for full client profiles (admin only)."
+            accent="#F5C800"
+          >
+            <ClientMap />
+          </Collapsible>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8 }}>
             {sopData.resources.map((r) => (
               <a
@@ -197,19 +244,6 @@ export function SOPsTab() {
                 </div>
               </a>
             ))}
-          </div>
-        </div>
-
-        {/* ── Approval Video SOP ── */}
-        <div id="approval-video" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
-          <SectionHeader icon="🎬" title="Pre-Launch Approval Video — SOP" subtitle="The Loom you send the client before launch. Pre-handles 90% of mid-cycle objections." />
-          <div style={{
-            backgroundColor: '#141414',
-            border: '1px solid #2A2A2A',
-            borderRadius: 14,
-            padding: 14,
-          }}>
-            <ApprovalVideoSOP />
           </div>
         </div>
 
@@ -259,6 +293,17 @@ export function SOPsTab() {
         {/* ── SOPs ── */}
         <div id="sops" style={{ scrollMarginTop: 60 }}>
           <SectionHeader icon="📋" title="Standard Operating Procedures" subtitle="Reference documents for every core process. Don't memorize — know where to find them." />
+
+          {/* In-portal SOP: Pre-Launch Approval Video — collapsible, closed by default */}
+          <Collapsible
+            id="approval-video"
+            icon="🎬"
+            title="Pre-Launch Approval Video — SOP"
+            subtitle="The Loom you send the client before launch. Pre-handles 90% of mid-cycle objections. Includes 3 reference examples + transcripts + 14 ranked common mistakes."
+            accent="#F5C800"
+          >
+            <ApprovalVideoSOP />
+          </Collapsible>
 
           {/* Filter pills */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem' }}>

@@ -45,6 +45,44 @@ const KIND_COLOR: Record<ResultKind, string> = {
 function buildIndex(): SearchResult[] {
   const results: SearchResult[] = [];
 
+  // High-leverage in-portal resources surfaced as direct search hits.
+  // Lets Cmd+K → "client map" / "approval video" / "common mistakes" / "big picture"
+  // jump straight to the right place without trawling sections.
+  results.push(
+    {
+      kind: 'resource',
+      id: 'client-map',
+      title: 'Client Map — Clientele At A Glance',
+      subtitle: 'Live US map of every active + pre-launch client. Click a state/dot for profiles (admin).',
+      tab: 'resources',
+      url: '/resources#clientele',
+    },
+    {
+      kind: 'sop',
+      id: 'approval-video-sop',
+      title: 'Pre-Launch Approval Video — SOP',
+      subtitle: 'Show this → explain this. 3 reference Looms, 14 common mistakes ranked, case studies.',
+      tab: 'resources',
+      url: '/resources#approval-video',
+    },
+    {
+      kind: 'sop',
+      id: 'approval-common-mistakes',
+      title: 'Approval Video — Common Mistakes (ranked)',
+      subtitle: '14 patterns ranked critical / high / medium with fixes drawn from real reviews.',
+      tab: 'resources',
+      url: '/resources#common-mistakes',
+    },
+    {
+      kind: 'section',
+      id: 'big-picture',
+      title: 'The Big Picture — Customer Journey + Org Map',
+      subtitle: 'Required first watch. Miro board + Loom walkthrough in Section 6.',
+      sectionId: 6,
+      tab: 'sections',
+    },
+  );
+
   // Training sections
   SECTIONS.forEach((s) => {
     results.push({

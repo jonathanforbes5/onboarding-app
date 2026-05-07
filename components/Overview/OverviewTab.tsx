@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
 import teamData from '@/repo/data/team.json';
+import recordingsData from '@/repo/data/recordings.json';
+import { SECTIONS } from '@/data/sections';
 
 const C = {
   bg: '#0A0A0A',
@@ -37,7 +39,8 @@ const TIER_LABELS: Record<string, string> = {
 
 const TIER_ORDER = ['leadership', 'pod_managers', 'media_buying', 'va_management', 'sales'];
 
-const SECTIONS_TOTAL = 13;
+const SECTIONS_TOTAL = SECTIONS.length;
+const LOOMS_TOTAL = (recordingsData.training_looms?.length ?? 0) + (recordingsData.recordings?.length ?? 0);
 
 function SectionTitle({ children, accent }: { children: React.ReactNode; accent?: string }) {
   return (
@@ -170,7 +173,7 @@ const TAB_GUIDE = [
     label: 'Company',
     icon: '📚',
     color: '#F5C800',
-    desc: '13 training sections covering the business model, metrics, org structure, and tools. Quizzes after each.',
+    desc: `${SECTIONS_TOTAL} training sections covering the business model, metrics, org structure, mindset, and tools. Quizzes after each.`,
     start: true,
   },
   {
@@ -186,7 +189,7 @@ const TAB_GUIDE = [
     label: 'Recordings',
     icon: '🎬',
     color: '#A78BFA',
-    desc: 'Training videos, service delivery walkthroughs, and 37 Loom walkthroughs for live account scenarios.',
+    desc: `Training videos, service delivery walkthroughs, and ${LOOMS_TOTAL}+ Loom walkthroughs for live account scenarios.`,
     start: false,
   },
 ];
@@ -479,11 +482,15 @@ export function OverviewTab() {
                 icon: '🎯',
                 title: 'Revenue Retention Engine',
                 body: 'You are the quarterback — not the player. You diagnose, prescribe, and coordinate. Emmanuel & Mervin build, Leila manages VAs, Ken designs. You own the outcomes.',
+                jumpTo: 16,
+                jumpLabel: 'Section 16: Revenue Partner Mindset →',
               },
               {
                 icon: '📋',
                 title: 'You Own the Client Relationship',
                 body: 'Once a client is closed, you take over. Onboarding call → setup coordination → launch → optimization → cycle completion → renewal. You are the client\'s single point of contact from day one to renewal.',
+                jumpTo: 6,
+                jumpLabel: 'Section 6: The Big Picture →',
               },
               {
                 icon: '⚡',
@@ -493,9 +500,21 @@ export function OverviewTab() {
                   'Cost per Booking — spend ÷ booked appointments. Not CPL, ever.',
                   'Speed to cashflow — every day a client isn\'t launched is revenue delayed.',
                 ],
+                jumpTo: 15,
+                jumpLabel: 'Section 15: Layered Thinking →',
               },
             ].map((card) => (
-              <div key={card.title} style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 12, padding: '18px 20px' }}>
+              <button
+                key={card.title}
+                onClick={() => { setActiveTab('sections'); setCurrentSection(card.jumpTo); }}
+                style={{
+                  backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 12,
+                  padding: '18px 20px', textAlign: 'left', cursor: 'pointer', transition: 'border-color 0.15s',
+                  fontFamily: 'inherit',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = C.acc + '88'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = C.border; }}
+              >
                 <div style={{ fontSize: 22, marginBottom: 10 }}>{card.icon}</div>
                 <h3 style={{ color: C.text, fontSize: 14, fontWeight: 800, margin: '0 0 8px' }}>{card.title}</h3>
                 {card.body && <p style={{ color: C.muted, fontSize: 12.5, margin: 0, lineHeight: 1.6 }}>{card.body}</p>}
@@ -506,26 +525,42 @@ export function OverviewTab() {
                     ))}
                   </ul>
                 )}
-              </div>
+                {card.jumpLabel && (
+                  <div style={{ color: C.acc, fontSize: 11, fontWeight: 800, marginTop: 12 }}>
+                    {card.jumpLabel}
+                  </div>
+                )}
+              </button>
             ))}
           </div>
 
-          {/* Operating rhythm */}
-          <div style={{
-            marginTop: 12,
-            backgroundColor: '#001A00',
-            border: `1px solid ${C.green}44`,
-            borderRadius: 10,
-            padding: '14px 18px',
-            display: 'flex',
-            gap: 12,
-            alignItems: 'flex-start',
-            flexWrap: 'wrap',
-          }}>
+          {/* Operating rhythm — clickable to jump to S17 Weekly Rhythm */}
+          <button
+            onClick={() => { setActiveTab('sections'); setCurrentSection(17); }}
+            style={{
+              width: '100%',
+              marginTop: 12,
+              backgroundColor: '#001A00',
+              border: `1px solid ${C.green}44`,
+              borderRadius: 10,
+              padding: '14px 18px',
+              display: 'flex',
+              gap: 12,
+              alignItems: 'flex-start',
+              flexWrap: 'wrap',
+              textAlign: 'left',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              transition: 'border-color 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = C.green; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = C.green + '44'; }}
+          >
             <span style={{ fontSize: 18, flexShrink: 0 }}>📅</span>
             <div style={{ flex: 1 }}>
-              <div style={{ color: C.green, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>
-                Weekly Operating Rhythm
+              <div style={{ color: C.green, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span>Weekly Operating Rhythm</span>
+                <span style={{ color: C.green, opacity: 0.6, fontSize: 10, fontWeight: 700 }}>· Section 17 →</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 8 }}>
                 {[
@@ -540,15 +575,33 @@ export function OverviewTab() {
                 ))}
               </div>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* ── Team Directory ── */}
         <div style={{ marginBottom: 28 }}>
           <SectionTitle>Team Directory</SectionTitle>
-          <p style={{ color: C.muted, fontSize: 12.5, margin: '0 0 16px', lineHeight: 1.5 }}>
+          <p style={{ color: C.muted, fontSize: 12.5, margin: '0 0 12px', lineHeight: 1.5 }}>
             Everyone on the team. Use <strong style={{ color: C.text }}>ClickUp for tasks</strong> and <strong style={{ color: C.text }}>Slack for async comms</strong>. Your own card shows your bio and goal — click <strong style={{ color: C.text }}>Edit</strong> to update it.
           </p>
+          <a
+            href="https://roofignite.bamboohr.com/employees/orgchart.php"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              backgroundColor: C.surf3, border: `1px solid ${C.border2}`,
+              borderRadius: 8, padding: '8px 14px', marginBottom: 16,
+              color: C.text, fontSize: 12, fontWeight: 700, textDecoration: 'none',
+              transition: 'border-color 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = C.acc + '88'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = C.border2; }}
+          >
+            <span>🏢</span>
+            <span>View full org chart in BambooHR</span>
+            <span style={{ color: C.muted2, fontSize: 11 }}>↗</span>
+          </a>
           {TIER_ORDER.map((tier) => {
             const members = teamByTier[tier];
             if (!members || members.length === 0) return null;
@@ -588,9 +641,29 @@ export function OverviewTab() {
                 color: C.acc,
               },
               {
-                channel: '#internal-team',
-                desc: 'Account-specific requests, VA task context, and team-wide notices. Post here when you need the VA team to know something about an account.',
-                color: C.green,
+                channel: '#manager-discussion',
+                desc: 'Coordination with the VA management team — Leila, Aica, Pamela. Post VA quality / speed / qualification issues here.',
+                color: '#A78BFA',
+              },
+              {
+                channel: '#onboarding-feedback-channel',
+                desc: 'Post-onboarding-call feedback loop. The QA bot posts scorecards here. Brief debriefs go here for Jon\'s eyes before service delivery starts.',
+                color: '#22C55E',
+              },
+              {
+                channel: '#onboarding-cracks',
+                desc: 'Daily flag of clients slipping through the cracks (cracks bot posts at 7:30 AM). Respond in-thread when one of your clients is flagged.',
+                color: '#EF4444',
+              },
+              {
+                channel: '#post-onboarding-discussion',
+                desc: 'QA bot posts post-onboarding-call summaries. React/comment when something stands out. High signal, low noise.',
+                color: '#F97316',
+              },
+              {
+                channel: 'Per-client channels',
+                desc: 'One private channel per client — your daily working space. Mon/Thu status notes go here in addition to your pod update.',
+                color: '#06B6D4',
               },
             ].map((ch) => (
               <div

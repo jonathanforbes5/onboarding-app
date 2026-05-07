@@ -133,10 +133,11 @@ export function Header() {
         </div>
       )}
 
-      <div className="flex items-center gap-2 px-3 py-2">
+      <div className="flex items-center gap-2 px-3 py-2 relative">
 
-        {/* ── Left: sidebar toggle + logo ── */}
+        {/* ── Left: sidebar toggle (mobile) + logo (desktop-left / mobile-absolute-center) ── */}
         <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* Sidebar toggle — only on sections/desktop */}
           {activeTab === 'sections' && !showCurriculumMap && (
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -154,8 +155,17 @@ export function Header() {
               <Menu size={15} />
             </button>
           )}
-          <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
+          {/* Logo: left on desktop, absolutely centered on mobile */}
+          <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto hidden sm:block" />
         </div>
+
+        {/* Logo centered absolutely on mobile only */}
+        <img
+          src="/logo.png"
+          alt="Roof Ignite"
+          className="h-7 w-auto sm:hidden absolute left-1/2 -translate-x-1/2"
+          style={{ pointerEvents: 'none' }}
+        />
 
         {/* ── Center: primary tabs — desktop only ── */}
         <div className="flex-1 hidden sm:flex items-center justify-center min-w-0">
@@ -299,6 +309,26 @@ export function Header() {
 
     {/* Mobile slide-down menu */}
     <div className={`hdr-mobile-menu${mobileMenuOpen ? ' open' : ''} sm:hidden`}>
+
+      {/* Close bar at the very top of the drawer */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+        padding: '10px 16px 6px',
+        borderBottom: '1px solid #1A1A1A',
+      }}>
+        <button
+          onClick={() => setMobileMenuOpen(false)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: '#1C1C1C', border: '1px solid #2A2A2A',
+            borderRadius: 20, padding: '6px 14px',
+            color: '#888', fontSize: 13, fontWeight: 600,
+            cursor: 'pointer', fontFamily: 'inherit',
+          }}
+        >
+          <X size={14} /> Close
+        </button>
+      </div>
 
       {/* User row */}
       {currentUser && userColor && (

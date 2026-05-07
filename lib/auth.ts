@@ -76,7 +76,23 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
       .eq('email', email.toLowerCase())
       .maybeSingle();
 
-    if (error || !data) return null;
+    if (error || !data) {
+      // Profile columns may not exist yet — fall back to base fields.
+      const fallback = await supabase
+        .from('allowed_users')
+        .select('email, display_name, role, user_key')
+        .eq('email', email.toLowerCase())
+        .maybeSingle();
+
+      if (fallback.error || !fallback.data) return null;
+
+      return {
+        email: fallback.data.email,
+        displayName: fallback.data.display_name,
+        role: fallback.data.role as 'super_admin' | 'user',
+        userKey: fallback.data.user_key,
+      };
+    }
 
     return {
       email: data.email,

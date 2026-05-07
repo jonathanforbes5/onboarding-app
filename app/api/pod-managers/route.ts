@@ -9,15 +9,23 @@ export async function GET() {
     return NextResponse.json({ managers: [] });
   }
 
-  // Anon key is sufficient — RLS allows public SELECT
   const client = createClient(supabaseUrl, anonKey);
 
+  // Try full query with profile columns first.
   const { data, error } = await client
     .from('allowed_users')
     .select('display_name, user_key, role, bio, goal, avatar_emoji, avatar_url')
     .order('display_name');
 
-  if (error) return NextResponse.json({ managers: [] });
+  if (!error) {
+    return NextResponse.json({ managers: data ?? [] });
+  }
 
-  return NextResponse.json({ managers: data ?? [] });
+  // Columns may not exist yet — fall back to base fields so the directory still renders.
+  const fallback = await client
+    .from('allowed_users')
+    .select('display_name, user_key, role')
+    .order('display_name');
+
+  return NextResponse.json({ managers: fallback.data ?? [] });
 }

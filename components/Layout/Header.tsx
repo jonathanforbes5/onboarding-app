@@ -155,10 +155,6 @@ export function Header() {
               <Menu size={15} />
             </button>
           )}
-          {/* Logo: left on desktop, absolutely centered on mobile */}
-          <button onClick={() => navigate('overview')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto hidden sm:block" />
-          </button>
         </div>
 
         {/* Logo centered absolutely on mobile only */}

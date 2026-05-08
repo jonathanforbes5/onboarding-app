@@ -11,6 +11,7 @@ const COLUMN_SQL = `
 `.trim();
 
 async function addProfileColumns(mgmtToken: string): Promise<boolean> {
+  if (!mgmtToken) return false;
   try {
     const res = await fetch(`https://api.supabase.com/v1/projects/${PROJECT_REF}/database/query`, {
       method: 'POST',
@@ -21,6 +22,18 @@ async function addProfileColumns(mgmtToken: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+async function tryUpdate(
+  admin: ReturnType<typeof createClient>,
+  email: string,
+  updateData: Record<string, string | undefined>,
+) {
+  return admin
+    .from('allowed_users')
+    .update(updateData)
+    .eq('email', email)
+    .select('email'); // returns matched rows so we can verify the write
 }
 
 export async function POST(req: NextRequest) {
@@ -43,35 +56,41 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'email required' }, { status: 400 });
   }
 
+  const normalizedEmail = email.toLowerCase().trim();
   const admin = createClient(supabaseUrl, serviceKey);
-  const updateData = {
-    ...(bio          !== undefined && { bio }),
-    ...(goal         !== undefined && { goal }),
-    ...(avatar_emoji !== undefined && { avatar_emoji }),
-    ...(avatar_url   !== undefined && { avatar_url }),
-  };
+  const updateData: Record<string, string | undefined> = {};
+  if (bio          !== undefined) updateData.bio          = bio;
+  if (goal         !== undefined) updateData.goal         = goal;
+  if (avatar_emoji !== undefined) updateData.avatar_emoji = avatar_emoji;
+  if (avatar_url   !== undefined) updateData.avatar_url   = avatar_url;
 
-  let { error } = await admin
-    .from('allowed_users')
-    .update(updateData)
-    .eq('email', email.toLowerCase());
+  let { data: rows, error } = await tryUpdate(admin, normalizedEmail, updateData);
 
-  // If the update failed due to missing columns, auto-migrate and retry once.
-  if (error && error.message.toLowerCase().includes('column')) {
+  // If columns are missing, auto-migrate then retry
+  if (error && (error.message.includes('column') || error.message.includes('does not exist'))) {
     const mgmtToken = process.env.SUPABASE_MANAGEMENT_TOKEN ?? '';
-    if (mgmtToken) {
-      await addProfileColumns(mgmtToken);
+    const migrated = await addProfileColumns(mgmtToken);
+
+    if (!migrated) {
+      return NextResponse.json({
+        error: 'Profile columns are missing from the database. Ask an admin to visit /api/migrate to fix this.',
+      }, { status: 500 });
     }
-    // Retry regardless — if mgmt token isn't set, maybe another method worked.
-    const retry = await admin
-      .from('allowed_users')
-      .update(updateData)
-      .eq('email', email.toLowerCase());
+
+    const retry = await tryUpdate(admin, normalizedEmail, updateData);
+    rows  = retry.data;
     error = retry.error;
   }
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // Verify at least one row was actually updated
+  if (!rows || rows.length === 0) {
+    return NextResponse.json({
+      error: `No user found with email ${normalizedEmail}. Profile could not be saved.`,
+    }, { status: 404 });
   }
 
   return NextResponse.json({ ok: true });

@@ -155,13 +155,17 @@ export function Header() {
               <Menu size={15} />
             </button>
           )}
+          {/* Logo — desktop left */}
+          <button onClick={() => navigate('overview')} className="hidden sm:flex items-center" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+            <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
+          </button>
         </div>
 
-        {/* Logo centered absolutely on mobile only */}
+        {/* Logo centered absolutely — mobile only (sm:hidden must not be overridden by inline display) */}
         <button
           onClick={() => navigate('overview')}
           className="sm:hidden absolute left-1/2 -translate-x-1/2"
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
           <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
         </button>

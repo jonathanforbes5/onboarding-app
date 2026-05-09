@@ -24,10 +24,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    // Run on all paths except internals + static assets. Note: we still
-    // need to RUN on these and let them through (above), so we can't just
-    // exclude them here — but excluding speeds things up.
-    '/((?!_next/static|_next/image).*)',
-  ],
+  // Match everything; the function body decides whether to rewrite or pass.
+  // Earlier path-to-regexp matchers with negative lookahead were unreliable
+  // on the edge — explicit allow-list inside the function is safer.
+  matcher: ['/((?!_next).*)'],
 };

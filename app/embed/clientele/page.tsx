@@ -4,9 +4,16 @@
 // portal chrome — just the map and a thin auth gate so the embed only
 // renders for a logged-in @roofignite.com super_admin (matches the
 // security model of the rest of the portal).
+//
+// IMPORTANT: this route MUST NOT be hit by the SPA rewrite in middleware.ts.
+// We've set matcher exclusions there + a fresh build-hash here so Vercel's
+// edge cache invalidates on deploy.
+// build_marker: 2026-05-08-22:00 — embed-fix-v3
 import React from 'react';
 import { useApp } from '@/context/AppContext';
 import { ClientMap } from '@/components/Diagrams/ClientMap';
+
+export const dynamic = 'force-dynamic';
 
 export default function EmbedClientelePage() {
   const { currentUser, authLoading } = useApp();

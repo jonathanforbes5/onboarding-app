@@ -181,8 +181,8 @@ const CSS = `
 .rim-reset-btn { padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; background: #1E293B; color: #CBD5E1; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; font-family: inherit; }
 .rim-reset-btn:hover { background: #273449; }
 .rim-hint { font-size: 10px; color: #64748B; }
-.rim-mapwrap { position: relative; border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid #1f1f1f; }
-.rim-svg { display: block; width: 100%; height: auto; touch-action: none; }
+.rim-mapwrap { position: relative; border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid #1f1f1f; min-height: 580px; height: min(78vh, calc((100vw - 320px) * 0.5715)); }
+.rim-svg { display: block; width: 100%; height: 100%; touch-action: none; }
 .rim-tip { position: absolute; z-index: 10; pointer-events: none; background: #0A0A0A; border: 1px solid rgba(245,200,0,0.33); border-radius: 8px; padding: 10px 12px; min-width: 220px; max-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); color: #fff; font-size: 12px; }
 .rim-tip-loc { font-size: 10px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #F5C800; margin-bottom: 4px; }
 .rim-tip-row { font-size: 12px; }
@@ -195,8 +195,14 @@ const CSS = `
 .rim-warn { font-size: 10px; color: #FBA94B; background: rgba(234,88,12,0.08); border: 1px solid rgba(234,88,12,0.25); border-radius: 10px; padding: 8px 10px; margin-top: 8px; }
 .rim-loading { font-size: 12px; color: #94A3B8; text-align: center; padding: 32px; }
 .rim-error { font-size: 12px; color: #F87171; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); border-radius: 10px; padding: 12px; }
-.rim-drawer { margin-top: 12px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: #fff; color: #111; }
-.rim-drawer-head { background: #0A0A0A; color: #fff; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+/* Drawer renders as a floating side panel ON TOP of the map so users see it
+   immediately when they click a state/dot. On narrow screens it falls back to
+   full-width-below to stay readable. */
+.rim-drawer { position: absolute; top: 12px; right: 12px; bottom: 12px; width: 380px; max-width: calc(100% - 24px); border-radius: 12px; overflow: hidden; overflow-y: auto; border: 1px solid rgba(0,0,0,0.1); background: #fff; color: #111; z-index: 30; box-shadow: 0 24px 60px rgba(0,0,0,0.55); display: flex; flex-direction: column; }
+.rim-drawer-head { position: sticky; top: 0; background: #0A0A0A; color: #fff; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; z-index: 1; }
+@media (max-width: 720px) {
+  .rim-drawer { position: static; width: 100%; max-width: 100%; margin-top: 12px; max-height: 60vh; }
+}
 .rim-drawer-kind { font-size: 9px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #F5C800; }
 .rim-drawer-title { font-size: 14px; font-weight: 900; }
 .rim-drawer-meta { font-size: 10px; color: rgba(255,255,255,0.6); }
@@ -349,20 +355,21 @@ async function mount(target, options = {}) {
         <span class="rim-hint">scroll to zoom · drag to pan</span>
       </div>
       <div class="rim-mapwrap" data-rim="mapwrap">
-        <svg class="rim-svg" viewBox="0 0 ${VIEW_W} ${VIEW_H}" data-rim="svg">
+        <svg class="rim-svg" viewBox="0 0 ${VIEW_W} ${VIEW_H}" preserveAspectRatio="xMidYMid meet" data-rim="svg">
           <g data-rim="zoomlayer">
             <g data-rim="states"></g>
             <g data-rim="markers"></g>
           </g>
         </svg>
         <div class="rim-tip" data-rim="tip" hidden></div>
+        <!-- Drawer floats on top of the map (right-side panel) on desktop, drops below on mobile. -->
+        <div data-rim="drawer-mount"></div>
       </div>
       <div class="rim-footer">
         <span data-rim="footer-l"></span>
         <span>Live from Airtable · refreshed every 5 min</span>
       </div>
       <div class="rim-warn" data-rim="warn" hidden></div>
-      <div data-rim="drawer-mount"></div>
     </div>
   `;
 
@@ -620,7 +627,21 @@ async function mount(target, options = {}) {
   // ---- Zoom / pan (manual, no d3-zoom — keeps the bundle smaller)
   // We track zoom + center [lng, lat] and apply an SVG transform that maps the
   // projected centroid to the viewport center, scaled by `zoom`.
+
+  // Clamp center to roughly the US bounding box (with a small buffer so the
+  // viewport edges can extend slightly past the coastline). Prevents the user
+  // from panning to Europe or the middle of the Pacific.
+  const US_BBOX = { minLng: -128, maxLng: -62, minLat: 22, maxLat: 51 };
+  function clampCenter(lngLat) {
+    const [lng, lat] = lngLat;
+    return [
+      Math.max(US_BBOX.minLng, Math.min(US_BBOX.maxLng, lng)),
+      Math.max(US_BBOX.minLat, Math.min(US_BBOX.maxLat, lat)),
+    ];
+  }
+
   function applyTransform() {
+    state.center = clampCenter(state.center);
     const c = projection(state.center);
     if (!c) return;
     const [cx, cy] = c;
@@ -665,14 +686,22 @@ async function mount(target, options = {}) {
     applyTransform();
   }, { passive: false });
 
-  // Drag = pan
+  // Drag = pan. We deliberately DON'T setPointerCapture eagerly — only after
+  // the user has moved past a small threshold — so plain clicks on state
+  // paths and city markers propagate normally to their click handlers.
   let drag = null;
+  const DRAG_THRESHOLD = 4; // px before we treat the gesture as a pan
   elSvg.addEventListener('pointerdown', (e) => {
-    drag = { x: e.clientX, y: e.clientY, center: state.center.slice() };
-    elSvg.setPointerCapture(e.pointerId);
+    drag = { x: e.clientX, y: e.clientY, center: state.center.slice(), captured: false };
   });
   elSvg.addEventListener('pointermove', (e) => {
     if (!drag) return;
+    if (!drag.captured) {
+      const moved = Math.hypot(e.clientX - drag.x, e.clientY - drag.y);
+      if (moved < DRAG_THRESHOLD) return;
+      drag.captured = true;
+      try { elSvg.setPointerCapture(e.pointerId); } catch (_) { /* unsupported pointerId */ }
+    }
     const rect = elSvg.getBoundingClientRect();
     const dx = (e.clientX - drag.x) * (VIEW_W / rect.width);
     const dy = (e.clientY - drag.y) * (VIEW_H / rect.height);
@@ -729,6 +758,16 @@ async function mount(target, options = {}) {
       state.openClientId = null;
       renderDrawer();
     });
+
+    // On narrow screens the drawer renders below the map (CSS media query) —
+    // smooth-scroll it into view so the click is obviously responsive. On
+    // desktop it floats over the map so this is a no-op visually.
+    if (window.innerWidth <= 720) {
+      const inner = elDrawer.querySelector('.rim-drawer');
+      if (inner && inner.scrollIntoView) {
+        inner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
     elDrawer.querySelectorAll('[data-rim-cli]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const id = btn.dataset.rimCli;

@@ -369,7 +369,21 @@ export function ClientMap() {
             zoom={zoomCenter.zoom}
             minZoom={1}
             maxZoom={8}
-            onMoveEnd={(p: any) => setZoomCenter({ coordinates: p.coordinates, zoom: p.zoom })}
+            // Clamp panning to roughly the US bbox so users can't drag the
+            // map off into the Pacific. translateExtent is in SVG units
+            // matching the ComposableMap width/height. d3-zoom inside RSM
+            // honours this and prevents the transform from going past the
+            // edges.
+            translateExtent={[[0, 0], [980, 560]]}
+            onMoveEnd={(p: any) => {
+              // Belt-and-suspenders: clamp the [lng, lat] center to the US
+              // bbox in case translateExtent is bypassed (e.g. via
+              // programmatic state.zoomCenter update).
+              const [lng, lat] = p.coordinates;
+              const clampedLng = Math.max(-128, Math.min(-62, lng));
+              const clampedLat = Math.max(22,   Math.min(51,  lat));
+              setZoomCenter({ coordinates: [clampedLng, clampedLat], zoom: p.zoom });
+            }}
           >
           <Geographies geography="/us-states-10m.json">
             {({ geographies }: { geographies: any[] }) =>

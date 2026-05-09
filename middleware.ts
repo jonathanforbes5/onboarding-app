@@ -6,7 +6,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 // rewrite in next.config.js which path-to-regexp wasn't honouring on
 // edge correctly (it was catching /embed/clientele and breaking the
 // dashboard iframe).
-const PASS_THROUGH = /^\/(api|embed|_next|favicon|icon|us-states-10m|robots|sitemap)/;
+const PASS_THROUGH = /^\/(api|embed|widgets|_next|favicon|icon|us-states-10m|robots|sitemap)/;
 const STATIC_FILE  = /\.(?:json|png|jpg|jpeg|svg|webp|ico|woff2?|css|js|map|txt|xml|webmanifest)$/;
 
 export function middleware(req: NextRequest) {

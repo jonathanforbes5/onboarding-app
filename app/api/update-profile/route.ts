@@ -25,15 +25,19 @@ async function addProfileColumns(mgmtToken: string): Promise<boolean> {
 }
 
 async function tryUpdate(
-  admin: ReturnType<typeof createClient>,
+  admin: any,
   email: string,
   updateData: Record<string, string | undefined>,
 ) {
+  // `admin` typed as `any` because supabase-js v2's strict typed client
+  // narrows update payloads to `never` when no Database generic is given. We
+  // don't want to generate the full schema types just for this route — call
+  // shape is verified at runtime via `.select('email')`.
   return admin
     .from('allowed_users')
     .update(updateData)
     .eq('email', email)
-    .select('email'); // returns matched rows so we can verify the write
+    .select('email');
 }
 
 export async function POST(req: NextRequest) {

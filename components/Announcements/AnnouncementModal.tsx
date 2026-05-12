@@ -2,34 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Megaphone, ExternalLink, X } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
-
-interface Announcement {
-  id: string;
-  title: string;
-  body: string;
-  link_url: string | null;
-  loom_url: string | null;
-  image_url: string | null;
-  created_by: string;
-  created_at: string;
-  published: boolean;
-}
-
-// Static announcements — always shown regardless of DB state.
-// Use stable string IDs (not UUIDs) so seen-state persists across deploys.
-const STATIC_ANNOUNCEMENTS: Announcement[] = [
-  {
-    id: 'static_landing_page_v2_2026_05',
-    title: 'Landing Page v2 Tutorial — SOP + Video Now Live',
-    body: "Cole just dropped the new Landing Page v2 tutorial. There's a full written SOP and a Loom walkthrough covering the complete build flow end-to-end. Find both in Resources → SOPs (filter by Onboarding or Service Delivery).",
-    link_url: 'https://docs.google.com/document/d/1T9aEbXitLV6XZkRCnYD8_7CX3_isp6okUEIxipZIGpQ/edit?tab=t.0',
-    loom_url: 'https://www.loom.com/share/56ad708c46c24e138d0ba954b976c13d',
-    image_url: null,
-    created_by: 'Cole Yedema',
-    created_at: '2026-05-12T00:00:00Z',
-    published: true,
-  },
-];
+import { type Announcement, STATIC_ANNOUNCEMENTS, mergeAnnouncements } from '@/data/staticAnnouncements';
 
 function LoomEmbed({ url }: { url: string }) {
   const id = url.match(/(?:loom\.com\/(?:share|embed)\/)([a-f0-9]+)/i)?.[1];
@@ -52,14 +25,7 @@ export function AnnouncementModal() {
     fetch('/api/announcements')
       .then(r => r.json())
       .then((d) => {
-        const fromDb: Announcement[] = d.announcements ?? [];
-        const dbIds = new Set(fromDb.map(a => a.id));
-        // Merge DB announcements with static ones, deduplicating by stable static ID
-        // (static IDs are never UUIDs, so they won't collide with DB entries).
-        const staticExtras = STATIC_ANNOUNCEMENTS.filter(s => !dbIds.has(s.id));
-        const all = [...fromDb, ...staticExtras].sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-        );
+        const all = mergeAnnouncements(d.announcements ?? []);
         try {
           const seen: string[] = JSON.parse(localStorage.getItem(`ri_${userKey}_seen_announcements`) ?? '[]');
           const unseen = all.filter(a => !seen.includes(a.id));

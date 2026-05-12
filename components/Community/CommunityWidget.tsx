@@ -2,14 +2,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { X, ChevronUp, Plus, Map, Megaphone, Bug, ExternalLink, Calendar, Lightbulb, MessageSquarePlus } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { type Announcement, mergeAnnouncements } from '@/data/staticAnnouncements';
 
 type WidgetTab = 'whatsnew' | 'ideas' | 'roadmap';
-
-interface Announcement {
-  id: string; title: string; body: string;
-  link_url: string | null; loom_url: string | null; image_url: string | null;
-  created_by: string; created_at: string; published: boolean;
-}
 interface FeedbackItem {
   id: string; title: string; description: string | null; category: string | null;
   vote_count: number; created_by: string; status: string; created_at: string; hasVoted: boolean;
@@ -93,15 +88,21 @@ export function CommunityWidget() {
     fetch('/api/announcements')
       .then(r => r.json())
       .then(d => {
-        const list: Announcement[] = d.announcements ?? [];
+        const list = mergeAnnouncements(d.announcements ?? []);
         setAnnouncements(list);
-        // compute unread
         try {
           const seen: string[] = JSON.parse(localStorage.getItem(`ri_${userKey}_seen_announcements`) ?? '[]');
           setUnreadCount(list.filter(a => !seen.includes(a.id)).length);
         } catch {}
       })
-      .catch(() => {})
+      .catch(() => {
+        const list = mergeAnnouncements([]);
+        setAnnouncements(list);
+        try {
+          const seen: string[] = JSON.parse(localStorage.getItem(`ri_${userKey}_seen_announcements`) ?? '[]');
+          setUnreadCount(list.filter(a => !seen.includes(a.id)).length);
+        } catch {}
+      })
       .finally(() => setAnnouncementsLoading(false));
   }, [userKey]);
 

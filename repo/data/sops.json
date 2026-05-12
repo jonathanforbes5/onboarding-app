@@ -281,6 +281,20 @@
       "description": "How to handle seasonal slowdowns — winter retainer structure, client conversations, and maintaining relationships during off-season.",
       "url": "https://docs.google.com/document/d/1KrhdBIV9R2skH2tDO1VIQ1_GRm3g_9EDEfNH8rp3150/edit?usp=sharing",
       "tags": ["seasonal", "retention", "client"]
+    },
+    {
+      "id": "landing_page_v2_sop",
+      "title": "Landing Page v2 — Tutorial SOP",
+      "description": "Written SOP for the Landing Page v2 build process — step-by-step setup guide from Cole. Pair with the Loom walkthrough below.",
+      "url": "https://docs.google.com/document/d/1T9aEbXitLV6XZkRCnYD8_7CX3_isp6okUEIxipZIGpQ/edit?tab=t.0",
+      "tags": ["service-delivery", "landing-page", "setup", "onboarding"]
+    },
+    {
+      "id": "landing_page_v2_loom",
+      "title": "Landing Page v2 — Tutorial Walkthrough (Cole)",
+      "description": "Cole walks through the full Landing Page v2 setup live. Watch alongside the written SOP. Covers the complete build flow end-to-end.",
+      "url": "https://www.loom.com/share/56ad708c46c24e138d0ba954b976c13d",
+      "tags": ["service-delivery", "landing-page", "loom", "onboarding"]
     }
   ]
 }

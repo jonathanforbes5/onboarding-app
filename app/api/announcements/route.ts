@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
+// Announcements that should always exist in the DB.
+// On GET, any missing entries (matched by title) are auto-inserted.
+const SEEDED_ANNOUNCEMENTS = [
+  {
+    title: 'Landing Page v2 Tutorial — SOP + Video Now Live',
+    body: "Cole just dropped the new Landing Page v2 tutorial. There's a full written SOP and a Loom walkthrough covering the complete build flow end-to-end. Find both in Resources → SOPs (filter by Onboarding or Service Delivery).",
+    link_url: 'https://docs.google.com/document/d/1T9aEbXitLV6XZkRCnYD8_7CX3_isp6okUEIxipZIGpQ/edit?tab=t.0',
+    loom_url: 'https://www.loom.com/share/56ad708c46c24e138d0ba954b976c13d',
+    created_by: 'Cole Yedema',
+    published: true,
+  },
+];
+
 function getClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -57,7 +70,22 @@ export async function GET() {
     return NextResponse.json({ announcements: [] });
   }
 
-  return NextResponse.json({ announcements: data ?? [] });
+  const existing = data ?? [];
+
+  // Insert any seeded announcements that aren't in the DB yet (matched by title).
+  const existingTitles = new Set(existing.map((a) => a.title));
+  const missing = SEEDED_ANNOUNCEMENTS.filter((s) => !existingTitles.has(s.title));
+  if (missing.length > 0) {
+    const { data: inserted } = await client.from('announcements').insert(missing).select(
+      'id, title, body, link_url, loom_url, image_url, created_by, created_at, published',
+    );
+    const merged = [...(inserted ?? []), ...existing].sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    );
+    return NextResponse.json({ announcements: merged });
+  }
+
+  return NextResponse.json({ announcements: existing });
 }
 
 export async function POST(req: NextRequest) {

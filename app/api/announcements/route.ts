@@ -55,37 +55,38 @@ async function ensureTable() {
   });
 }
 
+const SELECT_COLS = 'id, title, body, link_url, loom_url, image_url, created_by, created_at, published';
+
+async function fetchAnnouncements(client: ReturnType<typeof getClient>) {
+  if (!client) return null;
+  const res = await client.from('announcements').select(SELECT_COLS).eq('published', true).order('created_at', { ascending: false });
+  if (res.error?.message?.includes('does not exist')) {
+    await ensureTable();
+    const retry = await client.from('announcements').select(SELECT_COLS).eq('published', true).order('created_at', { ascending: false });
+    return retry.error ? null : (retry.data ?? []);
+  }
+  return res.error ? null : (res.data ?? []);
+}
+
 export async function GET() {
   const client = getClient();
   if (!client) return NextResponse.json({ announcements: [] });
 
-  const { data, error } = await client
-    .from('announcements')
-    .select('id, title, body, link_url, loom_url, image_url, created_by, created_at, published')
-    .eq('published', true)
-    .order('created_at', { ascending: false });
+  const rows = await fetchAnnouncements(client);
+  if (rows === null) return NextResponse.json({ announcements: [] });
 
-  if (error?.message?.includes('does not exist')) {
-    await ensureTable();
-    return NextResponse.json({ announcements: [] });
-  }
-
-  const existing = data ?? [];
-
-  // Insert any seeded announcements that aren't in the DB yet (matched by title).
-  const existingTitles = new Set(existing.map((a) => a.title));
+  // Insert any seeded announcements missing from the DB (matched by title).
+  const existingTitles = new Set(rows.map((a) => a.title));
   const missing = SEEDED_ANNOUNCEMENTS.filter((s) => !existingTitles.has(s.title));
   if (missing.length > 0) {
-    const { data: inserted } = await client.from('announcements').insert(missing).select(
-      'id, title, body, link_url, loom_url, image_url, created_by, created_at, published',
-    );
-    const merged = [...(inserted ?? []), ...existing].sort(
+    const { data: inserted } = await client.from('announcements').insert(missing).select(SELECT_COLS);
+    const merged = [...(inserted ?? []), ...rows].sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
     return NextResponse.json({ announcements: merged });
   }
 
-  return NextResponse.json({ announcements: existing });
+  return NextResponse.json({ announcements: rows });
 }
 
 export async function POST(req: NextRequest) {

@@ -145,9 +145,9 @@ interface TrainingLoom {
   priority: string;
 }
 
-function LoomCard({ loom }: { loom: TrainingLoom }) {
+function LoomCard({ loom }: { loom: TrainingLoom | ApiRecordingItem }) {
   const catColor = LOOM_FILTERS.find((f) => f.id === loom.category)?.color ?? '#666';
-  const isCore = loom.priority === 'core';
+  const isCore = (loom as TrainingLoom).priority === 'core';
   return (
     <a
       href={loom.url}

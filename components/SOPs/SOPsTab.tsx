@@ -87,14 +87,24 @@ function SectionHeader({ icon, title, subtitle }: SectionHeaderProps) {
   );
 }
 
+interface ContentItem {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  icon?: string;
+  category: string;
+  tags?: string[];
+}
+
 export function SOPsTab() {
   const [activeFilter, setActiveFilter] = useState<FilterTag>('all');
-  const [dynamicItems, setDynamicItems] = useState<null | typeof sopData.resources>(null);
+  const [dynamicItems, setDynamicItems] = useState<null | ContentItem[]>(null);
 
   useEffect(() => {
     fetch('/api/content/resources')
       .then((res) => res.json())
-      .then((data: { items: typeof sopData.resources }) => {
+      .then((data: { items: ContentItem[] }) => {
         if (data?.items) setDynamicItems(data.items);
       })
       .catch(() => {
@@ -108,10 +118,11 @@ export function SOPsTab() {
 
   const filteredSOPs = allSops.filter((sop) => {
     if (activeFilter === 'all') return true;
-    if (activeFilter === 'creative') return sop.tags.some((t) => ['creative', 'ads', 'scaling', 'testing', 'copy', 'design', 'fundamentals'].includes(t));
-    if (activeFilter === 'client') return sop.tags.some((t) => ['client', 'retention', 'seasonal', 'social-proof'].includes(t));
-    if (activeFilter === 'process') return sop.tags.some((t) => ['process', 'va', 'setup', 'technical', 'dashboard', 'monitoring'].includes(t));
-    if (activeFilter === 'onboarding') return sop.tags.includes('onboarding');
+    const tags = (sop as ContentItem).tags ?? [];
+    if (activeFilter === 'creative') return tags.some((t) => ['creative', 'ads', 'scaling', 'testing', 'copy', 'design', 'fundamentals'].includes(t));
+    if (activeFilter === 'client') return tags.some((t) => ['client', 'retention', 'seasonal', 'social-proof'].includes(t));
+    if (activeFilter === 'process') return tags.some((t) => ['process', 'va', 'setup', 'technical', 'dashboard', 'monitoring'].includes(t));
+    if (activeFilter === 'onboarding') return tags.includes('onboarding');
     return true;
   });
 
@@ -279,7 +290,7 @@ export function SOPsTab() {
                 title={sop.title}
                 description={sop.description}
                 url={sop.url}
-                meta={sop.tags.map((t) => t.replace('-', ' ')).join(' · ')}
+                meta={(sop.tags ?? []).map((t) => t.replace('-', ' ')).join(' · ')}
               />
             ))}
           </div>

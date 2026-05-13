@@ -895,9 +895,541 @@ function AskRIInsights() {
   );
 }
 
-// ── Content Management (Announcements / Feedback / Roadmap) ──
+// ── Content Management (Announcements / Feedback / Roadmap / Resources / Recordings) ──
 function ContentAdmin() {
-  const [adminTab, setAdminTab] = useState<'announcements' | 'feedback' | 'roadmap'>('announcements');
+  const [adminTab, setAdminTab] = useState<'announcements' | 'feedback' | 'roadmap' | 'resources' | 'recordings'>('announcements');
+
+  // ── Announcements ──
+  const [announcements, setAnnouncements] = useState<{
+    id: string; title: string; body: string; link_url: string | null;
+    loom_url: string | null; image_url: string | null; created_by: string;
+    published: boolean; created_at: string;
+  }[]>([]);
+  const [aForm, setAForm] = useState({ title: '', notes: '', body: '', link_url: '', loom_url: '', image_url: '' });
+  const [aSaving, setASaving] = useState(false);
+  const [aMsg, setAMsg] = useState<string | null>(null);
+  const [aSummarizing, setASummarizing] = useState(false);
+
+  // ── Feedback ──
+  const [feedbackItems, setFeedbackItems] = useState<{
+    id: string; title: string; description: string | null; category: string | null;
+    vote_count: number; created_by: string; status: string; created_at: string;
+  }[]>([]);
+
+  // ── Roadmap ──
+  const [roadmapItems, setRoadmapItems] = useState<{
+    id: string; title: string; description: string | null; category: string | null;
+    status: string; created_by: string; created_at: string;
+  }[]>([]);
+  const [rForm, setRForm] = useState({ title: '', description: '', status: 'planned', category: '' });
+  const [rSaving, setRSaving] = useState(false);
+  const [rMsg, setRMsg] = useState<string | null>(null);
+
+  // ── Resources ──
+  type ContentItem = { id: string; title: string; description: string; url: string; icon: string; category: string; tags: string[]; published: boolean; created_at?: string };
+  const [resources, setResources] = useState<ContentItem[]>([]);
+  const [resForm, setResForm] = useState({ id: '', title: '', description: '', url: '', icon: '📄', category: 'sop', tags: '' });
+  const [resEditingId, setResEditingId] = useState<string | null>(null);
+  const [resSaving, setResSaving] = useState(false);
+  const [resMsg, setResMsg] = useState<string | null>(null);
+
+  // ── Recordings ──
+  type RecItem = { id: string; title: string; description: string; url: string; category: string; tags: string[]; duration_mins?: number; watch_first?: boolean; published: boolean; created_at?: string };
+  const [recordings, setRecordings] = useState<RecItem[]>([]);
+  const [recForm, setRecForm] = useState({ id: '', title: '', description: '', url: '', category: 'training_loom', tags: '', duration_mins: '', watch_first: false });
+  const [recEditingId, setRecEditingId] = useState<string | null>(null);
+  const [recSaving, setRecSaving] = useState(false);
+  const [recMsg, setRecMsg] = useState<string | null>(null);
+
+  const loadAll = useCallback(async () => {
+    try {
+      const [aRes, fRes, rmRes] = await Promise.all([
+        fetch('/api/announcements').then((r) => r.json()),
+        fetch('/api/feedback').then((r) => r.json()),
+        fetch('/api/roadmap').then((r) => r.json()),
+      ]);
+      setAnnouncements(aRes.announcements ?? []);
+      setFeedbackItems(fRes.items ?? []);
+      setRoadmapItems(rmRes.items ?? []);
+    } catch {}
+  }, []);
+
+  const loadResources = useCallback(async () => {
+    try {
+      const d = await fetch('/api/content/resources').then(r => r.json());
+      setResources(d.items ?? []);
+    } catch {}
+  }, []);
+
+  const loadRecordings = useCallback(async () => {
+    try {
+      const d = await fetch('/api/content/recordings').then(r => r.json());
+      setRecordings(d.items ?? []);
+    } catch {}
+  }, []);
+
+  useEffect(() => { loadAll(); }, [loadAll]);
+  useEffect(() => { if (adminTab === 'resources') loadResources(); }, [adminTab, loadResources]);
+  useEffect(() => { if (adminTab === 'recordings') loadRecordings(); }, [adminTab, loadRecordings]);
+
+  // ── Announcement actions ──
+  async function summarizeWithAI() {
+    if (!aForm.title.trim()) { setAMsg('Enter a title first'); return; }
+    setASummarizing(true); setAMsg(null);
+    try {
+      const res = await fetch('/api/ai-summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: aForm.title.trim(), notes: aForm.notes.trim() }),
+      });
+      const d = await res.json();
+      if (d.summary) setAForm(f => ({ ...f, body: d.summary }));
+      else setAMsg(d.error ?? 'Could not generate summary');
+    } catch { setAMsg('AI unavailable'); }
+    setASummarizing(false);
+  }
+
+  async function postAnnouncement() {
+    if (!aForm.title.trim() || !aForm.body.trim()) { setAMsg('Title and body required'); return; }
+    setASaving(true); setAMsg(null);
+    try {
+      const res = await fetch('/api/announcements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: aForm.title.trim(), body: aForm.body.trim(),
+          link_url: aForm.link_url.trim() || undefined,
+          loom_url: aForm.loom_url.trim() || undefined,
+          image_url: aForm.image_url.trim() || undefined,
+          created_by: 'admin',
+        }),
+      });
+      if (res.ok) { setAForm({ title: '', notes: '', body: '', link_url: '', loom_url: '', image_url: '' }); setAMsg('Posted! Users will see the popup on next login.'); await loadAll(); }
+      else { const d = await res.json(); setAMsg(d.error ?? 'Error'); }
+    } catch (e) { setAMsg(String(e)); }
+    setASaving(false);
+  }
+
+  async function deleteAnnouncement(id: string) {
+    if (!confirm('Delete this announcement?')) return;
+    await fetch(`/api/announcements/${id}`, { method: 'DELETE' });
+    await loadAll();
+  }
+
+  async function togglePublish(id: string, published: boolean) {
+    await fetch(`/api/announcements/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ published }) });
+    await loadAll();
+  }
+
+  // ── Feedback actions ──
+  async function updateFeedbackStatus(id: string, status: string) {
+    await fetch(`/api/feedback/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+    setFeedbackItems((prev) => prev.map((f) => f.id === id ? { ...f, status } : f));
+  }
+
+  async function deleteFeedback(id: string) {
+    if (!confirm('Delete this feedback item?')) return;
+    await fetch(`/api/feedback/${id}`, { method: 'DELETE' });
+    await loadAll();
+  }
+
+  // ── Roadmap actions ──
+  async function postRoadmapItem() {
+    if (!rForm.title.trim()) { setRMsg('Title required'); return; }
+    setRSaving(true); setRMsg(null);
+    try {
+      const res = await fetch('/api/roadmap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: rForm.title.trim(), description: rForm.description.trim() || undefined, status: rForm.status, category: rForm.category.trim() || undefined, created_by: 'admin' }),
+      });
+      if (res.ok) { setRForm({ title: '', description: '', status: 'planned', category: '' }); setRMsg('Added!'); await loadAll(); }
+      else { const d = await res.json(); setRMsg(d.error ?? 'Error'); }
+    } catch (e) { setRMsg(String(e)); }
+    setRSaving(false);
+  }
+
+  async function updateRoadmapStatus(id: string, status: string) {
+    await fetch(`/api/roadmap/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+    setRoadmapItems((prev) => prev.map((r) => r.id === id ? { ...r, status } : r));
+  }
+
+  async function deleteRoadmapItem(id: string) {
+    if (!confirm('Delete this roadmap item?')) return;
+    await fetch(`/api/roadmap/${id}`, { method: 'DELETE' });
+    await loadAll();
+  }
+
+  // ── Resource actions ──
+  function startEditResource(item: ContentItem) {
+    setResForm({ id: item.id, title: item.title, description: item.description, url: item.url, icon: item.icon || '📄', category: item.category, tags: (item.tags ?? []).join(', ') });
+    setResEditingId(item.id);
+    setResMsg(null);
+  }
+
+  function cancelEditResource() { setResForm({ id: '', title: '', description: '', url: '', icon: '📄', category: 'sop', tags: '' }); setResEditingId(null); setResMsg(null); }
+
+  async function saveResource() {
+    if (!resForm.title.trim() || !resForm.url.trim()) { setResMsg('Title and URL required'); return; }
+    setResSaving(true); setResMsg(null);
+    const payload = {
+      id: resForm.id.trim() || undefined,
+      title: resForm.title.trim(), description: resForm.description.trim(),
+      url: resForm.url.trim(), icon: resForm.icon.trim() || '📄',
+      category: resForm.category,
+      tags: resForm.tags.split(',').map(t => t.trim()).filter(Boolean),
+    };
+    try {
+      const method = resEditingId ? 'PUT' : 'POST';
+      const url = resEditingId ? `/api/content/resources/${resEditingId}` : '/api/content/resources';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (res.ok) { cancelEditResource(); setResMsg(resEditingId ? 'Updated!' : 'Added!'); await loadResources(); }
+      else { const d = await res.json(); setResMsg(d.error ?? 'Error'); }
+    } catch (e) { setResMsg(String(e)); }
+    setResSaving(false);
+  }
+
+  async function deleteResource(id: string) {
+    if (!confirm('Remove this resource?')) return;
+    await fetch(`/api/content/resources/${id}`, { method: 'DELETE' });
+    await loadResources();
+  }
+
+  // ── Recording actions ──
+  function startEditRecording(item: RecItem) {
+    setRecForm({ id: item.id, title: item.title, description: item.description, url: item.url, category: item.category, tags: (item.tags ?? []).join(', '), duration_mins: item.duration_mins ? String(item.duration_mins) : '', watch_first: item.watch_first ?? false });
+    setRecEditingId(item.id);
+    setRecMsg(null);
+  }
+
+  function cancelEditRecording() { setRecForm({ id: '', title: '', description: '', url: '', category: 'training_loom', tags: '', duration_mins: '', watch_first: false }); setRecEditingId(null); setRecMsg(null); }
+
+  async function saveRecording() {
+    if (!recForm.title.trim() || !recForm.url.trim()) { setRecMsg('Title and URL required'); return; }
+    setRecSaving(true); setRecMsg(null);
+    const payload = {
+      id: recForm.id.trim() || undefined,
+      title: recForm.title.trim(), description: recForm.description.trim(),
+      url: recForm.url.trim(), category: recForm.category,
+      tags: recForm.tags.split(',').map(t => t.trim()).filter(Boolean),
+      duration_mins: recForm.duration_mins ? parseInt(recForm.duration_mins) : undefined,
+      watch_first: recForm.watch_first,
+    };
+    try {
+      const method = recEditingId ? 'PUT' : 'POST';
+      const url = recEditingId ? `/api/content/recordings/${recEditingId}` : '/api/content/recordings';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if (res.ok) { cancelEditRecording(); setRecMsg(recEditingId ? 'Updated!' : 'Added!'); await loadRecordings(); }
+      else { const d = await res.json(); setRecMsg(d.error ?? 'Error'); }
+    } catch (e) { setRecMsg(String(e)); }
+    setRecSaving(false);
+  }
+
+  async function deleteRecording(id: string) {
+    if (!confirm('Remove this recording?')) return;
+    await fetch(`/api/content/recordings/${id}`, { method: 'DELETE' });
+    await loadRecordings();
+  }
+
+  const inputStyle: React.CSSProperties = {
+    backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 8,
+    padding: '8px 12px', color: C.text, fontSize: 12, outline: 'none',
+    fontFamily: 'inherit', width: '100%', boxSizing: 'border-box',
+  };
+
+  const TABS = [
+    { id: 'announcements' as const, label: `What's New (${announcements.length})` },
+    { id: 'feedback' as const,      label: `Feedback (${feedbackItems.length})` },
+    { id: 'roadmap' as const,       label: `Roadmap (${roadmapItems.length})` },
+    { id: 'resources' as const,     label: 'Resources' },
+    { id: 'recordings' as const,    label: 'Recordings' },
+  ];
+
+  return (
+    <div style={{ marginTop: 32, backgroundColor: C.surf, border: `1px solid ${C.border}`, borderRadius: 16, overflow: 'hidden' }}>
+      {/* Header */}
+      <div style={{ background: `linear-gradient(135deg, #F5C80018 0%, transparent 70%)`, borderBottom: `1px solid ${C.border}`, padding: '16px 20px' }}>
+        <div style={{ color: C.acc, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 3 }}>Content Management</div>
+        <h2 style={{ color: C.text, fontSize: 16, fontWeight: 900, margin: 0 }}>Announcements · Feedback · Roadmap · Resources · Recordings</h2>
+        <p style={{ color: C.muted, fontSize: 12, margin: '3px 0 0' }}>Manage all portal content without touching code.</p>
+      </div>
+
+      {/* Sub-tabs */}
+      <div style={{ display: 'flex', borderBottom: `1px solid ${C.border}`, overflowX: 'auto' }}>
+        {TABS.map((t) => (
+          <button key={t.id} onClick={() => setAdminTab(t.id)} style={{
+            padding: '10px 16px', fontSize: 12, fontWeight: 700, border: 'none', flexShrink: 0,
+            borderBottom: adminTab === t.id ? `2px solid ${C.acc}` : '2px solid transparent',
+            backgroundColor: 'transparent', color: adminTab === t.id ? C.acc : C.muted, cursor: 'pointer',
+          }}>{t.label}</button>
+        ))}
+      </div>
+
+      <div style={{ padding: '20px' }}>
+
+        {/* ── Announcements ── */}
+        {adminTab === 'announcements' && (
+          <div>
+            <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border2}`, borderRadius: 12, padding: '16px', marginBottom: 20 }}>
+              <div style={{ color: C.acc, fontSize: 12, fontWeight: 800, marginBottom: 12 }}>Post New Announcement</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <input placeholder="Title *" value={aForm.title} onChange={(e) => setAForm((f) => ({ ...f, title: e.target.value }))} style={inputStyle} />
+
+                {/* AI assist */}
+                <div>
+                  <textarea
+                    placeholder="Raw notes (optional) — paste bullet points, Slack messages, or rough context here. AI will turn them into a polished body."
+                    value={aForm.notes}
+                    onChange={(e) => setAForm((f) => ({ ...f, notes: e.target.value }))}
+                    rows={2}
+                    style={{ ...inputStyle, resize: 'vertical', color: C.muted }}
+                  />
+                  <button
+                    onClick={summarizeWithAI}
+                    disabled={aSummarizing}
+                    style={{
+                      marginTop: 6, backgroundColor: '#1A1600', border: `1px solid ${C.acc}44`,
+                      color: aSummarizing ? C.muted : C.acc, fontSize: 11, fontWeight: 800,
+                      padding: '6px 14px', borderRadius: 7, cursor: aSummarizing ? 'default' : 'pointer', fontFamily: 'inherit',
+                    }}
+                  >
+                    {aSummarizing ? '✦ Generating…' : '✦ Generate summary with AI'}
+                  </button>
+                </div>
+
+                <textarea placeholder="Body * (what users will see in the popup and What's New tab)" value={aForm.body} onChange={(e) => setAForm((f) => ({ ...f, body: e.target.value }))} rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
+                <input placeholder="Link URL (optional)" value={aForm.link_url} onChange={(e) => setAForm((f) => ({ ...f, link_url: e.target.value }))} style={inputStyle} />
+                <input placeholder="Loom URL (optional — embeds the video in the popup)" value={aForm.loom_url} onChange={(e) => setAForm((f) => ({ ...f, loom_url: e.target.value }))} style={inputStyle} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <button onClick={postAnnouncement} disabled={aSaving} style={{ backgroundColor: C.acc, color: '#000', fontWeight: 800, fontSize: 12, padding: '8px 18px', borderRadius: 8, border: 'none', cursor: 'pointer' }}>
+                    {aSaving ? 'Posting…' : 'Post announcement'}
+                  </button>
+                  {aMsg && <span style={{ color: aMsg.startsWith('Posted') ? C.green : C.red, fontSize: 12 }}>{aMsg}</span>}
+                </div>
+              </div>
+            </div>
+
+            {announcements.length === 0 ? (
+              <p style={{ color: C.muted2, fontSize: 13, textAlign: 'center', padding: '20px 0' }}>No announcements yet.</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {announcements.map((a) => (
+                  <div key={a.id} style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ color: C.text, fontSize: 13, fontWeight: 800 }}>{a.title}</div>
+                      <div style={{ color: C.muted, fontSize: 11, marginTop: 3, lineHeight: 1.5 }}>{a.body.slice(0, 120)}{a.body.length > 120 ? '…' : ''}</div>
+                      <div style={{ color: C.muted2, fontSize: 10, marginTop: 6 }}>{new Date(a.created_at).toLocaleString()} · by {a.created_by} · {a.published ? '✅ Published' : '🚫 Hidden'}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                      <button onClick={() => togglePublish(a.id, !a.published)} style={{ backgroundColor: a.published ? '#1A1A1A' : '#0D1A0D', color: a.published ? C.muted : C.green, fontSize: 11, fontWeight: 700, padding: '5px 10px', borderRadius: 7, border: `1px solid ${a.published ? C.border : '#22C55E44'}`, cursor: 'pointer' }}>
+                        {a.published ? 'Unpublish' : 'Publish'}
+                      </button>
+                      <button onClick={() => deleteAnnouncement(a.id)} style={{ backgroundColor: '#1A0D0D', color: C.red, fontSize: 11, fontWeight: 700, padding: '5px 10px', borderRadius: 7, border: `1px solid ${C.red}44`, cursor: 'pointer' }}>Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Feedback ── */}
+        {adminTab === 'feedback' && (
+          <div>
+            {feedbackItems.length === 0 ? (
+              <p style={{ color: C.muted2, fontSize: 13, textAlign: 'center', padding: '20px 0' }}>No feedback submitted yet.</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {feedbackItems.map((f) => (
+                  <div key={f.id} style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                        <span style={{ backgroundColor: '#1A1400', color: C.acc, fontSize: 10, fontWeight: 800, padding: '2px 8px', borderRadius: 20, border: `1px solid ${C.acc}44` }}>▲ {f.vote_count}</span>
+                        {f.category && <span style={{ color: C.muted2, fontSize: 10 }}>#{f.category}</span>}
+                      </div>
+                      <div style={{ color: C.text, fontSize: 13, fontWeight: 700 }}>{f.title}</div>
+                      {f.description && <div style={{ color: C.muted, fontSize: 11, marginTop: 3 }}>{f.description}</div>}
+                      <div style={{ color: C.muted2, fontSize: 10, marginTop: 6 }}>{new Date(f.created_at).toLocaleString()} · by {f.created_by}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
+                      {['open', 'under_review', 'planned', 'done', 'closed'].map((s) => (
+                        <button key={s} onClick={() => updateFeedbackStatus(f.id, s)} style={{ backgroundColor: f.status === s ? '#1A1400' : 'transparent', color: f.status === s ? C.acc : C.muted2, fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 6, border: f.status === s ? `1px solid ${C.acc}44` : `1px solid ${C.border}`, cursor: 'pointer' }}>
+                          {s.replace('_', ' ')}
+                        </button>
+                      ))}
+                      <button onClick={() => deleteFeedback(f.id)} style={{ backgroundColor: '#1A0D0D', color: C.red, fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 6, border: `1px solid ${C.red}44`, cursor: 'pointer' }}>Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Roadmap ── */}
+        {adminTab === 'roadmap' && (
+          <div>
+            <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border2}`, borderRadius: 12, padding: '16px', marginBottom: 20 }}>
+              <div style={{ color: C.acc, fontSize: 12, fontWeight: 800, marginBottom: 12 }}>Add Roadmap Item</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <input placeholder="Title *" value={rForm.title} onChange={(e) => setRForm(f => ({ ...f, title: e.target.value }))} style={inputStyle} />
+                <textarea placeholder="Description (optional)" value={rForm.description} onChange={(e) => setRForm(f => ({ ...f, description: e.target.value }))} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <select value={rForm.status} onChange={(e) => setRForm(f => ({ ...f, status: e.target.value }))} style={{ ...inputStyle, width: 'auto' }}>
+                    {['planned', 'in_progress', 'done'].map(s => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
+                  </select>
+                  <input placeholder="Category (optional)" value={rForm.category} onChange={(e) => setRForm(f => ({ ...f, category: e.target.value }))} style={inputStyle} />
+                </div>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                  <button onClick={postRoadmapItem} disabled={rSaving} style={{ backgroundColor: C.acc, color: '#000', fontWeight: 800, fontSize: 12, padding: '8px 18px', borderRadius: 8, border: 'none', cursor: 'pointer' }}>{rSaving ? 'Adding…' : 'Add item'}</button>
+                  {rMsg && <span style={{ color: rMsg === 'Added!' ? C.green : C.red, fontSize: 12 }}>{rMsg}</span>}
+                </div>
+              </div>
+            </div>
+            {roadmapItems.length === 0 ? (
+              <p style={{ color: C.muted2, fontSize: 13, textAlign: 'center', padding: '20px 0' }}>No roadmap items yet.</p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {roadmapItems.map((r) => (
+                  <div key={r.id} style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ color: C.text, fontSize: 13, fontWeight: 700 }}>{r.title}</div>
+                      {r.description && <div style={{ color: C.muted, fontSize: 11, marginTop: 3 }}>{r.description}</div>}
+                      {r.category && <div style={{ color: C.muted2, fontSize: 10, marginTop: 4 }}>{r.category}</div>}
+                      <div style={{ color: C.muted2, fontSize: 10, marginTop: 4 }}>{new Date(r.created_at).toLocaleString()}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
+                      {['planned', 'in_progress', 'done'].map((s) => (
+                        <button key={s} onClick={() => updateRoadmapStatus(r.id, s)} style={{ backgroundColor: r.status === s ? '#1A1400' : 'transparent', color: r.status === s ? C.acc : C.muted2, fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 6, border: r.status === s ? `1px solid ${C.acc}44` : `1px solid ${C.border}`, cursor: 'pointer' }}>
+                          {s.replace('_', ' ')}
+                        </button>
+                      ))}
+                      <button onClick={() => deleteRoadmapItem(r.id)} style={{ backgroundColor: '#1A0D0D', color: C.red, fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 6, border: `1px solid ${C.red}44`, cursor: 'pointer' }}>Delete</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Resources ── */}
+        {adminTab === 'resources' && (
+          <div>
+            <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border2}`, borderRadius: 12, padding: '16px', marginBottom: 20 }}>
+              <div style={{ color: C.acc, fontSize: 12, fontWeight: 800, marginBottom: 12 }}>{resEditingId ? 'Edit Resource' : 'Add New Resource / SOP / Tool'}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <input placeholder="Title *" value={resForm.title} onChange={e => setResForm(f => ({ ...f, title: e.target.value }))} style={inputStyle} />
+                  <input placeholder="Icon emoji" value={resForm.icon} onChange={e => setResForm(f => ({ ...f, icon: e.target.value }))} style={{ ...inputStyle, width: 80, flexShrink: 0 }} />
+                </div>
+                <textarea placeholder="Description" value={resForm.description} onChange={e => setResForm(f => ({ ...f, description: e.target.value }))} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+                <input placeholder="URL *" value={resForm.url} onChange={e => setResForm(f => ({ ...f, url: e.target.value }))} style={inputStyle} />
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <select value={resForm.category} onChange={e => setResForm(f => ({ ...f, category: e.target.value }))} style={{ ...inputStyle, width: 'auto' }}>
+                    <option value="resource">⚡ Quick Access</option>
+                    <option value="tool">🛠️ Tool</option>
+                    <option value="sop">📋 SOP</option>
+                  </select>
+                  <input placeholder="Tags (comma-separated, e.g. onboarding, client, process)" value={resForm.tags} onChange={e => setResForm(f => ({ ...f, tags: e.target.value }))} style={inputStyle} />
+                </div>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button onClick={saveResource} disabled={resSaving} style={{ backgroundColor: C.acc, color: '#000', fontWeight: 800, fontSize: 12, padding: '8px 18px', borderRadius: 8, border: 'none', cursor: 'pointer' }}>
+                    {resSaving ? 'Saving…' : resEditingId ? 'Update' : 'Add resource'}
+                  </button>
+                  {resEditingId && <button onClick={cancelEditResource} style={{ backgroundColor: C.surf3, color: C.muted, fontSize: 12, fontWeight: 600, padding: '8px 14px', borderRadius: 8, border: `1px solid ${C.border}`, cursor: 'pointer' }}>Cancel</button>}
+                  {resMsg && <span style={{ color: resMsg.includes('!') ? C.green : C.red, fontSize: 12 }}>{resMsg}</span>}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ color: C.muted, fontSize: 11, marginBottom: 10 }}>{resources.length} items (static + DB combined)</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {resources.map((item) => (
+                <div key={item.id} style={{ backgroundColor: C.surf2, border: `1px solid ${resEditingId === item.id ? C.acc + '55' : C.border}`, borderRadius: 10, padding: '10px 14px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon || '📄'}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ color: C.text, fontSize: 12, fontWeight: 700 }}>{item.title}</div>
+                    <div style={{ color: C.muted, fontSize: 11, marginTop: 2 }}>{item.description?.slice(0, 80)}{(item.description?.length ?? 0) > 80 ? '…' : ''}</div>
+                    <div style={{ display: 'flex', gap: 6, marginTop: 5, flexWrap: 'wrap' }}>
+                      <span style={{ backgroundColor: '#1A1400', color: C.acc, fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 4 }}>{item.category}</span>
+                      {(item.tags ?? []).map(t => <span key={t} style={{ backgroundColor: C.surf3, color: C.muted, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4 }}>#{t}</span>)}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                    <button onClick={() => startEditResource(item)} style={{ backgroundColor: C.surf3, color: C.muted, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: `1px solid ${C.border}`, cursor: 'pointer' }}>Edit</button>
+                    <button onClick={() => deleteResource(item.id)} style={{ backgroundColor: '#1A0D0D', color: C.red, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: `1px solid ${C.red}44`, cursor: 'pointer' }}>Remove</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Recordings ── */}
+        {adminTab === 'recordings' && (
+          <div>
+            <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border2}`, borderRadius: 12, padding: '16px', marginBottom: 20 }}>
+              <div style={{ color: C.acc, fontSize: 12, fontWeight: 800, marginBottom: 12 }}>{recEditingId ? 'Edit Recording' : 'Add New Recording'}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <input placeholder="Title *" value={recForm.title} onChange={e => setRecForm(f => ({ ...f, title: e.target.value }))} style={inputStyle} />
+                <textarea placeholder="Description" value={recForm.description} onChange={e => setRecForm(f => ({ ...f, description: e.target.value }))} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+                <input placeholder="URL * (Fathom, Loom, YouTube, etc.)" value={recForm.url} onChange={e => setRecForm(f => ({ ...f, url: e.target.value }))} style={inputStyle} />
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <select value={recForm.category} onChange={e => setRecForm(f => ({ ...f, category: e.target.value }))} style={{ ...inputStyle, width: 'auto' }}>
+                    <option value="training_loom">🎬 Training Loom</option>
+                    <option value="onboarding_reference">📞 Onboarding Reference</option>
+                    <option value="service_delivery">⚙️ Service Delivery</option>
+                    <option value="reference_recording">📹 Reference Recording</option>
+                  </select>
+                  <input placeholder="Duration (minutes)" type="number" value={recForm.duration_mins} onChange={e => setRecForm(f => ({ ...f, duration_mins: e.target.value }))} style={{ ...inputStyle, width: 140, flexShrink: 0 }} />
+                </div>
+                <input placeholder="Tags (comma-separated, e.g. creative, lead-flow, technical)" value={recForm.tags} onChange={e => setRecForm(f => ({ ...f, tags: e.target.value }))} style={inputStyle} />
+                <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: C.muted }}>
+                  <input type="checkbox" checked={recForm.watch_first} onChange={e => setRecForm(f => ({ ...f, watch_first: e.target.checked }))} />
+                  Mark as "Watch First" (highlights this recording)
+                </label>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button onClick={saveRecording} disabled={recSaving} style={{ backgroundColor: C.acc, color: '#000', fontWeight: 800, fontSize: 12, padding: '8px 18px', borderRadius: 8, border: 'none', cursor: 'pointer' }}>
+                    {recSaving ? 'Saving…' : recEditingId ? 'Update' : 'Add recording'}
+                  </button>
+                  {recEditingId && <button onClick={cancelEditRecording} style={{ backgroundColor: C.surf3, color: C.muted, fontSize: 12, fontWeight: 600, padding: '8px 14px', borderRadius: 8, border: `1px solid ${C.border}`, cursor: 'pointer' }}>Cancel</button>}
+                  {recMsg && <span style={{ color: recMsg.includes('!') ? C.green : C.red, fontSize: 12 }}>{recMsg}</span>}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ color: C.muted, fontSize: 11, marginBottom: 10 }}>{recordings.length} items (static + DB combined)</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {recordings.map((item) => (
+                <div key={item.id} style={{ backgroundColor: C.surf2, border: `1px solid ${recEditingId === item.id ? C.acc + '55' : C.border}`, borderRadius: 10, padding: '10px 14px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap', marginBottom: 3 }}>
+                      <span style={{ color: C.text, fontSize: 12, fontWeight: 700 }}>{item.title}</span>
+                      {item.watch_first && <span style={{ backgroundColor: '#1A1400', color: C.acc, fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 4 }}>WATCH FIRST</span>}
+                    </div>
+                    <div style={{ color: C.muted, fontSize: 11 }}>{item.description?.slice(0, 80)}{(item.description?.length ?? 0) > 80 ? '…' : ''}</div>
+                    <div style={{ display: 'flex', gap: 6, marginTop: 5, flexWrap: 'wrap' }}>
+                      <span style={{ backgroundColor: '#0D1A1A', color: '#06B6D4', fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 4 }}>{item.category.replace(/_/g, ' ')}</span>
+                      {item.duration_mins && <span style={{ color: C.muted2, fontSize: 10 }}>{Math.floor(item.duration_mins / 60) > 0 ? `${Math.floor(item.duration_mins / 60)}h ` : ''}{item.duration_mins % 60}m</span>}
+                      {(item.tags ?? []).map(t => <span key={t} style={{ backgroundColor: C.surf3, color: C.muted, fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 4 }}>#{t}</span>)}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                    <button onClick={() => startEditRecording(item)} style={{ backgroundColor: C.surf3, color: C.muted, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: `1px solid ${C.border}`, cursor: 'pointer' }}>Edit</button>
+                    <button onClick={() => deleteRecording(item.id)} style={{ backgroundColor: '#1A0D0D', color: C.red, fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: `1px solid ${C.red}44`, cursor: 'pointer' }}>Remove</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
+
 
   // ── Announcements ──
   const [announcements, setAnnouncements] = useState<{

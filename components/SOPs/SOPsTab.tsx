@@ -1,59 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import sopData from '@/repo/data/sops.json';
-import { ClientMap } from '@/components/Diagrams/ClientMap';
-import { ApprovalVideoSOP } from '@/components/Diagrams/ApprovalVideoSOP';
-import { useApp } from '@/context/AppContext';
-
-function Collapsible({ id, icon, title, subtitle, accent, children }: {
-  id?: string;
-  icon: string;
-  title: string;
-  subtitle?: string;
-  accent: string;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div id={id} style={{
-      backgroundColor: '#0F0F0F',
-      border: `1px solid ${accent}33`,
-      borderRadius: 12,
-      overflow: 'hidden',
-      marginBottom: 12,
-      scrollMarginTop: 60,
-    }}>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        style={{
-          width: '100%',
-          padding: '14px 16px',
-          background: 'transparent',
-          border: 'none',
-          textAlign: 'left',
-          cursor: 'pointer',
-          color: '#F5F5F5',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-          fontFamily: 'inherit',
-        }}
-      >
-        <span style={{ fontSize: 20 }}>{icon}</span>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800 }}>{title}</div>
-          {subtitle && <div style={{ color: '#888', fontSize: 11, marginTop: 2 }}>{subtitle}</div>}
-        </div>
-        <span style={{ color: accent, fontSize: 12, fontWeight: 800 }}>{open ? '▲ Hide' : '▼ View'}</span>
-      </button>
-      {open && (
-        <div style={{ padding: '0 16px 16px', borderTop: `1px solid ${accent}22` }}>
-          <div style={{ paddingTop: 12 }}>{children}</div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 type FilterTag = 'all' | 'client' | 'creative' | 'process' | 'onboarding';
 
@@ -141,10 +88,25 @@ function SectionHeader({ icon, title, subtitle }: SectionHeaderProps) {
 }
 
 export function SOPsTab() {
-  const { setActiveTab, setCurrentSection } = useApp();
   const [activeFilter, setActiveFilter] = useState<FilterTag>('all');
+  const [dynamicItems, setDynamicItems] = useState<null | typeof sopData.resources>(null);
 
-  const filteredSOPs = sopData.sops.filter((sop) => {
+  useEffect(() => {
+    fetch('/api/content/resources')
+      .then((res) => res.json())
+      .then((data: { items: typeof sopData.resources }) => {
+        if (data?.items) setDynamicItems(data.items);
+      })
+      .catch(() => {
+        // silently fall back to static JSON
+      });
+  }, []);
+
+  const allResources = dynamicItems ? dynamicItems.filter((i) => i.category === 'resource') : sopData.resources;
+  const allTools = dynamicItems ? dynamicItems.filter((i) => i.category === 'tool') : sopData.tools;
+  const allSops = dynamicItems ? dynamicItems.filter((i) => i.category === 'sop') : sopData.sops;
+
+  const filteredSOPs = allSops.filter((sop) => {
     if (activeFilter === 'all') return true;
     if (activeFilter === 'creative') return sop.tags.some((t) => ['creative', 'ads', 'scaling', 'testing', 'copy', 'design', 'fundamentals'].includes(t));
     if (activeFilter === 'client') return sop.tags.some((t) => ['client', 'retention', 'seasonal', 'social-proof'].includes(t));
@@ -197,61 +159,8 @@ export function SOPsTab() {
         {/* ── Quick Access ── */}
         <div id="quick-access" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
           <SectionHeader icon="⚡" title="Quick Access" subtitle="Open these daily — know where they are." />
-
-          {/* Big Picture — internal navigation card. Highest-priority quick-access. */}
-          <button
-            onClick={() => {
-              setActiveTab('sections');
-              setCurrentSection(6);
-              setTimeout(() => document.getElementById('big-picture')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
-            }}
-            style={{
-              width: '100%',
-              display: 'flex', alignItems: 'center', gap: 12,
-              background: 'linear-gradient(135deg, #1A1600 0%, #141414 80%)',
-              border: '1px solid #F5C80066',
-              borderRadius: 12,
-              padding: '14px 16px',
-              marginBottom: 12,
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-              textAlign: 'left',
-              transition: 'border-color 0.15s',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#F5C800'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#F5C80066'; }}
-          >
-            <span style={{ fontSize: 20 }}>🎯</span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                <span style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800 }}>The Big Picture — Customer Journey + Who Does What</span>
-                <span style={{
-                  fontSize: 9, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase',
-                  color: '#000', backgroundColor: '#F5C800', padding: '2px 6px', borderRadius: 4,
-                }}>
-                  Watch first
-                </span>
-              </div>
-              <div style={{ color: '#888', fontSize: 11, marginTop: 3 }}>
-                Interactive Miro board + Loom walkthrough. The connective tissue across every other section. Re-watch any time work feels disconnected.
-              </div>
-            </div>
-            <span style={{ color: '#F5C800', fontSize: 14, fontWeight: 800 }}>→</span>
-          </button>
-
-          {/* Client Map — collapsible, closed by default */}
-          <Collapsible
-            id="clientele"
-            icon="🗺️"
-            title="RoofIgnite Clientele At A Glance"
-            subtitle="Live map. Click a state or dot for full client profiles (admin)."
-            accent="#F5C800"
-          >
-            <ClientMap />
-          </Collapsible>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8 }}>
-            {sopData.resources.map((r) => (
+            {allResources.map((r) => (
               <a
                 key={r.id}
                 href={r.url}
@@ -294,7 +203,7 @@ export function SOPsTab() {
         <div id="tools" style={{ marginBottom: '2.5rem', scrollMarginTop: 60 }}>
           <SectionHeader icon="🛠️" title="Tools" subtitle="The core platforms you'll use every day." />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 8 }}>
-            {sopData.tools.map((t) => (
+            {allTools.map((t) => (
               <a
                 key={t.id}
                 href={t.url}
@@ -336,17 +245,6 @@ export function SOPsTab() {
         {/* ── SOPs ── */}
         <div id="sops" style={{ scrollMarginTop: 60 }}>
           <SectionHeader icon="📋" title="Standard Operating Procedures" subtitle="Reference documents for every core process. Don't memorize — know where to find them." />
-
-          {/* In-portal SOP: Pre-Launch Approval Video — collapsible, closed by default */}
-          <Collapsible
-            id="approval-video"
-            icon="🎬"
-            title="Pre-Launch Approval Video — SOP"
-            subtitle="The Loom you send the client before launch. Pre-handles 90% of mid-cycle objections. Includes 3 reference examples + transcripts + 14 ranked common mistakes."
-            accent="#F5C800"
-          >
-            <ApprovalVideoSOP />
-          </Collapsible>
 
           {/* Filter pills */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: '1rem' }}>

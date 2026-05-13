@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import recordingsData from '@/repo/data/recordings.json';
 
 function ExternalLinkIcon() {
@@ -227,21 +227,58 @@ function LoomCard({ loom }: { loom: TrainingLoom }) {
   );
 }
 
+interface ApiRecordingItem {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  category: string;
+  tags?: string[];
+  [key: string]: unknown;
+}
+
 export function RecordingsTab() {
   const [filter, setFilter] = useState<ViewFilter>('all');
   const [loomFilter, setLoomFilter] = useState<LoomFilter>('all');
+  const [dynamicItems, setDynamicItems] = useState<null | ApiRecordingItem[]>(null);
 
-  const filteredTraining = recordingsData.recordings.filter((r) => {
+  useEffect(() => {
+    fetch('/api/content/recordings')
+      .then((res) => res.json())
+      .then((data: { items: ApiRecordingItem[] }) => {
+        if (data?.items) setDynamicItems(data.items);
+      })
+      .catch(() => {
+        // silently fall back to static JSON
+      });
+  }, []);
+
+  const allRecordings = dynamicItems
+    ? dynamicItems.filter((i) => ['onboarding_reference', 'service_delivery'].includes(i.category))
+    : recordingsData.recordings;
+
+  const allLooms = dynamicItems
+    ? dynamicItems.filter((i) => i.category === 'training_loom')
+    : (recordingsData.training_looms as TrainingLoom[]);
+
+  const allRefRecordings = dynamicItems
+    ? dynamicItems.filter((i) => i.category === 'reference_recording')
+    : recordingsData.reference_recordings;
+
+  const loomMatchesFilter = (loom: TrainingLoom | ApiRecordingItem, filterVal: string): boolean => {
+    if (filterVal === 'all') return true;
+    if (dynamicItems) return (loom as ApiRecordingItem).tags?.includes(filterVal) ?? false;
+    return (loom as TrainingLoom).priority === filterVal || loom.category === filterVal;
+  };
+
+  const filteredTraining = allRecordings.filter((r) => {
     if (filter === 'all') return true;
     if (filter === 'onboarding') return r.category === 'onboarding_reference';
     if (filter === 'service') return r.category === 'service_delivery';
     return false;
   });
 
-  const filteredLooms = (recordingsData.training_looms as TrainingLoom[]).filter((l) => {
-    if (loomFilter === 'all') return true;
-    return l.category === loomFilter;
-  });
+  const filteredLooms = allLooms.filter((l) => loomMatchesFilter(l, loomFilter));
 
   return (
     <div style={{

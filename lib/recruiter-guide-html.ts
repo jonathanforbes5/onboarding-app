@@ -425,6 +425,8 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       <span class="pill">GoHighLevel</span>
       <span class="pill">Agency Client Mgmt</span>
       <span class="pill">Direct Response</span>
+      <span class="pill gold">Full Commitment · No Side Agencies</span>
+      <span class="pill">Startup Environment</span>
     </div>
   </div>
   <div class="cover-logo">
@@ -447,6 +449,8 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
     <div class="ideal-box" style="background:#0D0D1A; border-color:#3B82F633;">
       <p>A Pod Manager at RoofIgnite is a <strong style="color:#fff;">revenue partner and pod quarterback</strong> — not a strategist, media buyer, or GHL technician. They own outcomes for <strong style="color:#fff;">20–30 active roofing (and some HVAC/gutter) client accounts simultaneously</strong>, each on a <strong style="color:#fff;">28-day performance cycle</strong> where the company only bills if it delivers 80%+ of the contracted appointment target. They set up campaigns using proven copy and creatives (provided), run daily triage via the Command Centre dashboard, conduct structured check-ins every Monday and Thursday, coordinate a VA team on lead follow-up, and escalate issues well before they become client churn.</p>
       <p style="margin-top:10px;">Success in this role is <strong style="color:#fff;">50% results</strong> (bookings, CPA, show rate) and <strong style="color:#fff;">50% narrative management</strong> — keeping the client's story aligned with reality, inoculating against outside doubt, and proactively communicating before a client ever has to ask. The company is scaling aggressively. This person must be someone who <strong style="color:#fff;">executes flawlessly under pressure</strong> and treats their client book like their own business. They are NOT the landing page builder, the Meta specialist, the GHL technician, or the VA manager — they coordinate all of those, own the outcome, and escalate precisely when needed.</p>
+      <p style="margin-top:10px;"><strong style="color:#fff;">This is an entrepreneurial, full-commitment role.</strong> RoofIgnite provides the book of business, the systems, the specialists, and the clients. The Pod Manager runs it like an owner. In exchange, the role requires <strong style="color:#fff;">100% professional dedication</strong> — no active side agency, no freelance client roster being built in parallel, no competing commitments. Outside competition of any kind is a direct conflict of interest and will result in penalties or termination. This is not a contractor arrangement or a stepping stone — it is a career position with real upside for the right person.</p>
+      <p style="margin-top:10px;"><strong style="color:#fff;">Startup environment. Fast pace. Big commitment. Big opportunity.</strong> RoofIgnite is scaling from $300K to $1M+/month. Things change quickly — processes evolve, new SOPs get written, the org grows around you. The hours are real, the pace is real, and not every week is smooth. The candidates who thrive here are energized by that, not stressed by it. The upside is equally real: book growth compounds, bonuses scale, and CSMs who perform at 30 clients become first in line for team lead and senior roles as the company scales to multiple pods.</p>
     </div>
   </div>
 
@@ -492,6 +496,16 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
           <td class="td-label">5</td>
           <td><span class="td-label">Remote-ready and async-first</span><br><span class="td-muted">Must be self-directed with reliable internet, professional setup, and no timezone blockers (overlap with North America required)</span></td>
           <td class="td-muted">Confirm timezone and home office setup in screening</td>
+        </tr>
+        <tr>
+          <td class="td-label">6</td>
+          <td><span class="td-label">Full professional commitment — no active outside agency or competing clients</span> <span class="gate-badge">HARD GATE</span><br><span class="td-muted">Non-compete, full-dedication role. Cannot be running or actively growing their own agency, freelance roster, or any competing service business in parallel. Ask directly in screening.</span></td>
+          <td class="td-muted">Ask: "Are you currently running your own agency or managing clients outside of your employer?" Active competing engagement without a firm wind-down plan = do not advance</td>
+        </tr>
+        <tr>
+          <td class="td-label">7</td>
+          <td><span class="td-label">Startup-ready mindset — comfortable with pace, change, and ambiguity</span><br><span class="td-muted">RoofIgnite is scaling 3x+ in revenue. Processes evolve constantly, hours are real, and weeks vary. Must be energized by growth and opportunity — not looking for a predictable, structured 9-to-5 environment.</span></td>
+          <td class="td-muted">Listen for ownership and growth language. Red flags: requests for rigid hours, "what does a typical day look like," or signs they need a highly structured environment</td>
         </tr>
       </tbody>
     </table>
@@ -613,34 +627,34 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
     </div>
     <div class="cards">
       <div class="card">
-        <div class="card-icon">📋</div>
-        <div class="card-title">Process Discipline</div>
-        <div class="card-body">Follows SOPs without cutting corners. Documents everything in writing — no verbal agreements, no skipped steps. Understands that <em>consistent execution IS the job</em>, not creative reinvention. This person should find comfort in a well-defined system, not fight it.</div>
+        <div class="card-icon">👑</div>
+        <div class="card-title">Extreme Ownership</div>
+        <div class="card-body">Wins and losses both belong to them — no blame-shifting to the platform, the creative team, or the client. When an account is red, they diagnose it, act on it, and update Jonathan with a plan before anyone asks. A-player standard: problems surface up with a proposed solution attached, not just a question.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">💼</div>
+        <div class="card-title">Revenue Partner Mindset</div>
+        <div class="card-body">Treats their client book like their own business — not a list of tickets to manage. Proactively pursues testimonials, referrals, ad spend upsells, and cycle renewals. Understands that every retained client compounds. The book is the scorecard: grow it or it shrinks. Not a customer service rep — a revenue operator.</div>
       </div>
       <div class="card">
         <div class="card-icon">📞</div>
-        <div class="card-title">Proactive Client Communication</div>
-        <div class="card-body">Doesn't wait for a client to ask — surfaces issues before they escalate. Runs Monday/Thursday check-ins without being reminded. Can translate ad performance data into plain language a roofing contractor understands. Maintains client confidence during seasonal slow periods.</div>
+        <div class="card-title">Narrative Management (50/50)</div>
+        <div class="card-body">50% of the job is results, 50% is narrative — keeping the client's story aligned with reality. Pre-handles objections before they arise ("someone's going to tell you leads are slow — bring it to me first"). Doesn't wait for a client to call with a complaint. Inoculates against outside doubt on the setup call, not mid-crisis.</div>
       </div>
       <div class="card">
-        <div class="card-icon">🚨</div>
-        <div class="card-title">Urgency Without Chaos</div>
-        <div class="card-body">Treats struggling client accounts like they personally own them. Identifies DEFCON-level issues early and escalates to leadership with context and a proposed fix — not just a problem dump. Doesn't need to be chased down after ramp-up.</div>
+        <div class="card-icon">🔬</div>
+        <div class="card-title">Diagnostic, Not Reactive</div>
+        <div class="card-body">Applies Layer 1 → Layer 2 → Layer 3 thinking before touching anything. If Layer 1 (bookings vs target) is green, they stop — they don't tweak campaigns because something looks interesting. If Layer 1 is red, they drill one metric at a time, pick the biggest lever, pull it, and verify. No random changes, no "boiling the ocean."</div>
       </div>
       <div class="card">
-        <div class="card-icon">🤝</div>
-        <div class="card-title">Team Coordination</div>
-        <div class="card-body">Manages VA follow-up accountability without micromanaging every call. Delegates creative briefs clearly to the design team. Hands off technical setup tasks (DNS, GHL backend) to the ops team with complete specs. Knows the difference between their lane and someone else's.</div>
-      </div>
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <div class="card-title">Metrics-Driven Mindset</div>
-        <div class="card-body">Makes decisions based on data, not gut feel. Knows what KPI targets look like at different spend tiers ($2K/month vs $15K/month accounts have different benchmarks). Can articulate why they made an optimization — not just that they made one.</div>
+        <div class="card-icon">📋</div>
+        <div class="card-title">Process & Documentation Discipline</div>
+        <div class="card-body">Mon/Thu status updates in Slack (per account: cycle #, day of 28, bookings vs target, health colour, action with due date). All specialist requests via ClickUp with full context. Onboarding post-call checklist completed within 1 hour. The paper trail IS the job — if it's not documented, it didn't happen.</div>
       </div>
       <div class="card">
         <div class="card-icon">⚡</div>
-        <div class="card-title">Growth-Environment Fit</div>
-        <div class="card-body">Energized by aggressive growth targets, not intimidated by them. Comfortable with a company scaling 3x in a year — processes will evolve, new SOPs will be written, roles will expand. Someone who sees this as opportunity, not instability.</div>
+        <div class="card-title">Speed & Accountability</div>
+        <div class="card-body">Billing failure = call the client the same day, every time. Unresolved blockers escalate on a 24/48-hour clock: 0–24h message the owner, 24–48h switch channels, 48h+ escalate to Jonathan with a paper trail. Response SLA to clients: same day. Slack response: 5–30 minutes during business hours. No client ever discovers a problem before this person does.</div>
       </div>
     </div>
   </div>
@@ -723,6 +737,26 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
             <td class="td-label text-red">Only in-house / single-brand experience</td>
             <td class="td-muted">Agency execution pace is 3–5x higher. Managing 20–30 accounts is not 20x harder — it requires a completely different operating rhythm that in-house experience rarely builds.</td>
           </tr>
+          <tr>
+            <td class="td-label text-red">Thinks "cost per lead" is the primary KPI</td>
+            <td class="td-muted">At RoofIgnite the metric is cost per booked appointment, not cost per lead. A candidate anchored on CPL is using the wrong framework and will misdiagnose account health from day one.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Wants to create their own ad strategy / questions proven creative systems</td>
+            <td class="td-muted">Proven copy and creatives are provided. The role is execution, optimization, and coordination — not creative strategy. Someone who needs to "put their stamp on it" will create chaos in a system built for repeatability at scale.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Currently running or actively growing their own agency / freelance client roster</td>
+            <td class="td-muted">This is a full-commitment, non-compete role. RoofIgnite provides the book of business — candidates cannot be building a competing business on the side. Any outside competition is a direct conflict of interest and is subject to penalty or termination. Ask directly: "Do you currently have your own clients or agency you're running?" A yes without a clear plan to wind it down is a disqualifier.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Looking for a side income stream or bridge role</td>
+            <td class="td-muted">The hours, pace, and commitment required make this incompatible with a side gig mentality. This role demands full professional bandwidth — someone treating it as supplemental income will underperform and damage the client book.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Wants stability over growth — "9-to-5" mindset</td>
+            <td class="td-muted">RoofIgnite is a startup scaling 3x+ in revenue. Processes change. Weeks vary. The role rewards ownership and adaptability — candidates who need rigid structure, minimal hours, or a highly predictable environment will not thrive here.</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -749,9 +783,9 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
         <div class="q-look">Looking for: Systematic diagnostic process (creative fatigue? audience exhaustion? landing page issue? follow-up gap?), specific changes made (not just "tweaked the audience"), and measured outcome. <strong>Red flag:</strong> vague answer, can't remember specifics, or blames the client / platform.</div>
       </div>
       <div class="question-block">
-        <div class="q-num">Question 03 · GHL Depth Check</div>
-        <div class="q-text">"What's the most complex automation or workflow you've built in GoHighLevel? Walk me through the trigger, the steps, and why you built it that way."</div>
-        <div class="q-look">Looking for: Specifics — triggers (new lead from FB form, missed call, etc.), actions (SMS, email, task creation), branching logic. A2P SMS registration experience is a strong green flag. <strong>Red flag:</strong> describes a pipeline or contact list as an "automation," has never set up a workflow with conditional logic.</div>
+        <div class="q-num">Question 03 · Diagnostic Thinking (Layer 1/2/3)</div>
+        <div class="q-text">"A client is on Day 18 of their 28-day cycle and at 40% of their booking target. Walk me through exactly how you'd diagnose the account and what you'd do."</div>
+        <div class="q-look">Looking for: Layer 1 check first (bookings vs target — confirmed red). Layer 2 drill (CPM high? CTR low? Survey completion low? VA booking rate low? OSA% high?). Layer 3 lever based on the actual broken metric (creative refresh? survey shortening? speed to lead fix?). Escalation to Jonathan same day for a red account this deep in cycle. <strong>Red flag:</strong> immediately suggests changing the audience or killing the campaign without first diagnosing which layer is broken. Random changes, not structured diagnosis.</div>
       </div>
       <div class="question-block">
         <div class="q-num">Question 04 · Difficult Client Handling</div>
@@ -767,6 +801,11 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
         <div class="q-num">Question 06 · VA / Team Accountability</div>
         <div class="q-text">"Have you managed VAs or a call center team? How did you keep them accountable without micromanaging every call?"</div>
         <div class="q-look">Looking for: Clear KPIs set for the VA team (call volume, follow-up timing, booking rate), regular check-in cadence, tools used for visibility (CRM tracking, call logs). <strong>Red flag:</strong> "I just told them what to do" with no system, or never managed a remote team at all.</div>
+      </div>
+      <div class="question-block">
+        <div class="q-num">Question 07 · Client Narrative / Relationship Management</div>
+        <div class="q-text">"Midway through a client's second cycle, results are fine but they tell you they've been talking to someone who says Facebook ads don't work for roofing. How do you handle it?"</div>
+        <div class="q-look">Looking for: Recognition that this is a "little birdie" situation — someone external is whispering doubt. The right move is to pull out the data, re-anchor on the numbers, and remind the client of what they agreed to. Ideally they pre-handled this on the onboarding call ("if someone tells you leads are slow, bring it to me first"). <strong>Red flag:</strong> gets defensive, dismisses the concern, or doesn't have a structured way to handle narrative drift. This is the 50% of the job that isn't in any ad manager dashboard.</div>
       </div>
     </div>
   </div>
@@ -895,7 +934,7 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       </div>
     </div>
     <div class="ideal-box">
-      <p>The ideal RoofIgnite Pod Manager has spent <strong style="color:#fff;">2–4 years at a performance marketing agency</strong> running paid social for local service businesses — ideally home services (roofing, HVAC, contractors). They've managed <strong style="color:#fff;">20–30 client accounts simultaneously at full capacity</strong>, each at $3K–$20K/month in ad spend, and have seen the full lifecycle: onboarding, campaign launch, performance optimization, troubleshooting, and sometimes off-boarding. They know what a struggling account looks like before the client calls to complain. They've built real GHL workflows — not just set up a pipeline. They communicate in a way that makes roofing business owners feel informed and confident, not confused. They are <strong style="color:#fff;">energized by a fast-moving, high-growth environment</strong>, not looking for a stable 9-to-5. And above all, they respect a well-built system and make it better over time — they don't blow it up on arrival.</p>
+      <p>The ideal RoofIgnite Pod Manager has spent <strong style="color:#fff;">2–4 years at a performance marketing agency</strong> running paid social for local service businesses — ideally home services (roofing, HVAC, contractors). They've managed <strong style="color:#fff;">20–30 client accounts simultaneously at full capacity</strong>, each at $3K–$20K/month in ad spend, and have seen the full lifecycle: onboarding, campaign launch, performance optimization, troubleshooting, and cycle renewal. They understand that the primary metric is <strong style="color:#fff;">cost per booked appointment</strong> — not cost per lead, not ROAS. They know what a struggling account looks like before the client calls to complain, and they diagnose it layer by layer rather than making random changes. They've built real GHL workflows — not just set up a pipeline. They communicate in a way that makes roofing business owners feel informed and confident, and they pre-handle doubt before it becomes a mid-cycle crisis. They are a <strong style="color:#fff;">revenue partner</strong>, not an account manager — their book is their business, and they grow it through retention, referrals, and proactive upsells. They are <strong style="color:#fff;">energized by a fast-moving, high-growth environment</strong>, not looking for a stable 9-to-5. Above all, they respect a well-built system, execute it precisely, and make it better over time.</p>
       <div class="ideal-titles">
         <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;line-height:2;">Titles they may currently hold:</div>
         <span class="title-tag">Media Buyer (Agency)</span>

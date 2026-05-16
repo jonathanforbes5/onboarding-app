@@ -904,18 +904,25 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       <div class="section-num">→</div>
       <div>
         <div class="section-title">Compensation & Role Details</div>
-        <div class="section-sub">Share with candidates post-screening</div>
+        <div class="section-sub">Revenue share model — share with candidates post-screening</div>
       </div>
     </div>
-    <div class="comp-banner">
+
+    <!-- OTE headline banner -->
+    <div class="comp-banner" style="margin-bottom:14px;">
       <div class="comp-item">
         <div class="comp-val">$72K</div>
         <div class="comp-key">Base Salary (CAD/yr)</div>
       </div>
       <div class="comp-divider"></div>
-      <div class="comp-item" style="max-width:280px;text-align:left;">
-        <div class="comp-val" style="font-size:14px;line-height:1.4;">+ Scaling Bonuses</div>
-        <div class="comp-key" style="line-height:1.6;margin-top:4px;">Performance bonuses tied to account retention, client results, and pod growth. Structure scales with accounts managed — see <a href="https://docs.google.com/document/d/1H5NYHSFK4PBrSj259_d7ijWuY5Q9SST7DNeFQWqK0Lg/edit?usp=drive_link" target="_blank" style="color:#F5C800;text-decoration:none;">Compensation Structure doc</a> for full cycle-based breakdown.</div>
+      <div class="comp-item">
+        <div class="comp-val">$105K–$134K+</div>
+        <div class="comp-key">OTE Range (CAD/yr)</div>
+      </div>
+      <div class="comp-divider"></div>
+      <div class="comp-item">
+        <div class="comp-val">2%</div>
+        <div class="comp-key">Monthly retainer commission (all clients)</div>
       </div>
       <div class="comp-divider"></div>
       <div class="comp-item">
@@ -927,6 +934,103 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
         <div class="comp-val">Full-Time</div>
         <div class="comp-key">Employment Type</div>
       </div>
+    </div>
+
+    <!-- How it works callout -->
+    <div style="background:#0D0D1A;border:1px solid #3B82F633;border-radius:12px;padding:16px 18px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.7;">
+      <span style="color:#fff;font-weight:800;">How it works:</span> This is a revenue share model, not a simple bonus. The CSM earns <strong style="color:#fff;">2% of collected retainer revenue from every client in their book, every month</strong>. A 25-client book at a $4,000 average retainer generates $2,000/month in commission on top of base. The more clients they retain, the more their book grows, the more they earn — no ceiling.
+    </div>
+
+    <!-- OTE by book size table -->
+    <table style="margin-bottom:14px;">
+      <thead>
+        <tr>
+          <th>Book Size</th>
+          <th>Churn Rate</th>
+          <th>Monthly Commission</th>
+          <th>Milestone Bonuses</th>
+          <th>Performance Levers</th>
+          <th style="color:#F5C800;">Total OTE (CAD/yr)</th>
+          <th>Monthly Take-Home</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-label">20 clients</td>
+          <td class="td-muted">5.2% avg</td>
+          <td class="td-muted">$1,600/mo</td>
+          <td class="td-muted">$6,000/yr</td>
+          <td class="td-muted">~$7,900/yr</td>
+          <td style="color:var(--green);font-weight:800;">~$105,100</td>
+          <td class="td-muted">~$8,760/mo</td>
+        </tr>
+        <tr>
+          <td class="td-label">25 clients <span style="background:#1A1400;color:var(--gold);font-size:8px;font-weight:800;padding:2px 6px;border-radius:4px;margin-left:6px;">TARGET</span></td>
+          <td class="td-muted">3.5% strong</td>
+          <td class="td-muted">$2,000/mo</td>
+          <td class="td-muted">$7,500/yr</td>
+          <td class="td-muted">~$16,500/yr</td>
+          <td style="color:var(--gold);font-weight:800;">~$120,000</td>
+          <td class="td-muted">~$10,000/mo</td>
+        </tr>
+        <tr>
+          <td class="td-label">30 clients</td>
+          <td class="td-muted">2.5% elite</td>
+          <td class="td-muted">$2,400/mo</td>
+          <td class="td-muted">$9,300/yr</td>
+          <td class="td-muted">~$23,600/yr</td>
+          <td style="color:#A78BFA;font-weight:800;">~$133,700</td>
+          <td class="td-muted">~$11,140/mo</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Earning levers -->
+    <div style="font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">What Drives the Variable Comp</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Lever</th>
+          <th>Structure</th>
+          <th>Earning Potential</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-label">2% Retainer Commission</td>
+          <td class="td-muted">2% of every client's monthly retainer, paid on collected revenue</td>
+          <td class="td-muted">$19,200–$28,800/yr at 20–30 clients</td>
+        </tr>
+        <tr>
+          <td class="td-label">Client Milestone Bonus</td>
+          <td class="td-muted">$150 when client completes Cycle 1 · $100 when client completes Cycle 2</td>
+          <td class="td-muted">$6,000–$9,300/yr (3 new clients/month, strong retention)</td>
+        </tr>
+        <tr>
+          <td class="td-label">Fast Launch Bonus</td>
+          <td class="td-muted">$50 within 7 days of close · $25 within 14 days · $0 after 14 days</td>
+          <td class="td-muted">Up to $1,800/yr (3 clients/month launching on time)</td>
+        </tr>
+        <tr>
+          <td class="td-label">Onboarding Quality Bonus</td>
+          <td class="td-muted">$50 at 90%+ QA score · $25 at 80–89% · $0 below 80%</td>
+          <td class="td-muted">Up to $1,800/yr (3 onboardings/month at 90%+)</td>
+        </tr>
+        <tr>
+          <td class="td-label">Referral & Testimonial</td>
+          <td class="td-muted">$500 per referral that closes · $250 per video testimonial (uncapped)</td>
+          <td class="td-muted">Uncapped — reflects relationship quality</td>
+        </tr>
+        <tr>
+          <td class="td-label">Ad Spend Upsell</td>
+          <td class="td-muted">10% of monthly management fee when client ad spend exceeds $200/day — ongoing</td>
+          <td class="td-muted">$8,000–$9,000/yr across 9–10 accounts above threshold</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:12px;font-size:11px;color:var(--muted);line-height:1.65;">
+      <strong style="color:#fff;">Key note for candidates:</strong> Commission is calculated on <em>collected</em> retainer revenue, not invoiced. The CSM owns the payment relationship and has a direct financial incentive to keep clients current. Price concessions used to save a client are commission-protected at the original rate for 3 cycles. Full structure: <a href="https://docs.google.com/document/d/1H5NYHSFK4PBrSj259_d7ijWuY5Q9SST7DNeFQWqK0Lg/edit?usp=drive_link" target="_blank" style="color:var(--gold);text-decoration:none;">Compensation Structure Doc ↗</a>
     </div>
   </div>
 

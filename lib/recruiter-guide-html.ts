@@ -970,11 +970,6 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       </div>
       <div class="comp-divider"></div>
       <div class="comp-item">
-        <div class="comp-val">2%</div>
-        <div class="comp-key">Monthly retainer commission (all clients)</div>
-      </div>
-      <div class="comp-divider"></div>
-      <div class="comp-item">
         <div class="comp-val">100% Remote</div>
         <div class="comp-key">Work Location</div>
       </div>
@@ -1084,77 +1079,6 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
   </div>
 
   <!-- ── Terminology ── -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-num">→</div>
-      <div>
-        <div class="section-title">Key Terminology — For Recruiter Reference</div>
-        <div class="section-sub">Terms you'll hear in interviews and in the role — use these to probe depth during screening</div>
-      </div>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Term</th>
-          <th>What It Means</th>
-          <th>Why It Matters in Screening</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="td-label">Layer 1 / Layer 2 / Layer 3</td>
-          <td class="td-muted">Diagnostic framework: L1 = outcomes (bookings vs target), L2 = drivers (CPM, CTR, survey rate, VA booking rate), L3 = levers to pull (creative refresh, survey shortening, speed to lead). If L1 is green, don't touch L2.</td>
-          <td class="td-muted">A candidate who thinks diagnostically in this structure will ramp in weeks, not months</td>
-        </tr>
-        <tr>
-          <td class="td-label">Cost Per Booked Appointment</td>
-          <td class="td-muted">The primary metric — ad spend divided by confirmed booked appointments. NOT cost per lead, NOT ROAS. Candidates from e-commerce backgrounds often anchor on ROAS or CPL, which is the wrong framework.</td>
-          <td class="td-muted">Ask what metric they optimise toward — wrong answer = CPL or ROAS</td>
-        </tr>
-        <tr>
-          <td class="td-label">Death Valley</td>
-          <td class="td-muted">Days 7–21 after a client launches. 60% of all client churn originates in this window. The Cycle 1 and Cycle 2 milestone bonuses exist specifically to reward getting clients through it.</td>
-          <td class="td-muted">Strong candidates will recognise this danger zone without being told</td>
-        </tr>
-        <tr>
-          <td class="td-label">80% Rule</td>
-          <td class="td-muted">RoofIgnite only bills a client if it delivers at least 80% of the contracted appointment target. If 20 appointments were agreed, 16 is the billing minimum. Below that, the cycle extends at no charge.</td>
-          <td class="td-muted">Shows the company's accountability model — good candidates see this as motivating, not risky</td>
-        </tr>
-        <tr>
-          <td class="td-label">28-Day Cycle</td>
-          <td class="td-muted">All client contracts run on 28-day performance billing cycles. Renewal is confirmed 5–7 days before cycle end. "Cycle 1 renewal" and "Cycle 2 renewal" are milestone bonus triggers.</td>
-          <td class="td-muted">Different from monthly retainer mindset — requires active renewal management every 28 days</td>
-        </tr>
-        <tr>
-          <td class="td-label">OSA Rate</td>
-          <td class="td-muted">Out-of-Service-Area lead rate. If &gt;20% of leads come from outside the client's service area, it's a targeting issue that must be fixed — these leads can't convert.</td>
-          <td class="td-muted">Layer 2 metric — candidates who know this metric understand local service business nuances</td>
-        </tr>
-        <tr>
-          <td class="td-label">Command Centre</td>
-          <td class="td-muted">Internal dashboard showing all accounts with 🟢🟡🟠🔴 health status. Opened first thing every morning — it's the daily triage starting point, not email or Slack.</td>
-          <td class="td-muted">Morning triage discipline is non-negotiable. Ask how they start their day.</td>
-        </tr>
-        <tr>
-          <td class="td-label">A2P / 10DLC</td>
-          <td class="td-muted">GHL phone number registration for business SMS. Not Meta-related. Handled by Emmanuel. Rejection means a 2–3 week SMS lockout — getting it right on setup matters.</td>
-          <td class="td-muted">Advanced GHL knowledge indicator — few candidates will know this without real GHL experience</td>
-        </tr>
-        <tr>
-          <td class="td-label">KRS / Gutter Shutter</td>
-          <td class="td-muted">Preferred brand partner franchise networks. Billed at $3,300/cycle (not the standard $4,000). Must be identified before the onboarding call — wrong billing rate causes revenue issues.</td>
-          <td class="td-muted">Attention to detail and ICP knowledge — they need to verify franchise status on every new client</td>
-        </tr>
-        <tr>
-          <td class="td-label">Logbook</td>
-          <td class="td-muted">Central Google Sheet documenting every lead across every account. Maintained by the VA team. The Pod Manager reads it to understand lead quality and VA performance — it's the ground truth for diagnosing Layer 2 issues.</td>
-          <td class="td-muted">Data literacy and systems discipline — candidates who manage by gut feel won't use it</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
   <!-- ── Footer ── -->
   <div class="footer">
     <div class="footer-brand">ROOFIGNITE · CONFIDENTIAL</div>

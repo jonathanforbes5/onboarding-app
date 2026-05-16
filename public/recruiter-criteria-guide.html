@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roof Ignite — Pod Manager Hiring Criteria Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:    #F5C800;
+      --gold-lt: #FDF3B0;
+      --black:   #0A0A0A;
+      --dark:    #111111;
+      --surf:    #161616;
+      --surf2:   #1C1C1C;
+      --border:  #2A2A2A;
+      --text:    #F0F0F0;
+      --muted:   #888888;
+      --muted2:  #555555;
+      --green:   #22C55E;
+      --red:     #EF4444;
+      --blue:    #3B82F6;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 13px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 32px 64px;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      background: linear-gradient(135deg, #0A0A0A 0%, #161616 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      page-break-after: avoid;
+    }
+    .cover-left { flex: 1; }
+    .cover-eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .cover-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .cover-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .cover-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+    .pill.gold { background: #1A1400; border-color: var(--gold); color: var(--gold); }
+    .cover-logo { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .cover-logo img { height: 28px; opacity: 0.9; filter: brightness(0) invert(1); }
+    .cover-date { font-size: 10px; color: var(--muted2); }
+
+    /* ── Section layout ── */
+    .section {
+      margin-top: 36px;
+      page-break-inside: avoid;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-num {
+      background: var(--gold);
+      color: var(--black);
+      font-size: 9px;
+      font-weight: 900;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .section-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    thead th {
+      background: var(--surf);
+      color: var(--gold);
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: #0D0D0D; }
+    tbody td {
+      padding: 9px 12px;
+      color: var(--text);
+      vertical-align: top;
+    }
+    .td-label {
+      font-weight: 700;
+      color: #fff;
+    }
+    .td-muted { color: var(--muted); font-size: 11px; }
+    .gate-badge {
+      display: inline-block;
+      background: #1A0A0A;
+      border: 1px solid var(--red);
+      color: var(--red);
+      font-size: 8px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+
+    /* ── Cards grid ── */
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .cards-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .card {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .card-icon { font-size: 18px; margin-bottom: 6px; }
+    .card-title { font-size: 12px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .card-body { font-size: 11px; color: var(--muted); line-height: 1.55; }
+    .card.green { border-color: #22C55E33; }
+    .card.red { border-color: #EF444433; }
+    .card.gold { border-color: var(--gold) + '33'; border-color: #F5C80033; }
+
+    /* ── Skill rating rows ── */
+    .skills { display: flex; flex-direction: column; gap: 6px; }
+    .skill-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+    }
+    .skill-name { flex: 1; font-size: 12px; font-weight: 600; color: var(--text); }
+    .skill-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+    .skill-dots { display: flex; gap: 4px; flex-shrink: 0; }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--border);
+    }
+    .dot.req { background: var(--gold); }
+    .skill-label { font-size: 9px; font-weight: 700; color: var(--muted2); width: 60px; text-align: right; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    /* ── Question blocks ── */
+    .questions { display: flex; flex-direction: column; gap: 10px; }
+    .question-block {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .q-num {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .q-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+    .q-look {
+      font-size: 11px;
+      color: var(--muted);
+      padding-left: 14px;
+      border-left: 2px solid var(--gold);
+      line-height: 1.55;
+    }
+
+    /* ── Score rubric ── */
+    .rubric { display: flex; flex-direction: column; gap: 0; }
+    .rubric-row {
+      display: flex;
+      align-items: center;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surf);
+      gap: 12px;
+    }
+    .rubric-row:first-child { border-radius: 10px 10px 0 0; }
+    .rubric-row:last-child { border-radius: 0 0 10px 10px; border-bottom: none; }
+    .rubric-row.header {
+      background: var(--dark);
+      border-bottom: 2px solid var(--border);
+      border-radius: 10px 10px 0 0;
+    }
+    .rubric-row.header span { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); }
+    .rubric-row.total { background: #1A1400; border-top: 1px solid var(--gold); }
+    .rubric-cat { flex: 1; font-size: 12px; font-weight: 600; }
+    .rubric-cat.bold { font-weight: 800; color: #fff; }
+    .rubric-weight {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      width: 50px;
+      text-align: right;
+    }
+    .rubric-score {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      width: 70px;
+      text-align: right;
+    }
+    .score-box {
+      width: 48px;
+      height: 22px;
+      background: var(--surf2);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+    .rubric-row.total .rubric-cat { font-weight: 900; color: #fff; font-size: 13px; }
+    .rubric-row.total .rubric-weight { font-size: 13px; color: var(--gold); }
+
+    /* ── Threshold badges ── */
+    .thresholds { display: flex; gap: 10px; margin-top: 12px; }
+    .threshold {
+      flex: 1;
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-align: center;
+    }
+    .threshold.advance { background: #0D1A0D; border: 1px solid #22C55E33; }
+    .threshold.priority { background: #1A1400; border: 1px solid var(--gold); }
+    .threshold-score { font-size: 22px; font-weight: 900; }
+    .threshold.advance .threshold-score { color: var(--green); }
+    .threshold.priority .threshold-score { color: var(--gold); }
+    .threshold-label { font-size: 10px; font-weight: 700; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── Ideal profile ── */
+    .ideal-box {
+      background: #1A1400;
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      padding: 20px 22px;
+    }
+    .ideal-box p { font-size: 13px; color: var(--text); line-height: 1.7; }
+    .ideal-titles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .title-tag {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── Recording eval ── */
+    .rec-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .rec-card {
+      border-radius: 10px;
+      padding: 14px 15px;
+    }
+    .rec-card.green { background: #0D1A0D; border: 1px solid #22C55E33; }
+    .rec-card.yellow { background: #1A1600; border: 1px solid #EAB30833; }
+    .rec-card.red { background: #1A0D0D; border: 1px solid #EF444433; }
+    .rec-card-title {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .rec-card.green .rec-card-title { color: var(--green); }
+    .rec-card.yellow .rec-card-title { color: #EAB308; }
+    .rec-card.red .rec-card-title { color: var(--red); }
+    .rec-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .rec-list li { font-size: 11px; color: var(--muted); line-height: 1.5; padding-left: 12px; position: relative; }
+    .rec-list li::before { content: '›'; position: absolute; left: 0; font-weight: 700; }
+    .rec-card.green .rec-list li::before { color: var(--green); }
+    .rec-card.yellow .rec-list li::before { color: #EAB308; }
+    .rec-card.red .rec-list li::before { color: var(--red); }
+
+    /* ── Comp banner ── */
+    .comp-banner {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .comp-item { text-align: center; }
+    .comp-val { font-size: 20px; font-weight: 900; color: var(--gold); }
+    .comp-key { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+    .comp-divider { width: 1px; height: 40px; background: var(--border); }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 48px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand { font-size: 11px; font-weight: 800; color: var(--muted2); letter-spacing: 0.06em; }
+    .footer-note { font-size: 10px; color: var(--muted2); }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff !important; color: #111 !important; }
+      .page { padding: 0 20px 40px; }
+      .section { page-break-inside: avoid; }
+      @page { margin: 20mm 15mm; size: A4; }
+    }
+
+    /* ── Utilities ── */
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+    .bold { font-weight: 700; }
+    .text-gold { color: var(--gold); }
+    .text-green { color: var(--green); }
+    .text-red { color: var(--red); }
+    .text-muted { color: var(--muted); }
+    ul.check { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+    ul.check li { font-size: 12px; color: var(--muted); padding-left: 18px; position: relative; line-height: 1.5; }
+    ul.check li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 800; }
+    ul.cross { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
+    ul.cross li { font-size: 12px; color: var(--muted); padding-left: 18px; position: relative; line-height: 1.5; }
+    ul.cross li::before { content: '✕'; position: absolute; left: 0; color: var(--red); font-weight: 800; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+    .col-box {
+      background: var(--surf);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .col-box-title { font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<div class="cover">
+  <div class="cover-left">
+    <div class="cover-eyebrow">Recruiting Agency — Confidential</div>
+    <div class="cover-title">Pod Manager<br>Hiring Criteria Guide</div>
+    <div class="cover-sub">RoofIgnite Performance Marketing · Remote · Full-Time</div>
+    <div class="cover-pills">
+      <span class="pill gold">Must Read Before Screening</span>
+      <span class="pill">Facebook Ads</span>
+      <span class="pill">GoHighLevel</span>
+      <span class="pill">Agency Client Mgmt</span>
+      <span class="pill">Direct Response</span>
+    </div>
+  </div>
+  <div class="cover-logo">
+    <img src="/logo.png" alt="RoofIgnite" />
+    <div class="cover-date">Prepared May 2026</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ── Role Context ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">→</div>
+      <div>
+        <div class="section-title">What This Role Actually Is</div>
+        <div class="section-sub">Read this before looking at resumes</div>
+      </div>
+    </div>
+    <div class="ideal-box" style="background:#0D0D1A; border-color:#3B82F633;">
+      <p>A Pod Manager at RoofIgnite is a <strong style="color:#fff;">client-facing performance operator</strong> — not a strategist, not a media buyer at an agency managing one big brand. They run <strong style="color:#fff;">10–15 active roofing client accounts simultaneously</strong>, each spending $2K–$30K/month on Facebook ads. They set up campaigns using <strong style="color:#fff;">proven copy and creatives</strong> (provided), monitor performance daily, conduct structured check-ins every Monday and Thursday, coordinate a VA team on lead follow-up, and escalate issues before they become client churn.</p>
+      <p style="margin-top:10px;">The company is scaling from <strong style="color:#fff;">$300K → $1M/month in managed ad spend</strong>. This person must be someone who <strong style="color:#fff;">executes flawlessly under pressure</strong>, not someone who wants to reinvent the wheel. The role rewards discipline, proactive communication, and process adherence above creative thinking.</p>
+    </div>
+  </div>
+
+  <!-- ── Section 1: Hard Gates ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">Must-Have Qualifications</div>
+        <div class="section-sub">Hard gates — missing any one = do not advance</div>
+      </div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:28px;">#</th>
+          <th>Requirement</th>
+          <th>How to Verify</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-label">1</td>
+          <td><span class="td-label">2+ years hands-on Facebook/Meta Ads</span> <span class="gate-badge">HARD GATE</span><br><span class="td-muted">Must have managed campaigns end-to-end — not just "boosted posts" or supported a buyer</span></td>
+          <td class="td-muted">Resume + ask for specific ad account spend levels managed</td>
+        </tr>
+        <tr>
+          <td class="td-label">2</td>
+          <td><span class="td-label">GoHighLevel (GHL) hands-on experience</span> <span class="gate-badge">HARD GATE</span><br><span class="td-muted">Must have built workflows, sub-accounts, or automations — not just "aware of" GHL</span></td>
+          <td class="td-muted">Application screen question + ask them to describe a specific workflow they built</td>
+        </tr>
+        <tr>
+          <td class="td-label">3</td>
+          <td><span class="td-label">Multi-account agency experience</span> <span class="gate-badge">HARD GATE</span><br><span class="td-muted">Must have managed multiple client accounts simultaneously (not one brand in-house)</span></td>
+          <td class="td-muted">Resume — look for agency-side roles, not in-house brand roles</td>
+        </tr>
+        <tr>
+          <td class="td-label">4</td>
+          <td><span class="td-label">Fluent English — written and verbal</span> <span class="gate-badge">HARD GATE</span><br><span class="td-muted">Client-facing role. Must communicate clearly and confidently with roofing business owners</span></td>
+          <td class="td-muted">Application voice recording + interview call</td>
+        </tr>
+        <tr>
+          <td class="td-label">5</td>
+          <td><span class="td-label">Remote-ready and async-first</span><br><span class="td-muted">Must be self-directed with reliable internet, professional setup, and no timezone blockers (overlap with North America required)</span></td>
+          <td class="td-muted">Confirm timezone and home office setup in screening</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Section 2: Technical Skills ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">Technical Skill Rating Sheet</div>
+        <div class="section-sub">Score each area 1–5 during screening call</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; padding-left:4px;">Facebook / Meta Ads Platform</div>
+      <div class="skills">
+        <div class="skill-row">
+          <div><div class="skill-name">Campaign architecture</div><div class="skill-sub">CBO vs. ABO, objective selection, ad set structure, naming conventions</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Budget & bidding strategy</div><div class="skill-sub">Spending allocation across accounts, scaling triggers, avoiding algorithm resets</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Creative monitoring & swap decisions</div><div class="skill-sub">Recognising ad saturation, knowing when to refresh creatives vs. change targeting</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Lead gen optimization (not e-commerce)</div><div class="skill-sub">CPL, cost-per-appointment, lead quality metrics — not ROAS-first thinking</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Meta Business Manager admin</div><div class="skill-sub">Pixel setup, ad account permissions, BM ownership rules (never create a BM for a client)</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:11px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; padding-left:4px;">GoHighLevel (GHL) / CRM</div>
+      <div class="skills">
+        <div class="skill-row">
+          <div><div class="skill-name">Sub-account setup & management</div><div class="skill-sub">Configuring new client accounts, pipeline stages, contact management</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Workflow & automation builds</div><div class="skill-sub">A2P SMS registration, follow-up sequences, trigger logic, lead routing</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Calendar & booking integrations</div><div class="skill-sub">Setting up appointment calendars, confirmation sequences, survey forms</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Landing page & funnel setup</div><div class="skill-sub">Building lead capture pages within GHL, connecting to ad campaigns</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:11px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; padding-left:4px;">Operations & Communication Tools</div>
+      <div class="skills">
+        <div class="skill-row">
+          <div><div class="skill-name">Slack — async team communication</div><div class="skill-sub">Primary internal comms tool for all escalations, pod updates, and daily status</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Loom — async video communication</div><div class="skill-sub">Pre-launch QC walkthroughs, client update videos, internal training</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Google Sheets — performance tracking</div><div class="skill-sub">Client check-in logging, lead data entry, account health tracking</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Canva — light creative editing</div><div class="skill-sub">Basic image edits for ad creatives, resizing, brand colour application</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8" style="font-size:10px; color:var(--muted2); padding-left:4px;">● filled = required proficiency level &nbsp;|&nbsp; ○ empty = bonus</div>
+  </div>
+
+  <!-- ── Section 3: Behavioral Traits ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">Behavioral Traits — Non-Negotiables</div>
+        <div class="section-sub">What separates adequate hires from great ones in this specific role</div>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Process Discipline</div>
+        <div class="card-body">Follows SOPs without cutting corners. Documents everything in writing — no verbal agreements, no skipped steps. Understands that <em>consistent execution IS the job</em>, not creative reinvention. This person should find comfort in a well-defined system, not fight it.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📞</div>
+        <div class="card-title">Proactive Client Communication</div>
+        <div class="card-body">Doesn't wait for a client to ask — surfaces issues before they escalate. Runs Monday/Thursday check-ins without being reminded. Can translate ad performance data into plain language a roofing contractor understands. Maintains client confidence during seasonal slow periods.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚨</div>
+        <div class="card-title">Urgency Without Chaos</div>
+        <div class="card-body">Treats struggling client accounts like they personally own them. Identifies DEFCON-level issues early and escalates to leadership with context and a proposed fix — not just a problem dump. Doesn't need to be chased down after ramp-up.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <div class="card-title">Team Coordination</div>
+        <div class="card-body">Manages VA follow-up accountability without micromanaging every call. Delegates creative briefs clearly to the design team. Hands off technical setup tasks (DNS, GHL backend) to the ops team with complete specs. Knows the difference between their lane and someone else's.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Metrics-Driven Mindset</div>
+        <div class="card-body">Makes decisions based on data, not gut feel. Knows what KPI targets look like at different spend tiers ($2K/month vs $15K/month accounts have different benchmarks). Can articulate why they made an optimization — not just that they made one.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Growth-Environment Fit</div>
+        <div class="card-body">Energized by aggressive growth targets, not intimidated by them. Comfortable with a company scaling 3x in a year — processes will evolve, new SOPs will be written, roles will expand. Someone who sees this as opportunity, not instability.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 4: Role-Specific Knowledge ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-title">Differentiating Experience</div>
+        <div class="section-sub">Nice-to-have — candidates with these will ramp significantly faster</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="col-box">
+        <div class="col-box-title">Industry Background</div>
+        <ul class="check">
+          <li>Home services / contractor marketing (roofing, HVAC, plumbing, siding)</li>
+          <li>B2C lead generation — not e-commerce / DTC (completely different optimization mindset)</li>
+          <li>Appointment-setting funnels vs. product purchase funnels</li>
+          <li>Seasonal campaign management (roofing slows in winter — they need to handle this conversation with clients)</li>
+        </ul>
+      </div>
+      <div class="col-box">
+        <div class="col-box-title">Scale & Depth</div>
+        <ul class="check">
+          <li>Managed $5K–$30K/month in ad spend per individual client account</li>
+          <li>Simultaneously managed 10+ accounts at once</li>
+          <li>Has managed or supervised a VA / call center team in a lead gen context</li>
+          <li>Experience building landing pages (not just Facebook lead forms)</li>
+          <li>Fluent in direct response copywriting principles (hooks, proof, urgency)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 5: Red Flags ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <div class="section-title">Red Flags — Do Not Advance</div>
+        <div class="section-sub">These patterns indicate a poor fit regardless of resume strength</div>
+      </div>
+    </div>
+    <div class="cards" style="grid-template-columns:1fr;">
+      <table>
+        <thead>
+          <tr>
+            <th>Red Flag</th>
+            <th>Why It's Disqualifying</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-label text-red">Only e-commerce / DTC experience</td>
+            <td class="td-muted">ROAS-first optimization logic is wrong for local B2C lead gen. Will apply the wrong benchmarks and framework to client accounts.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">"I mostly boost posts" or organic-first background</td>
+            <td class="td-muted">No structured campaign architecture experience. Cannot set up ad sets, configure targeting, or read performance data at the required level.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Vague about GHL — can't describe a specific workflow</td>
+            <td class="td-muted">GHL is used daily for every client account. "Familiar with it" or "I've heard of it" is not acceptable. Must have built something real in it.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Wants to "build their own strategy" / questions every SOP</td>
+            <td class="td-muted">This role executes a proven system. Strategic input is welcomed over time, but early on, SOPs are non-negotiable. A "I'd do it differently" mentality creates chaos at scale.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">No examples of managing multiple simultaneous accounts</td>
+            <td class="td-muted">Managing one large brand in-house is fundamentally different from juggling 10–15 smaller accounts at once. The context-switching, triage, and prioritization skills don't transfer the same way.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Reactive communicator — needs to be chased down</td>
+            <td class="td-muted">Pod Managers are the main point of contact for clients. Slow or chased responses directly damage client retention and trust.</td>
+          </tr>
+          <tr>
+            <td class="td-label text-red">Only in-house / single-brand experience</td>
+            <td class="td-muted">Agency execution pace is 3–5x higher. Managing 12 accounts is not 12x harder — it requires a completely different operating rhythm that in-house experience rarely builds.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Section 6: Screening Questions ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div>
+        <div class="section-title">Screening Interview Questions</div>
+        <div class="section-sub">Ask all 6 — the answers reveal real competency far better than resume claims</div>
+      </div>
+    </div>
+    <div class="questions">
+      <div class="question-block">
+        <div class="q-num">Question 01 · Facebook Ads Architecture</div>
+        <div class="q-text">"Walk me through how you'd set up a Facebook campaign from scratch for a new roofing client. What objective, targeting approach, and budget structure would you use?"</div>
+        <div class="q-look">Looking for: Lead Generation objective (not Conversions/Sales), local radius targeting around the client's service area, ABO vs. CBO reasoning, awareness that roofing clients need appointment volume not website traffic. <strong>Red flag:</strong> mentions ROAS, pixel-based retargeting as primary strategy, or broad targeting as a positive.</div>
+      </div>
+      <div class="question-block">
+        <div class="q-num">Question 02 · Account Troubleshooting</div>
+        <div class="q-text">"Tell me about a client account that was underperforming. What did you diagnose, what specifically did you change, and what happened?"</div>
+        <div class="q-look">Looking for: Systematic diagnostic process (creative fatigue? audience exhaustion? landing page issue? follow-up gap?), specific changes made (not just "tweaked the audience"), and measured outcome. <strong>Red flag:</strong> vague answer, can't remember specifics, or blames the client / platform.</div>
+      </div>
+      <div class="question-block">
+        <div class="q-num">Question 03 · GHL Depth Check</div>
+        <div class="q-text">"What's the most complex automation or workflow you've built in GoHighLevel? Walk me through the trigger, the steps, and why you built it that way."</div>
+        <div class="q-look">Looking for: Specifics — triggers (new lead from FB form, missed call, etc.), actions (SMS, email, task creation), branching logic. A2P SMS registration experience is a strong green flag. <strong>Red flag:</strong> describes a pipeline or contact list as an "automation," has never set up a workflow with conditional logic.</div>
+      </div>
+      <div class="question-block">
+        <div class="q-num">Question 04 · Difficult Client Handling</div>
+        <div class="q-text">"Describe a time a client was upset about results. What happened, what did you say, and what was the outcome?"</div>
+        <div class="q-look">Looking for: Proactive communication (ideally they caught it before the client complained), data-backed confidence in the conversation (showing numbers, explaining what's being done), no blame-shifting to the platform or creative team. <strong>Red flag:</strong> says "I escalated it to my manager" as the only action taken, or describes placating the client without a real plan.</div>
+      </div>
+      <div class="question-block">
+        <div class="q-num">Question 05 · Multi-Account Day Management</div>
+        <div class="q-text">"How do you structure your day when you're managing 12 active client accounts? Walk me through a typical Monday morning."</div>
+        <div class="q-look">Looking for: Structured triage first thing (dashboard check, red-flag accounts first), scheduled check-in cadence, task management system (ClickUp or equivalent), not reactive firefighting. <strong>Red flag:</strong> "I just check in when something goes wrong" — reactive, not proactive operating model.</div>
+      </div>
+      <div class="question-block">
+        <div class="q-num">Question 06 · VA / Team Accountability</div>
+        <div class="q-text">"Have you managed VAs or a call center team? How did you keep them accountable without micromanaging every call?"</div>
+        <div class="q-look">Looking for: Clear KPIs set for the VA team (call volume, follow-up timing, booking rate), regular check-in cadence, tools used for visibility (CRM tracking, call logs). <strong>Red flag:</strong> "I just told them what to do" with no system, or never managed a remote team at all.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 7: Scoring ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div>
+        <div class="section-title">Candidate Scoring Rubric</div>
+        <div class="section-sub">Complete after screening call — use to prioritize who to advance</div>
+      </div>
+    </div>
+    <div class="rubric">
+      <div class="rubric-row header">
+        <span style="flex:1;">Competency</span>
+        <span style="width:50px;text-align:right;">Weight</span>
+        <span style="width:70px;text-align:right;">Max Score</span>
+        <span style="width:58px;text-align:right;">Actual</span>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-cat">Facebook / Meta Ads Proficiency<br><span style="font-size:10px;color:var(--muted);">Campaign structure, optimization, lead gen logic, creative decisions</span></div>
+        <div class="rubric-weight">25%</div>
+        <div class="rubric-score">25 pts</div>
+        <div class="score-box"></div>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-cat">GoHighLevel / Technical CRM Operations<br><span style="font-size:10px;color:var(--muted);">Sub-accounts, workflows, automations, landing pages</span></div>
+        <div class="rubric-weight">20%</div>
+        <div class="rubric-score">20 pts</div>
+        <div class="score-box"></div>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-cat">Client Communication & Relationship Management<br><span style="font-size:10px;color:var(--muted);">Proactivity, difficult conversations, check-in discipline</span></div>
+        <div class="rubric-weight">20%</div>
+        <div class="rubric-score">20 pts</div>
+        <div class="score-box"></div>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-cat">Process Discipline & SOP Execution<br><span style="font-size:10px;color:var(--muted);">Can they follow systems without ego? Do they document?</span></div>
+        <div class="rubric-weight">15%</div>
+        <div class="rubric-score">15 pts</div>
+        <div class="score-box"></div>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-cat">Performance Analysis & Reporting<br><span style="font-size:10px;color:var(--muted);">Reads data, makes logical decisions, communicates results to clients</span></div>
+        <div class="rubric-weight">10%</div>
+        <div class="rubric-score">10 pts</div>
+        <div class="score-box"></div>
+      </div>
+      <div class="rubric-row">
+        <div class="rubric-cat">VA / Internal Team Management<br><span style="font-size:10px;color:var(--muted);">Setting KPIs, accountability systems, delegation quality</span></div>
+        <div class="rubric-weight">10%</div>
+        <div class="rubric-score">10 pts</div>
+        <div class="score-box"></div>
+      </div>
+      <div class="rubric-row total">
+        <div class="rubric-cat bold">Total Score</div>
+        <div class="rubric-weight">100%</div>
+        <div class="rubric-score">100 pts</div>
+        <div class="score-box"></div>
+      </div>
+    </div>
+    <div class="thresholds">
+      <div class="threshold advance">
+        <div class="threshold-score">70+</div>
+        <div class="threshold-label">Advance to Interview</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;">No hard gate failures</div>
+      </div>
+      <div class="threshold priority">
+        <div class="threshold-score">85+</div>
+        <div class="threshold-label">Priority Candidate</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;">Fast-track to RoofIgnite team</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 8: Voice Recording Eval ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div>
+        <div class="section-title">Evaluating the 60-Second Voice Recording</div>
+        <div class="section-sub">This is a client-facing role — communication quality IS a performance metric</div>
+      </div>
+    </div>
+    <div class="rec-grid">
+      <div class="rec-card green">
+        <div class="rec-card-title">✓ Green Flags</div>
+        <ul class="rec-list">
+          <li>Clear, confident, concise — gets to the point within 15 seconds</li>
+          <li>Mentions specific metrics or results ("I managed $400K/month, dropped CPL by 35%")</li>
+          <li>Sounds like someone who could reassure a stressed roofing contractor on a call</li>
+          <li>Professional audio environment — no background noise, shows attention to detail</li>
+          <li>Natural energy — not robotic or over-rehearsed</li>
+        </ul>
+      </div>
+      <div class="rec-card yellow">
+        <div class="rec-card-title">⚠ Yellow Flags</div>
+        <ul class="rec-list">
+          <li>Scripted reading — may struggle with live, unscripted client calls</li>
+          <li>Vague about results ("worked with Facebook ads for a few years")</li>
+          <li>Mentions only personal brand / freelance projects without agency context</li>
+          <li>Strong accent but comprehensible — flag for client communication assessment</li>
+        </ul>
+      </div>
+      <div class="rec-card red">
+        <div class="rec-card-title">✕ Red Flags</div>
+        <ul class="rec-list">
+          <li>Difficult to understand — client-facing English fluency is required</li>
+          <li>No energy, flat delivery — will not inspire client confidence</li>
+          <li>Rambles past 90 seconds without a clear point</li>
+          <li>Didn't submit one — shows low motivation or difficulty following instructions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Section 9: Ideal Candidate Profile ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div>
+        <div class="section-title">Ideal Candidate Profile Summary</div>
+        <div class="section-sub">Use this as a north star when comparing candidates</div>
+      </div>
+    </div>
+    <div class="ideal-box">
+      <p>The ideal RoofIgnite Pod Manager has spent <strong style="color:#fff;">2–4 years at a performance marketing agency</strong> running paid social for local service businesses — ideally home services (roofing, HVAC, contractors). They've managed <strong style="color:#fff;">10–15 client accounts simultaneously</strong>, each at $3K–$20K/month in ad spend, and have seen the full lifecycle: onboarding, campaign launch, performance optimization, troubleshooting, and sometimes off-boarding. They know what a struggling account looks like before the client calls to complain. They've built real GHL workflows — not just set up a pipeline. They communicate in a way that makes roofing business owners feel informed and confident, not confused. They are <strong style="color:#fff;">energized by a fast-moving, high-growth environment</strong>, not looking for a stable 9-to-5. And above all, they respect a well-built system and make it better over time — they don't blow it up on arrival.</p>
+      <div class="ideal-titles">
+        <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;line-height:2;">Titles they may currently hold:</div>
+        <span class="title-tag">Media Buyer (Agency)</span>
+        <span class="title-tag">Performance Marketing Manager</span>
+        <span class="title-tag">Paid Social Specialist</span>
+        <span class="title-tag">Client Success Manager (w/ ads execution)</span>
+        <span class="title-tag">Digital Marketing Manager (Agency)</span>
+        <span class="title-tag">Account Manager — Paid Media</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Compensation ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">→</div>
+      <div>
+        <div class="section-title">Compensation & Role Details</div>
+        <div class="section-sub">Share with candidates post-screening</div>
+      </div>
+    </div>
+    <div class="comp-banner">
+      <div class="comp-item">
+        <div class="comp-val">$95K–$120K</div>
+        <div class="comp-key">Base Salary (CAD/yr)</div>
+      </div>
+      <div class="comp-divider"></div>
+      <div class="comp-item">
+        <div class="comp-val">+ Bonus</div>
+        <div class="comp-key">Performance-Based</div>
+      </div>
+      <div class="comp-divider"></div>
+      <div class="comp-item">
+        <div class="comp-val">100% Remote</div>
+        <div class="comp-key">Work Location</div>
+      </div>
+      <div class="comp-divider"></div>
+      <div class="comp-item">
+        <div class="comp-val">Full-Time</div>
+        <div class="comp-key">Employment Type</div>
+      </div>
+      <div class="comp-divider"></div>
+      <div class="comp-item">
+        <div class="comp-val">$300K → $1M</div>
+        <div class="comp-key">Monthly Managed Spend (scaling now)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ── -->
+  <div class="footer">
+    <div class="footer-brand">ROOFIGNITE · CONFIDENTIAL</div>
+    <div class="footer-note">Prepared for recruiting agency use only · May 2026 · Do not distribute to candidates</div>
+  </div>
+
+</div>
+</body>
+</html>

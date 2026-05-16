@@ -445,7 +445,7 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       </div>
     </div>
     <div class="ideal-box" style="background:#0D0D1A; border-color:#3B82F633;">
-      <p>A Pod Manager at RoofIgnite is a <strong style="color:#fff;">client-facing performance operator</strong> — not a strategist, not a media buyer at an agency managing one big brand. They run <strong style="color:#fff;">10–15 active roofing client accounts simultaneously</strong>, each spending $2K–$30K/month on Facebook ads. They set up campaigns using <strong style="color:#fff;">proven copy and creatives</strong> (provided), monitor performance daily, conduct structured check-ins every Monday and Thursday, coordinate a VA team on lead follow-up, and escalate issues before they become client churn.</p>
+      <p>A Pod Manager at RoofIgnite is a <strong style="color:#fff;">client-facing performance operator</strong> — not a strategist, not a media buyer at an agency managing one big brand. They run <strong style="color:#fff;">20–30 active roofing client accounts at full capacity</strong>, each spending $2K–$30K/month on Facebook ads. They set up campaigns using <strong style="color:#fff;">proven copy and creatives</strong> (provided), monitor performance daily, conduct structured check-ins every Monday and Thursday, coordinate a VA team on lead follow-up, and escalate issues before they become client churn.</p>
       <p style="margin-top:10px;">The company is scaling from <strong style="color:#fff;">$300K → $1M/month in managed ad spend</strong>. This person must be someone who <strong style="color:#fff;">executes flawlessly under pressure</strong>, not someone who wants to reinvent the wheel. The role rewards discipline, proactive communication, and process adherence above creative thinking.</p>
     </div>
   </div>
@@ -658,7 +658,7 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
         <div class="col-box-title">Scale & Depth</div>
         <ul class="check">
           <li>Managed $5K–$30K/month in ad spend per individual client account</li>
-          <li>Simultaneously managed 10+ accounts at once</li>
+          <li>Simultaneously managed 20–30 accounts at full capacity</li>
           <li>Has managed or supervised a VA / call center team in a lead gen context</li>
           <li>Experience building landing pages (not just Facebook lead forms)</li>
           <li>Fluent in direct response copywriting principles (hooks, proof, urgency)</li>
@@ -703,7 +703,7 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
           </tr>
           <tr>
             <td class="td-label text-red">No examples of managing multiple simultaneous accounts</td>
-            <td class="td-muted">Managing one large brand in-house is fundamentally different from juggling 10–15 smaller accounts at once. The context-switching, triage, and prioritization skills don't transfer the same way.</td>
+            <td class="td-muted">Managing one large brand in-house is fundamentally different from juggling 20–30 smaller accounts at once. The context-switching, triage, and prioritization skills don't transfer the same way.</td>
           </tr>
           <tr>
             <td class="td-label text-red">Reactive communicator — needs to be chased down</td>
@@ -711,7 +711,7 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
           </tr>
           <tr>
             <td class="td-label text-red">Only in-house / single-brand experience</td>
-            <td class="td-muted">Agency execution pace is 3–5x higher. Managing 12 accounts is not 12x harder — it requires a completely different operating rhythm that in-house experience rarely builds.</td>
+            <td class="td-muted">Agency execution pace is 3–5x higher. Managing 20–30 accounts is not 20x harder — it requires a completely different operating rhythm that in-house experience rarely builds.</td>
           </tr>
         </tbody>
       </table>
@@ -750,7 +750,7 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       </div>
       <div class="question-block">
         <div class="q-num">Question 05 · Multi-Account Day Management</div>
-        <div class="q-text">"How do you structure your day when you're managing 12 active client accounts? Walk me through a typical Monday morning."</div>
+        <div class="q-text">"How do you structure your day when you're managing 20–30 active client accounts? Walk me through a typical Monday morning."</div>
         <div class="q-look">Looking for: Structured triage first thing (dashboard check, red-flag accounts first), scheduled check-in cadence, task management system (ClickUp or equivalent), not reactive firefighting. <strong>Red flag:</strong> "I just check in when something goes wrong" — reactive, not proactive operating model.</div>
       </div>
       <div class="question-block">
@@ -885,7 +885,7 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       </div>
     </div>
     <div class="ideal-box">
-      <p>The ideal RoofIgnite Pod Manager has spent <strong style="color:#fff;">2–4 years at a performance marketing agency</strong> running paid social for local service businesses — ideally home services (roofing, HVAC, contractors). They've managed <strong style="color:#fff;">10–15 client accounts simultaneously</strong>, each at $3K–$20K/month in ad spend, and have seen the full lifecycle: onboarding, campaign launch, performance optimization, troubleshooting, and sometimes off-boarding. They know what a struggling account looks like before the client calls to complain. They've built real GHL workflows — not just set up a pipeline. They communicate in a way that makes roofing business owners feel informed and confident, not confused. They are <strong style="color:#fff;">energized by a fast-moving, high-growth environment</strong>, not looking for a stable 9-to-5. And above all, they respect a well-built system and make it better over time — they don't blow it up on arrival.</p>
+      <p>The ideal RoofIgnite Pod Manager has spent <strong style="color:#fff;">2–4 years at a performance marketing agency</strong> running paid social for local service businesses — ideally home services (roofing, HVAC, contractors). They've managed <strong style="color:#fff;">20–30 client accounts simultaneously at full capacity</strong>, each at $3K–$20K/month in ad spend, and have seen the full lifecycle: onboarding, campaign launch, performance optimization, troubleshooting, and sometimes off-boarding. They know what a struggling account looks like before the client calls to complain. They've built real GHL workflows — not just set up a pipeline. They communicate in a way that makes roofing business owners feel informed and confident, not confused. They are <strong style="color:#fff;">energized by a fast-moving, high-growth environment</strong>, not looking for a stable 9-to-5. And above all, they respect a well-built system and make it better over time — they don't blow it up on arrival.</p>
       <div class="ideal-titles">
         <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px;line-height:2;">Titles they may currently hold:</div>
         <span class="title-tag">Media Buyer (Agency)</span>
@@ -909,13 +909,13 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
     </div>
     <div class="comp-banner">
       <div class="comp-item">
-        <div class="comp-val">$95K–$120K</div>
+        <div class="comp-val">$72K</div>
         <div class="comp-key">Base Salary (CAD/yr)</div>
       </div>
       <div class="comp-divider"></div>
-      <div class="comp-item">
-        <div class="comp-val">+ Bonus</div>
-        <div class="comp-key">Performance-Based</div>
+      <div class="comp-item" style="max-width:280px;text-align:left;">
+        <div class="comp-val" style="font-size:14px;line-height:1.4;">+ Scaling Bonuses</div>
+        <div class="comp-key" style="line-height:1.6;margin-top:4px;">Performance bonuses tied to account retention, client results, and pod growth. Structure scales with accounts managed — see <a href="https://docs.google.com/document/d/1H5NYHSFK4PBrSj259_d7ijWuY5Q9SST7DNeFQWqK0Lg/edit?usp=drive_link" target="_blank" style="color:#F5C800;text-decoration:none;">Compensation Structure doc</a> for full cycle-based breakdown.</div>
       </div>
       <div class="comp-divider"></div>
       <div class="comp-item">
@@ -926,11 +926,6 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       <div class="comp-item">
         <div class="comp-val">Full-Time</div>
         <div class="comp-key">Employment Type</div>
-      </div>
-      <div class="comp-divider"></div>
-      <div class="comp-item">
-        <div class="comp-val">$300K → $1M</div>
-        <div class="comp-key">Monthly Managed Spend (scaling now)</div>
       </div>
     </div>
   </div>

@@ -445,8 +445,8 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       </div>
     </div>
     <div class="ideal-box" style="background:#0D0D1A; border-color:#3B82F633;">
-      <p>A Pod Manager at RoofIgnite is a <strong style="color:#fff;">client-facing performance operator</strong> — not a strategist, not a media buyer at an agency managing one big brand. They run <strong style="color:#fff;">20–30 active roofing client accounts at full capacity</strong>, each spending $2K–$30K/month on Facebook ads. They set up campaigns using <strong style="color:#fff;">proven copy and creatives</strong> (provided), monitor performance daily, conduct structured check-ins every Monday and Thursday, coordinate a VA team on lead follow-up, and escalate issues before they become client churn.</p>
-      <p style="margin-top:10px;">The company is scaling from <strong style="color:#fff;">$300K → $1M/month in managed ad spend</strong>. This person must be someone who <strong style="color:#fff;">executes flawlessly under pressure</strong>, not someone who wants to reinvent the wheel. The role rewards discipline, proactive communication, and process adherence above creative thinking.</p>
+      <p>A Pod Manager at RoofIgnite is a <strong style="color:#fff;">revenue partner and pod quarterback</strong> — not a strategist, media buyer, or GHL technician. They own outcomes for <strong style="color:#fff;">20–30 active roofing (and some HVAC/gutter) client accounts simultaneously</strong>, each on a <strong style="color:#fff;">28-day performance cycle</strong> where the company only bills if it delivers 80%+ of the contracted appointment target. They set up campaigns using proven copy and creatives (provided), run daily triage via the Command Centre dashboard, conduct structured check-ins every Monday and Thursday, coordinate a VA team on lead follow-up, and escalate issues well before they become client churn.</p>
+      <p style="margin-top:10px;">Success in this role is <strong style="color:#fff;">50% results</strong> (bookings, CPA, show rate) and <strong style="color:#fff;">50% narrative management</strong> — keeping the client's story aligned with reality, inoculating against outside doubt, and proactively communicating before a client ever has to ask. The company is scaling aggressively. This person must be someone who <strong style="color:#fff;">executes flawlessly under pressure</strong> and treats their client book like their own business. They are NOT the landing page builder, the Meta specialist, the GHL technician, or the VA manager — they coordinate all of those, own the outcome, and escalate precisely when needed.</p>
     </div>
   </div>
 
@@ -511,27 +511,27 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       <div style="font-size:11px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; padding-left:4px;">Facebook / Meta Ads Platform</div>
       <div class="skills">
         <div class="skill-row">
-          <div><div class="skill-name">Campaign architecture</div><div class="skill-sub">CBO vs. ABO, objective selection, ad set structure, naming conventions</div></div>
+          <div><div class="skill-name">Campaign architecture</div><div class="skill-sub">CBO vs. ABO, objective selection (Lead Gen not Conversions), ad set structure, naming conventions (B2C required in every campaign name)</div></div>
           <div class="skill-label">Score /5</div>
           <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div>
         </div>
         <div class="skill-row">
-          <div><div class="skill-name">Budget & bidding strategy</div><div class="skill-sub">Spending allocation across accounts, scaling triggers, avoiding algorithm resets</div></div>
-          <div class="skill-label">Score /5</div>
-          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
-        </div>
-        <div class="skill-row">
-          <div><div class="skill-name">Creative monitoring & swap decisions</div><div class="skill-sub">Recognising ad saturation, knowing when to refresh creatives vs. change targeting</div></div>
-          <div class="skill-label">Score /5</div>
-          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
-        </div>
-        <div class="skill-row">
-          <div><div class="skill-name">Lead gen optimization (not e-commerce)</div><div class="skill-sub">CPL, cost-per-appointment, lead quality metrics — not ROAS-first thinking</div></div>
+          <div><div class="skill-name">Layer 1/2/3 diagnostic framework</div><div class="skill-sub">Layer 1 = outcome (bookings vs target, cost per booked appointment). Layer 2 = drivers (CPM, CTR, survey rate, VA booking rate, OSA%). Layer 3 = levers (creative refresh, survey shortening, speed to lead). Must know: if Layer 1 is green, STOP — don't touch Layer 2.</div></div>
           <div class="skill-label">Score /5</div>
           <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div>
         </div>
         <div class="skill-row">
-          <div><div class="skill-name">Meta Business Manager admin</div><div class="skill-sub">Pixel setup, ad account permissions, BM ownership rules (never create a BM for a client)</div></div>
+          <div><div class="skill-name">Lead gen optimization — cost per booked appointment</div><div class="skill-sub">Key metric is cost per booked appointment, NOT cost per lead and NOT ROAS. Must understand the full funnel: ad click → landing page → qualification survey → VA call → booked appointment</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Creative monitoring & swap decisions</div><div class="skill-sub">Recognising ad fatigue (Andromeda concentrates spend on top 3–4 ads, accelerating fatigue). Knowing when to refresh creatives vs. change targeting. Post-Andromeda protocol: duplicate ad set, turn off top-reach, launch new set, wait 48h before full refresh.</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Meta Business Manager admin</div><div class="skill-sub">Pixel setup, CAPI (Conversion API) verification, ad account permissions, BM ownership rules (client must own their BM — never create one for them)</div></div>
           <div class="skill-label">Score /5</div>
           <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
         </div>
@@ -568,22 +568,32 @@ export const RECRUITER_GUIDE_HTML = `<!DOCTYPE html>
       <div style="font-size:11px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; padding-left:4px;">Operations & Communication Tools</div>
       <div class="skills">
         <div class="skill-row">
-          <div><div class="skill-name">Slack — async team communication</div><div class="skill-sub">Primary internal comms tool for all escalations, pod updates, and daily status</div></div>
+          <div><div class="skill-name">Command Centre — daily triage dashboard</div><div class="skill-sub">Must open FIRST every morning. Shows all accounts with 🟢🟡🟠🔴 health status. Red = 40%+ behind target (escalate same day). This is the most critical daily habit — not checking it is a red flag.</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">ClickUp — specialist task coordination</div><div class="skill-sub">ALL requests to Emmanuel (GHL/tech), Ken (creatives), Mervin (overflow) go through ClickUp — NEVER Slack DM. Every task must include: client name, GHL link, all assets, 48-hour deadline. This discipline is non-negotiable.</div></div>
           <div class="skill-label">Score /5</div>
           <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
         </div>
         <div class="skill-row">
-          <div><div class="skill-name">Loom — async video communication</div><div class="skill-sub">Pre-launch QC walkthroughs, client update videos, internal training</div></div>
+          <div><div class="skill-name">Slack — async team communication</div><div class="skill-sub">Primary internal comms for all pod updates, escalations, status posts. Response SLA: 5–30 min during business hours. Mon/Thu status updates posted to #ops-manager-discussion per account.</div></div>
+          <div class="skill-label">Score /5</div>
+          <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div>
+        </div>
+        <div class="skill-row">
+          <div><div class="skill-name">Loom — async video communication</div><div class="skill-sub">Pre-launch QC walkthroughs (5-min Loom before every launch — pre-handles 90% of mid-cycle objections). Client update videos. Recorded via Fathom on all onboarding calls (team visibility enabled).</div></div>
           <div class="skill-label">Score /5</div>
           <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
         </div>
         <div class="skill-row">
-          <div><div class="skill-name">Google Sheets — performance tracking</div><div class="skill-sub">Client check-in logging, lead data entry, account health tracking</div></div>
+          <div><div class="skill-name">Google Sheets / Logbook / Client Check-In Sheet</div><div class="skill-sub">Logbook = central truth for ALL lead data across every account (maintained by VAs). Client Check-In Sheet = structured Mon/Thu update tracker. Both must be kept current — Jonathan and Oscar track from these.</div></div>
           <div class="skill-label">Score /5</div>
           <div class="dot req"></div><div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div>
         </div>
         <div class="skill-row">
-          <div><div class="skill-name">Canva — light creative editing</div><div class="skill-sub">Basic image edits for ad creatives, resizing, brand colour application</div></div>
+          <div><div class="skill-name">Canva — light creative editing</div><div class="skill-sub">Basic image edits for ad creatives, resizing, brand colour application. Ken handles full creative production — Canva is for quick edits only.</div></div>
           <div class="skill-label">Score /5</div>
           <div class="dot req"></div><div class="dot req"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>

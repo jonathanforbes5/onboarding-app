@@ -37,24 +37,55 @@ export function S17_WeeklyRhythm() {
       <div>
         <h3 className="font-black text-sm uppercase tracking-widest text-brand-gray mb-3">How The Most Effective MOMs Run Their Day</h3>
         <p className="text-xs text-brand-gray mb-3">
-          Watch these to see how Cole and Tyler actually structure their day end-to-end. Same job, two different operating styles.
+          Each operator has two videos. <strong>Part 1</strong> is the day structure — how they actually move from
+          dashboard → triage → specialist coordination → close-out. Model your day after this.
+          <strong> Part 2</strong> is how they <em>think</em> about creative for client results — the specificity
+          that turns generic ads into appointment-generating ones. Same job, two different operating styles.
           Both work. Find what fits you.
         </p>
-        <div className="space-y-3">
-          <LoomSlot
-            slotKey="s17_cole_day"
-            title="Cole&apos;s typical day"
-            subtitle="Morning checks → account triage → specialist coordination"
-            recordedBy="Cole"
-            length="6:00"
-          />
-          <LoomSlot
-            slotKey="s17_tyler_day"
-            title="Tyler&apos;s typical day"
-            subtitle="How Tyler runs Pod 2 alongside Cole — different angle on the same job"
-            recordedBy="Tyler"
-            length="6:00"
-          />
+
+        {/* Cole */}
+        <div className="mb-5">
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="font-black text-xs uppercase tracking-widest" style={{ color: '#F5C800' }}>Cole — Pod 1</div>
+            <div className="text-[10px] text-brand-gray">2 videos · recorded together</div>
+          </div>
+          <div className="space-y-3">
+            <LoomSlot
+              slotKey="s17_cole_day"
+              title="Part 1 — Cole's day, end to end"
+              subtitle="The day structure to model after: morning checks → account triage → specialist coordination → action steps for 15 accounts"
+              recordedBy="Cole"
+            />
+            <LoomSlot
+              slotKey="s17_cole_thinking"
+              title="Part 2 — Cole on creative-thinking for client results"
+              subtitle="How he thinks through creative specificity to drive client outcomes — the why behind every brief"
+              recordedBy="Cole"
+            />
+          </div>
+        </div>
+
+        {/* Tyler — pending recording */}
+        <div>
+          <div className="flex items-baseline justify-between mb-2">
+            <div className="font-black text-xs uppercase tracking-widest" style={{ color: '#F5C800' }}>Tyler — Pod 2</div>
+            <div className="text-[10px] text-brand-gray">Coming soon — same two-part format</div>
+          </div>
+          <div className="space-y-3">
+            <LoomSlot
+              slotKey="s17_tyler_day"
+              title="Part 1 — Tyler's day, end to end"
+              subtitle="How Tyler runs Pod 2 — different angle on the same job"
+              recordedBy="Tyler"
+            />
+            <LoomSlot
+              slotKey="s17_tyler_thinking"
+              title="Part 2 — Tyler on creative-thinking for client results"
+              subtitle="Tyler's approach to creative specificity for client outcomes"
+              recordedBy="Tyler"
+            />
+          </div>
         </div>
       </div>
 

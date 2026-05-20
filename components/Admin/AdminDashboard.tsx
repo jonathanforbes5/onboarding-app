@@ -413,6 +413,21 @@ function AskRIInsights() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
+  // Deep-link via URL hash. /admin#media or /admin#loom jumps straight to the
+  // Media Links tab. Used by the Quick Actions bar at the top of /admin so
+  // pasting a new Loom URL is a one-click action instead of "scroll to find
+  // the buried tab".
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const apply = () => {
+      const h = window.location.hash.replace('#', '').toLowerCase();
+      if (h === 'media' || h === 'loom' || h === 'looms') setTab('media');
+    };
+    apply();
+    window.addEventListener('hashchange', apply);
+    return () => window.removeEventListener('hashchange', apply);
+  }, []);
+
   const loadMedia = useCallback(async () => {
     try {
       const res = await fetch('/api/media-links');
@@ -471,12 +486,14 @@ function AskRIInsights() {
 
   return (
     <div
+      id="ask-ri-insights"
       style={{
         marginTop: 32,
         backgroundColor: C.surf,
         border: `1px solid ${C.border}`,
         borderRadius: 16,
         overflow: 'hidden',
+        scrollMarginTop: 24,
       }}
     >
       {/* Header */}
@@ -1528,6 +1545,84 @@ export function AdminDashboard() {
               {loading ? 'Refreshing…' : '↻ Refresh'}
             </button>
           </div>
+        </div>
+
+        {/* Quick Actions — surfaced because the most common admin task is
+            pasting a new Loom URL, and the Media Links tab is buried at the
+            bottom of the page. Each button sets a URL hash that the matching
+            section listens for. */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 8,
+            marginBottom: 20,
+            padding: '10px 12px',
+            backgroundColor: C.surf2,
+            border: `1px solid ${C.border}`,
+            borderRadius: 10,
+            alignItems: 'center',
+          }}
+        >
+          <div
+            style={{
+              color: C.muted,
+              fontSize: 10,
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              marginRight: 4,
+            }}
+          >
+            Quick actions
+          </div>
+          <a
+            href="#media"
+            onClick={(e) => {
+              // Smooth-scroll + set hash so AskRIInsights flips to the media
+              // tab via its hashchange listener.
+              e.preventDefault();
+              window.location.hash = 'media';
+              document.getElementById('ask-ri-insights')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            style={{
+              padding: '7px 12px',
+              borderRadius: 8,
+              backgroundColor: '#F5C800',
+              color: '#000',
+              fontWeight: 800,
+              fontSize: 12,
+              textDecoration: 'none',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            📺 Set Loom URL
+          </a>
+          <a
+            href="#ask-ri-insights"
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.hash = 'questions';
+              document.getElementById('ask-ri-insights')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }}
+            style={{
+              padding: '7px 12px',
+              borderRadius: 8,
+              backgroundColor: C.surf3,
+              color: C.text,
+              fontWeight: 700,
+              fontSize: 12,
+              textDecoration: 'none',
+              border: `1px solid ${C.border}`,
+              cursor: 'pointer',
+            }}
+          >
+            💬 Ask RI Insights
+          </a>
+          <span style={{ color: C.muted2, fontSize: 10, marginLeft: 'auto' }}>
+            Most-used tools jump here · everything else is below
+          </span>
         </div>
 
         {/* Pod summary */}

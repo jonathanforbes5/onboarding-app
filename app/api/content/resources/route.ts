@@ -15,9 +15,14 @@ type ResourceItem = {
 };
 
 function getStaticItems(): ResourceItem[] {
-  const fromResources = (sopsData.resources ?? []).map((r) => ({ ...r, tags: [] as string[] }));
-  const fromTools = (sopsData.tools ?? []).map((r) => ({ ...r, tags: [] as string[] }));
-  const fromSops = (sopsData.sops ?? []).map((r) => ({ ...r, tags: (r as { tags?: string[] }).tags ?? [] }));
+  // Set `category` defensively for every static entry. Historically the
+  // sops.json file only included `category` on resources and tools — the SOP
+  // entries lacked it, which silently filtered every SOP out of the Resources
+  // tab UI. Put `category: '<x>'` BEFORE the spread so any explicit value in
+  // the file still wins, but missing values get a correct default.
+  const fromResources = (sopsData.resources ?? []).map((r) => ({ ...r, category: (r as { category?: string }).category ?? 'resource', tags: [] as string[] }));
+  const fromTools     = (sopsData.tools ?? []).map((r) => ({ ...r, category: (r as { category?: string }).category ?? 'tool', tags: [] as string[] }));
+  const fromSops      = (sopsData.sops ?? []).map((r) => ({ ...r, category: (r as { category?: string }).category ?? 'sop', tags: (r as { tags?: string[] }).tags ?? [] }));
   return [...fromResources, ...fromTools, ...fromSops] as ResourceItem[];
 }
 
@@ -71,19 +76,33 @@ function mergeItems(staticItems: ResourceItem[], dbRows: ResourceItem[]): Resour
   const dbMap = new Map(dbRows.map((r) => [r.id, r]));
   const unpublishedIds = new Set(dbRows.filter((r) => r.published === false).map((r) => r.id));
 
+  // Drop nullish fields from a row before merging — Supabase returns
+  // `category: null` for empty columns, and spreading that over a valid
+  // static value would null it out. We only want DB to *override* fields
+  // that were explicitly set.
+  const stripNullish = <T extends Record<string, unknown>>(o: T): Partial<T> => {
+    const out: Partial<T> = {};
+    for (const k of Object.keys(o) as (keyof T)[]) {
+      const v = o[k];
+      if (v !== null && v !== undefined) out[k] = v;
+    }
+    return out;
+  };
+
   // Start with static items, overriding with DB versions where applicable
   const merged: ResourceItem[] = [];
   for (const item of staticItems) {
     if (unpublishedIds.has(item.id)) continue;
     const dbVersion = dbMap.get(item.id);
-    merged.push(dbVersion ? { ...item, ...dbVersion } : item);
+    merged.push(dbVersion ? { ...item, ...stripNullish(dbVersion) } as ResourceItem : item);
   }
 
-  // Append DB-only items (not in static) that are published
+  // Append DB-only items (not in static) that are published. Default
+  // missing category to 'sop' as a safety net — Pre-API rows were SOPs.
   const staticIds = new Set(staticItems.map((r) => r.id));
   for (const row of dbRows) {
     if (!staticIds.has(row.id) && row.published !== false) {
-      merged.push(row);
+      merged.push({ ...row, category: row.category ?? 'sop' });
     }
   }
 

@@ -63,7 +63,8 @@ const DAY_DATES_POD5: Record<number, string> = {
 
 // ── User display config ──────────────────────────────────────
 const USER_CONFIG: Record<string, { label: string; color: string; textColor: string; pod: number; startDate: string }> = {
-  sam:    { label: 'Sam',    color: '#F5C800', textColor: '#000', pod: 4, startDate: 'Apr 14, 2026' },
+  li:     { label: 'Li',     color: '#14B8A6', textColor: '#fff', pod: 4, startDate: 'May 25, 2026' },
+  dakota: { label: 'Dakota', color: '#F43F5E', textColor: '#fff', pod: 4, startDate: 'May 25, 2026' },
   ksenia: { label: 'Ksenia', color: '#EC4899', textColor: '#fff', pod: 5, startDate: 'May 4, 2026'  },
   adeen:  { label: 'Adeen',  color: '#8B5CF6', textColor: '#fff', pod: 5, startDate: 'May 4, 2026'  },
 };
@@ -1464,8 +1465,8 @@ export function AdminDashboard() {
 
   useEffect(() => { load(); }, [load]);
 
-  const users = ['sam', 'ksenia', 'adeen'] as const;
-  const pod4Users = ['sam'] as const;
+  const users = ['li', 'dakota', 'ksenia', 'adeen'] as const;
+  const pod4Users = ['li', 'dakota'] as const;
   const pod5Users = ['ksenia', 'adeen'] as const;
 
   function podAvg(podUsers: readonly string[], daysList: any[]) {
@@ -1508,7 +1509,7 @@ export function AdminDashboard() {
               Pod Manager Progress Dashboard
             </h1>
             <p style={{ color: C.muted, fontSize: 13, margin: 0 }}>
-              Pod 4 (Sam · Apr 14) &amp; Pod 5 (Ksenia + Adeen · May 4)
+              Pod 4 (Li &amp; Dakota · May 25) &amp; Pod 5 (Ksenia + Adeen · May 4)
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -1639,10 +1640,10 @@ export function AdminDashboard() {
             {/* Pod 4 */}
             <div style={{ flex: '1 1 260px' }}>
               <div style={{ color: C.acc, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
-                Pod 4 — Sam · Apr 14
+                Pod 4 — Li &amp; Dakota · May 25
               </div>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                <Stat label="Worksheet" value={`${Math.round(pod4Stats.worksheetAvg)}%`} sub="Sam" color={pod4Stats.worksheetAvg >= 70 ? C.green : pod4Stats.worksheetAvg >= 40 ? C.orange : C.red} />
+                <Stat label="Worksheet" value={`${Math.round(pod4Stats.worksheetAvg)}%`} sub="Li & Dakota" color={pod4Stats.worksheetAvg >= 70 ? C.green : pod4Stats.worksheetAvg >= 40 ? C.orange : C.red} />
                 <Stat label="Training" value={`${Math.round(pod4Stats.sectionsAvg)}%`} sub="sections done" color={pod4Stats.sectionsAvg >= 70 ? C.green : pod4Stats.sectionsAvg >= 40 ? C.orange : C.red} />
               </div>
             </div>

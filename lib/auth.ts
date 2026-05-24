@@ -23,6 +23,8 @@ export const USER_COLORS: Record<string, { bg: string; text: string }> = {
   tyler:    { bg: '#10B981', text: '#fff' },
   ksenia:   { bg: '#EC4899', text: '#fff' },
   adeen:    { bg: '#8B5CF6', text: '#fff' },
+  li:       { bg: '#14B8A6', text: '#fff' },
+  dakota:   { bg: '#F43F5E', text: '#fff' },
 };
 
 // Static user list used for staging bypass (when Supabase is not configured).
@@ -37,7 +39,8 @@ export const LOCAL_USERS: Record<string, UserProfile> = {
   ksenia:    { email: 'ksenia@roofignite.com',    displayName: 'Ksenia',    userKey: 'ksenia',    role: 'user' },
   adeen:     { email: 'adeen@roofignite.com',     displayName: 'Adeen',     userKey: 'adeen',     role: 'user' },
   patrick:   { email: 'patrick@roofignite.com',   displayName: 'Patrick',   userKey: 'patrick',   role: 'user' },
-  gianmarco: { email: 'gianmarco@roofignite.com', displayName: 'Gianmarco', userKey: 'gianmarco', role: 'user' },
+  li:        { email: 'li@roofignite.com',         displayName: 'Li',        userKey: 'li',        role: 'user' },
+  dakota:    { email: 'dakota@roofignite.com',     displayName: 'Dakota',    userKey: 'dakota',    role: 'user' },
   gregory:   { email: 'gregory@roofignite.com',   displayName: 'Gregory',   userKey: 'gregory',   role: 'user' },
   kyle:      { email: 'kyle@roofignite.com',      displayName: 'Kyle',      userKey: 'kyle',      role: 'user' },
   abdullah:  { email: 'abdullah@roofignite.com',  displayName: 'Abdullah',  userKey: 'abdullah',  role: 'user' },

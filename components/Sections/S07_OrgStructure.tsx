@@ -7,11 +7,11 @@ import { ClientMap } from '@/components/Diagrams/ClientMap';
 import { useApp } from '@/context/AppContext';
 
 const PODS = [
-  { label: 'Pod 1', managers: 'Gianmarco & Gregory', started: 'Mar 3, 2026', clients: '20–30', isYou: false },
+  { label: 'Pod 1', managers: 'Sam & Gregory', started: 'Mar 3, 2026', clients: '20–30', isYou: false },
   { label: 'Pod 2', managers: 'Cole & Tyler', started: 'Aug 2025', clients: '20–30', isYou: false },
   { label: 'Pod 3', managers: 'Kyle & Abdullah', started: 'Mar 25, 2026', clients: 'Building', isYou: false },
-  { label: 'Pod 4', managers: 'Sam', started: 'Apr 14, 2026', clients: 'Onboarding', isYou: false },
-  { label: 'Pod 5', managers: 'Ksenia & Adeen', started: 'May 4, 2026', clients: 'Onboarding', isYou: true },
+  { label: 'Pod 4', managers: 'Li & Dakota', started: 'May 25, 2026', clients: 'Onboarding', isYou: true },
+  { label: 'Pod 5', managers: 'Ksenia & Adeen', started: 'May 4, 2026', clients: 'Onboarding', isYou: false },
 ];
 
 const SPECIALISTS = [

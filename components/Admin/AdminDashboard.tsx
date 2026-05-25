@@ -157,7 +157,7 @@ function UserCard({
   const isPod5     = cfg.pod === 5;
   const days       = isPod5 ? (dayContentPod5.days as any[]) : (dayContent.days as any[]);
   const dayDates   = isPod5 ? DAY_DATES_POD5 : DAY_DATES_POD4;
-  const startMs    = isPod5 ? new Date('2026-05-04').getTime() : new Date('2026-04-14').getTime();
+  const startMs    = isPod5 ? new Date('2026-05-04').getTime() : new Date('2026-05-25').getTime();
 
   const totalWS    = getTotalWorksheetItems(days);
   const doneWS     = getCompletedForUser(data.checklistItems, days);

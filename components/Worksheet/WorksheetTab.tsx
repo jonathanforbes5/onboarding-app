@@ -68,6 +68,7 @@ const WEEK_LABELS_POD5: Record<number, string> = {
   2: 'Week 2 — May 11–15',
 };
 
+const POD4_USERS = new Set(['li', 'dakota']);
 const POD5_USERS = new Set(['ksenia', 'adeen']);
 
 // ----------- Recording URLs -----------
@@ -380,11 +381,13 @@ export function WorksheetTab() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const isLeadership = currentUser?.role === 'super_admin';
-  // Leadership always sees Pod 5 (current cohort); Pod 5 users by key
-  const isPod5      = POD5_USERS.has(currentUser?.userKey ?? '') || isLeadership;
+  const isPod4      = POD4_USERS.has(currentUser?.userKey ?? '');
+  const isPod5      = POD5_USERS.has(currentUser?.userKey ?? '');
+  // Leadership previews Pod 4 (the current new cohort)
+  const showPod5    = isPod5;
+  const canAccess   = isPod4 || isPod5 || isLeadership;
 
-  // Only Pod 5 members and leadership can access the worksheet
-  if (!isPod5 && !isLeadership) {
+  if (!canAccess) {
     return (
       <div style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -392,18 +395,18 @@ export function WorksheetTab() {
         color: C.text, fontFamily: 'Inter, system-ui, sans-serif', padding: 32, textAlign: 'center',
       }}>
         <div style={{ fontSize: 36, marginBottom: 16 }}>📋</div>
-        <h2 style={{ color: C.text, fontSize: 20, fontWeight: 900, margin: '0 0 10px' }}>Pod 5 Worksheet</h2>
+        <h2 style={{ color: C.text, fontSize: 20, fontWeight: 900, margin: '0 0 10px' }}>Onboarding Worksheet</h2>
         <p style={{ color: C.muted, fontSize: 14, maxWidth: 340, lineHeight: 1.6, margin: 0 }}>
-          This worksheet is for the current onboarding cohort (Pod 5). Your onboarding program has concluded — contact leadership if you need access.
+          This worksheet is for the current onboarding cohort. Your onboarding program has concluded — contact leadership if you need access.
         </p>
       </div>
     );
   }
 
-  const podNum  = isPod5 ? 5 : 4;
-  const dayDates    = isPod5 ? DAY_DATES_POD5 : DAY_DATES_POD4;
-  const weekLabels  = isPod5 ? WEEK_LABELS_POD5 : WEEK_LABELS_POD4;
-  const rawContent  = isPod5 ? dayContentPod5 : dayContentPod4;
+  const podNum      = showPod5 ? 5 : 4;
+  const dayDates    = showPod5 ? DAY_DATES_POD5 : DAY_DATES_POD4;
+  const weekLabels  = showPod5 ? WEEK_LABELS_POD5 : WEEK_LABELS_POD4;
+  const rawContent  = showPod5 ? dayContentPod5 : dayContentPod4;
   const days = rawContent.days as Day[];
 
   const allStats = useMemo(
@@ -492,23 +495,21 @@ export function WorksheetTab() {
               >
                 10-Day Worksheet
               </span>
-              {isPod5 && (
-                <span style={{
-                  display: 'inline-block',
-                  backgroundColor: '#1A1400',
-                  border: `1px solid ${C.acc}44`,
-                  color: C.acc,
-                  fontSize: 9,
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.07em',
-                  borderRadius: 4,
-                  padding: '1px 5px',
-                  width: 'fit-content',
-                }}>
-                  Pod 5
-                </span>
-              )}
+              <span style={{
+                display: 'inline-block',
+                backgroundColor: '#1A1400',
+                border: `1px solid ${C.acc}44`,
+                color: C.acc,
+                fontSize: 9,
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.07em',
+                borderRadius: 4,
+                padding: '1px 5px',
+                width: 'fit-content',
+              }}>
+                Pod {podNum}
+              </span>
             </div>
             <span style={{ color: C.acc, fontSize: 12, fontWeight: 800 }}>{pct}%</span>
           </div>

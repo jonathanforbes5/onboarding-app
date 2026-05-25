@@ -29,8 +29,9 @@ export function Header() {
   const isSuperAdmin = currentUser?.role === 'super_admin';
   const effectiveAdmin = isSuperAdmin && !previewMode;
 
+  const isPod4User      = currentUser?.userKey === 'li' || currentUser?.userKey === 'dakota';
   const isPod5User      = currentUser?.userKey === 'ksenia' || currentUser?.userKey === 'adeen';
-  const canSeeWorksheet = isPod5User || (isSuperAdmin && previewMode);
+  const canSeeWorksheet = isPod4User || isPod5User || (isSuperAdmin && previewMode);
 
   const [bookmarksOpen,       setBookmarksOpen]       = useState(false);
   const [mobileMenuOpen,      setMobileMenuOpen]      = useState(false);
@@ -125,7 +126,7 @@ export function Header() {
           textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
         }}>
           <Eye size={12} />
-          Previewing as Pod 5 manager (Ksenia / Adeen) —
+          Previewing as Pod 4 manager (Li / Dakota) —
           <button onClick={() => setPreviewMode(false)}
             style={{ color: '#F5C800', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>
             exit preview
@@ -282,7 +283,7 @@ export function Header() {
 
               {isSuperAdmin && (
                 <button onClick={() => setPreviewMode(!previewMode)} className="p-1 rounded hover:bg-white/10 transition-colors"
-                  title={previewMode ? 'Exit Pod 5 preview' : 'Preview as Pod 5 manager (Ksenia / Adeen)'}>
+                  title={previewMode ? 'Exit Pod 4 preview' : 'Preview as Pod 4 manager (Li / Dakota)'}>
                   {previewMode ? <EyeOff size={13} className="text-brand-yellow" /> : <Eye size={13} className="text-white/35 hover:text-white/80" />}
                 </button>
               )}
@@ -444,7 +445,7 @@ export function Header() {
           <button className="hdr-nav-item" onClick={() => { setPreviewMode(!previewMode); setMobileMenuOpen(false); }}>
             {previewMode ? <EyeOff size={18} color="#F5C800" style={{ flexShrink: 0 }} /> : <Eye size={18} color="#888" style={{ flexShrink: 0 }} />}
             <span style={{ color: previewMode ? '#F5C800' : '#CCC', fontSize: 15, fontWeight: 500 }}>
-              {previewMode ? 'Exit Pod 5 preview' : 'Preview as Pod 5 manager'}
+              {previewMode ? 'Exit Pod 4 preview' : 'Preview as Pod 4 manager'}
             </span>
           </button>
         </div>

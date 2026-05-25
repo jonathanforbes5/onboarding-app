@@ -36,10 +36,10 @@ const ORG: OrgNode = {
       detail: 'Your direct manager. Runs Tuesday/Friday review calls. Escalate any account that has been red for 3+ days without resolution. Reach via Slack (fastest) or call if urgent.',
       reports: [
         { name: 'Pod 5', title: 'Ksenia & Adeen — May 4, 2026', color: 'bg-brand-black text-white', detail: 'Pod 5 managers. 20–30 client accounts. Starting May 4, 2026.' },
-        { name: 'Pod 4', title: 'Sam — Apr 14, 2026', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Pod 4 manager. 20–30 client accounts. Started April 14, 2026.' },
+        { name: 'Pod 4', title: 'Li & Dakota — May 25, 2026', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Pod 4 managers. 20–30 client accounts. Starting May 25, 2026.' },
         { name: 'Pod 3', title: 'Kyle & Abdullah', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Launched March 25, 2026. Great peer resource — most recent onboarding experience before Pod 5.' },
         { name: 'Pod 2', title: 'Cole & Tyler — Aug 2025', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Started August 2025. Most experienced pod. Cole moved to an ops/systems role — best resource for internal tooling questions.' },
-        { name: 'Pod 1', title: 'Gianmarco & Gregory — Mar 3', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Started March 3, 2026.' },
+        { name: 'Pod 1', title: 'Sam & Gregory — Mar 3', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Started March 3, 2026.' },
         { name: 'Emmanuel', title: 'Full-Cycle Media Buyer + Setup Lead', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Handles ALL GHL account setups, A2P registration, landing pages, and ongoing campaign management. Task via ClickUp with client name, GHL sub-account link, and 48hr deadline.' },
         { name: 'Mervin', title: 'Full-Cycle Media Buyer + Setup Support', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Same tier as Emmanuel. Supports setup overflow and ongoing media buying. Task via ClickUp exactly as you would Emmanuel.' },
         { name: 'Bren', title: 'Pod Media Buyer (Pod 2)', color: 'bg-white border border-brand-gray-mid text-brand-black', detail: 'Handles Meta campaign execution and creative optimization for Pod 2. Can support other pods on overflow.' },

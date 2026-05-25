@@ -82,10 +82,10 @@ const ROWS: Row[] = [
 ];
 
 const POD_LABELS: Record<Exclude<Pod, 'ALL'>, string> = {
-  P1: 'Pod 1 (Gianmarco / Gregory)',
+  P1: 'Pod 1 (Sam / Gregory)',
   P2: 'Pod 2 (Cole / Tyler)',
   P3: 'Pod 3 (Kyle / Abdullah)',
-  P4: 'Pod 4 (Sam)',
+  P4: 'Pod 4 (Li / Dakota)',
   P5: 'Pod 5 (Ksenia / Adeen)',
 };
 

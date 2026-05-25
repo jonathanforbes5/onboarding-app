@@ -30,18 +30,18 @@ interface Day {
   sections: DaySection[];
 }
 
-// ----------- Pod 4 dates (Mon–Fri, Apr 14–25, 2026) -----------
+// ----------- Pod 4 dates (Mon–Fri, May 25–Jun 5, 2026) -----------
 const DAY_DATES_POD4: Record<number, { short: string; full: string; week: number }> = {
-  1:  { short: 'Mon Apr 14', full: 'Monday, April 14 2026',    week: 1 },
-  2:  { short: 'Tue Apr 15', full: 'Tuesday, April 15 2026',   week: 1 },
-  3:  { short: 'Wed Apr 16', full: 'Wednesday, April 16 2026', week: 1 },
-  4:  { short: 'Thu Apr 17', full: 'Thursday, April 17 2026',  week: 1 },
-  5:  { short: 'Fri Apr 18', full: 'Friday, April 18 2026',    week: 1 },
-  6:  { short: 'Mon Apr 21', full: 'Monday, April 21 2026',    week: 2 },
-  7:  { short: 'Tue Apr 22', full: 'Tuesday, April 22 2026',   week: 2 },
-  8:  { short: 'Wed Apr 23', full: 'Wednesday, April 23 2026', week: 2 },
-  9:  { short: 'Thu Apr 24', full: 'Thursday, April 24 2026',  week: 2 },
-  10: { short: 'Fri Apr 25', full: 'Friday, April 25 2026',    week: 2 },
+  1:  { short: 'Mon May 25', full: 'Monday, May 25 2026',      week: 1 },
+  2:  { short: 'Tue May 26', full: 'Tuesday, May 26 2026',     week: 1 },
+  3:  { short: 'Wed May 27', full: 'Wednesday, May 27 2026',   week: 1 },
+  4:  { short: 'Thu May 28', full: 'Thursday, May 28 2026',    week: 1 },
+  5:  { short: 'Fri May 29', full: 'Friday, May 29 2026',      week: 1 },
+  6:  { short: 'Mon Jun 1',  full: 'Monday, June 1 2026',      week: 2 },
+  7:  { short: 'Tue Jun 2',  full: 'Tuesday, June 2 2026',     week: 2 },
+  8:  { short: 'Wed Jun 3',  full: 'Wednesday, June 3 2026',   week: 2 },
+  9:  { short: 'Thu Jun 4',  full: 'Thursday, June 4 2026',    week: 2 },
+  10: { short: 'Fri Jun 5',  full: 'Friday, June 5 2026',      week: 2 },
 };
 
 // ----------- Pod 5 dates (Mon–Fri, May 4–15, 2026) -----------
@@ -59,8 +59,8 @@ const DAY_DATES_POD5: Record<number, { short: string; full: string; week: number
 };
 
 const WEEK_LABELS_POD4: Record<number, string> = {
-  1: 'Week 1 — Apr 14–18',
-  2: 'Week 2 — Apr 21–25',
+  1: 'Week 1 — May 25–29',
+  2: 'Week 2 — Jun 1–5',
 };
 
 const WEEK_LABELS_POD5: Record<number, string> = {

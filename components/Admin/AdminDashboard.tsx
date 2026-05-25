@@ -53,8 +53,8 @@ const C = {
 
 // ── Per-pod date maps ─────────────────────────────────────────
 const DAY_DATES_POD4: Record<number, string> = {
-  1:'Mon Apr 14',2:'Tue Apr 15',3:'Wed Apr 16',4:'Thu Apr 17',5:'Fri Apr 18',
-  6:'Mon Apr 21',7:'Tue Apr 22',8:'Wed Apr 23',9:'Thu Apr 24',10:'Fri Apr 25',
+  1:'Mon May 25',2:'Tue May 26',3:'Wed May 27',4:'Thu May 28',5:'Fri May 29',
+  6:'Mon Jun 1', 7:'Tue Jun 2', 8:'Wed Jun 3', 9:'Thu Jun 4', 10:'Fri Jun 5',
 };
 const DAY_DATES_POD5: Record<number, string> = {
   1:'Mon May 4', 2:'Tue May 5', 3:'Wed May 6', 4:'Thu May 7', 5:'Fri May 8',
@@ -340,10 +340,10 @@ function UserCard({
         {/* Week labels */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 4 }}>
           <div style={{ color: C.muted2, fontSize: 9, textAlign: 'center' }}>
-            {isPod5 ? 'Week 1 (May 4–8)' : 'Week 1 (Apr 14–18)'}
+            {isPod5 ? 'Week 1 (May 4–8)' : 'Week 1 (May 25–29)'}
           </div>
           <div style={{ color: C.muted2, fontSize: 9, textAlign: 'center' }}>
-            {isPod5 ? 'Week 2 (May 11–15)' : 'Week 2 (Apr 21–25)'}
+            {isPod5 ? 'Week 2 (May 11–15)' : 'Week 2 (Jun 1–5)'}
           </div>
         </div>
       </div>

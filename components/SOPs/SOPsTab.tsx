@@ -112,7 +112,8 @@ export function SOPsTab() {
       });
   }, []);
 
-  const allResources = dynamicItems ? dynamicItems.filter((i) => i.category === 'resource') : sopData.resources;
+  const allResources = (dynamicItems ? dynamicItems.filter((i) => i.category === 'resource') : sopData.resources)
+    .slice().sort((a, b) => a.title.localeCompare(b.title));
   const allTools = dynamicItems ? dynamicItems.filter((i) => i.category === 'tool') : sopData.tools;
   const allSops = dynamicItems ? dynamicItems.filter((i) => i.category === 'sop') : sopData.sops;
 

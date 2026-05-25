@@ -29,8 +29,12 @@ function getStaticItems(): RecordingItem[] {
 
   const fromLooms = (recordingsData.training_looms ?? []).map((r) => {
     const raw = r as { id: string; title: string; description: string; url: string; category?: string; priority?: string; tags?: string[] };
-    const tags = raw.priority ? [raw.priority, ...(raw.tags ?? [])] : (raw.tags ?? []);
-    return { ...raw, category: raw.category ?? 'training_loom', tags };
+    const tags = [
+      ...(raw.priority ? [raw.priority] : []),
+      ...(raw.category ? [raw.category] : []),
+      ...(raw.tags ?? []),
+    ];
+    return { ...raw, category: 'training_loom', tags };
   });
 
   return [...fromRecordings, ...fromReference, ...fromLooms] as RecordingItem[];

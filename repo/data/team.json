@@ -47,13 +47,14 @@
     "avatar_initial": "C"
   },
   {
-    "id": "gianmarco",
-    "name": "Gianmarco Sinisi",
+    "id": "sam",
+    "name": "Sam",
     "role": "Pod 1 Manager",
     "tier": "pod_managers",
     "contact": "Slack — general pod management questions.",
     "pod": 1,
-    "avatar_initial": "G"
+    "started": "2026-03-03",
+    "avatar_initial": "S"
   },
   {
     "id": "gregory",
@@ -87,13 +88,22 @@
     "avatar_initial": "A"
   },
   {
-    "id": "sam",
-    "name": "Sam",
+    "id": "li",
+    "name": "Li",
     "role": "Pod 4 Manager",
     "tier": "pod_managers",
     "pod": 4,
-    "started": "2026-04-14",
-    "avatar_initial": "S"
+    "started": "2026-05-25",
+    "avatar_initial": "L"
+  },
+  {
+    "id": "dakota",
+    "name": "Dakota",
+    "role": "Pod 4 Manager",
+    "tier": "pod_managers",
+    "pod": 4,
+    "started": "2026-05-25",
+    "avatar_initial": "D"
   },
   {
     "id": "ksenia",

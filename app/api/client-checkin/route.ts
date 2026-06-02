@@ -40,7 +40,33 @@ const EDITABLE = new Set<string>([
   'Start Date', 'Stripe Customer ID', 'Stripe Email', 'Pod', 'Primary CSM',
   'Client Status', 'Niche', 'Contact Email', 'Contact Phone', 'Client Notes',
   'Secondary CSM',
+  // 2026-05-31 — Milestones tab fields. The dashboard's shared.js
+  // EDITABLE set already includes these; the backend was lagging behind,
+  // which caused Launch Date / Ready to Launch / etc. saves to fail
+  // with "non-editable fields" errors.
+  'Close Date', 'Onboarding Date', 'Ready to Launch Date', 'Launch Date',
+  'Before & After Onboarding', 'Before Launch', 'Just Launched',
+  '7 Hours After Launch',
+  'Month 1 - Check-in 1', 'Month 1 - Check-in 2',
+  'Month 1 - Check-in 3', 'Month 1 - Check-in 4',
+  'Referral Email', 'Did we ask for referrals?',
+  'How many times did you ask?', 'How many referrals did we get?',
+  'Initial Opt-In Email', 'Onboarding Email',
+  'Handoff Posted', 'Handoff Acknowledged',
+  'Do we ask for testimonials?', 'Testimonial Email',
 ]);
+
+// Strip common business suffixes for fuzzy matching when an exact lookup
+// misses (e.g. dashboard says "Evolve Roofing" but the sheet has
+// "Evolve Roofing LLC"). Whitespace + punctuation collapsed.
+function normalizeBiz(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[.,'"’]/g, '')                            // strip punctuation
+    .replace(/\b(llc|l\.l\.c\.|inc|inc\.|incorporated|corp|corporation|co|company|ltd|limited|llp|pllc|pc|holdings|group|services|solutions)\b/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 // A1 column letter for a 0-indexed column (handles A..Z, AA..ZZ).
 function colLetter(idx: number): string {
@@ -107,12 +133,28 @@ async function findRowByBusinessName(token: string, businessName: string): Promi
   const j = await r.json() as { values?: string[][] };
   const rows = j.values ?? [];
   const target = businessName.trim().toLowerCase();
+
+  // Pass 1: exact case-insensitive match (fast path, preserves prior behavior).
   for (let i = 0; i < rows.length; i++) {
     if ((rows[i][0] ?? '').trim().toLowerCase() === target) {
-      return i + 2; // header is row 1, data starts at row 2
+      return i + 2;
     }
   }
-  return null;
+
+  // Pass 2: normalized fallback — strip LLC / Inc / etc. from both sides.
+  // Only return when EXACTLY ONE row matches the normalized name, so we
+  // never silently pick the wrong sibling (e.g. "Modern Roofing" vs
+  // "Modern Roofing Co" both reducing to "modern roofing"). When 0 or 2+
+  // matches, return null and let the caller surface the error.
+  const targetNorm = normalizeBiz(businessName);
+  if (!targetNorm) return null;
+  const hits: number[] = [];
+  for (let i = 0; i < rows.length; i++) {
+    if (normalizeBiz(rows[i][0] ?? '') === targetNorm) {
+      hits.push(i + 2);
+    }
+  }
+  return hits.length === 1 ? hits[0] : null;
 }
 
 // GET /api/client-checkin → returns { headers, editable }.

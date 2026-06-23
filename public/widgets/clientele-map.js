@@ -96,21 +96,22 @@ const STATE_TIER = {
   Colorado: 'hard', Florida: 'hard', Delaware: 'hard',
   California: 'hard', 'North Carolina': 'hard', 'South Carolina': 'hard',
   Maryland: 'hard', 'New Jersey': 'hard', Pennsylvania: 'hard',
-  Arizona: 'hard', Minnesota: 'hard', Wisconsin: 'hard',
-  Missouri: 'hard',
+  Idaho: 'medium', Missouri: 'medium',
   'New York': 'great', Ohio: 'great', Illinois: 'great',
   Alabama: 'great', Georgia: 'great', Massachusetts: 'great',
   Connecticut: 'great', 'Rhode Island': 'great', Washington: 'great',
-  Oregon: 'great',
-  Montana: 'unknown', Idaho: 'unknown', Wyoming: 'unknown', Utah: 'unknown',
-  'New Mexico': 'unknown', 'North Dakota': 'unknown', 'South Dakota': 'unknown',
-  Nebraska: 'unknown', Kansas: 'unknown', Iowa: 'unknown', Michigan: 'unknown',
+  Oregon: 'great', Minnesota: 'great', Wisconsin: 'great', Arizona: 'great',
+  'North Dakota': 'great', Kansas: 'great', Oklahoma: 'great',
+  Arkansas: 'great', Nevada: 'great',
+  Montana: 'unknown', Wyoming: 'unknown', Utah: 'unknown',
+  'New Mexico': 'unknown', 'South Dakota': 'unknown',
+  Nebraska: 'unknown', Iowa: 'unknown', Michigan: 'unknown',
   Indiana: 'unknown', Kentucky: 'unknown', Mississippi: 'unknown',
   Louisiana: 'unknown', 'West Virginia': 'unknown', Vermont: 'unknown',
 };
 
-const TIER_LABELS = { avoid: 'Avoid', hard: 'Hard', great: 'Easy / Great', easy: 'Easy / Great', unknown: 'No data' };
-const TIER_COLORS = { avoid: '#7F1D1D', hard: '#EA580C', great: '#16A34A', easy: '#16A34A', unknown: '#374151' };
+const TIER_LABELS = { avoid: 'Avoid', hard: 'Hard', medium: 'Moderate', great: 'Easy / Great', easy: 'Easy / Great', unknown: 'No data' };
+const TIER_COLORS = { avoid: '#7F1D1D', hard: '#EA580C', medium: '#CA8A04', great: '#16A34A', easy: '#16A34A', unknown: '#374151' };
 
 const STATUS_FILTERS = [
   { id: 'all',       label: 'All Current', color: '#F5C800' },
@@ -291,6 +292,8 @@ async function mount(target, options = {}) {
     error: null,
     filter: 'all',
     showDifficulty: false,
+    showReference: false,
+    showVideographer: false,
     zoom: 1,
     center: [-96, 38],
     selection: null,    // { kind: 'city', point } | { kind: 'state', name }
@@ -334,13 +337,23 @@ async function mount(target, options = {}) {
           <div class="rim-title">RoofIgnite Clientele At A Glance</div>
           <div class="rim-subtitle">Live map. Click a state or dot for full client profiles${state.isAdmin ? ' (admin)' : ''}.</div>
         </div>
-        <label class="rim-diff-toggle">
-          <input type="checkbox" data-rim="difficulty">
-          <span>Show market difficulty fill</span>
-        </label>
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+          <label class="rim-diff-toggle">
+            <input type="checkbox" data-rim="difficulty">
+            <span>Show market difficulty fill</span>
+          </label>
+          <label class="rim-diff-toggle">
+            <input type="checkbox" data-rim="ref-flag">
+            <span>Reference-friendly clients</span>
+          </label>
+          <label class="rim-diff-toggle">
+            <input type="checkbox" data-rim="vid-flag">
+            <span>Videographer candidates</span>
+          </label>
+        </div>
       </div>
       <div class="rim-diff-legend" data-rim="legend" hidden>
-        ${['avoid','hard','great','unknown'].map(t => `
+        ${['avoid','hard','medium','great','unknown'].map(t => `
           <span class="swatch"><span class="dot" style="background:${TIER_COLORS[t]}"></span>${TIER_LABELS[t]}</span>
         `).join('')}
       </div>
@@ -382,6 +395,8 @@ async function mount(target, options = {}) {
   const elStats     = $('stats');
   const elLegend    = $('legend');
   const elDifficulty= $('difficulty');
+  const elRefFlag   = $('ref-flag');
+  const elVidFlag   = $('vid-flag');
   const elSearch    = $('search');
   const elGo        = $('go');
   const elNomatch   = $('nomatch');
@@ -471,9 +486,16 @@ async function mount(target, options = {}) {
         state.filter === 'active'    ? '#22C55E' :
         p.preLaunch > p.active ? '#A78BFA' : '#F5C800';
 
+      // CSM flag highlight: surface cities with a matching client when a flag toggle is on.
+      const refHit = p.clients.some((c) => c.referenceFriendly);
+      const vidHit = p.clients.some((c) => c.videographerCandidate);
+      const flagActive = state.showReference || state.showVideographer;
+      const flagMatch = (state.showReference && refHit) || (state.showVideographer && vidHit);
+
       const g = document.createElementNS(SVGNS, 'g');
       g.setAttribute('class', 'rim-marker');
       g.setAttribute('transform', `translate(${cx}, ${cy})`);
+      if (flagActive && !flagMatch) g.setAttribute('opacity', '0.2');
 
       // Pulse ring
       const ring = document.createElementNS(SVGNS, 'circle');
@@ -500,8 +522,8 @@ async function mount(target, options = {}) {
       dot.setAttribute('r', String(r));
       dot.setAttribute('fill', color);
       dot.setAttribute('opacity', '0.85');
-      dot.setAttribute('stroke', '#0A0A0A');
-      dot.setAttribute('stroke-width', String(Math.max(0.4, zoomScale)));
+      dot.setAttribute('stroke', flagMatch ? (state.showReference && refHit ? '#22C55E' : '#A78BFA') : '#0A0A0A');
+      dot.setAttribute('stroke-width', String(flagMatch ? Math.max(1.6, 2.4 * zoomScale) : Math.max(0.4, zoomScale)));
       g.appendChild(dot);
 
       const txt = document.createElementNS(SVGNS, 'text');
@@ -724,6 +746,8 @@ async function mount(target, options = {}) {
     state.showDifficulty = elDifficulty.checked;
     renderStateFills();
   });
+  elRefFlag.addEventListener('change', () => { state.showReference = elRefFlag.checked; renderMarkers(); });
+  elVidFlag.addEventListener('change', () => { state.showVideographer = elVidFlag.checked; renderMarkers(); });
 
   // ---- Drawer (admin client list + cycle profiles)
   function renderDrawer() {
@@ -795,7 +819,7 @@ async function mount(target, options = {}) {
         <button class="rim-cli-head" data-rim-cli="${escHtml(c.recordId)}">
           <span style="color:${statusColor}">●</span>
           <span class="rim-cli-flex">
-            <span class="rim-cli-name">${escHtml(c.businessName)}</span>
+            <span class="rim-cli-name">${escHtml(c.businessName)}${c.referenceFriendly ? ' <span style="color:#22C55E;font-weight:700;font-size:10px">★ ref-call</span>' : ''}${c.videographerCandidate ? ' <span style="color:#A78BFA;font-weight:700;font-size:10px">● videographer</span>' : ''}</span>
             <span class="rim-cli-sub">${[c.clientName, c.pod || '—', c.primaryCsm || '—', c.niche || '—'].filter(Boolean).map(escHtml).join(' · ')}</span>
           </span>
           <span class="rim-cli-arrow">${isOpen ? '▲' : '▼'}</span>

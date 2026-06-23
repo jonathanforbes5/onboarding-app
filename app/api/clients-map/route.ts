@@ -132,6 +132,8 @@ interface ClientProfile {
   primaryCsm?:     string;
   status:          string;
   niche?:          string;
+  referenceFriendly?:     boolean;
+  videographerCandidate?: boolean;
   cycles?:         CycleSnapshot[];
   cyclesTotal?:    number;
   totalBilled?:    number;
@@ -332,6 +334,8 @@ export async function GET() {
           primaryCsm:       amNames[0],
           status,
           niche,
+          referenceFriendly:    !!f['Reference-Call Friendly'],
+          videographerCandidate:!!f['Videographer Candidate'],
           cycles:           clientCycles,
           cyclesTotal,
           totalBilled,

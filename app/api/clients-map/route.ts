@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import locations from '@/data/geo/locations.json';
 
+// Run per-request — never static-prerender this route at build time, or the
+// response freezes to build-time Airtable data (and the in-memory cache below
+// would never refresh from a real request). This is the documented pitfall.
+export const dynamic = 'force-dynamic';
+
 const AIRTABLE_API     = 'https://api.airtable.com/v0';
 const BASE_ID          = 'appu7PwZohLkR6Wvi';
 const MAIN_TABLE       = 'tblkuc7mLefV3ng4h';

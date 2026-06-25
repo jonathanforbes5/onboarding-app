@@ -134,6 +134,7 @@ interface ClientProfile {
   niche?:          string;
   referenceFriendly?:     boolean;
   videographerCandidate?: boolean;
+  copyRunningCurrent?:    string;
   cycles?:         CycleSnapshot[];
   cyclesTotal?:    number;
   totalBilled?:    number;
@@ -164,6 +165,7 @@ interface CycleSnapshot {
   surveyPct?:      number;
   goodToBill?:     string;
   billed?:         string;
+  copyRunning?:    string;
 }
 
 interface CityPoint {
@@ -245,6 +247,7 @@ export async function GET() {
         surveyPct:      f['Survey %']               as number | undefined,
         goodToBill:     f['Good to Bill']           as string | undefined,
         billed:         f['Billed']                 as string | undefined,
+        copyRunning:    f['Copy Running']           as string | undefined,
       };
       for (const id of accountIds) {
         if (!cyclesByAccount.has(id)) cyclesByAccount.set(id, []);
@@ -336,6 +339,8 @@ export async function GET() {
           niche,
           referenceFriendly:    !!f['Reference-Call Friendly'],
           videographerCandidate:!!f['Videographer Candidate'],
+          // Most recent cycle that has copy data — shown at the top of the card.
+          copyRunningCurrent:   clientCycles.find(cy => cy.copyRunning)?.copyRunning,
           cycles:           clientCycles,
           cyclesTotal,
           totalBilled,

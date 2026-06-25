@@ -54,6 +54,10 @@ const EDITABLE = new Set<string>([
   'Initial Opt-In Email', 'Onboarding Email',
   'Handoff Posted', 'Handoff Acknowledged',
   'Do we ask for testimonials?', 'Testimonial Email',
+  // 2026-06-25 — Reference / Videographer flags (cols BJ/BK). These live
+  // past the static HEADERS map above, so the write loop resolves their
+  // column by live header-name lookup instead of position.
+  'Reference-Call Friendly', 'Videographer Candidate',
 ]);
 
 // Strip common business suffixes for fuzzy matching when an exact lookup
@@ -206,10 +210,32 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Live header row — fetched lazily, only when a field isn't in the static
+    // HEADERS map, so newer columns (e.g. BJ Reference-Call Friendly / BK
+    // Videographer Candidate) resolve by NAME instead of hardcoded position.
+    // Position is a liability; header names aren't.
+    let liveHeaders: string[] | null = null;
+    const needLive = Object.keys(fields).some(f => (HEADERS as readonly string[]).indexOf(f) < 0);
+    if (needLive) {
+      try {
+        const hr = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB_NAME)}!1:1`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        if (hr.ok) {
+          const hj = await hr.json() as { values?: string[][] };
+          liveHeaders = (hj.values && hj.values[0]) ? hj.values[0].map((h) => String(h ?? '')) : null;
+        }
+      } catch { /* fall back to the static map only */ }
+    }
+
     // Build batch update payload — one A1 range per field.
     const valueRanges = [];
     for (const [field, raw] of Object.entries(fields)) {
-      const colIdx = (HEADERS as readonly string[]).indexOf(field);
+      let colIdx = (HEADERS as readonly string[]).indexOf(field);
+      if (colIdx < 0 && liveHeaders) {
+        colIdx = liveHeaders.findIndex((h) => h.trim().toLowerCase() === field.trim().toLowerCase());
+      }
       if (colIdx < 0) continue;
       const cell = `${TAB_NAME}!${colLetter(colIdx)}${rowIdx}`;
       const val  = raw == null ? '' : String(raw);

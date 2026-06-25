@@ -192,9 +192,22 @@ interface CityPoint {
 let cache: { at: number; payload: any } | null = null;
 const CACHE_MS = 5 * 60 * 1000;
 
+// The map widget fetches this cross-origin from dashboard.roofignite.com, so
+// the response must be CORS-readable (a plain GET is a simple request — no
+// preflight — but it still needs Access-Control-Allow-Origin to be readable).
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin':  '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+export function OPTIONS() {
+  return new NextResponse(null, { headers: CORS_HEADERS });
+}
+
 export async function GET() {
   if (cache && Date.now() - cache.at < CACHE_MS) {
-    return NextResponse.json(cache.payload);
+    return NextResponse.json(cache.payload, { headers: CORS_HEADERS });
   }
 
   const token = process.env.AIRTABLE_TOKEN;
@@ -211,7 +224,7 @@ export async function GET() {
         airtable_value_length: (process.env.AIRTABLE_TOKEN ?? '').length,
         relevantEnvKeys: visibleKeys,
       },
-    }, { status: 500 });
+    }, { status: 500, headers: CORS_HEADERS });
   }
 
   try {
@@ -370,8 +383,8 @@ export async function GET() {
     };
 
     cache = { at: Date.now(), payload };
-    return NextResponse.json(payload);
+    return NextResponse.json(payload, { headers: CORS_HEADERS });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return NextResponse.json({ error: String(err) }, { status: 500, headers: CORS_HEADERS });
   }
 }

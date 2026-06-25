@@ -825,9 +825,9 @@ async function mount(target, options = {}) {
           <span class="rim-cli-arrow">${isOpen ? '▲' : '▼'}</span>
         </button>
         ${isOpen ? `<div class="rim-cli-body">
-          ${c.copyRunningCurrent ? `<div style="margin:0 0 12px;padding:9px 13px;border-radius:9px;background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.5);display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;">
-            <span style="font-size:10px;font-weight:900;letter-spacing:0.13em;text-transform:uppercase;color:#22D3EE;white-space:nowrap;">🎬 Copy Running</span>
-            <span style="font-size:14px;font-weight:800;color:#A5F3FC;">${escHtml(c.copyRunningCurrent)}</span>
+          ${c.copyRunningCurrent ? `<div style="margin:0 0 12px;padding:9px 13px;border-radius:9px;background:#22D3EE;border:1px solid #0891B2;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;">
+            <span style="font-size:10px;font-weight:900;letter-spacing:0.13em;text-transform:uppercase;color:#083344;white-space:nowrap;">🎬 Copy Running</span>
+            <span style="font-size:14px;font-weight:800;color:#000;">${escHtml(c.copyRunningCurrent)}</span>
           </div>` : ''}
           <div class="rim-fields">
             ${field('Status', c.status)}
@@ -883,9 +883,9 @@ async function mount(target, options = {}) {
           <span class="rim-cycle-arrow">${isOpen ? '▲' : '▼'}</span>
         </button>
         ${isOpen ? `<div class="rim-cycle-body">
-          ${cy.copyRunning ? `<div style="margin:0 0 9px;padding:7px 11px;border-radius:7px;background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.42);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;">
-            <span style="font-size:9px;font-weight:900;letter-spacing:0.13em;text-transform:uppercase;color:#22D3EE;white-space:nowrap;">🎬 Copy Running</span>
-            <span style="font-size:12px;font-weight:700;color:#A5F3FC;">${escHtml(cy.copyRunning)}</span>
+          ${cy.copyRunning ? `<div style="margin:0 0 9px;padding:7px 11px;border-radius:7px;background:#22D3EE;border:1px solid #0891B2;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:9px;font-weight:900;letter-spacing:0.13em;text-transform:uppercase;color:#083344;white-space:nowrap;">🎬 ${i === 0 ? 'Copy Running' : 'Copy Ran'}</span>
+            <span style="font-size:12px;font-weight:700;color:#000;">${escHtml(cy.copyRunning)}</span>
           </div>` : ''}
           <div class="rim-cycle-grid">
             ${miniStat('Ad spend', fmtMoney(cy.adSpend))}

@@ -38,16 +38,40 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   closed:       { label: 'Closed',       color: '#555555' },
 };
 
+// Derive a stable fingerprint from browser properties so the ID persists
+// even if localStorage is cleared, making casual multi-voting much harder.
+function browserFingerprint(): string {
+  try {
+    const parts = [
+      navigator.language,
+      navigator.platform ?? '',
+      String(navigator.hardwareConcurrency ?? 0),
+      String(screen.width),
+      String(screen.height),
+      String(screen.colorDepth),
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    ].join('|');
+    // FNV-1a 32-bit hash
+    let h = 0x811c9dc5;
+    for (let i = 0; i < parts.length; i++) {
+      h ^= parts.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return 'fp_' + h.toString(36);
+  } catch {
+    return '';
+  }
+}
+
 function getVisitorId(): string {
   try {
-    let id = localStorage.getItem('ri_pub_visitor');
-    if (!id) {
-      id = 'pub_' + Math.random().toString(36).slice(2, 10);
-      localStorage.setItem('ri_pub_visitor', id);
-    }
+    const stored = localStorage.getItem('ri_pub_visitor');
+    if (stored) return stored; // preserve existing IDs so prior votes remain
+    const id = browserFingerprint() || 'pub_' + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem('ri_pub_visitor', id);
     return id;
   } catch {
-    return 'pub_' + Math.random().toString(36).slice(2, 10);
+    return browserFingerprint() || 'pub_anon';
   }
 }
 
@@ -95,6 +119,7 @@ export default function VoiceClient() {
   const [roadmapItems, setRoadmapItems] = useState<RoadmapItem[]>([]);
   const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [votingId, setVotingId] = useState<string | null>(null);
+  const [rateLimited, setRateLimited] = useState(false);
 
   useEffect(() => {
     setVisitorId(getVisitorId());
@@ -153,21 +178,42 @@ export default function VoiceClient() {
   const vote = async (id: string) => {
     if (votingId || !visitorId) return;
     setVotingId(id);
+    // Optimistic update
+    setFeedItems(prev => prev.map(item =>
+      item.id === id
+        ? { ...item, hasVoted: !item.hasVoted, vote_count: item.vote_count + (item.hasVoted ? -1 : 1) }
+        : item
+    ));
     try {
       const res = await fetch(`/api/feedback/${id}/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_key: visitorId }),
       });
-      const data = await res.json() as { voted: boolean };
-      setFeedItems(prev =>
-        prev.map(item =>
+      const data = await res.json() as { voted: boolean; rateLimited?: boolean };
+      if (res.status === 429 || data.rateLimited) {
+        // Roll back optimistic update
+        setFeedItems(prev => prev.map(item =>
           item.id === id
-            ? { ...item, hasVoted: data.voted, vote_count: item.vote_count + (data.voted ? 1 : -1) }
+            ? { ...item, hasVoted: !item.hasVoted, vote_count: item.vote_count + (item.hasVoted ? -1 : 1) }
             : item
-        )
-      );
-    } catch {}
+        ));
+        setRateLimited(true);
+        setTimeout(() => setRateLimited(false), 5000);
+      } else {
+        // Sync with server truth
+        setFeedItems(prev => prev.map(item =>
+          item.id === id ? { ...item, hasVoted: data.voted } : item
+        ));
+      }
+    } catch {
+      // Roll back on network error
+      setFeedItems(prev => prev.map(item =>
+        item.id === id
+          ? { ...item, hasVoted: !item.hasVoted, vote_count: item.vote_count + (item.hasVoted ? -1 : 1) }
+          : item
+      ));
+    }
     setVotingId(null);
   };
 
@@ -379,6 +425,26 @@ export default function VoiceClient() {
         {/* ── Community board ── */}
         {section === 'board' && (
           <div>
+            {/* Rate limit warning */}
+            {rateLimited && (
+              <div style={{
+                backgroundColor: '#1A0D00', border: '1px solid #FB923C44',
+                borderRadius: 10, padding: '10px 14px', marginBottom: 14,
+                display: 'flex', alignItems: 'center', gap: 8,
+                fontSize: 12, fontWeight: 700, color: '#FB923C',
+              }}>
+                ⚡ You're voting a lot — take a breather for a minute, then continue.
+              </div>
+            )}
+
+            {/* Board stats */}
+            {!feedLoading && feedItems.length > 0 && (
+              <div style={{ marginBottom: 14, color: '#444', fontSize: 12, fontWeight: 600 }}>
+                {feedItems.length} submission{feedItems.length !== 1 ? 's' : ''} from the team
+                {' · '}{feedItems.reduce((s, i) => s + i.vote_count, 0)} total votes
+              </div>
+            )}
+
             {/* Board controls */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
               {/* Sort */}
@@ -419,9 +485,11 @@ export default function VoiceClient() {
                 ))}
               </div>
 
-              <span style={{ color: '#2A2A2A', fontSize: 11, flexShrink: 0 }}>
-                {displayed.length} item{displayed.length !== 1 ? 's' : ''}
-              </span>
+              {filterCat && (
+                <span style={{ color: '#2A2A2A', fontSize: 11, flexShrink: 0 }}>
+                  {displayed.length} result{displayed.length !== 1 ? 's' : ''}
+                </span>
+              )}
             </div>
 
             {feedLoading ? (
@@ -455,19 +523,29 @@ export default function VoiceClient() {
                       <button
                         onClick={() => vote(item.id)}
                         disabled={votingId === item.id}
+                        title={item.hasVoted ? 'Remove your vote' : 'Upvote this'}
                         style={{
                           display: 'flex', flexDirection: 'column', alignItems: 'center',
-                          justifyContent: 'center', gap: 2,
-                          width: 46, minHeight: 54, padding: '6px 4px', borderRadius: 8,
+                          justifyContent: 'center', gap: 1,
+                          width: 50, minHeight: 62, padding: '8px 4px', borderRadius: 10,
                           backgroundColor: item.hasVoted ? '#1A1400' : C.surf2,
-                          border: `1.5px solid ${item.hasVoted ? C.acc + '66' : C.border2}`,
+                          border: `1.5px solid ${item.hasVoted ? C.acc + '88' : C.border2}`,
                           cursor: votingId === item.id ? 'wait' : 'pointer',
-                          flexShrink: 0, transition: 'all 0.15s',
+                          flexShrink: 0,
+                          transition: 'all 0.15s',
+                          transform: votingId === item.id ? 'scale(0.93)' : 'scale(1)',
                         }}
                       >
-                        <ChevronUp size={14} color={item.hasVoted ? C.acc : '#555'} />
-                        <span style={{ color: item.hasVoted ? C.acc : '#BBB', fontSize: 15, fontWeight: 900, lineHeight: 1 }}>
+                        <ChevronUp size={16} color={item.hasVoted ? C.acc : '#555'} strokeWidth={item.hasVoted ? 2.5 : 2} />
+                        <span style={{ color: item.hasVoted ? C.acc : '#CCCCCC', fontSize: 16, fontWeight: 900, lineHeight: 1, margin: '1px 0' }}>
                           {item.vote_count}
+                        </span>
+                        <span style={{
+                          fontSize: 8, fontWeight: 800, textTransform: 'uppercase',
+                          letterSpacing: '0.05em', lineHeight: 1,
+                          color: item.hasVoted ? C.acc : '#444',
+                        }}>
+                          {item.hasVoted ? 'voted' : 'vote'}
                         </span>
                       </button>
 

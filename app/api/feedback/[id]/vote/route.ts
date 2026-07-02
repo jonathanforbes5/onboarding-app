@@ -15,7 +15,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const { user_key } = await req.json() as { user_key: string };
   if (!user_key) return NextResponse.json({ error: 'user_key required' }, { status: 400 });
 
-  // Check if already voted
+  // Check if already voted on this item
   const { data: existing } = await client
     .from('feedback_votes')
     .select('id')
@@ -32,6 +32,17 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       await client.from('feedback_items').update({ vote_count: Math.max(0, current - 1) }).eq('id', params.id);
     }
     return NextResponse.json({ voted: false });
+  }
+
+  // Rate limit: max 10 new votes per 60 seconds per visitor
+  const since = new Date(Date.now() - 60_000).toISOString();
+  const { count: recentCount } = await client
+    .from('feedback_votes')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_key', user_key)
+    .gte('created_at', since);
+  if ((recentCount ?? 0) >= 10) {
+    return NextResponse.json({ rateLimited: true, voted: false }, { status: 429 });
   }
 
   // Add vote and increment

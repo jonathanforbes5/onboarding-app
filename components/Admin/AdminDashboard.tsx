@@ -33,6 +33,18 @@ interface SearchLog {
   created_at: string;
 }
 
+interface FeedbackComment {
+  id: string;
+  author: string;
+  comment: string;
+  created_at: string;
+}
+
+type FeedbackAdminItem = {
+  id: string; title: string; description: string | null; category: string | null;
+  vote_count: number; created_by: string; status: string; created_at: string;
+};
+
 // ── Colour tokens ────────────────────────────────────────────
 const C = {
   bg:      '#0A0A0A',
@@ -929,10 +941,13 @@ function ContentAdmin() {
   const [aSummarizing, setASummarizing] = useState(false);
 
   // ── Feedback ──
-  const [feedbackItems, setFeedbackItems] = useState<{
-    id: string; title: string; description: string | null; category: string | null;
-    vote_count: number; created_by: string; status: string; created_at: string;
-  }[]>([]);
+  const [feedbackItems, setFeedbackItems] = useState<FeedbackAdminItem[]>([]);
+  const [expandedFeedbackId, setExpandedFeedbackId] = useState<string | null>(null);
+  const [feedbackComments, setFeedbackComments] = useState<Record<string, FeedbackComment[]>>({});
+  const [commentDraft, setCommentDraft] = useState('');
+  const [commentSaving, setCommentSaving] = useState(false);
+  const [promotingId, setPromotingId] = useState<string | null>(null);
+  const [promotedIds, setPromotedIds] = useState<Set<string>>(new Set());
 
   // ── Roadmap ──
   const [roadmapItems, setRoadmapItems] = useState<{
@@ -1049,6 +1064,70 @@ function ContentAdmin() {
     if (!confirm('Delete this feedback item?')) return;
     await fetch(`/api/feedback/${id}`, { method: 'DELETE' });
     await loadAll();
+  }
+
+  async function loadComments(id: string) {
+    try {
+      const res = await fetch(`/api/feedback/${id}/comments`);
+      const d = await res.json();
+      setFeedbackComments(prev => ({ ...prev, [id]: d.comments ?? [] }));
+    } catch {}
+  }
+
+  async function submitComment(itemId: string) {
+    if (!commentDraft.trim() || commentSaving) return;
+    setCommentSaving(true);
+    try {
+      const res = await fetch(`/api/feedback/${itemId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ comment: commentDraft.trim(), author: 'Leadership' }),
+      });
+      if (res.ok) {
+        setCommentDraft('');
+        await loadComments(itemId);
+      }
+    } catch {}
+    setCommentSaving(false);
+  }
+
+  async function deleteComment(itemId: string, commentId: string) {
+    if (!confirm('Delete this comment?')) return;
+    await fetch(`/api/feedback/${itemId}/comments?comment_id=${commentId}`, { method: 'DELETE' });
+    await loadComments(itemId);
+  }
+
+  async function promoteToRoadmap(item: FeedbackAdminItem) {
+    setPromotingId(item.id);
+    try {
+      const res = await fetch('/api/roadmap', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: item.title,
+          description: item.description,
+          status: 'planned',
+          category: item.category,
+          created_by: 'admin',
+        }),
+      });
+      if (res.ok) {
+        await updateFeedbackStatus(item.id, 'planned');
+        setPromotedIds(prev => new Set([...prev, item.id]));
+        await loadAll();
+      }
+    } catch {}
+    setPromotingId(null);
+  }
+
+  function toggleFeedbackExpanded(id: string) {
+    if (expandedFeedbackId === id) {
+      setExpandedFeedbackId(null);
+    } else {
+      setExpandedFeedbackId(id);
+      setCommentDraft('');
+      if (!feedbackComments[id]) loadComments(id);
+    }
   }
 
   // ── Roadmap actions ──
@@ -1252,37 +1331,189 @@ function ContentAdmin() {
         )}
 
         {/* ── Feedback ── */}
-        {adminTab === 'feedback' && (
-          <div>
-            {feedbackItems.length === 0 ? (
-              <p style={{ color: C.muted2, fontSize: 13, textAlign: 'center', padding: '20px 0' }}>No feedback submitted yet.</p>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {feedbackItems.map((f) => (
-                  <div key={f.id} style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        <span style={{ backgroundColor: '#1A1400', color: C.acc, fontSize: 10, fontWeight: 800, padding: '2px 8px', borderRadius: 20, border: `1px solid ${C.acc}44` }}>▲ {f.vote_count}</span>
-                        {f.category && <span style={{ color: C.muted2, fontSize: 10 }}>#{f.category}</span>}
-                      </div>
-                      <div style={{ color: C.text, fontSize: 13, fontWeight: 700 }}>{f.title}</div>
-                      {f.description && <div style={{ color: C.muted, fontSize: 11, marginTop: 3 }}>{f.description}</div>}
-                      <div style={{ color: C.muted2, fontSize: 10, marginTop: 6 }}>{new Date(f.created_at).toLocaleString()} · by {f.created_by}</div>
-                    </div>
-                    <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
-                      {['open', 'under_review', 'planned', 'done', 'closed'].map((s) => (
-                        <button key={s} onClick={() => updateFeedbackStatus(f.id, s)} style={{ backgroundColor: f.status === s ? '#1A1400' : 'transparent', color: f.status === s ? C.acc : C.muted2, fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 6, border: f.status === s ? `1px solid ${C.acc}44` : `1px solid ${C.border}`, cursor: 'pointer' }}>
-                          {s.replace('_', ' ')}
-                        </button>
-                      ))}
-                      <button onClick={() => deleteFeedback(f.id)} style={{ backgroundColor: '#1A0D0D', color: C.red, fontSize: 10, fontWeight: 700, padding: '4px 8px', borderRadius: 6, border: `1px solid ${C.red}44`, cursor: 'pointer' }}>Delete</button>
-                    </div>
+        {adminTab === 'feedback' && (() => {
+          const FB_CAT_COLORS: Record<string, string> = {
+            'Feature Idea': '#F5C800', 'Process Improvement': '#60A5FA',
+            'Training Needed': '#A78BFA', 'Portal Bug': '#EF4444',
+            'Recognition': '#F472B6', 'Open Feedback': '#34D399',
+          };
+          const STATUS_COLOR: Record<string, string> = {
+            open: '#60A5FA', under_review: '#FBBF24', planned: '#A78BFA', done: '#22C55E', closed: '#555',
+          };
+          const sorted = [...feedbackItems].sort((a, b) => b.vote_count - a.vote_count);
+          const totalVotes = feedbackItems.reduce((s, f) => s + f.vote_count, 0);
+          return (
+            <div>
+              {/* Stats bar */}
+              {feedbackItems.length > 0 && (
+                <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+                  <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 14px', fontSize: 12, color: C.muted }}>
+                    <span style={{ color: C.text, fontWeight: 900, fontSize: 18 }}>{feedbackItems.length}</span>
+                    <span style={{ marginLeft: 5 }}>submissions</span>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+                  <div style={{ backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 14px', fontSize: 12, color: C.muted }}>
+                    <span style={{ color: C.acc, fontWeight: 900, fontSize: 18 }}>▲ {totalVotes}</span>
+                    <span style={{ marginLeft: 5 }}>total votes</span>
+                  </div>
+                  <a href="/voice" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 5, marginLeft: 'auto', backgroundColor: '#0F0F0F', border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 14px', fontSize: 11, fontWeight: 700, color: C.muted, textDecoration: 'none' }}>
+                    🔗 View public board ↗
+                  </a>
+                </div>
+              )}
+
+              {feedbackItems.length === 0 ? (
+                <p style={{ color: C.muted2, fontSize: 13, textAlign: 'center', padding: '20px 0' }}>No feedback submitted yet. Share <code style={{ color: C.acc }}>/voice</code> with the team.</p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {sorted.map((f) => {
+                    const isOpen = expandedFeedbackId === f.id;
+                    const catColor = f.category ? (FB_CAT_COLORS[f.category] ?? C.muted) : C.muted;
+                    const statusColor = STATUS_COLOR[f.status] ?? '#555';
+                    const comments = feedbackComments[f.id] ?? [];
+                    const alreadyPromoted = promotedIds.has(f.id) || f.status === 'planned' || f.status === 'done';
+                    return (
+                      <div key={f.id} style={{ backgroundColor: C.surf2, border: `1.5px solid ${isOpen ? C.acc + '44' : C.border}`, borderRadius: 12, overflow: 'hidden', transition: 'border-color 0.15s' }}>
+                        {/* Row header — clickable to expand */}
+                        <div
+                          onClick={() => toggleFeedbackExpanded(f.id)}
+                          style={{ padding: '12px 14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12 }}
+                        >
+                          {/* Vote count */}
+                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 40, flexShrink: 0 }}>
+                            <span style={{ color: C.acc, fontSize: 10, fontWeight: 700 }}>▲</span>
+                            <span style={{ color: f.vote_count > 0 ? C.acc : C.muted2, fontSize: 18, fontWeight: 900, lineHeight: 1 }}>{f.vote_count}</span>
+                          </div>
+                          {/* Content */}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 3 }}>
+                              {f.category && (
+                                <span style={{ backgroundColor: catColor + '18', border: `1px solid ${catColor}44`, borderRadius: 10, padding: '1px 8px', fontSize: 10, fontWeight: 700, color: catColor }}>
+                                  {f.category}
+                                </span>
+                              )}
+                              <span style={{ backgroundColor: statusColor + '18', border: `1px solid ${statusColor}33`, borderRadius: 10, padding: '1px 7px', fontSize: 10, fontWeight: 700, color: statusColor }}>
+                                {f.status.replace('_', ' ')}
+                              </span>
+                              {comments.length > 0 && (
+                                <span style={{ color: C.muted2, fontSize: 10 }}>💬 {comments.length}</span>
+                              )}
+                            </div>
+                            <div style={{ color: C.text, fontSize: 13, fontWeight: 700, lineHeight: 1.35 }}>{f.title}</div>
+                            <div style={{ color: C.muted2, fontSize: 10, marginTop: 2 }}>
+                              {new Date(f.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                          </div>
+                          {/* Expand chevron */}
+                          <span style={{ color: C.muted2, fontSize: 12, flexShrink: 0, transition: 'transform 0.15s', display: 'inline-block', transform: isOpen ? 'rotate(180deg)' : 'none' }}>▼</span>
+                        </div>
+
+                        {/* Expanded panel */}
+                        {isOpen && (
+                          <div style={{ borderTop: `1px solid ${C.border}`, backgroundColor: C.surf3 }}>
+                            {/* Description */}
+                            {f.description && (
+                              <div style={{ padding: '12px 14px', borderBottom: `1px solid ${C.border}` }}>
+                                <div style={{ color: C.muted, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Description</div>
+                                <p style={{ color: '#CCCCCC', fontSize: 12, margin: 0, lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>{f.description}</p>
+                              </div>
+                            )}
+
+                            {/* Actions row */}
+                            <div style={{ padding: '10px 14px', borderBottom: `1px solid ${C.border}`, display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                              <div style={{ color: C.muted, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginRight: 4 }}>Status:</div>
+                              {['open', 'under_review', 'planned', 'done', 'closed'].map((s) => (
+                                <button key={s} onClick={(e) => { e.stopPropagation(); updateFeedbackStatus(f.id, s); }}
+                                  style={{ backgroundColor: f.status === s ? statusColor + '22' : 'transparent', color: f.status === s ? statusColor : C.muted2, fontSize: 10, fontWeight: 700, padding: '4px 9px', borderRadius: 6, border: f.status === s ? `1.5px solid ${statusColor}66` : `1px solid ${C.border}`, cursor: 'pointer', transition: 'all 0.1s' }}>
+                                  {s.replace('_', ' ')}
+                                </button>
+                              ))}
+                              <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); promoteToRoadmap(f); }}
+                                  disabled={alreadyPromoted || promotingId === f.id}
+                                  title={alreadyPromoted ? 'Already on roadmap' : 'Add to roadmap as Planned'}
+                                  style={{
+                                    backgroundColor: alreadyPromoted ? '#0D1A0D' : '#1A1400',
+                                    border: `1px solid ${alreadyPromoted ? '#22C55E44' : C.acc + '55'}`,
+                                    color: alreadyPromoted ? '#22C55E' : C.acc,
+                                    fontSize: 10, fontWeight: 800, padding: '4px 10px', borderRadius: 6,
+                                    cursor: alreadyPromoted ? 'default' : 'pointer',
+                                    opacity: promotingId === f.id ? 0.6 : 1,
+                                  }}
+                                >
+                                  {promotingId === f.id ? '…' : alreadyPromoted ? '✓ On Roadmap' : '🗺 → Roadmap'}
+                                </button>
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); deleteFeedback(f.id); }}
+                                  style={{ backgroundColor: '#1A0D0D', color: C.red, fontSize: 10, fontWeight: 700, padding: '4px 9px', borderRadius: 6, border: `1px solid ${C.red}44`, cursor: 'pointer' }}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Comments thread */}
+                            <div style={{ padding: '12px 14px' }}>
+                              <div style={{ color: C.muted, fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
+                                Internal Notes {comments.length > 0 ? `(${comments.length})` : ''}
+                              </div>
+                              {comments.length === 0 ? (
+                                <p style={{ color: C.muted2, fontSize: 11, margin: '0 0 10px', fontStyle: 'italic' }}>No notes yet — add context or next steps.</p>
+                              ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 10 }}>
+                                  {comments.map((c) => (
+                                    <div key={c.id} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                                      <div style={{ flex: 1, backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 10px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+                                          <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 4 }}>
+                                            <span style={{ color: C.acc, fontSize: 10, fontWeight: 800 }}>{c.author}</span>
+                                            <span style={{ color: C.muted2, fontSize: 10 }}>
+                                              {new Date(c.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                          </div>
+                                          <button
+                                            onClick={(e) => { e.stopPropagation(); deleteComment(f.id, c.id); }}
+                                            style={{ background: 'none', border: 'none', color: C.muted2, cursor: 'pointer', fontSize: 12, lineHeight: 1, padding: '0 2px' }}
+                                            title="Delete comment"
+                                          >×</button>
+                                        </div>
+                                        <p style={{ color: '#CCCCCC', fontSize: 12, margin: 0, lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>{c.comment}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              {/* Add comment */}
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <textarea
+                                  placeholder="Add an internal note or response…"
+                                  value={commentDraft}
+                                  onChange={(e) => setCommentDraft(e.target.value)}
+                                  onClick={(e) => e.stopPropagation()}
+                                  onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); submitComment(f.id); } }}
+                                  rows={2}
+                                  style={{ flex: 1, backgroundColor: C.surf2, border: `1px solid ${C.border}`, borderRadius: 8, padding: '8px 10px', color: C.text, fontSize: 12, outline: 'none', fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.5 }}
+                                />
+                                <button
+                                  onClick={(e) => { e.stopPropagation(); submitComment(f.id); }}
+                                  disabled={!commentDraft.trim() || commentSaving}
+                                  style={{ backgroundColor: commentDraft.trim() ? C.acc : C.surf3, color: commentDraft.trim() ? '#000' : C.muted2, fontSize: 11, fontWeight: 800, padding: '8px 12px', borderRadius: 8, border: 'none', cursor: commentDraft.trim() ? 'pointer' : 'not-allowed', alignSelf: 'flex-end', whiteSpace: 'nowrap' }}
+                                >
+                                  {commentSaving ? '…' : 'Add note'}
+                                </button>
+                              </div>
+                              <div style={{ color: C.muted2, fontSize: 10, marginTop: 4 }}>⌘↵ to submit · notes are internal only, not visible to submitters</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* ── Roadmap ── */}
         {adminTab === 'roadmap' && (

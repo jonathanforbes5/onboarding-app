@@ -19,6 +19,8 @@ interface SOPItem {
   description: string;
   owner: string;
   url?: string;
+  url2?: string;
+  url2Label?: string;
   tags?: string[];
 }
 
@@ -43,16 +45,19 @@ const CATEGORIES: Category[] = [
         title: 'Marketing & Operations Management Folder',
         description: 'The folder holding almost all SOPs. Shared — everyone at RoofIgnite has access.',
         owner: 'Shared',
+        url: 'https://drive.google.com/drive/folders/19t9b9WOjllJoNu1Fg8dTXQnazfjXbCvj',
       },
       {
         title: 'R.LTD Service Delivery SOP',
         description: 'One-time setup tutorial for Pillar 1 (needs updating).',
         owner: 'Oscar',
+        url: 'https://docs.google.com/document/d/1EVh5t1JYFsyyAdw0XBEQdarLayi7JIjknTc4DL8Zb2k/edit?usp=sharing',
       },
       {
         title: 'R.LTD Client Ongoing Management SOP',
         description: 'Many Looms for common Pillar 2 action steps. Reference the Training Library tab inside.',
         owner: 'Oscar',
+        url: 'https://docs.google.com/document/d/1PRNfivI7vq0gqNT4YSBlwo1m93GUERF6gWR9fQQ5gqY/edit?usp=sharing',
       },
     ],
   },
@@ -73,16 +78,19 @@ const CATEGORIES: Category[] = [
         title: 'Set Up and Launch Landing Page V2',
         description: 'Step-by-step SOP for building and launching the landing page.',
         owner: 'Cole',
+        url: 'https://docs.google.com/document/d/1T9aEbXitLV6XZkRCnYD8_7CX3_isp6okUEIxipZIGpQ/edit?usp=sharing',
       },
       {
         title: 'RoofIgnite V3 Landing Page (LP V3): GHL Buildout SOP',
         description: 'V3 LP buildout inside GHL.',
         owner: 'Oscar',
+        url: 'https://docs.google.com/document/d/1nzVN4jf_EoywPWHvigzlEnDHlPnYk2dQSQVZFWuYEi8/edit?usp=sharing',
       },
       {
         title: 'Switching to 4Q Survey',
         description: 'Switch from default 7-question to 4-question survey for markets where landing-page conversion is low.',
         owner: 'Emmanuel',
+        url: 'https://docs.google.com/document/d/1dIN8VlaI-G26J_gM8FkZnPuAidaLpU1iF4jLyS8Z5mI/edit?usp=sharing',
       },
     ],
   },
@@ -97,26 +105,31 @@ const CATEGORIES: Category[] = [
         title: 'Creative Mastery Ad Set 101 (PDF)',
         description: 'How to judge good vs. bad on our most popular evergreen creative format.',
         owner: 'Cole',
+        url: 'https://drive.google.com/file/d/1cp4dKeQOW2H0AURfWNefBOY1YpUqHAeK/view?usp=sharing',
       },
       {
         title: 'Creative Construction Mastery SOP',
         description: 'Written SOP + Loom of Oscar building ads; the psychology behind creative.',
         owner: 'Oscar',
+        url: 'https://docs.google.com/document/d/1CMJ-s4BwXIp7pAU_vSKYU54RZlnrqb0RXlYJujg8Gxo/edit?usp=sharing',
       },
       {
         title: 'RI.LTD Andromeda Creative Diversification Playbook',
         description: 'Before/after examples + step-by-step edit tutorials for testimonial, drone, and talking-head ads.',
         owner: 'Oscar',
+        url: 'https://docs.google.com/document/d/1du8s7ylQDfBi4zqHWXF2VF2nt8LodggjiKxcKW3pLWU/edit?usp=sharing',
       },
       {
         title: 'RoofIgnite Studio — Creative Format Library + SOP',
         description: 'In-house local creative builder: pick angle → format → plug in copy + assets → export. Formats: iMessage Testimonial, Notes-app Confession, Google Review Highlight, Two-Quotes Split, The Receipt, and more. Start with Michael Dallara\'s 2 overview Looms.',
         owner: 'Michael Dallara',
+        url: 'https://docs.google.com/document/d/1p1jzjcZCeMhvkrYXEiezutE7JPxgOwKi84Acs_nXbSg/edit?usp=sharing',
       },
       {
         title: 'RoofIgnite AI Video SOP',
         description: 'Systemizes AI video production for creative diversity. Edit AI UGC videos in CapCut, use ArcAds for UGC actors, and revive dying winners with hook tests, copy/headline swaps, and clean dupes.',
         owner: 'Michael Dallara',
+        url: 'https://docs.google.com/document/d/1K9rVhomXWGcCJi3tGl_9QOi6G19dxK7mDERzX8V5m8M/edit?usp=sharing',
       },
     ],
   },
@@ -131,6 +144,7 @@ const CATEGORIES: Category[] = [
         title: 'Roofing B2C Ads Buildout (Copy / Headlines / Angles)',
         description: 'All templatized ad copy, headlines, and angles for roofing clients.',
         owner: 'Oscar',
+        url: 'https://docs.google.com/document/d/1UdHQXz-i7T5YfgS1aiVe7ycDYijudw1C8F0oMGr6mrU/edit?usp=sharing',
       },
     ],
   },
@@ -145,11 +159,13 @@ const CATEGORIES: Category[] = [
         title: 'Accounts Specific Document',
         description: 'Client-specific details for each active account.',
         owner: 'Oscar',
+        url: 'https://docs.google.com/document/d/1RmLtprnhJxhY7asBbUSPuiahD4H8vbz_dIb42Y__wr0/edit?usp=sharing',
       },
       {
         title: 'Client Check-In System',
         description: 'Management fee, appointment expectations, contact info, account owner.',
         owner: 'Oscar',
+        url: 'https://docs.google.com/spreadsheets/d/15xYnNomoGM3bQn0TGsIaQaH7bks4ZY3_N3ESFJKIl1Q/edit?usp=sharing',
       },
     ],
   },
@@ -178,51 +194,63 @@ const CATEGORIES: Category[] = [
         title: 'Fixing the $50/day ad spend limit',
         description: 'When a fresh account is capped at $50/day: check business verification, spin up a new Facebook Developer app if ineligible, apply for verification using A2P business info (license/incorporation docs). Client example: AHI Roofing.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/014abf82664e4a6fa99b82cdd029c33d',
       },
       {
         title: 'Registering & deleting CNAME records (caller-ID fix)',
         description: 'Make business name on outbound calls match the sub-account. Check CNAME under Settings → Phone Numbers → Trust Center, register shortened name, remove already-registered CNAME via support-chat. Client examples: Trusted Home, Sharpline.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/c7d3c23fafcf42b8b9cc08ba47c0ca21',
       },
       {
         title: 'Installing our system on the client\'s own GHL sub-account',
         description: 'For the rare client who insists we build inside their own GHL agency sub-account. Covers client comms, admin access, and full asset transfer. Client example: Get Smart Construction.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/23404ec9af31419eb876682010fdd143',
       },
       {
         title: 'Auto-syncing leads into a client\'s CRM with Zapier — Roofr',
         description: 'Connect GHL → Google Sheet → client CRM. Includes field mapping for both 4Q and 7Q surveys. Client example: Madrid Roofing.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/d5c9c9141e824acab01946cc0b3d8030',
       },
       {
         title: 'Turning around a slow / low-quality account',
         description: 'Three fixes: (1) advanced pixel conditioning, (2) telling homeowners client will call an hour before appointment, (3) reading ad metrics vs. comparable account and rebuilding creatives. Client example: Kover Solutions.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/07dd1be8a96c4d60a936f30caf6cebcc',
       },
       {
         title: 'Moving an account onto an already-A2P-verified sub-account',
         description: 'When A2P won\'t verify: repurpose an old verified sub-account. Full asset transfer. Ask Oscar which verified account to use. Client example: Sharpline → Founders Roofing.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/7f8322d24522419d885375cd7e2e2c1b',
       },
       {
         title: 'Auto-syncing leads into AccuLynx with Zapier (2-part)',
         description: 'Part 1 builds the Zap; Part 2 finishes once API key arrives. If you switch 7Q → 4Q, refresh Sheet headers and re-map. Client example: Brown Roofing.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/8a9d316d70f64f9d9b4ed95c3761ea3a',
+        url2: 'https://www.loom.com/share/095fe1fe2e7a4486a164d030a08ea80b',
+        url2Label: 'Part 2',
       },
       {
         title: 'Advanced pixel conditioning / Conversion API setup',
         description: 'Generate CAPI access token + data-set/pixel ID in Events Manager, build GHL workflow firing \'schedule\' conversion event on \'qualified\' tag. Tag good leads within ~7 days. Client example: Klaus Larsen Roofing.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/8625af65318a49aaa2ce69830df8f949',
       },
       {
         title: 'Tagging booked leads back into a client\'s CRM',
         description: 'Build GHL workflow that, on \'qualified\' tag, pushes contact through Sheet → Zap into their system with \'booked\' tag, duplicated per county/sub-account. Client example: US Shingle.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/9195143fae2b4eccbb9ad1cb64258879',
       },
       {
         title: 'Killing out-of-service-area leads with a survey gate',
         description: 'Add required first survey question that disqualifies immediately on \'no.\' Keep ad spend high enough — not $20/day. Client example: Everlast Roofing.',
         owner: 'Oscar',
+        url: 'https://www.loom.com/share/3303b0f97948404fbb81b088acb31bcb',
       },
     ],
   },
@@ -344,6 +372,37 @@ function SOPCard({ sop, accent }: SOPCardProps) {
               }}
             >
               Open <ExternalLinkIcon />
+            </a>
+          )}
+          {sop.url2 && (
+            <a
+              href={sop.url2}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: '2px 8px',
+                borderRadius: 20,
+                fontSize: 10,
+                fontWeight: 700,
+                backgroundColor: C.surf3,
+                border: `1px solid ${C.border2}`,
+                color: C.muted,
+                textDecoration: 'none',
+                transition: 'color 0.15s, border-color 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = C.text;
+                e.currentTarget.style.borderColor = C.muted2;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = C.muted;
+                e.currentTarget.style.borderColor = C.border2;
+              }}
+            >
+              {sop.url2Label ?? 'Part 2'} <ExternalLinkIcon />
             </a>
           )}
         </div>

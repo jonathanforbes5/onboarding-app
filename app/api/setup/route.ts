@@ -160,6 +160,160 @@ do $$ begin
     create policy "allow_all" on chat_knowledge for all using (true) with check (true); end if;
 end $$;
 
+-- Announcements (What's New popup + community widget)
+create table if not exists announcements (
+  id         uuid default gen_random_uuid() primary key,
+  title      text not null,
+  body       text not null,
+  link_url   text,
+  loom_url   text,
+  image_url  text,
+  created_by text not null default 'admin',
+  published  boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+alter table announcements enable row level security;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'announcements' and policyname = 'anon_read') then
+    create policy "anon_read" on announcements for select using (published = true); end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'announcements' and policyname = 'service_all') then
+    create policy "service_all" on announcements for all using (true) with check (true); end if;
+end $$;
+
+-- Roadmap (public board + admin view)
+create table if not exists roadmap_items (
+  id          uuid default gen_random_uuid() primary key,
+  title       text not null,
+  description text,
+  status      text not null default 'planned',
+  category    text,
+  created_by  text not null default 'admin',
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+alter table roadmap_items enable row level security;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'roadmap_items' and policyname = 'all_access') then
+    create policy "all_access" on roadmap_items for all using (true) with check (true); end if;
+end $$;
+
+-- Anonymous voice / feedback board
+create table if not exists feedback_items (
+  id          uuid default gen_random_uuid() primary key,
+  title       text not null,
+  description text,
+  category    text,
+  vote_count  integer not null default 0,
+  created_by  text not null default 'anonymous',
+  status      text not null default 'open',
+  created_at  timestamptz not null default now()
+);
+
+create table if not exists feedback_votes (
+  id               uuid default gen_random_uuid() primary key,
+  feedback_item_id uuid not null references feedback_items(id) on delete cascade,
+  user_key         text not null,
+  created_at       timestamptz not null default now(),
+  unique(feedback_item_id, user_key)
+);
+
+create table if not exists feedback_comments (
+  id               uuid default gen_random_uuid() primary key,
+  feedback_item_id uuid not null references feedback_items(id) on delete cascade,
+  author           text not null default 'admin',
+  comment          text not null,
+  created_at       timestamptz not null default now()
+);
+
+alter table feedback_items    enable row level security;
+alter table feedback_votes    enable row level security;
+alter table feedback_comments enable row level security;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'feedback_items' and policyname = 'all_access') then
+    create policy "all_access" on feedback_items for all using (true) with check (true); end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'feedback_votes' and policyname = 'all_access') then
+    create policy "all_access" on feedback_votes for all using (true) with check (true); end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'feedback_comments' and policyname = 'all_access') then
+    create policy "all_access" on feedback_comments for all using (true) with check (true); end if;
+end $$;
+
+create index if not exists feedback_votes_item_idx    on feedback_votes(feedback_item_id);
+create index if not exists feedback_comments_item_idx on feedback_comments(feedback_item_id);
+
+-- Loom / media slot overrides
+create table if not exists media_links (
+  slot_key   text primary key,
+  url        text not null,
+  title      text,
+  transcript text,
+  updated_at timestamptz default now(),
+  updated_by text
+);
+
+alter table media_links add column if not exists transcript text;
+alter table media_links enable row level security;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'media_links' and policyname = 'allow_all') then
+    create policy "allow_all" on media_links for all using (true) with check (true); end if;
+end $$;
+
+-- Dynamic content items (resources + recordings managed via admin)
+create table if not exists content_resources (
+  id          text primary key,
+  title       text not null,
+  description text not null default '',
+  url         text not null,
+  icon        text default '📄',
+  category    text not null default 'sop',
+  tags        text[] default '{}',
+  published   boolean default true,
+  sort_order  integer default 0,
+  created_at  timestamptz default now()
+);
+
+create table if not exists content_recordings (
+  id            text primary key,
+  title         text not null,
+  description   text not null default '',
+  url           text not null,
+  category      text not null default 'training_loom',
+  tags          text[] default '{}',
+  duration_mins integer,
+  watch_first   boolean default false,
+  published     boolean default true,
+  sort_order    integer default 0,
+  created_at    timestamptz default now()
+);
+
+alter table content_resources  enable row level security;
+alter table content_recordings enable row level security;
+
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'content_resources' and policyname = 'allow_all') then
+    create policy "allow_all" on content_resources for all using (true) with check (true); end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_policies where tablename = 'content_recordings' and policyname = 'allow_all') then
+    create policy "allow_all" on content_recordings for all using (true) with check (true); end if;
+end $$;
+
+-- Expand allowed_users role check to include media_buyer
+alter table allowed_users drop constraint if exists allowed_users_role_check;
+alter table allowed_users add constraint allowed_users_role_check
+  check (role in ('super_admin', 'user', 'media_buyer'));
+
 -- Seed users (only leadership have super_admin role)
 insert into allowed_users (email, display_name, role, user_key) values
   ('jonathan@roofignite.com', 'Jonathan', 'super_admin', 'jonathan'),
@@ -170,8 +324,12 @@ insert into allowed_users (email, display_name, role, user_key) values
   ('tyler@roofignite.com',    'Tyler',    'user',        'tyler'),
   ('ksenia@roofignite.com',   'Ksenia',   'user',        'ksenia'),
   ('adeen@roofignite.com',    'Adeen',    'user',        'adeen'),
-  ('patrick@roofignite.com',  'Patrick',  'user',        'patrick')
-on conflict (email) do nothing;
+  ('patrick@roofignite.com',  'Patrick',  'user',        'patrick'),
+  ('emmanuel@roofignite.com', 'Emmanuel', 'media_buyer', 'emmanuel'),
+  ('bren@roofignite.com',     'Bren',     'media_buyer', 'bren'),
+  ('mervin@roofignite.com',   'Mervin',   'media_buyer', 'mervin'),
+  ('ken@roofignite.com',      'Ken',      'media_buyer', 'ken')
+on conflict (email) do update set role = excluded.role, user_key = excluded.user_key;
 
 -- Fix any existing super_admin roles that should be user (idempotent)
 update allowed_users set role = 'user' where email in (

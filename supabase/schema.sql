@@ -89,3 +89,121 @@ create table if not exists chat_knowledge (
 
 alter table chat_knowledge enable row level security;
 create policy "allow_all" on chat_knowledge for all using (true) with check (true);
+
+-- ── Announcements ───────────────────────────────────────────
+create table if not exists announcements (
+  id         uuid default gen_random_uuid() primary key,
+  title      text not null,
+  body       text not null,
+  link_url   text,
+  loom_url   text,
+  image_url  text,
+  created_by text not null default 'admin',
+  published  boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+alter table announcements enable row level security;
+create policy "anon_read"   on announcements for select using (published = true);
+create policy "service_all" on announcements for all    using (true) with check (true);
+
+-- ── Roadmap ─────────────────────────────────────────────────
+create table if not exists roadmap_items (
+  id          uuid default gen_random_uuid() primary key,
+  title       text not null,
+  description text,
+  status      text not null default 'planned',
+  category    text,
+  created_by  text not null default 'admin',
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+alter table roadmap_items enable row level security;
+create policy "allow_all" on roadmap_items for all using (true) with check (true);
+
+-- ── Anonymous feedback / voice board ────────────────────────
+create table if not exists feedback_items (
+  id          uuid default gen_random_uuid() primary key,
+  title       text not null,
+  description text,
+  category    text,
+  vote_count  integer not null default 0,
+  created_by  text not null default 'anonymous',
+  status      text not null default 'open',
+  created_at  timestamptz not null default now()
+);
+
+create table if not exists feedback_votes (
+  id               uuid default gen_random_uuid() primary key,
+  feedback_item_id uuid not null references feedback_items(id) on delete cascade,
+  user_key         text not null,
+  created_at       timestamptz not null default now(),
+  unique(feedback_item_id, user_key)
+);
+
+create table if not exists feedback_comments (
+  id               uuid default gen_random_uuid() primary key,
+  feedback_item_id uuid not null references feedback_items(id) on delete cascade,
+  author           text not null default 'admin',
+  comment          text not null,
+  created_at       timestamptz not null default now()
+);
+
+alter table feedback_items    enable row level security;
+alter table feedback_votes    enable row level security;
+alter table feedback_comments enable row level security;
+
+create policy "allow_all" on feedback_items    for all using (true) with check (true);
+create policy "allow_all" on feedback_votes    for all using (true) with check (true);
+create policy "allow_all" on feedback_comments for all using (true) with check (true);
+
+create index if not exists feedback_votes_item_idx    on feedback_votes(feedback_item_id);
+create index if not exists feedback_comments_item_idx on feedback_comments(feedback_item_id);
+
+-- ── Loom / media slot overrides ─────────────────────────────
+create table if not exists media_links (
+  slot_key   text primary key,
+  url        text not null,
+  title      text,
+  transcript text,
+  updated_at timestamptz default now(),
+  updated_by text
+);
+
+alter table media_links enable row level security;
+create policy "allow_all" on media_links for all using (true) with check (true);
+
+-- ── Dynamic content (admin-managed) ─────────────────────────
+create table if not exists content_resources (
+  id          text primary key,
+  title       text not null,
+  description text not null default '',
+  url         text not null,
+  icon        text default '📄',
+  category    text not null default 'sop',
+  tags        text[] default '{}',
+  published   boolean default true,
+  sort_order  integer default 0,
+  created_at  timestamptz default now()
+);
+
+create table if not exists content_recordings (
+  id            text primary key,
+  title         text not null,
+  description   text not null default '',
+  url           text not null,
+  category      text not null default 'training_loom',
+  tags          text[] default '{}',
+  duration_mins integer,
+  watch_first   boolean default false,
+  published     boolean default true,
+  sort_order    integer default 0,
+  created_at    timestamptz default now()
+);
+
+alter table content_resources  enable row level security;
+alter table content_recordings enable row level security;
+
+create policy "allow_all" on content_resources  for all using (true) with check (true);
+create policy "allow_all" on content_recordings for all using (true) with check (true);

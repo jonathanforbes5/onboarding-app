@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useRef } from 'react';
+import { ChevronRight } from 'lucide-react';
 import { LOCAL_USERS, UserProfile } from '@/lib/auth';
 
 const BYPASS_KEY = 'ri_bypass_profile';
@@ -41,6 +42,7 @@ export function LoginScreen() {
   const [otpCode, setOtpCode]       = useState('');
   const [otpEmail, setOtpEmail]     = useState('');
   const [resending, setResending]   = useState(false);
+  const [track, setTrack]           = useState<'pod_manager' | 'media_buyer' | null>(null);
 
   const inp: React.CSSProperties = {
     width: '100%', backgroundColor: '#0A0A0A', border: '1px solid #2A2A2A',
@@ -72,7 +74,7 @@ export function LoginScreen() {
     email: us.email ?? `${key}@roofignite.com`,
     displayName: us.displayName,
     userKey: us.userKey ?? key,
-    role: us.role as 'super_admin' | 'user',
+    role: us.role as 'super_admin' | 'user' | 'media_buyer',
     bio: us.bio ?? undefined,
     goal: us.goal ?? undefined,
     avatarEmoji: us.avatarEmoji ?? undefined,
@@ -249,11 +251,12 @@ export function LoginScreen() {
     setStage('name'); setError(''); setPassword(''); setConfirmPw('');
     setUserStatus(null); setPendingProfile(null);
     setOtpToken(''); setOtpCode(''); setOtpEmail('');
+    setTrack(null);
   };
 
   /* ── Render ── */
-  const roleLabel = (role: string) => role === 'super_admin' ? 'Leadership' : 'Pod Manager';
-  const roleColor = (role: string) => role === 'super_admin' ? '#F5C800' : '#22C55E';
+  const roleLabel = (role: string) => role === 'super_admin' ? 'Leadership' : role === 'media_buyer' ? 'Media Buyer' : 'Pod Manager';
+  const roleColor = (role: string) => role === 'super_admin' ? '#F5C800' : role === 'media_buyer' ? '#818CF8' : '#22C55E';
 
   return (
     <div style={{
@@ -275,9 +278,72 @@ export function LoginScreen() {
         boxShadow: '0 0 40px rgba(245,200,0,0.04), 0 8px 32px rgba(0,0,0,0.4)',
       }}>
 
-        {/* ── Enter name ── */}
-        {stage === 'name' && (
+        {/* ── Portal selection ── */}
+        {stage === 'name' && !track && (
           <>
+            <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 6px', textAlign: 'center' }}>Welcome</h2>
+            <p style={{ color: '#555', fontSize: 13, margin: '0 0 1.5rem', textAlign: 'center', lineHeight: 1.6 }}>
+              Select your portal to continue.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                onClick={() => setTrack('pod_manager')}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: 12,
+                  padding: '16px 18px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#F5C800')}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#2A2A2A')}
+              >
+                <span style={{ fontSize: 28, flexShrink: 0 }}>📋</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Pod Manager / CSM</div>
+                  <div style={{ color: '#555', fontSize: 12 }}>Onboarding &amp; training hub</div>
+                </div>
+                <ChevronRight size={16} color="#444" style={{ flexShrink: 0 }} />
+              </button>
+              <button
+                onClick={() => setTrack('media_buyer')}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: 12,
+                  padding: '16px 18px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#818CF8')}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#2A2A2A')}
+              >
+                <span style={{ fontSize: 28, flexShrink: 0 }}>📱</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Media Buyer / Designer</div>
+                  <div style={{ color: '#555', fontSize: 12 }}>Campaigns, creative &amp; tools</div>
+                </div>
+                <ChevronRight size={16} color="#444" style={{ flexShrink: 0 }} />
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* ── Enter name ── */}
+        {stage === 'name' && track && (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <button
+                onClick={() => setTrack(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: 12, padding: 0, fontFamily: 'inherit' }}
+              >
+                ← Back
+              </button>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+                backgroundColor: track === 'media_buyer' ? '#1A1A2E' : '#1A1400',
+                border: `1px solid ${track === 'media_buyer' ? '#818CF844' : '#F5C80044'}`,
+                borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700,
+                color: track === 'media_buyer' ? '#818CF8' : '#F5C800',
+              }}>
+                {track === 'media_buyer' ? '📱 Media Buyer' : '📋 Pod Manager'}
+              </span>
+            </div>
             <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 6px', textAlign: 'center' }}>Sign in</h2>
             <p style={{ color: '#555', fontSize: 13, margin: '0 0 1.5rem', textAlign: 'center', lineHeight: 1.6 }}>
               Enter your first name to continue.
@@ -422,7 +488,7 @@ export function LoginScreen() {
               <span style={{
                 display: 'inline-block', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700,
                 textTransform: 'uppercase', letterSpacing: '0.05em',
-                backgroundColor: pendingProfile.role === 'super_admin' ? '#1A1400' : '#0D1F14',
+                backgroundColor: pendingProfile.role === 'super_admin' ? '#1A1400' : pendingProfile.role === 'media_buyer' ? '#0D0D20' : '#0D1F14',
                 border: `1px solid ${roleColor(pendingProfile.role)}44`,
                 color: roleColor(pendingProfile.role),
               }}>{roleLabel(pendingProfile.role)}</span>

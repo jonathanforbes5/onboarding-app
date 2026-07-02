@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Source of truth for known users — if Supabase is missing a row, auto-insert from here
-const KNOWN_USERS: Record<string, { email: string; displayName: string; role: 'super_admin' | 'user' }> = {
+const KNOWN_USERS: Record<string, { email: string; displayName: string; role: 'super_admin' | 'user' | 'media_buyer' }> = {
   jonathan:  { email: 'jonathan@roofignite.com',  displayName: 'Jonathan',  role: 'super_admin' },
   oscar:     { email: 'oscar@roofignite.com',     displayName: 'Oscar',     role: 'super_admin' },
   mani:      { email: 'mani@roofignite.com',      displayName: 'Mani',      role: 'super_admin' },
@@ -17,6 +17,10 @@ const KNOWN_USERS: Record<string, { email: string; displayName: string; role: 's
   gregory:   { email: 'gregory@roofignite.com',   displayName: 'Gregory',   role: 'user' },
   kyle:      { email: 'kyle@roofignite.com',      displayName: 'Kyle',      role: 'user' },
   abdullah:  { email: 'abdullah@roofignite.com',  displayName: 'Abdullah',  role: 'user' },
+  emmanuel:  { email: 'emmanuel@roofignite.com',  displayName: 'Emmanuel',  role: 'media_buyer' },
+  bren:      { email: 'bren@roofignite.com',      displayName: 'Bren',      role: 'media_buyer' },
+  mervin:    { email: 'mervin@roofignite.com',    displayName: 'Mervin',    role: 'media_buyer' },
+  ken:       { email: 'ken@roofignite.com',       displayName: 'Ken',       role: 'media_buyer' },
 };
 
 export async function GET(req: NextRequest) {

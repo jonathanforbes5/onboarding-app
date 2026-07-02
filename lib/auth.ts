@@ -4,7 +4,7 @@ export interface UserProfile {
   email: string;
   displayName: string;
   userKey: string;
-  role: 'super_admin' | 'user';
+  role: 'super_admin' | 'user' | 'media_buyer';
   bio?: string;
   goal?: string;
   avatarEmoji?: string;
@@ -21,10 +21,14 @@ export const USER_COLORS: Record<string, { bg: string; text: string }> = {
   info:     { bg: '#F97316', text: '#fff' },
   cole:     { bg: '#06B6D4', text: '#fff' },
   tyler:    { bg: '#10B981', text: '#fff' },
-  ksenia:   { bg: '#EC4899', text: '#fff' },
-  adeen:    { bg: '#8B5CF6', text: '#fff' },
-  li:       { bg: '#14B8A6', text: '#fff' },
-  dakota:   { bg: '#F43F5E', text: '#fff' },
+  ksenia:    { bg: '#EC4899', text: '#fff' },
+  adeen:     { bg: '#8B5CF6', text: '#fff' },
+  li:        { bg: '#14B8A6', text: '#fff' },
+  dakota:    { bg: '#F43F5E', text: '#fff' },
+  emmanuel:  { bg: '#F59E0B', text: '#000' },
+  bren:      { bg: '#818CF8', text: '#fff' },
+  mervin:    { bg: '#2DD4BF', text: '#000' },
+  ken:       { bg: '#FB923C', text: '#fff' },
 };
 
 // Static user list used for staging bypass (when Supabase is not configured).
@@ -44,6 +48,10 @@ export const LOCAL_USERS: Record<string, UserProfile> = {
   gregory:   { email: 'gregory@roofignite.com',   displayName: 'Gregory',   userKey: 'gregory',   role: 'user' },
   kyle:      { email: 'kyle@roofignite.com',      displayName: 'Kyle',      userKey: 'kyle',      role: 'user' },
   abdullah:  { email: 'abdullah@roofignite.com',  displayName: 'Abdullah',  userKey: 'abdullah',  role: 'user' },
+  emmanuel:  { email: 'emmanuel@roofignite.com',  displayName: 'Emmanuel',  userKey: 'emmanuel',  role: 'media_buyer' },
+  bren:      { email: 'bren@roofignite.com',      displayName: 'Bren',      userKey: 'bren',      role: 'media_buyer' },
+  mervin:    { email: 'mervin@roofignite.com',    displayName: 'Mervin',    userKey: 'mervin',    role: 'media_buyer' },
+  ken:       { email: 'ken@roofignite.com',       displayName: 'Ken',       userKey: 'ken',       role: 'media_buyer' },
 };
 
 export function getUserColor(userKey: string) {
@@ -92,7 +100,7 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
       return {
         email: fallback.data.email,
         displayName: fallback.data.display_name,
-        role: fallback.data.role as 'super_admin' | 'user',
+        role: fallback.data.role as 'super_admin' | 'user' | 'media_buyer',
         userKey: fallback.data.user_key,
       };
     }
@@ -100,7 +108,7 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
     return {
       email: data.email,
       displayName: data.display_name,
-      role: data.role as 'super_admin' | 'user',
+      role: data.role as 'super_admin' | 'user' | 'media_buyer',
       userKey: data.user_key,
       bio: data.bio ?? undefined,
       goal: data.goal ?? undefined,

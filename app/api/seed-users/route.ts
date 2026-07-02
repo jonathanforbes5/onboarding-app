@@ -21,6 +21,10 @@ const USERS = [
   { email: 'gregory@roofignite.com',   display_name: 'Gregory',   role: 'user',        user_key: 'gregory' },
   { email: 'kyle@roofignite.com',      display_name: 'Kyle',      role: 'user',        user_key: 'kyle' },
   { email: 'abdullah@roofignite.com',  display_name: 'Abdullah',  role: 'user',        user_key: 'abdullah' },
+  { email: 'emmanuel@roofignite.com',  display_name: 'Emmanuel',  role: 'media_buyer', user_key: 'emmanuel' },
+  { email: 'bren@roofignite.com',      display_name: 'Bren',      role: 'media_buyer', user_key: 'bren' },
+  { email: 'mervin@roofignite.com',    display_name: 'Mervin',    role: 'media_buyer', user_key: 'mervin' },
+  { email: 'ken@roofignite.com',       display_name: 'Ken',       role: 'media_buyer', user_key: 'ken' },
 ];
 
 export async function GET(req: NextRequest) {

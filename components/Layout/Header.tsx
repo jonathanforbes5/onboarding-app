@@ -22,11 +22,14 @@ export function Header() {
     logout,
     previewMode,
     setPreviewMode,
+    previewAsMB,
+    setPreviewAsMB,
     openProfileEdit,
   } = useApp();
 
   const userColor    = currentUser ? getUserColor(currentUser.userKey) : null;
-  const isSuperAdmin = currentUser?.role === 'super_admin';
+  const isSuperAdmin   = currentUser?.role === 'super_admin';
+  const isMediaBuyer   = currentUser?.role === 'media_buyer';
   const effectiveAdmin = isSuperAdmin && !previewMode;
 
   const isPod4User      = currentUser?.userKey === 'li' || currentUser?.userKey === 'dakota';
@@ -61,18 +64,24 @@ export function Header() {
     setMobileMenuOpen(false);
   };
 
-  const allTabs = [
-    { id: 'overview',   label: 'Overview',    icon: '🏠' },
-    ...(canSeeWorksheet ? [{ id: 'worksheet', label: 'Worksheet', icon: '📋' }] : []),
-    { id: 'sections',   label: 'Company',     icon: '📚' },
-    { id: 'resources',  label: 'Resources',   icon: '📁' },
-    { id: 'recordings', label: 'Recordings',  icon: '🎬' },
-    ...(effectiveAdmin  ? [{ id: 'admin',     label: 'Admin',       icon: '📊' }] : []),
-  ] as const;
-
-  // Desktop tabs (no admin — goes in More dropdown on desktop)
-  const primaryTabs = allTabs.filter(t => t.id !== 'admin') as typeof allTabs[number][];
-  const adminTab    = effectiveAdmin ? { id: 'admin' as const, label: 'Admin', icon: '📊' } : null;
+  type TabDef = { id: Parameters<typeof setActiveTab>[0]; label: string; icon: string };
+  const showMBPortal = isMediaBuyer || (isSuperAdmin && previewAsMB);
+  const allTabs: TabDef[] = showMBPortal
+    ? [
+        { id: 'mb_home',  label: 'Home',  icon: '🏠' },
+        { id: 'mb_sops',  label: 'SOPs',  icon: '📋' },
+        { id: 'mb_tools', label: 'Tools', icon: '🛠️' },
+      ]
+    : [
+        { id: 'overview',   label: 'Overview',   icon: '🏠' },
+        ...(canSeeWorksheet ? [{ id: 'worksheet' as Parameters<typeof setActiveTab>[0], label: 'Worksheet', icon: '📋' }] : []),
+        { id: 'sections',   label: 'Company',    icon: '📚' },
+        { id: 'resources',  label: 'Resources',  icon: '📁' },
+        { id: 'recordings', label: 'Recordings', icon: '🎬' },
+        ...(effectiveAdmin ? [{ id: 'admin' as Parameters<typeof setActiveTab>[0], label: 'Admin', icon: '📊' }] : []),
+      ];
+  const primaryTabs = allTabs.filter(t => t.id !== 'admin');
+  const adminTab = (effectiveAdmin && !showMBPortal) ? { id: 'admin' as Parameters<typeof setActiveTab>[0], label: 'Admin', icon: '📊' } : null;
 
   return (
   <>
@@ -134,6 +143,22 @@ export function Header() {
         </div>
       )}
 
+      {/* Media Buyer preview banner */}
+      {previewAsMB && (
+        <div style={{
+          backgroundColor: '#0D0D1F', borderBottom: '1px solid #818CF833',
+          padding: '4px 12px', fontSize: 11, fontWeight: 700, color: '#818CF8',
+          textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        }}>
+          <Eye size={12} />
+          Previewing as Media Buyer —
+          <button onClick={() => setPreviewAsMB(false)}
+            style={{ color: '#818CF8', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>
+            exit preview
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 px-3 py-2 relative">
 
         {/* ── Left: sidebar toggle (mobile) + logo (desktop-left / mobile-absolute-center) ── */}
@@ -157,14 +182,14 @@ export function Header() {
             </button>
           )}
           {/* Logo — desktop left */}
-          <button onClick={() => navigate('overview')} className="hidden sm:flex items-center" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <button onClick={() => navigate(showMBPortal ? 'mb_home' : 'overview')} className="hidden sm:flex items-center" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
             <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
           </button>
         </div>
 
         {/* Logo centered absolutely — mobile only (sm:hidden must not be overridden by inline display) */}
         <button
-          onClick={() => navigate('overview')}
+          onClick={() => navigate(showMBPortal ? 'mb_home' : 'overview')}
           className="sm:hidden absolute left-1/2 -translate-x-1/2"
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
@@ -282,10 +307,16 @@ export function Header() {
               >{currentUser.displayName}</button>
 
               {isSuperAdmin && (
-                <button onClick={() => setPreviewMode(!previewMode)} className="p-1 rounded hover:bg-white/10 transition-colors"
-                  title={previewMode ? 'Exit Pod 4 preview' : 'Preview as Pod 4 manager (Li / Dakota)'}>
-                  {previewMode ? <EyeOff size={13} className="text-brand-yellow" /> : <Eye size={13} className="text-white/35 hover:text-white/80" />}
-                </button>
+                <>
+                  <button onClick={() => setPreviewMode(!previewMode)} className="p-1 rounded hover:bg-white/10 transition-colors"
+                    title={previewMode ? 'Exit Pod 4 preview' : 'Preview as Pod 4 manager (Li / Dakota)'}>
+                    {previewMode ? <EyeOff size={13} className="text-brand-yellow" /> : <Eye size={13} className="text-white/35 hover:text-white/80" />}
+                  </button>
+                  <button onClick={() => setPreviewAsMB(!previewAsMB)} className="p-1 rounded hover:bg-white/10 transition-colors"
+                    title={previewAsMB ? 'Exit Media Buyer preview' : 'Preview as Media Buyer'}>
+                    {previewAsMB ? <EyeOff size={13} style={{ color: '#818CF8' }} /> : <Eye size={13} className="text-white/35 hover:text-white/80" />}
+                  </button>
+                </>
               )}
               <button onClick={logout} className="p-1 rounded hover:bg-white/10 transition-colors" title="Sign out">
                 <LogOut size={13} className="text-white/35 hover:text-white/80" />
@@ -446,6 +477,12 @@ export function Header() {
             {previewMode ? <EyeOff size={18} color="#F5C800" style={{ flexShrink: 0 }} /> : <Eye size={18} color="#888" style={{ flexShrink: 0 }} />}
             <span style={{ color: previewMode ? '#F5C800' : '#CCC', fontSize: 15, fontWeight: 500 }}>
               {previewMode ? 'Exit Pod 4 preview' : 'Preview as Pod 4 manager'}
+            </span>
+          </button>
+          <button className="hdr-nav-item" onClick={() => { setPreviewAsMB(!previewAsMB); setMobileMenuOpen(false); }}>
+            {previewAsMB ? <EyeOff size={18} color="#818CF8" style={{ flexShrink: 0 }} /> : <Eye size={18} color="#888" style={{ flexShrink: 0 }} />}
+            <span style={{ color: previewAsMB ? '#818CF8' : '#CCC', fontSize: 15, fontWeight: 500 }}>
+              {previewAsMB ? 'Exit Media Buyer preview' : 'Preview as Media Buyer'}
             </span>
           </button>
         </div>

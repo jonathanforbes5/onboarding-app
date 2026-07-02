@@ -13,6 +13,9 @@ import { CompanyCurriculum } from '@/components/Sections/CompanyCurriculum';
 import { AnnouncementsTab } from '@/components/Announcements/AnnouncementsTab';
 import { FeedbackTab } from '@/components/Feedback/FeedbackTab';
 import { RoadmapTab } from '@/components/Roadmap/RoadmapTab';
+import { MBHomeTab } from '@/components/MediaBuyer/MBHomeTab';
+import { MBSOPsTab } from '@/components/MediaBuyer/MBSOPsTab';
+import { MBToolsTab } from '@/components/MediaBuyer/MBToolsTab';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { ChatWidget } from '@/components/Chat/ChatWidget';
@@ -26,7 +29,8 @@ import { QuizPrompt } from '@/components/UI/QuizPrompt';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, setCurrentSection, profileEditOpen, openProfileEdit, closeProfileEdit, previewMode } = useApp();
+  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, setCurrentSection, profileEditOpen, openProfileEdit, closeProfileEdit, previewMode, previewAsMB } = useApp();
+  const isMediaBuyer = currentUser?.role === 'media_buyer';
 
   const handleChatNavigate = (href: string) => {
     if (href.startsWith('#section-')) {
@@ -170,6 +174,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {activeTab === 'roadmap' && (
         <div className="pt-[42px]">
           <RoadmapTab />
+        </div>
+      )}
+
+      {activeTab === 'mb_home' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <MBHomeTab />
+        </div>
+      )}
+
+      {activeTab === 'mb_sops' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <MBSOPsTab />
+        </div>
+      )}
+
+      {activeTab === 'mb_tools' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <MBToolsTab />
         </div>
       )}
 

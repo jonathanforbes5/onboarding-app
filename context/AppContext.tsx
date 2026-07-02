@@ -11,7 +11,7 @@ import {
 } from '@/lib/syncService';
 
 export type { UserProfile };
-export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'announcements' | 'feedback' | 'roadmap';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'announcements' | 'feedback' | 'roadmap' | 'mb_home' | 'mb_sops' | 'mb_tools';
 
 const TAB_TO_PATH: Record<ActiveTab, string> = {
   overview: '/',
@@ -23,10 +23,13 @@ const TAB_TO_PATH: Record<ActiveTab, string> = {
   announcements: '/announcements',
   feedback: '/feedback',
   roadmap: '/roadmap',
+  mb_home:  '/mb',
+  mb_sops:  '/mb/sops',
+  mb_tools: '/mb/tools',
 };
 
 function pathToTab(pathname: string): ActiveTab | null {
-  const slug = pathname.replace(/^\//, '').split('/')[0];
+  const slug = pathname.replace(/^\//, '');
   const map: Record<string, ActiveTab> = {
     '': 'overview',
     worksheet: 'worksheet',
@@ -37,6 +40,9 @@ function pathToTab(pathname: string): ActiveTab | null {
     announcements: 'announcements',
     feedback: 'feedback',
     roadmap: 'roadmap',
+    mb: 'mb_home',
+    'mb/sops': 'mb_sops',
+    'mb/tools': 'mb_tools',
   };
   return map[slug] ?? null;
 }
@@ -77,6 +83,7 @@ export interface AppState {
   showCompletionCelebration: boolean;
   profileEditOpen: boolean;
   previewMode: boolean;
+  previewAsMB: boolean;
 }
 
 interface AppContextType extends AppState {
@@ -100,6 +107,7 @@ interface AppContextType extends AppState {
   openProfileEdit: () => void;
   closeProfileEdit: () => void;
   setPreviewMode: (v: boolean) => void;
+  setPreviewAsMB: (v: boolean) => void;
   progressPercent: number;
   isBookmarked: (id: number) => boolean;
   isCompleted: (id: number) => boolean;
@@ -131,6 +139,7 @@ const defaultState: AppState = {
   showCompletionCelebration: false,
   profileEditOpen: false,
   previewMode: false,
+  previewAsMB: false,
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -195,7 +204,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           ...prev,
           currentUser: profile,
           authLoading: false,
-          activeTab: savedTab ?? 'overview',
+          activeTab: savedTab ?? (profile.role === 'media_buyer' ? 'mb_home' : 'overview'),
           syncStatus: 'synced',
         }));
         return;
@@ -285,7 +294,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // 'chat' was removed as a tab — if saved, fall back to default
     const rawSavedTab = localStorage.getItem(`ri_${userKey}_activeTab`);
     const savedTab = (rawSavedTab === 'chat' ? null : rawSavedTab) as ActiveTab | null;
-    const defaultTab: ActiveTab = savedTab ?? 'overview';
+    const defaultTab: ActiveTab = savedTab ?? (profile?.role === 'media_buyer' ? 'mb_home' : 'overview');
 
     setState((prev) => ({
       ...prev,
@@ -525,7 +534,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setShowCompletionCelebration = useCallback((v: boolean) => setState((p) => ({ ...p, showCompletionCelebration: v })), []);
   const openProfileEdit  = useCallback(() => setState((p) => ({ ...p, profileEditOpen: true })), []);
   const closeProfileEdit = useCallback(() => setState((p) => ({ ...p, profileEditOpen: false })), []);
-  const setPreviewMode   = useCallback((v: boolean) => setState((p) => ({ ...p, previewMode: v })), []);
+  const setPreviewMode   = useCallback((v: boolean) => setState((p) => ({ ...p, previewMode: v, previewAsMB: v ? false : p.previewAsMB })), []);
+  const setPreviewAsMB   = useCallback((v: boolean) => setState((p) => ({ ...p, previewAsMB: v, previewMode: v ? false : p.previewMode })), []);
 
   const progressPercent = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
   const isBookmarked    = (id: number) => state.bookmarks.includes(id);
@@ -554,6 +564,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       openProfileEdit,
       closeProfileEdit,
       setPreviewMode,
+      setPreviewAsMB,
       progressPercent,
       isBookmarked,
       isCompleted,

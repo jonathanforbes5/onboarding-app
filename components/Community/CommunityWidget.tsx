@@ -55,6 +55,15 @@ const WIDGET_TABS: { id: WidgetTab; label: string; icon: React.ReactNode }[] = [
   { id: 'roadmap',  label: 'Roadmap',    icon: <Map size={13} /> },
 ];
 
+const FB_CATS = [
+  { id: 'Feature Idea',        icon: '💡', color: '#F5C800' },
+  { id: 'Process Improvement', icon: '🔧', color: '#60A5FA' },
+  { id: 'Training Needed',     icon: '📚', color: '#A78BFA' },
+  { id: 'Portal Bug',          icon: '🐛', color: '#EF4444' },
+  { id: 'Recognition',         icon: '❤️',  color: '#F472B6' },
+  { id: 'Open Feedback',       icon: '💬', color: '#34D399' },
+];
+
 export function CommunityWidget() {
   const { currentUser } = useApp();
   const userKey = currentUser?.userKey ?? 'anonymous';
@@ -70,7 +79,8 @@ export function CommunityWidget() {
   const [feedLoading, setFeedLoading] = useState(false);
   const [showIdeaForm, setShowIdeaForm] = useState(false);
   const [showBugForm, setShowBugForm] = useState(false);
-  const [ideaForm, setIdeaForm] = useState({ title: '', description: '', category: '' });
+  const [ideaForm, setIdeaForm] = useState({ title: '', description: '' });
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [bugForm, setBugForm] = useState({ title: '', steps: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitDone, setSubmitDone] = useState<'idea' | 'bug' | null>(null);
@@ -183,12 +193,13 @@ export function CommunityWidget() {
         body: JSON.stringify({
           title: ideaForm.title.trim(),
           description: ideaForm.description.trim() || undefined,
-          category: ideaForm.category.trim() || undefined,
+          category: selectedCategory ?? undefined,
           created_by: 'anonymous',
         }),
       });
       if (res.ok) {
-        setIdeaForm({ title: '', description: '', category: '' });
+        setIdeaForm({ title: '', description: '' });
+        setSelectedCategory(null);
         setShowIdeaForm(false);
         setSubmitDone('idea');
         setTimeout(() => setSubmitDone(null), 3000);
@@ -505,9 +516,28 @@ export function CommunityWidget() {
                     <textarea placeholder="More details (optional)" value={ideaForm.description}
                       onChange={e => setIdeaForm(f => ({ ...f, description: e.target.value }))}
                       rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
-                    <input placeholder="Category (optional)" value={ideaForm.category}
-                      onChange={e => setIdeaForm(f => ({ ...f, category: e.target.value }))}
-                      style={inputStyle} />
+                    {/* Category pills */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {FB_CATS.map(cat => {
+                        const active = selectedCategory === cat.id;
+                        return (
+                          <button
+                            key={cat.id}
+                            onClick={() => setSelectedCategory(active ? null : cat.id)}
+                            style={{
+                              display: 'flex', alignItems: 'center', gap: 4,
+                              padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+                              cursor: 'pointer', border: `1.5px solid ${active ? cat.color : '#333'}`,
+                              backgroundColor: active ? `${cat.color}22` : 'transparent',
+                              color: active ? cat.color : '#666',
+                              transition: 'all 0.12s',
+                            }}
+                          >
+                            <span>{cat.icon}</span>{cat.id}
+                          </button>
+                        );
+                      })}
+                    </div>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button onClick={submitIdea} disabled={!ideaForm.title.trim() || submitting}
                         style={{
@@ -518,7 +548,7 @@ export function CommunityWidget() {
                         }}>
                         {submitting ? 'Submitting…' : 'Submit anonymously'}
                       </button>
-                      <button onClick={() => { setShowIdeaForm(false); setIdeaForm({ title: '', description: '', category: '' }); }}
+                      <button onClick={() => { setShowIdeaForm(false); setIdeaForm({ title: '', description: '' }); setSelectedCategory(null); }}
                         style={{ backgroundColor: '#1A1A1A', color: '#666', fontWeight: 700, fontSize: 12, padding: '9px 14px', borderRadius: 8, border: '1px solid #333', cursor: 'pointer' }}>
                         Cancel
                       </button>
@@ -620,6 +650,31 @@ export function CommunityWidget() {
                   })}
                 </div>
               )}
+
+              {/* Public board link */}
+              <div style={{
+                marginTop: 18, padding: '12px 14px', borderRadius: 10,
+                backgroundColor: '#0F0F0F', border: '1px solid #1E1E1E',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8,
+              }}>
+                <div>
+                  <div style={{ color: '#888', fontSize: 11, fontWeight: 700, marginBottom: 2 }}>🔒 Want full anonymity?</div>
+                  <div style={{ color: '#444', fontSize: 10, lineHeight: 1.5 }}>No login required — no IP logged, no account linked.</div>
+                </div>
+                <a
+                  href="/voice"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0,
+                    color: '#F5C800', fontSize: 11, fontWeight: 800, textDecoration: 'none',
+                    padding: '6px 10px', borderRadius: 7,
+                    backgroundColor: '#1A1400', border: '1px solid #F5C80033',
+                  }}
+                >
+                  Open board <ExternalLink size={10} />
+                </a>
+              </div>
             </div>
           )}
 

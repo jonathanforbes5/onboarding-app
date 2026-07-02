@@ -181,6 +181,8 @@ const CATEGORIES: Category[] = [
         description: 'SOPs for Indeed, Facebook, and GHL hiring buildouts — for clients who want more sales reps or project managers.',
         owner: 'Oscar',
         url: 'https://drive.google.com/drive/folders/1Yls5gpC1dSTU4WhuQFzaOMcanBILRgiU?usp=drive_link',
+        url2: 'https://fathom.video/share/hSLVbs6zzHnZLzUi4Wav35ENCeX-hxQt',
+        url2Label: 'Fathom Call',
       },
     ],
   },

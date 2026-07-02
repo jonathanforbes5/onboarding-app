@@ -15,21 +15,32 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const { user_key } = await req.json() as { user_key: string };
   if (!user_key) return NextResponse.json({ error: 'user_key required' }, { status: 400 });
 
-  // Check if already voted on this item
-  const { data: existing } = await client
+  const { data: existing, error: checkError } = await client
     .from('feedback_votes')
     .select('id')
     .eq('feedback_item_id', params.id)
     .eq('user_key', user_key)
     .maybeSingle();
 
+  // Table not found — votes can't be tracked yet; return gracefully
+  if (checkError?.message?.includes('does not exist')) {
+    return NextResponse.json({ voted: false });
+  }
+
   if (existing) {
     // Toggle off — remove vote and decrement
     await client.from('feedback_votes').delete().eq('id', (existing as { id: string }).id);
-    const { data: item } = await client.from('feedback_items').select('vote_count').eq('id', params.id).single();
+    const { data: item } = await client
+      .from('feedback_items')
+      .select('vote_count')
+      .eq('id', params.id)
+      .single();
     if (item) {
       const current = (item as unknown as { vote_count: number }).vote_count;
-      await client.from('feedback_items').update({ vote_count: Math.max(0, current - 1) }).eq('id', params.id);
+      await client
+        .from('feedback_items')
+        .update({ vote_count: Math.max(0, current - 1) })
+        .eq('id', params.id);
     }
     return NextResponse.json({ voted: false });
   }
@@ -47,10 +58,17 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   // Add vote and increment
   await client.from('feedback_votes').insert({ feedback_item_id: params.id, user_key });
-  const { data: item } = await client.from('feedback_items').select('vote_count').eq('id', params.id).single();
+  const { data: item } = await client
+    .from('feedback_items')
+    .select('vote_count')
+    .eq('id', params.id)
+    .single();
   if (item) {
     const current = (item as unknown as { vote_count: number }).vote_count;
-    await client.from('feedback_items').update({ vote_count: current + 1 }).eq('id', params.id);
+    await client
+      .from('feedback_items')
+      .update({ vote_count: current + 1 })
+      .eq('id', params.id);
   }
   return NextResponse.json({ voted: true });
 }

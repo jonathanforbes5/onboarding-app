@@ -1113,7 +1113,7 @@ function ContentAdmin() {
       });
       if (res.ok) {
         await updateFeedbackStatus(item.id, 'planned');
-        setPromotedIds(prev => new Set([...prev, item.id]));
+        setPromotedIds(prev => new Set(Array.from(prev).concat(item.id)));
         await loadAll();
       }
     } catch {}

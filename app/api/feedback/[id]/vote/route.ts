@@ -22,8 +22,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     .eq('user_key', user_key)
     .maybeSingle();
 
-  // Table not found — votes can't be tracked yet; return gracefully
-  if (checkError?.message?.includes('does not exist')) {
+  // Table not in schema cache (PGRST204) or genuinely missing — return gracefully
+  if (
+    checkError?.code === 'PGRST204' ||
+    checkError?.message?.includes('schema cache') ||
+    checkError?.message?.includes('does not exist')
+  ) {
     return NextResponse.json({ voted: false });
   }
 

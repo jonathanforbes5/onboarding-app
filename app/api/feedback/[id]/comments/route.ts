@@ -64,7 +64,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     .eq('feedback_item_id', params.id)
     .order('created_at', { ascending: true });
 
-  if (error?.message?.includes('does not exist')) {
+  if (error?.code === 'PGRST204' || error?.message?.includes('schema cache') || error?.message?.includes('does not exist')) {
     await ensureTable();
     return NextResponse.json({ comments: [] });
   }
@@ -91,9 +91,10 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     .select()
     .single();
 
-  if (error?.message?.includes('does not exist')) {
+  if (error?.code === 'PGRST204' || error?.message?.includes('schema cache') || error?.message?.includes('does not exist')) {
     const created = await ensureTable();
     if (!created) return NextResponse.json({ error: 'Database not ready' }, { status: 503 });
+    await new Promise((r) => setTimeout(r, 1500));
     const retry = await client.from('feedback_comments').insert(payload).select().single();
     if (retry.error) return NextResponse.json({ error: retry.error.message }, { status: 500 });
     return NextResponse.json({ comment: retry.data });

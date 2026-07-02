@@ -120,6 +120,7 @@ export default function VoiceClient() {
   const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [votingId, setVotingId] = useState<string | null>(null);
   const [rateLimited, setRateLimited] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     setVisitorId(getVisitorId());
@@ -150,19 +151,21 @@ export default function VoiceClient() {
     loadRoadmap();
   }, [visitorId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (isRetry = false) => {
     if (!title.trim() || !selectedCat || submitting) return;
     setSubmitting(true);
+    setSubmitError(null);
+    const payload = {
+      title: title.trim(),
+      description: details.trim() || undefined,
+      category: selectedCat,
+      created_by: 'anonymous',
+    };
     try {
       const res = await fetch('/api/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: details.trim() || undefined,
-          category: selectedCat,
-          created_by: 'anonymous',
-        }),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         const sid = genSubmissionId();
@@ -170,8 +173,17 @@ export default function VoiceClient() {
         setTitle(''); setDetails(''); setSelectedCat(null);
         setSection('board');
         loadFeed();
+      } else if (res.status === 503 && !isRetry) {
+        // Tables were just created — retry once after a short delay
+        setTimeout(() => handleSubmit(true), 1200);
+        return; // keep submitting=true while we wait
+      } else {
+        const body = await res.json().catch(() => ({})) as { error?: string };
+        setSubmitError(body.error ?? `Submission failed (${res.status}) — please try again.`);
       }
-    } catch {}
+    } catch {
+      setSubmitError('Network error — check your connection and try again.');
+    }
     setSubmitting(false);
   };
 
@@ -398,8 +410,27 @@ export default function VoiceClient() {
                     lineHeight: 1.6,
                   }}
                 />
+                {submitError && (
+                  <div style={{
+                    backgroundColor: '#1A0000', border: '1px solid #EF444455',
+                    borderRadius: 10, padding: '10px 14px',
+                    display: 'flex', alignItems: 'flex-start', gap: 8,
+                  }}>
+                    <span style={{ fontSize: 14, flexShrink: 0 }}>⚠️</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ color: '#EF4444', fontSize: 12, fontWeight: 700, marginBottom: 4 }}>{submitError}</div>
+                      <button
+                        onClick={() => handleSubmit()}
+                        style={{ background: 'none', border: 'none', color: '#EF8888', fontSize: 11, fontWeight: 700, cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+                      >
+                        Try again →
+                      </button>
+                    </div>
+                    <button onClick={() => setSubmitError(null)} style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: '0 2px' }}>×</button>
+                  </div>
+                )}
                 <button
-                  onClick={handleSubmit}
+                  onClick={() => handleSubmit()}
                   disabled={!title.trim() || submitting}
                   style={{
                     backgroundColor: title.trim() ? catColor : C.surf3,

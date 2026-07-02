@@ -84,6 +84,7 @@ export function CommunityWidget() {
   const [bugForm, setBugForm] = useState({ title: '', steps: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitDone, setSubmitDone] = useState<'idea' | 'bug' | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [votingId, setVotingId] = useState<string | null>(null);
 
   // Roadmap
@@ -183,9 +184,10 @@ export function CommunityWidget() {
     setVotingId(null);
   };
 
-  const submitIdea = async () => {
+  const submitIdea = async (isRetry = false) => {
     if (!ideaForm.title.trim() || submitting) return;
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const res = await fetch('/api/feedback', {
         method: 'POST',
@@ -204,8 +206,16 @@ export function CommunityWidget() {
         setSubmitDone('idea');
         setTimeout(() => setSubmitDone(null), 3000);
         loadFeedback();
+      } else if (res.status === 503 && !isRetry) {
+        setTimeout(() => submitIdea(true), 1200);
+        return;
+      } else {
+        const body = await res.json().catch(() => ({})) as { error?: string };
+        setSubmitError(body.error ?? 'Submission failed — please try again.');
       }
-    } catch {}
+    } catch {
+      setSubmitError('Network error — please try again.');
+    }
     setSubmitting(false);
   };
 
@@ -538,8 +548,13 @@ export function CommunityWidget() {
                         );
                       })}
                     </div>
+                    {submitError && (
+                      <div style={{ backgroundColor: '#1A0D0D', border: '1px solid #EF444433', borderRadius: 8, padding: '8px 10px', fontSize: 11, color: '#EF4444', fontWeight: 600 }}>
+                        ⚠️ {submitError}
+                      </div>
+                    )}
                     <div style={{ display: 'flex', gap: 8 }}>
-                      <button onClick={submitIdea} disabled={!ideaForm.title.trim() || submitting}
+                      <button onClick={() => submitIdea()} disabled={!ideaForm.title.trim() || submitting}
                         style={{
                           flex: 1, backgroundColor: ideaForm.title.trim() ? '#F5C800' : '#2A2A2A',
                           color: ideaForm.title.trim() ? '#000' : '#555', fontWeight: 800, fontSize: 12,
@@ -548,7 +563,7 @@ export function CommunityWidget() {
                         }}>
                         {submitting ? 'Submitting…' : 'Submit anonymously'}
                       </button>
-                      <button onClick={() => { setShowIdeaForm(false); setIdeaForm({ title: '', description: '' }); setSelectedCategory(null); }}
+                      <button onClick={() => { setShowIdeaForm(false); setIdeaForm({ title: '', description: '' }); setSelectedCategory(null); setSubmitError(null); }}
                         style={{ backgroundColor: '#1A1A1A', color: '#666', fontWeight: 700, fontSize: 12, padding: '9px 14px', borderRadius: 8, border: '1px solid #333', cursor: 'pointer' }}>
                         Cancel
                       </button>

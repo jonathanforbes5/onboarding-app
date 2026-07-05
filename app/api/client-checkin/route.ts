@@ -58,6 +58,9 @@ const EDITABLE = new Set<string>([
   // past the static HEADERS map above, so the write loop resolves their
   // column by live header-name lookup instead of position.
   'Reference-Call Friendly', 'Videographer Candidate',
+  // 2026-07-05 — Communication Milestones panel (cols BL/BM, live-header
+  // resolved). Touch level per Check-In SOP §4; call window per §4 Step 4.
+  'Touch Level', 'Preferred Call Window',
 ]);
 
 // Strip common business suffixes for fuzzy matching when an exact lookup

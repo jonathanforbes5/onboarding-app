@@ -16,6 +16,8 @@ import { RoadmapTab } from '@/components/Roadmap/RoadmapTab';
 import { MBHomeTab } from '@/components/MediaBuyer/MBHomeTab';
 import { MBSOPsTab } from '@/components/MediaBuyer/MBSOPsTab';
 import { MBToolsTab } from '@/components/MediaBuyer/MBToolsTab';
+import { CSHomeTab } from '@/components/CreativeSpecialist/CSHomeTab';
+import { CSSOPsTab } from '@/components/CreativeSpecialist/CSSOPsTab';
 import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { ChatWidget } from '@/components/Chat/ChatWidget';
@@ -192,6 +194,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {activeTab === 'mb_tools' && (isMediaBuyer || previewAsMB) && (
         <div className="pt-[42px]">
           <MBToolsTab />
+        </div>
+      )}
+
+      {activeTab === 'cs_home' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <CSHomeTab />
+        </div>
+      )}
+
+      {activeTab === 'cs_sops' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <CSSOPsTab />
         </div>
       )}
 

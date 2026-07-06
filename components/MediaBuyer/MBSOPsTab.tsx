@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
 const C = {
   bg: '#0A0A0A',
@@ -273,6 +273,16 @@ function ExternalLinkIcon() {
   );
 }
 
+function sopMatches(sop: SOPItem, q: string): boolean {
+  const lower = q.toLowerCase();
+  return (
+    sop.title.toLowerCase().includes(lower) ||
+    sop.description.toLowerCase().includes(lower) ||
+    sop.owner.toLowerCase().includes(lower) ||
+    (sop.tags ?? []).some((t) => t.toLowerCase().includes(lower))
+  );
+}
+
 function linkLabel(url: string): string {
   if (url.includes('loom.com')) return 'Watch Loom';
   if (url.includes('fathom.video')) return 'Watch Call';
@@ -427,10 +437,14 @@ function SOPCard({ sop, accent }: SOPCardProps) {
 
 interface CategorySectionProps {
   category: Category;
+  filteredSops?: SOPItem[];
 }
 
-function CategorySection({ category }: CategorySectionProps) {
+function CategorySection({ category, filteredSops }: CategorySectionProps) {
   const [open, setOpen] = useState(category.defaultOpen);
+  const isSearching = filteredSops !== undefined;
+  const sopsToShow = isSearching ? filteredSops : category.sops;
+  const isOpen = isSearching || open;
 
   return (
     <div
@@ -443,7 +457,7 @@ function CategorySection({ category }: CategorySectionProps) {
     >
       {/* Header */}
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => { if (!isSearching) setOpen((v) => !v); }}
         style={{
           width: '100%',
           display: 'flex',
@@ -452,57 +466,39 @@ function CategorySection({ category }: CategorySectionProps) {
           padding: '14px 18px',
           background: 'none',
           border: 'none',
-          cursor: 'pointer',
+          cursor: isSearching ? 'default' : 'pointer',
           textAlign: 'left',
           fontFamily: 'inherit',
           transition: 'background-color 0.15s',
-          borderBottom: open ? `1px solid ${C.border}` : 'none',
+          borderBottom: isOpen ? `1px solid ${C.border}` : 'none',
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = C.surf2; }}
+        onMouseEnter={(e) => { if (!isSearching) e.currentTarget.style.backgroundColor = C.surf2; }}
         onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
       >
         <span style={{ fontSize: 16, flexShrink: 0 }}>{category.icon}</span>
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          <span
-            style={{
-              color: C.text,
-              fontSize: 13.5,
-              fontWeight: 800,
-              letterSpacing: '-0.1px',
-            }}
-          >
+          <span style={{ color: C.text, fontSize: 13.5, fontWeight: 800, letterSpacing: '-0.1px' }}>
             {category.label}
           </span>
-          <span
-            style={{
-              backgroundColor: category.color + '22',
-              color: category.color,
-              border: `1px solid ${category.color}44`,
-              borderRadius: 20,
-              padding: '1px 8px',
-              fontSize: 10,
-              fontWeight: 800,
-            }}
-          >
-            {category.sops.length} {category.sops.length === 1 ? 'SOP' : 'SOPs'}
+          <span style={{
+            backgroundColor: category.color + '22', color: category.color,
+            border: `1px solid ${category.color}44`, borderRadius: 20,
+            padding: '1px 8px', fontSize: 10, fontWeight: 800,
+          }}>
+            {sopsToShow.length} {sopsToShow.length === 1 ? 'SOP' : 'SOPs'}
           </span>
         </div>
-        <div style={{ color: C.muted2, flexShrink: 0 }}>
-          <ChevronIcon open={open} />
-        </div>
+        {!isSearching && (
+          <div style={{ color: C.muted2, flexShrink: 0 }}>
+            <ChevronIcon open={open} />
+          </div>
+        )}
       </button>
 
       {/* SOP list */}
-      {open && (
-        <div
-          style={{
-            padding: '14px 16px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 8,
-          }}
-        >
-          {category.sops.map((sop, i) => (
+      {isOpen && (
+        <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {sopsToShow.map((sop, i) => (
             <SOPCard key={i} sop={sop} accent={category.color} />
           ))}
         </div>
@@ -512,6 +508,29 @@ function CategorySection({ category }: CategorySectionProps) {
 }
 
 export function MBSOPsTab() {
+  const [query, setQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const trimmed = query.trim();
+
+  const filteredCategories = trimmed
+    ? CATEGORIES
+        .map((cat) => ({ cat, matched: cat.sops.filter((s) => sopMatches(s, trimmed)) }))
+        .filter(({ matched, cat }) => matched.length > 0 || cat.label.toLowerCase().includes(trimmed.toLowerCase()))
+        .map(({ cat, matched }) => ({
+          cat,
+          filteredSops: cat.label.toLowerCase().includes(trimmed.toLowerCase()) ? cat.sops : matched,
+        }))
+    : null;
+
+  const totalResults = filteredCategories
+    ? filteredCategories.reduce((n, { filteredSops }) => n + filteredSops.length, 0)
+    : null;
+
+  const clearSearch = useCallback(() => {
+    setQuery('');
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <div
       style={{
@@ -530,7 +549,7 @@ export function MBSOPsTab() {
           border: `1px solid ${C.acc}33`,
           borderRadius: 16,
           padding: '22px 26px 20px',
-          marginBottom: 20,
+          marginBottom: 16,
           position: 'relative',
           overflow: 'hidden',
         }}>
@@ -564,11 +583,92 @@ export function MBSOPsTab() {
           </div>
         </div>
 
+        {/* ── Search bar ── */}
+        <div style={{ position: 'relative', marginBottom: 16 }}>
+          {/* Search icon */}
+          <svg
+            width="15" height="15" viewBox="0 0 20 20" fill="none"
+            style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: C.muted2 }}
+          >
+            <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M13.5 13.5L17 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search SOPs, topics, Looms, owners…"
+            style={{
+              width: '100%',
+              boxSizing: 'border-box',
+              backgroundColor: C.surf,
+              border: `1px solid ${trimmed ? C.acc + '55' : C.border2}`,
+              borderRadius: 10,
+              padding: '11px 40px 11px 40px',
+              color: C.text,
+              fontSize: 13.5,
+              fontFamily: 'inherit',
+              outline: 'none',
+              transition: 'border-color 0.15s',
+            }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = C.acc + '88'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = trimmed ? C.acc + '55' : C.border2; }}
+          />
+
+          {/* Clear button */}
+          {trimmed && (
+            <button
+              onClick={clearSearch}
+              style={{
+                position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: C.muted, padding: 4, display: 'flex', alignItems: 'center',
+              }}
+              title="Clear search"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* ── Results summary / no-results ── */}
+        {trimmed && (
+          <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {totalResults !== null && totalResults > 0 ? (
+              <>
+                <span style={{
+                  backgroundColor: C.acc + '18', border: `1px solid ${C.acc}33`,
+                  borderRadius: 20, padding: '2px 10px',
+                  fontSize: 11, fontWeight: 800, color: C.acc,
+                }}>
+                  {totalResults} result{totalResults !== 1 ? 's' : ''}
+                </span>
+                <span style={{ color: C.muted2, fontSize: 11.5 }}>
+                  across {filteredCategories!.length} categor{filteredCategories!.length !== 1 ? 'ies' : 'y'}
+                </span>
+              </>
+            ) : (
+              <span style={{ color: C.muted, fontSize: 12.5 }}>
+                No results for <strong style={{ color: C.text }}>&ldquo;{trimmed}&rdquo;</strong> — try a different term.
+              </span>
+            )}
+          </div>
+        )}
+
         {/* ── Category sections ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {CATEGORIES.map((cat) => (
-            <CategorySection key={cat.id} category={cat} />
-          ))}
+          {filteredCategories
+            ? filteredCategories.map(({ cat, filteredSops }) => (
+                <CategorySection key={cat.id} category={cat} filteredSops={filteredSops} />
+              ))
+            : CATEGORIES.map((cat) => (
+                <CategorySection key={cat.id} category={cat} />
+              ))
+          }
         </div>
 
       </div>

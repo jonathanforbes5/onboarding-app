@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
 const C = {
   bg: '#0A0A0A',
@@ -31,6 +31,16 @@ interface Category {
   color: string;
   defaultOpen: boolean;
   sops: SOPItem[];
+}
+
+function sopMatches(sop: SOPItem, q: string): boolean {
+  const lower = q.toLowerCase();
+  return (
+    sop.title.toLowerCase().includes(lower) ||
+    sop.description.toLowerCase().includes(lower) ||
+    sop.owner.toLowerCase().includes(lower) ||
+    (sop.tags ?? []).some((t) => t.toLowerCase().includes(lower))
+  );
 }
 
 function linkLabel(url: string): string {
@@ -255,20 +265,23 @@ function SOPCard({ sop, color }: { sop: SOPItem; color: string }) {
   );
 }
 
-function CategorySection({ cat }: { cat: Category }) {
+function CategorySection({ cat, filteredSops }: { cat: Category; filteredSops?: SOPItem[] }) {
   const [open, setOpen] = useState(cat.defaultOpen);
+  const isSearching = filteredSops !== undefined;
+  const sopsToShow = isSearching ? filteredSops : cat.sops;
+  const isOpen = isSearching || open;
 
   return (
     <div style={{ marginBottom: 20 }}>
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { if (!isSearching) setOpen((o) => !o); }}
         style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: 10,
-          cursor: 'pointer',
+          cursor: isSearching ? 'default' : 'pointer',
           padding: '12px 16px',
           backgroundColor: C.surf,
           border: `1px solid ${cat.color}33`,
-          borderRadius: open ? '12px 12px 0 0' : 12,
+          borderRadius: isOpen ? '12px 12px 0 0' : 12,
           transition: 'border-radius 0.15s',
           textAlign: 'left',
         }}
@@ -280,14 +293,16 @@ function CategorySection({ cat }: { cat: Category }) {
           borderRadius: 20, padding: '2px 8px',
           fontSize: 11, fontWeight: 800, color: cat.color,
         }}>
-          {cat.sops.length}
+          {sopsToShow.length}
         </span>
-        <span style={{ color: C.muted2, fontSize: 14, transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none', display: 'block' }}>
-          ▾
-        </span>
+        {!isSearching && (
+          <span style={{ color: C.muted2, fontSize: 14, transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none', display: 'block' }}>
+            ▾
+          </span>
+        )}
       </button>
 
-      {open && (
+      {isOpen && (
         <div style={{
           border: `1px solid ${cat.color}22`,
           borderTop: 'none',
@@ -298,7 +313,7 @@ function CategorySection({ cat }: { cat: Category }) {
           flexDirection: 'column',
           gap: 10,
         }}>
-          {cat.sops.map((sop) => (
+          {sopsToShow.map((sop) => (
             <SOPCard key={sop.title} sop={sop} color={cat.color} />
           ))}
         </div>
@@ -308,6 +323,29 @@ function CategorySection({ cat }: { cat: Category }) {
 }
 
 export function CSSOPsTab() {
+  const [query, setQuery] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const trimmed = query.trim();
+
+  const filteredCategories = trimmed
+    ? CATEGORIES
+        .map((cat) => ({ cat, matched: cat.sops.filter((s) => sopMatches(s, trimmed)) }))
+        .filter(({ matched, cat }) => matched.length > 0 || cat.label.toLowerCase().includes(trimmed.toLowerCase()))
+        .map(({ cat, matched }) => ({
+          cat,
+          filteredSops: cat.label.toLowerCase().includes(trimmed.toLowerCase()) ? cat.sops : matched,
+        }))
+    : null;
+
+  const totalResults = filteredCategories
+    ? filteredCategories.reduce((n, { filteredSops }) => n + filteredSops.length, 0)
+    : null;
+
+  const clearSearch = useCallback(() => {
+    setQuery('');
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -324,7 +362,7 @@ export function CSSOPsTab() {
           border: `1px solid ${C.acc}33`,
           borderRadius: 16,
           padding: '22px 26px 20px',
-          marginBottom: 24,
+          marginBottom: 16,
           position: 'relative',
           overflow: 'hidden',
         }}>
@@ -345,9 +383,87 @@ export function CSSOPsTab() {
           </p>
         </div>
 
-        {CATEGORIES.map((cat) => (
-          <CategorySection key={cat.id} cat={cat} />
-        ))}
+        {/* ── Search bar ── */}
+        <div style={{ position: 'relative', marginBottom: 16 }}>
+          <svg
+            width="15" height="15" viewBox="0 0 20 20" fill="none"
+            style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: C.muted2 }}
+          >
+            <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M13.5 13.5L17 17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search recordings, formats, SOPs, owners…"
+            style={{
+              width: '100%',
+              boxSizing: 'border-box',
+              backgroundColor: C.surf,
+              border: `1px solid ${trimmed ? C.acc + '55' : C.border2}`,
+              borderRadius: 10,
+              padding: '11px 40px 11px 40px',
+              color: C.text,
+              fontSize: 13.5,
+              fontFamily: 'inherit',
+              outline: 'none',
+              transition: 'border-color 0.15s',
+            }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = C.acc + '88'; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = trimmed ? C.acc + '55' : C.border2; }}
+          />
+          {trimmed && (
+            <button
+              onClick={clearSearch}
+              style={{
+                position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: C.muted, padding: 4, display: 'flex', alignItems: 'center',
+              }}
+              title="Clear search"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* ── Results summary ── */}
+        {trimmed && (
+          <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {totalResults !== null && totalResults > 0 ? (
+              <>
+                <span style={{
+                  backgroundColor: C.acc + '18', border: `1px solid ${C.acc}33`,
+                  borderRadius: 20, padding: '2px 10px',
+                  fontSize: 11, fontWeight: 800, color: C.acc,
+                }}>
+                  {totalResults} result{totalResults !== 1 ? 's' : ''}
+                </span>
+                <span style={{ color: C.muted2, fontSize: 11.5 }}>
+                  across {filteredCategories!.length} categor{filteredCategories!.length !== 1 ? 'ies' : 'y'}
+                </span>
+              </>
+            ) : (
+              <span style={{ color: C.muted, fontSize: 12.5 }}>
+                No results for <strong style={{ color: C.text }}>&ldquo;{trimmed}&rdquo;</strong> — try a different term.
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* ── Categories ── */}
+        {filteredCategories
+          ? filteredCategories.map(({ cat, filteredSops }) => (
+              <CategorySection key={cat.id} cat={cat} filteredSops={filteredSops} />
+            ))
+          : CATEGORIES.map((cat) => (
+              <CategorySection key={cat.id} cat={cat} />
+            ))
+        }
 
       </div>
     </div>

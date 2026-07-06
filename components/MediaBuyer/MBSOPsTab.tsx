@@ -273,6 +273,17 @@ function ExternalLinkIcon() {
   );
 }
 
+function linkLabel(url: string): string {
+  if (url.includes('loom.com')) return 'Watch Loom';
+  if (url.includes('fathom.video')) return 'Watch Call';
+  if (url.includes('docs.google.com/document')) return 'View Doc';
+  if (url.includes('docs.google.com/spreadsheets')) return 'View Sheet';
+  if (url.includes('drive.google.com/drive/folders')) return 'Open Folder';
+  if (url.includes('drive.google.com/file')) return 'View PDF';
+  if (url.includes('dashboard.roofignite.com')) return 'Open Tool';
+  return 'Open';
+}
+
 function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg
@@ -374,7 +385,7 @@ function SOPCard({ sop, accent }: SOPCardProps) {
                 e.currentTarget.style.borderColor = C.border2;
               }}
             >
-              Open <ExternalLinkIcon />
+              {linkLabel(sop.url)} <ExternalLinkIcon />
             </a>
           )}
           {sop.url2 && (
@@ -514,48 +525,42 @@ export function MBSOPsTab() {
       <div style={{ maxWidth: 860, margin: '0 auto' }}>
 
         {/* ── Page header ── */}
-        <div style={{ marginBottom: 20 }}>
-          <h1
-            style={{
-              color: C.text,
-              fontSize: 22,
-              fontWeight: 900,
-              margin: '0 0 6px',
-              letterSpacing: '-0.4px',
-            }}
-          >
-            SOP Master Index
-          </h1>
-          <p style={{ color: C.muted, fontSize: 13, margin: 0, lineHeight: 1.55 }}>
-            SOPs live on ClickUp and Drive. When stuck:{' '}
-            <span style={{ color: C.text, fontWeight: 700 }}>portal</span>{' '}
-            →{' '}
-            <span style={{ color: C.text, fontWeight: 700 }}>Claude</span>{' '}
-            →{' '}
-            <span style={{ color: C.text, fontWeight: 700 }}>peer</span>{' '}
-            →{' '}
-            <span style={{ color: C.text, fontWeight: 700 }}>escalate.</span>
+        <div style={{
+          background: 'linear-gradient(135deg, #1A1400 0%, #111111 60%)',
+          border: `1px solid ${C.acc}33`,
+          borderRadius: 16,
+          padding: '22px 26px 20px',
+          marginBottom: 20,
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+            background: `linear-gradient(90deg, ${C.acc}, transparent)`,
+            borderRadius: '16px 16px 0 0',
+          }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+            <span style={{ fontSize: 20 }}>📋</span>
+            <h1 style={{ color: C.text, fontSize: 20, fontWeight: 900, margin: 0, letterSpacing: '-0.3px' }}>
+              Media Buyer SOP Index
+            </h1>
+          </div>
+          <p style={{ color: C.muted, fontSize: 13, margin: '0 0 12px', lineHeight: 1.6, maxWidth: 560 }}>
+            Your complete reference for every task you'll encounter. Don't memorize — know where to find them.
+            Open the SOP before doing the task until it's automatic.
           </p>
-        </div>
-
-        {/* ── Notice banner ── */}
-        <div
-          style={{
-            backgroundColor: '#1A1400',
-            border: `1px solid ${C.acc}33`,
-            borderRadius: 10,
-            padding: '12px 16px',
-            marginBottom: 20,
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 10,
-          }}
-        >
-          <span style={{ fontSize: 16, flexShrink: 0 }}>📌</span>
-          <div style={{ fontSize: 12.5, color: '#bbb', lineHeight: 1.6 }}>
-            <strong style={{ color: C.acc }}>Don't memorize these — know where to find them.</strong>{' '}
-            Open the relevant SOP every time you're doing that task until you know it cold.
-            All links open in ClickUp or Google Drive.
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+            <span style={{ color: C.muted2, fontSize: 11.5 }}>When stuck:</span>
+            {['Portal', 'Claude', 'Peer', 'Escalate'].map((s, i, arr) => (
+              <React.Fragment key={s}>
+                <span style={{
+                  backgroundColor: C.acc + '18', border: `1px solid ${C.acc}33`,
+                  borderRadius: 6, padding: '2px 8px',
+                  fontSize: 11, fontWeight: 800, color: C.acc,
+                }}>{s}</span>
+                {i < arr.length - 1 && <span style={{ color: C.muted2, fontSize: 11 }}>→</span>}
+              </React.Fragment>
+            ))}
           </div>
         </div>
 

@@ -33,6 +33,16 @@ interface Category {
   sops: SOPItem[];
 }
 
+function linkLabel(url: string): string {
+  if (url.includes('loom.com')) return 'Watch Loom';
+  if (url.includes('fathom.video')) return 'Watch Call';
+  if (url.includes('docs.google.com/document')) return 'View Doc';
+  if (url.includes('docs.google.com/spreadsheets')) return 'View Sheet';
+  if (url.includes('drive.google.com/drive/folders')) return 'Open Folder';
+  if (url.includes('drive.google.com/file')) return 'View PDF';
+  return 'Open';
+}
+
 const CATEGORIES: Category[] = [
   {
     id: 'training',
@@ -220,7 +230,7 @@ function SOPCard({ sop, color }: { sop: SOPItem; color: string }) {
                 textDecoration: 'none',
               }}
             >
-              <span>↗</span> Open
+              <span>↗</span> {linkLabel(sop.url)}
             </a>
           )}
           {sop.url2 && (
@@ -236,7 +246,7 @@ function SOPCard({ sop, color }: { sop: SOPItem; color: string }) {
                 textDecoration: 'none',
               }}
             >
-              <span>↗</span> {sop.url2Label ?? 'Link 2'}
+              <span>↗</span> {sop.url2Label ?? linkLabel(sop.url2)}
             </a>
           )}
         </div>

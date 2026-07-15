@@ -213,36 +213,47 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Live header row — fetched lazily, only when a field isn't in the static
-    // HEADERS map, so newer columns (e.g. BJ Reference-Call Friendly / BK
-    // Videographer Candidate) resolve by NAME instead of hardcoded position.
-    // Position is a liability; header names aren't.
-    let liveHeaders: string[] | null = null;
-    const needLive = Object.keys(fields).some(f => (HEADERS as readonly string[]).indexOf(f) < 0);
-    if (needLive) {
-      try {
-        const hr = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB_NAME)}!1:1`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
-        if (hr.ok) {
-          const hj = await hr.json() as { values?: string[][] };
-          liveHeaders = (hj.values && hj.values[0]) ? hj.values[0].map((h) => String(h ?? '')) : null;
-        }
-      } catch { /* fall back to the static map only */ }
+    // Live header row — ALWAYS fetched; every field resolves by NAME.
+    // The static HEADERS map above is metadata for GET only. Writing by
+    // hardcoded position corrupted data when the sheet was re-laid-out on
+    // 2026-07-13 (e.g. "Launch Date" saves landed in the "Cycle 1 Billing
+    // Amount" column). Position is a liability; header names aren't.
+    const hr = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB_NAME)}!1:1`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!hr.ok) {
+      return NextResponse.json(
+        { ok: false, error: `header read failed (${hr.status}) — refusing to write by stale positions` },
+        { status: 502, headers: corsHeaders },
+      );
+    }
+    const hj = await hr.json() as { values?: string[][] };
+    const liveHeaders: string[] = (hj.values && hj.values[0])
+      ? hj.values[0].map((h) => String(h ?? ''))
+      : [];
+    if (!liveHeaders.length) {
+      return NextResponse.json(
+        { ok: false, error: 'empty header row — refusing to write' },
+        { status: 502, headers: corsHeaders },
+      );
     }
 
     // Build batch update payload — one A1 range per field.
     const valueRanges = [];
+    const unresolved: string[] = [];
     for (const [field, raw] of Object.entries(fields)) {
-      let colIdx = (HEADERS as readonly string[]).indexOf(field);
-      if (colIdx < 0 && liveHeaders) {
-        colIdx = liveHeaders.findIndex((h) => h.trim().toLowerCase() === field.trim().toLowerCase());
-      }
-      if (colIdx < 0) continue;
+      const colIdx = liveHeaders.findIndex((h) => h.trim().toLowerCase() === field.trim().toLowerCase());
+      if (colIdx < 0) { unresolved.push(field); continue; }
       const cell = `${TAB_NAME}!${colLetter(colIdx)}${rowIdx}`;
       const val  = raw == null ? '' : String(raw);
       valueRanges.push({ range: cell, values: [[val]] });
+    }
+    if (unresolved.length) {
+      return NextResponse.json(
+        { ok: false, error: `columns not found on sheet: ${unresolved.join(', ')}` },
+        { status: 400, headers: corsHeaders },
+      );
     }
     if (valueRanges.length === 0) {
       return NextResponse.json({ ok: true, row: rowIdx, updated: 0 }, { headers: corsHeaders });

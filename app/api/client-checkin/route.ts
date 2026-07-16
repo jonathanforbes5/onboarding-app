@@ -61,6 +61,9 @@ const EDITABLE = new Set<string>([
   // 2026-07-05 — Communication Milestones panel (cols BL/BM, live-header
   // resolved). Touch level per Check-In SOP §4; call window per §4 Step 4.
   'Touch Level', 'Preferred Call Window',
+  // 2026-07-16 — Contract chip on the account page lets CSMs paste the
+  // contract Drive link when it's missing.
+  'ContractLink',
 ]);
 
 // Strip common business suffixes for fuzzy matching when an exact lookup
@@ -175,17 +178,20 @@ export function GET() {
 }
 
 // POST /api/client-checkin
-// Body: { businessName: string, fields: { 'Field Name': value, ... } }
-// Returns: { ok: true, row, updated } or { ok: false, error }
+// Body: { businessName: string, clientId?: string|number, fields: { 'Field Name': value, ... } }
+// clientId (permanent numeric Client ID) takes priority for row matching —
+// rename-proof; businessName is the fallback for unstamped rows.
+// Returns: { ok: true, row, updated, matched_by } or { ok: false, error }
 export async function POST(req: NextRequest) {
   let body: any;
   try { body = await req.json(); }
   catch { return NextResponse.json({ ok: false, error: 'invalid json' }, { status: 400, headers: corsHeaders }); }
 
   const businessName = (body?.businessName ?? '').toString().trim();
+  const clientId     = (body?.clientId ?? '').toString().trim();
   const fields       = body?.fields as Record<string, unknown> | undefined;
-  if (!businessName) {
-    return NextResponse.json({ ok: false, error: 'businessName required' }, { status: 400, headers: corsHeaders });
+  if (!businessName && !/^\d+$/.test(clientId)) {
+    return NextResponse.json({ ok: false, error: 'businessName or clientId required' }, { status: 400, headers: corsHeaders });
   }
   if (!fields || typeof fields !== 'object') {
     return NextResponse.json({ ok: false, error: 'fields object required' }, { status: 400, headers: corsHeaders });
@@ -205,13 +211,6 @@ export async function POST(req: NextRequest) {
 
   try {
     const token = await getAccessToken();
-    const rowIdx = await findRowByBusinessName(token, businessName);
-    if (!rowIdx) {
-      return NextResponse.json(
-        { ok: false, error: `no row found for businessName "${businessName}"` },
-        { status: 404, headers: corsHeaders },
-      );
-    }
 
     // Live header row — ALWAYS fetched; every field resolves by NAME.
     // The static HEADERS map above is metadata for GET only. Writing by
@@ -236,6 +235,41 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { ok: false, error: 'empty header row — refusing to write' },
         { status: 502, headers: corsHeaders },
+      );
+    }
+
+    // ---- Row matching: permanent Client ID first (rename-proof), then name ----
+    let rowIdx: number | null = null;
+    let matchedBy = '';
+    if (/^\d+$/.test(clientId)) {
+      const idColIdx = liveHeaders.findIndex((h) => h.trim().toLowerCase() === 'client id');
+      if (idColIdx >= 0) {
+        const idCol = colLetter(idColIdx);
+        const cr = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(TAB_NAME)}!${idCol}2:${idCol}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        if (cr.ok) {
+          const cj = await cr.json() as { values?: string[][] };
+          const cells = cj.values ?? [];
+          for (let i = 0; i < cells.length; i++) {
+            if (((cells[i]?.[0] ?? '') + '').trim() === clientId) {
+              rowIdx = i + 2;
+              matchedBy = 'client_id';
+              break;
+            }
+          }
+        }
+      }
+    }
+    if (!rowIdx && businessName) {
+      rowIdx = await findRowByBusinessName(token, businessName);
+      if (rowIdx) matchedBy = 'business_name';
+    }
+    if (!rowIdx) {
+      return NextResponse.json(
+        { ok: false, error: `no row found for clientId "${clientId}" / businessName "${businessName}"` },
+        { status: 404, headers: corsHeaders },
       );
     }
 
@@ -274,7 +308,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { ok: true, row: rowIdx, updated: j.totalUpdatedCells ?? valueRanges.length },
+      { ok: true, row: rowIdx, updated: j.totalUpdatedCells ?? valueRanges.length, matched_by: matchedBy },
       { headers: corsHeaders },
     );
   } catch (err) {

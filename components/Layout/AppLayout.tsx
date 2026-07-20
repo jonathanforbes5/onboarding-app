@@ -16,6 +16,9 @@ import { RoadmapTab } from '@/components/Roadmap/RoadmapTab';
 import { MBHomeTab } from '@/components/MediaBuyer/MBHomeTab';
 import { MBSOPsTab } from '@/components/MediaBuyer/MBSOPsTab';
 import { MBToolsTab } from '@/components/MediaBuyer/MBToolsTab';
+import { MBTrainingTab } from '@/components/MediaBuyer/MBTrainingTab';
+import { MBWorksheetTab } from '@/components/MediaBuyer/MBWorksheetTab';
+import { MBPresentationTab } from '@/components/MediaBuyer/MBPresentationTab';
 import { CSHomeTab } from '@/components/CreativeSpecialist/CSHomeTab';
 import { CSSOPsTab } from '@/components/CreativeSpecialist/CSSOPsTab';
 import { SearchModal } from '@/components/Interactive/SearchModal';
@@ -194,6 +197,24 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {activeTab === 'mb_tools' && (isMediaBuyer || previewAsMB) && (
         <div className="pt-[42px]">
           <MBToolsTab />
+        </div>
+      )}
+
+      {activeTab === 'mb_training' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <MBTrainingTab />
+        </div>
+      )}
+
+      {activeTab === 'mb_worksheet' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <MBWorksheetTab />
+        </div>
+      )}
+
+      {activeTab === 'mb_presentation' && (isMediaBuyer || previewAsMB) && (
+        <div className="pt-[42px]">
+          <MBPresentationTab />
         </div>
       )}
 

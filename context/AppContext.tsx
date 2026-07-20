@@ -11,7 +11,7 @@ import {
 } from '@/lib/syncService';
 
 export type { UserProfile };
-export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'announcements' | 'feedback' | 'roadmap' | 'mb_home' | 'mb_sops' | 'mb_tools' | 'cs_home' | 'cs_sops';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'announcements' | 'feedback' | 'roadmap' | 'mb_home' | 'mb_sops' | 'mb_tools' | 'mb_training' | 'mb_worksheet' | 'mb_presentation' | 'cs_home' | 'cs_sops';
 
 const TAB_TO_PATH: Record<ActiveTab, string> = {
   overview: '/',
@@ -23,11 +23,14 @@ const TAB_TO_PATH: Record<ActiveTab, string> = {
   announcements: '/announcements',
   feedback: '/feedback',
   roadmap: '/roadmap',
-  mb_home:  '/mb',
-  mb_sops:  '/mb/sops',
-  mb_tools: '/mb/tools',
-  cs_home:  '/creative',
-  cs_sops:  '/creative/sops',
+  mb_home:         '/mb',
+  mb_sops:         '/mb/sops',
+  mb_tools:        '/mb/tools',
+  mb_training:     '/mb/training',
+  mb_worksheet:    '/mb/worksheet',
+  mb_presentation: '/mb/presentation',
+  cs_home:         '/creative',
+  cs_sops:         '/creative/sops',
 };
 
 function pathToTab(pathname: string): ActiveTab | null {
@@ -45,6 +48,9 @@ function pathToTab(pathname: string): ActiveTab | null {
     mb: 'mb_home',
     'mb/sops': 'mb_sops',
     'mb/tools': 'mb_tools',
+    'mb/training': 'mb_training',
+    'mb/worksheet': 'mb_worksheet',
+    'mb/presentation': 'mb_presentation',
     creative: 'cs_home',
     'creative/sops': 'cs_sops',
   };
@@ -73,11 +79,15 @@ export interface AppState {
   currentDay: number;
   checklistItems: Record<string, boolean>;
 
-  // Training sections
+  // Training sections (Pod Manager)
   completedSections: number[];
   quizScores: Record<number, number>;
   bookmarks: number[];
   notes: Record<number, Note>;
+
+  // MB training
+  completedMBDays: number[];
+  mbQuizScores: Record<number, number>;
 
   // UI overlays
   searchQuery: string;
@@ -101,6 +111,9 @@ interface AppContextType extends AppState {
   toggleChecklistItem: (groupId: string, index: number) => void;
   markSectionComplete: (id: number) => void;
   toggleBookmark: (id: number) => void;
+  markMBDayComplete: (day: number) => void;
+  saveMBQuizScore: (day: number, score: number) => void;
+  mbTrainingPercent: number;
   saveNote: (sectionId: number, text: string) => void;
   saveQuizScore: (sectionId: number, score: number) => void;
   setSearchQuery: (q: string) => void;
@@ -118,7 +131,9 @@ interface AppContextType extends AppState {
 }
 
 const SECTIONS_STORAGE_KEY = 'ri_onboarding_v1';
+const MB_TRAINING_STORAGE_KEY = 'ri_mb_training_v1';
 const TOTAL_SECTIONS = 20;
+const TOTAL_MB_DAYS = 5;
 const BYPASS_KEY = 'ri_bypass_profile';
 
 const defaultState: AppState = {
@@ -136,6 +151,8 @@ const defaultState: AppState = {
   quizScores: {},
   bookmarks: [],
   notes: {},
+  completedMBDays: [],
+  mbQuizScores: {},
   searchQuery: '',
   showSearch: false,
   showNotes: false,
@@ -178,6 +195,20 @@ function persistSectionsLocal(state: AppState) {
   } catch {}
 }
 
+function loadMBTrainingLocal(): Partial<AppState> {
+  try {
+    const saved = localStorage.getItem(MB_TRAINING_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : {};
+  } catch { return {}; }
+}
+
+function persistMBTrainingLocal(state: AppState) {
+  try {
+    const { completedMBDays, mbQuizScores } = state;
+    localStorage.setItem(MB_TRAINING_STORAGE_KEY, JSON.stringify({ completedMBDays, mbQuizScores }));
+  } catch {}
+}
+
 function persistChecklistLocal(userKey: string, items: Record<string, boolean>) {
   try {
     Object.entries(items).forEach(([k, v]) => {
@@ -189,10 +220,11 @@ function persistChecklistLocal(userKey: string, items: Record<string, boolean>) 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<AppState>(defaultState);
 
-  // ── Load sections state from localStorage on boot ────────
+  // ── Load sections + MB training state from localStorage on boot ────────
   useEffect(() => {
     const saved = loadSectionsLocal();
-    setState((prev) => ({ ...prev, ...saved }));
+    const mbSaved = loadMBTrainingLocal();
+    setState((prev) => ({ ...prev, ...saved, ...mbSaved }));
   }, []);
 
   // ── Supabase Auth listener ────────────────────────────────
@@ -530,6 +562,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  // ── MB Training ───────────────────────────────────────────
+  const markMBDayComplete = useCallback((day: number) => {
+    setState((prev) => {
+      if (prev.completedMBDays.includes(day)) return prev;
+      const next = { ...prev, completedMBDays: [...prev.completedMBDays, day] };
+      persistMBTrainingLocal(next);
+      return next;
+    });
+  }, []);
+
+  const saveMBQuizScore = useCallback((day: number, score: number) => {
+    setState((prev) => {
+      const existing = prev.mbQuizScores[day];
+      if (existing !== undefined && existing >= score) return prev;
+      const next = { ...prev, mbQuizScores: { ...prev.mbQuizScores, [day]: score } };
+      persistMBTrainingLocal(next);
+      return next;
+    });
+  }, []);
+
   // ── UI overlays ───────────────────────────────────────────
   const setSearchQuery       = useCallback((q: string)  => setState((p) => ({ ...p, searchQuery: q })), []);
   const setShowSearch        = useCallback((v: boolean)  => setState((p) => ({ ...p, showSearch: v })), []);
@@ -541,9 +593,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setPreviewMode   = useCallback((v: boolean) => setState((p) => ({ ...p, previewMode: v, previewAsMB: v ? false : p.previewAsMB })), []);
   const setPreviewAsMB   = useCallback((v: boolean) => setState((p) => ({ ...p, previewAsMB: v, previewMode: v ? false : p.previewMode })), []);
 
-  const progressPercent = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
-  const isBookmarked    = (id: number) => state.bookmarks.includes(id);
-  const isCompleted     = (id: number) => state.completedSections.includes(id);
+  const progressPercent    = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
+  const mbTrainingPercent  = Math.round((state.completedMBDays.length / TOTAL_MB_DAYS) * 100);
+  const isBookmarked       = (id: number) => state.bookmarks.includes(id);
+  const isCompleted        = (id: number) => state.completedSections.includes(id);
 
   return (
     <AppContext.Provider value={{
@@ -560,6 +613,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       toggleBookmark,
       saveNote,
       saveQuizScore,
+      markMBDayComplete,
+      saveMBQuizScore,
+      mbTrainingPercent,
       setSearchQuery,
       setShowSearch,
       setShowNotes,

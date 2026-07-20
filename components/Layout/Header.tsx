@@ -68,11 +68,14 @@ export function Header() {
   const showMBPortal = isMediaBuyer || (isSuperAdmin && previewAsMB);
   const allTabs: TabDef[] = showMBPortal
     ? [
-        { id: 'mb_home',  label: 'Home',     icon: '🏠' },
-        { id: 'mb_sops',  label: 'SOPs',     icon: '📋' },
-        { id: 'mb_tools', label: 'Tools',    icon: '🛠️' },
-        { id: 'cs_home',  label: 'Creative', icon: '🎨' },
-        { id: 'cs_sops',  label: 'Creative SOPs', icon: '📐' },
+        { id: 'mb_home',         label: 'Home',         icon: '🏠' },
+        { id: 'mb_training',     label: 'Training',     icon: '📚' },
+        { id: 'mb_worksheet',    label: 'Worksheet',    icon: '📝' },
+        { id: 'mb_presentation', label: 'Presentation', icon: '🎯' },
+        { id: 'mb_sops',         label: 'SOPs',         icon: '📋' },
+        { id: 'mb_tools',        label: 'Tools',        icon: '🛠️' },
+        { id: 'cs_home',         label: 'Creative',     icon: '🎨' },
+        { id: 'cs_sops',         label: 'Creative SOPs', icon: '📐' },
       ]
     : [
         { id: 'overview',   label: 'Overview',   icon: '🏠' },

@@ -34,8 +34,9 @@ import { QuizPrompt } from '@/components/UI/QuizPrompt';
 import { useApp } from '@/context/AppContext';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, setCurrentSection, profileEditOpen, openProfileEdit, closeProfileEdit, previewMode, previewAsMB } = useApp();
+  const { currentUser, authLoading, accessDenied, deniedEmail, activeTab, showCurriculumMap, syncStatus, showCompletionCelebration, setShowCompletionCelebration, setActiveTab, setCurrentSection, profileEditOpen, openProfileEdit, closeProfileEdit, previewMode, previewAsMB, previewAsCS } = useApp();
   const isMediaBuyer = currentUser?.role === 'media_buyer';
+  const isCreativeSpecialist = currentUser?.role === 'creative_specialist';
 
   const handleChatNavigate = (href: string) => {
     if (href.startsWith('#section-')) {
@@ -218,13 +219,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {activeTab === 'cs_home' && (isMediaBuyer || previewAsMB) && (
+      {activeTab === 'cs_home' && (isCreativeSpecialist || previewAsCS) && (
         <div className="pt-[42px]">
           <CSHomeTab />
         </div>
       )}
 
-      {activeTab === 'cs_sops' && (isMediaBuyer || previewAsMB) && (
+      {activeTab === 'cs_sops' && (isCreativeSpecialist || previewAsCS) && (
         <div className="pt-[42px]">
           <CSSOPsTab />
         </div>

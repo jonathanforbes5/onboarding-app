@@ -24,13 +24,16 @@ export function Header() {
     setPreviewMode,
     previewAsMB,
     setPreviewAsMB,
+    previewAsCS,
+    setPreviewAsCS,
     openProfileEdit,
   } = useApp();
 
-  const userColor    = currentUser ? getUserColor(currentUser.userKey) : null;
-  const isSuperAdmin   = currentUser?.role === 'super_admin';
-  const isMediaBuyer   = currentUser?.role === 'media_buyer';
-  const effectiveAdmin = isSuperAdmin && !previewMode;
+  const userColor           = currentUser ? getUserColor(currentUser.userKey) : null;
+  const isSuperAdmin        = currentUser?.role === 'super_admin';
+  const isMediaBuyer        = currentUser?.role === 'media_buyer';
+  const isCreativeSpecialist = currentUser?.role === 'creative_specialist';
+  const effectiveAdmin      = isSuperAdmin && !previewMode;
 
   const isPod4User      = currentUser?.userKey === 'li' || currentUser?.userKey === 'dakota';
   const isPod5User      = currentUser?.userKey === 'ksenia' || currentUser?.userKey === 'adeen';
@@ -66,16 +69,19 @@ export function Header() {
 
   type TabDef = { id: Parameters<typeof setActiveTab>[0]; label: string; icon: string };
   const showMBPortal = isMediaBuyer || (isSuperAdmin && previewAsMB);
+  const showCSPortal = isCreativeSpecialist || (isSuperAdmin && previewAsCS);
   const allTabs: TabDef[] = showMBPortal
     ? [
-        { id: 'mb_home',         label: 'Home',         icon: '🏠' },
-        { id: 'mb_training',     label: 'Training',     icon: '📚' },
-        { id: 'mb_worksheet',    label: 'Worksheet',    icon: '📝' },
-        { id: 'mb_presentation', label: 'Presentation', icon: '🎯' },
-        { id: 'mb_sops',         label: 'SOPs',         icon: '📋' },
-        { id: 'mb_tools',        label: 'Tools',        icon: '🛠️' },
-        { id: 'cs_home',         label: 'Creative',     icon: '🎨' },
-        { id: 'cs_sops',         label: 'Creative SOPs', icon: '📐' },
+        { id: 'mb_home',      label: 'Home',      icon: '🏠' },
+        { id: 'mb_training',  label: 'Training',  icon: '📚' },
+        { id: 'mb_worksheet', label: 'Worksheet', icon: '📝' },
+        { id: 'mb_sops',      label: 'SOPs',      icon: '📋' },
+        { id: 'mb_tools',     label: 'Tools',     icon: '🛠️' },
+      ]
+    : showCSPortal
+    ? [
+        { id: 'cs_home', label: 'Home', icon: '🏠' },
+        { id: 'cs_sops', label: 'SOPs', icon: '📋' },
       ]
     : [
         { id: 'overview',   label: 'Overview',   icon: '🏠' },
@@ -86,7 +92,7 @@ export function Header() {
         ...(effectiveAdmin ? [{ id: 'admin' as Parameters<typeof setActiveTab>[0], label: 'Admin', icon: '📊' }] : []),
       ];
   const primaryTabs = allTabs.filter(t => t.id !== 'admin');
-  const adminTab = (effectiveAdmin && !showMBPortal) ? { id: 'admin' as Parameters<typeof setActiveTab>[0], label: 'Admin', icon: '📊' } : null;
+  const adminTab = (effectiveAdmin && !showMBPortal && !showCSPortal) ? { id: 'admin' as Parameters<typeof setActiveTab>[0], label: 'Admin', icon: '📊' } : null;
 
   return (
   <>
@@ -164,6 +170,22 @@ export function Header() {
         </div>
       )}
 
+      {/* Creative Specialist preview banner */}
+      {previewAsCS && (
+        <div style={{
+          backgroundColor: '#0D1A10', borderBottom: '1px solid #4ADE8033',
+          padding: '4px 12px', fontSize: 11, fontWeight: 700, color: '#4ADE80',
+          textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+        }}>
+          <Eye size={12} />
+          Previewing as Creative Specialist —
+          <button onClick={() => setPreviewAsCS(false)}
+            style={{ color: '#4ADE80', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, fontWeight: 700 }}>
+            exit preview
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center gap-2 px-3 py-2 relative">
 
         {/* ── Left: sidebar toggle (mobile) + logo (desktop-left / mobile-absolute-center) ── */}
@@ -187,14 +209,14 @@ export function Header() {
             </button>
           )}
           {/* Logo — desktop left */}
-          <button onClick={() => navigate(showMBPortal ? 'mb_home' : 'overview')} className="hidden sm:flex items-center" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+          <button onClick={() => navigate(showCSPortal ? 'cs_home' : showMBPortal ? 'mb_home' : 'overview')} className="hidden sm:flex items-center" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
             <img src="/logo.png" alt="Roof Ignite" className="h-7 w-auto" />
           </button>
         </div>
 
         {/* Logo centered absolutely — mobile only (sm:hidden must not be overridden by inline display) */}
         <button
-          onClick={() => navigate(showMBPortal ? 'mb_home' : 'overview')}
+          onClick={() => navigate(showCSPortal ? 'cs_home' : showMBPortal ? 'mb_home' : 'overview')}
           className="sm:hidden absolute left-1/2 -translate-x-1/2"
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
         >
@@ -320,6 +342,10 @@ export function Header() {
                   <button onClick={() => setPreviewAsMB(!previewAsMB)} className="p-1 rounded hover:bg-white/10 transition-colors"
                     title={previewAsMB ? 'Exit Media Buyer preview' : 'Preview as Media Buyer'}>
                     {previewAsMB ? <EyeOff size={13} style={{ color: '#818CF8' }} /> : <Eye size={13} className="text-white/35 hover:text-white/80" />}
+                  </button>
+                  <button onClick={() => setPreviewAsCS(!previewAsCS)} className="p-1 rounded hover:bg-white/10 transition-colors"
+                    title={previewAsCS ? 'Exit Creative Specialist preview' : 'Preview as Creative Specialist'}>
+                    {previewAsCS ? <EyeOff size={13} style={{ color: '#4ADE80' }} /> : <Eye size={13} className="text-white/35 hover:text-white/80" />}
                   </button>
                 </>
               )}
@@ -488,6 +514,12 @@ export function Header() {
             {previewAsMB ? <EyeOff size={18} color="#818CF8" style={{ flexShrink: 0 }} /> : <Eye size={18} color="#888" style={{ flexShrink: 0 }} />}
             <span style={{ color: previewAsMB ? '#818CF8' : '#CCC', fontSize: 15, fontWeight: 500 }}>
               {previewAsMB ? 'Exit Media Buyer preview' : 'Preview as Media Buyer'}
+            </span>
+          </button>
+          <button className="hdr-nav-item" onClick={() => { setPreviewAsCS(!previewAsCS); setMobileMenuOpen(false); }}>
+            {previewAsCS ? <EyeOff size={18} color="#4ADE80" style={{ flexShrink: 0 }} /> : <Eye size={18} color="#888" style={{ flexShrink: 0 }} />}
+            <span style={{ color: previewAsCS ? '#4ADE80' : '#CCC', fontSize: 15, fontWeight: 500 }}>
+              {previewAsCS ? 'Exit Creative Specialist preview' : 'Preview as Creative Specialist'}
             </span>
           </button>
         </div>

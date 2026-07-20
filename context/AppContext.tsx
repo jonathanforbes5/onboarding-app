@@ -98,6 +98,7 @@ export interface AppState {
   profileEditOpen: boolean;
   previewMode: boolean;
   previewAsMB: boolean;
+  previewAsCS: boolean;
 }
 
 interface AppContextType extends AppState {
@@ -125,6 +126,7 @@ interface AppContextType extends AppState {
   closeProfileEdit: () => void;
   setPreviewMode: (v: boolean) => void;
   setPreviewAsMB: (v: boolean) => void;
+  setPreviewAsCS: (v: boolean) => void;
   progressPercent: number;
   isBookmarked: (id: number) => boolean;
   isCompleted: (id: number) => boolean;
@@ -161,6 +163,7 @@ const defaultState: AppState = {
   profileEditOpen: false,
   previewMode: false,
   previewAsMB: false,
+  previewAsCS: false,
 };
 
 const AppContext = createContext<AppContextType | null>(null);
@@ -240,7 +243,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           ...prev,
           currentUser: profile,
           authLoading: false,
-          activeTab: savedTab ?? (profile.role === 'media_buyer' ? 'mb_home' : 'overview'),
+          activeTab: savedTab ?? (profile.role === 'media_buyer' ? 'mb_home' : profile.role === 'creative_specialist' ? 'cs_home' : 'overview'),
           syncStatus: 'synced',
         }));
         return;
@@ -330,7 +333,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     // 'chat' was removed as a tab — if saved, fall back to default
     const rawSavedTab = localStorage.getItem(`ri_${userKey}_activeTab`);
     const savedTab = (rawSavedTab === 'chat' ? null : rawSavedTab) as ActiveTab | null;
-    const defaultTab: ActiveTab = savedTab ?? (profile?.role === 'media_buyer' ? 'mb_home' : 'overview');
+    const defaultTab: ActiveTab = savedTab ?? (profile?.role === 'media_buyer' ? 'mb_home' : profile?.role === 'creative_specialist' ? 'cs_home' : 'overview');
 
     setState((prev) => ({
       ...prev,
@@ -590,8 +593,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setShowCompletionCelebration = useCallback((v: boolean) => setState((p) => ({ ...p, showCompletionCelebration: v })), []);
   const openProfileEdit  = useCallback(() => setState((p) => ({ ...p, profileEditOpen: true })), []);
   const closeProfileEdit = useCallback(() => setState((p) => ({ ...p, profileEditOpen: false })), []);
-  const setPreviewMode   = useCallback((v: boolean) => setState((p) => ({ ...p, previewMode: v, previewAsMB: v ? false : p.previewAsMB })), []);
-  const setPreviewAsMB   = useCallback((v: boolean) => setState((p) => ({ ...p, previewAsMB: v, previewMode: v ? false : p.previewMode })), []);
+  const setPreviewMode   = useCallback((v: boolean) => setState((p) => ({ ...p, previewMode: v, previewAsMB: v ? false : p.previewAsMB, previewAsCS: v ? false : p.previewAsCS })), []);
+  const setPreviewAsMB   = useCallback((v: boolean) => setState((p) => ({ ...p, previewAsMB: v, previewMode: v ? false : p.previewMode, previewAsCS: v ? false : p.previewAsCS })), []);
+  const setPreviewAsCS   = useCallback((v: boolean) => setState((p) => ({ ...p, previewAsCS: v, previewMode: v ? false : p.previewMode, previewAsMB: v ? false : p.previewAsMB })), []);
 
   const progressPercent    = Math.round((state.completedSections.length / TOTAL_SECTIONS) * 100);
   const mbTrainingPercent  = Math.round((state.completedMBDays.length / TOTAL_MB_DAYS) * 100);
@@ -625,6 +629,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       closeProfileEdit,
       setPreviewMode,
       setPreviewAsMB,
+      setPreviewAsCS,
       progressPercent,
       isBookmarked,
       isCompleted,

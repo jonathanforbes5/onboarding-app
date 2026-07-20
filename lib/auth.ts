@@ -4,7 +4,7 @@ export interface UserProfile {
   email: string;
   displayName: string;
   userKey: string;
-  role: 'super_admin' | 'user' | 'media_buyer';
+  role: 'super_admin' | 'user' | 'media_buyer' | 'creative_specialist';
   bio?: string;
   goal?: string;
   avatarEmoji?: string;
@@ -100,7 +100,7 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
       return {
         email: fallback.data.email,
         displayName: fallback.data.display_name,
-        role: fallback.data.role as 'super_admin' | 'user' | 'media_buyer',
+        role: fallback.data.role as 'super_admin' | 'user' | 'media_buyer' | 'creative_specialist',
         userKey: fallback.data.user_key,
       };
     }
@@ -108,7 +108,7 @@ export async function getUserProfileByEmail(email: string): Promise<UserProfile 
     return {
       email: data.email,
       displayName: data.display_name,
-      role: data.role as 'super_admin' | 'user' | 'media_buyer',
+      role: data.role as 'super_admin' | 'user' | 'media_buyer' | 'creative_specialist',
       userKey: data.user_key,
       bio: data.bio ?? undefined,
       goal: data.goal ?? undefined,

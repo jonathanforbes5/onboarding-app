@@ -25,9 +25,10 @@ interface QuizEngineProps {
   prevScore?: number;
   onComplete: (score: number) => void;
   onBack: () => void;
+  onNextDay?: () => void;
 }
 
-function QuizEngine({ dayId, questions, prevScore, onComplete, onBack }: QuizEngineProps) {
+function QuizEngine({ dayId, questions, prevScore, onComplete, onBack, onNextDay }: QuizEngineProps) {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [answers, setAnswers] = useState<AnswerState[]>(Array(questions.length).fill('unanswered'));
@@ -59,14 +60,8 @@ function QuizEngine({ dayId, questions, prevScore, onComplete, onBack }: QuizEng
       setSelected(selectedOptions[current + 1] !== -1 ? selectedOptions[current + 1] : null);
       setShowExplanation(selectedOptions[current + 1] !== -1);
     } else {
-      const correct = answers.filter((a, i) => {
-        const ans = i === current ? (selected === questions[i].correctIndex ? 'correct' : 'incorrect') : a;
-        return ans === 'correct';
-      }).length;
-      // Recount properly
-      const finalAnswers = [...answers];
-      if (selected !== null) finalAnswers[current] = selected === q.correctIndex ? 'correct' : 'incorrect';
-      const finalScore = Math.round((finalAnswers.filter((a) => a === 'correct').length / questions.length) * 100);
+      // answers[current] was already set by handleSelect before this button appeared
+      const finalScore = Math.round((answers.filter((a) => a === 'correct').length / questions.length) * 100);
       setScore(finalScore);
       setFinished(true);
       onComplete(finalScore);
@@ -140,12 +135,36 @@ function QuizEngine({ dayId, questions, prevScore, onComplete, onBack }: QuizEng
               onClick={onBack}
               style={{
                 padding: '11px 22px', borderRadius: 8,
-                border: 'none', background: passed ? '#22C55E' : C.border2,
-                color: passed ? '#000' : C.muted, fontWeight: 700, fontSize: 13, cursor: 'pointer',
+                border: `1px solid ${C.border2}`, background: 'transparent',
+                color: C.muted, fontWeight: 700, fontSize: 13, cursor: 'pointer',
               }}
             >
-              {passed ? '← Back to Training' : '← Back to Content'}
+              ← Back to Content
             </button>
+            {passed && onNextDay && (
+              <button
+                onClick={onNextDay}
+                style={{
+                  padding: '11px 22px', borderRadius: 8,
+                  border: 'none', background: '#22C55E',
+                  color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer',
+                }}
+              >
+                Next Day →
+              </button>
+            )}
+            {passed && !onNextDay && (
+              <button
+                onClick={onBack}
+                style={{
+                  padding: '11px 22px', borderRadius: 8,
+                  border: 'none', background: '#22C55E',
+                  color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer',
+                }}
+              >
+                ← Back to Training
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -284,9 +303,10 @@ function QuizEngine({ dayId, questions, prevScore, onComplete, onBack }: QuizEng
 interface DayDetailProps {
   dayId: number;
   onBack: () => void;
+  onNextDay?: () => void;
 }
 
-function DayDetail({ dayId, onBack }: DayDetailProps) {
+function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
   const { mbQuizScores, markMBDayComplete, saveMBQuizScore, completedMBDays } = useApp();
   const [view, setView] = useState<'content' | 'quiz'>('content');
   const day = MB_TRAINING_DAYS.find((d) => d.id === dayId)!;
@@ -306,6 +326,7 @@ function DayDetail({ dayId, onBack }: DayDetailProps) {
         prevScore={prevScore}
         onComplete={handleQuizComplete}
         onBack={() => setView('content')}
+        onNextDay={onNextDay}
       />
     );
   }
@@ -486,9 +507,15 @@ export function MBTrainingTab() {
   const [activeDay, setActiveDay] = useState<number | null>(null);
 
   if (activeDay !== null) {
+    const currentIdx = MB_TRAINING_DAYS.findIndex((d) => d.id === activeDay);
+    const nextDay = MB_TRAINING_DAYS[currentIdx + 1];
     return (
       <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: 'Inter, system-ui, sans-serif', color: C.text }}>
-        <DayDetail dayId={activeDay} onBack={() => setActiveDay(null)} />
+        <DayDetail
+          dayId={activeDay}
+          onBack={() => setActiveDay(null)}
+          onNextDay={nextDay ? () => setActiveDay(nextDay.id) : undefined}
+        />
       </div>
     );
   }
@@ -496,6 +523,7 @@ export function MBTrainingTab() {
   const totalDays = MB_TRAINING_DAYS.length;
   const doneDays = completedMBDays.length;
   const pct = Math.round((doneDays / totalDays) * 100);
+  const nextIncompleteDay = MB_TRAINING_DAYS.find((d) => !completedMBDays.includes(d.id));
 
   return (
     <div style={{
@@ -542,12 +570,45 @@ export function MBTrainingTab() {
           </div>
         </div>
 
+        {/* Resume banner — shown when in progress but not done */}
+        {nextIncompleteDay && doneDays > 0 && (
+          <button
+            onClick={() => setActiveDay(nextIncompleteDay.id)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 14,
+              backgroundColor: nextIncompleteDay.color + '0E',
+              border: `1px solid ${nextIncompleteDay.color}33`,
+              borderRadius: 12, padding: '16px 20px',
+              marginBottom: 4, cursor: 'pointer', textAlign: 'left',
+              width: '100%',
+            }}
+          >
+            <div style={{
+              width: 36, height: 36, borderRadius: 10,
+              backgroundColor: nextIncompleteDay.color + '22',
+              border: `1px solid ${nextIncompleteDay.color}44`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 18, flexShrink: 0,
+            }}>
+              {nextIncompleteDay.icon}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ color: nextIncompleteDay.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 2 }}>
+                Continue Training
+              </div>
+              <div style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>
+                Day {nextIncompleteDay.id}: {nextIncompleteDay.title}
+              </div>
+            </div>
+            <div style={{ color: nextIncompleteDay.color, fontSize: 18, flexShrink: 0 }}>→</div>
+          </button>
+        )}
+
         {/* Day cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {MB_TRAINING_DAYS.map((day, idx) => {
+          {MB_TRAINING_DAYS.map((day) => {
             const isDone = completedMBDays.includes(day.id);
             const quizScore = mbQuizScores[day.id];
-            const prevDone = idx === 0 || completedMBDays.includes(MB_TRAINING_DAYS[idx - 1].id);
 
             return (
               <button

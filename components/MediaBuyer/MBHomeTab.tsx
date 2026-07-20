@@ -1,5 +1,7 @@
 'use client';
 import React from 'react';
+import { useApp } from '@/context/AppContext';
+import { MB_TRAINING_DAYS } from '@/data/mbTrainingData';
 
 const C = {
   bg: '#0A0A0A',
@@ -235,6 +237,10 @@ function EscalationStep({ number, label, detail, isLast = false }: EscalationSte
 }
 
 export function MBHomeTab() {
+  const { completedMBDays, mbTrainingPercent, setActiveTab } = useApp();
+  const nextDay = MB_TRAINING_DAYS.find((d) => !completedMBDays.includes(d.id));
+  const allDone = completedMBDays.length === MB_TRAINING_DAYS.length;
+
   return (
     <div
       style={{
@@ -311,6 +317,53 @@ export function MBHomeTab() {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* ── Training Progress ── */}
+        <div style={{
+          backgroundColor: C.surf,
+          border: `1px solid ${allDone ? '#22C55E33' : C.acc + '33'}`,
+          borderRadius: 14,
+          padding: '18px 22px',
+          marginBottom: 24,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16,
+          flexWrap: 'wrap',
+        }}>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+              <span style={{ fontSize: 16 }}>{allDone ? '🏆' : '📚'}</span>
+              <span style={{ color: allDone ? '#22C55E' : C.acc, fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {allDone ? 'Training Complete' : '5-Day Training Program'}
+              </span>
+            </div>
+            <div style={{ color: '#888', fontSize: 12.5, lineHeight: 1.5, marginBottom: 10 }}>
+              {allDone
+                ? 'You\'ve completed all 5 days. Use SOPs and Tools as your daily reference.'
+                : nextDay
+                ? `Next up: Day ${nextDay.id} — ${nextDay.title}`
+                : 'Complete all 5 days and pass each quiz at 80%+.'}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{ flex: 1, maxWidth: 200, height: 4, backgroundColor: '#1f1f1f', borderRadius: 2, overflow: 'hidden' }}>
+                <div style={{ width: `${mbTrainingPercent}%`, height: '100%', background: allDone ? '#22C55E' : C.acc, transition: 'width 0.4s' }} />
+              </div>
+              <span style={{ color: '#555', fontSize: 11 }}>{completedMBDays.length}/{MB_TRAINING_DAYS.length} days · {mbTrainingPercent}%</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setActiveTab('mb_training')}
+            style={{
+              padding: '10px 18px', borderRadius: 8,
+              border: `1px solid ${allDone ? '#22C55E44' : C.acc + '44'}`,
+              background: 'transparent',
+              color: allDone ? '#22C55E' : C.acc,
+              fontWeight: 700, fontSize: 13, cursor: 'pointer', flexShrink: 0,
+            }}
+          >
+            {allDone ? 'Review Training' : completedMBDays.length === 0 ? 'Start Training →' : 'Continue Training →'}
+          </button>
         </div>
 
         {/* ── Team Structure ── */}

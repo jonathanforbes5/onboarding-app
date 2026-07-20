@@ -209,6 +209,10 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
           'If the previous entry is vague or missing, that\'s a quality gap to fix going forward.',
           'The log book is also how leadership and teammates audit your work. Own it.',
         ],
+        callout: {
+          type: 'rule',
+          text: 'The log book is an internal document. Never share audit findings, performance data, or log entries directly with clients — all client-facing performance updates go through Sales/CSM.',
+        },
       },
       {
         heading: 'What a Healthy Account Looks Like',
@@ -343,6 +347,10 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
           'Look at ad sets that have been running for weeks with low or zero leads — these should have been killed.',
           'Don\'t let sunk cost keep you running a bad ad set. Turn it off, learn from it, move on.',
         ],
+        callout: {
+          type: 'rule',
+          text: 'When you find underperformers or performance gaps, your job is to diagnose and fix them internally — not to proactively notify the client. Any client-facing performance communication goes through Sales/CSM.',
+        },
       },
       {
         heading: 'Common QA Misses',
@@ -526,6 +534,10 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
           'Bad log entry: "Updated ads."',
           'Your log book entries are how leadership evaluates your analytical quality — not just your results.',
         ],
+        callout: {
+          type: 'rule',
+          text: 'Audit findings stay internal. Review meetings are with leadership — not clients. Never share performance diagnoses, log entries, or account analysis directly with a client. All of that goes through Sales/CSM.',
+        },
       },
       {
         heading: 'Presenting Account Status in Reviews',

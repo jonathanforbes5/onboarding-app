@@ -343,7 +343,7 @@ export function MBHomeTab() {
                 ? 'You\'ve completed all 5 days. Use SOPs and Tools as your daily reference.'
                 : nextDay
                 ? `Next up: Day ${nextDay.id} — ${nextDay.title}`
-                : 'Complete all 5 days and pass each quiz at 80%+.'}
+                : 'Start Day 1 below — pass each quiz at 80%+ to progress.'}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div style={{ flex: 1, maxWidth: 200, height: 4, backgroundColor: '#1f1f1f', borderRadius: 2, overflow: 'hidden' }}>
@@ -368,36 +368,39 @@ export function MBHomeTab() {
 
         {/* ── Team Structure ── */}
         <div style={{ marginBottom: 28 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
             <div style={{ width: 3, height: 14, backgroundColor: C.acc, borderRadius: 2 }} />
             <span style={{ color: C.acc, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-              Team Structure & Pod Assignments
+              Media Buying Team
             </span>
           </div>
+          <p style={{ color: '#666', fontSize: 12, margin: '0 0 14px', lineHeight: 1.5 }}>
+            The pod model is retired — we now operate in departments. Media Buying owns ad performance. Sales/CSM owns all client communication. These lines do not cross.
+          </p>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {[
               {
                 name: 'Emmanuel',
-                role: 'Setups + Pod 1',
-                pods: ['All new client setups', 'Pod 1: Greg & Sam'],
+                role: 'Setup Lead',
+                bullets: ['Handles all new client account builds', 'MB handoff once account is live'],
                 color: '#F59E0B',
               },
               {
                 name: 'Bren',
                 role: 'Media Buyer',
-                pods: ['Pod 2: Tyler & Cole', 'Pod 3: Kyle & Abdullah'],
+                bullets: ['Ongoing account management', 'Performance optimization & QA'],
                 color: '#818CF8',
               },
               {
                 name: 'Mervin',
                 role: 'Media Buyer',
-                pods: ['Pod 4: Li & Dakota', 'Pod 5: Adeen & Ksenia'],
+                bullets: ['Ongoing account management', 'KPI monitoring & reporting'],
                 color: '#2DD4BF',
               },
               {
                 name: 'Ken',
-                role: 'Graphic Designer',
-                pods: ['All creative / static ads', 'Text-based ad creatives'],
+                role: 'Creative Lead',
+                bullets: ['Static & video ad assets', 'Creative direction & strategy'],
                 color: '#FB923C',
               },
             ].map((mb) => (
@@ -429,12 +432,38 @@ export function MBHomeTab() {
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  {mb.pods.map((pod) => (
-                    <div key={pod} style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                  {mb.bullets.map((b) => (
+                    <div key={b} style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
                       <span style={{ color: mb.color, fontSize: 10, marginTop: 3, flexShrink: 0 }}>▸</span>
-                      <span style={{ color: '#999', fontSize: 11.5, lineHeight: 1.4 }}>{pod}</span>
+                      <span style={{ color: '#999', fontSize: 11.5, lineHeight: 1.4 }}>{b}</span>
                     </div>
                   ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Other departments you coordinate with */}
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 10 }}>
+            {[
+              { label: 'Sales / CSM', desc: 'Owns the client relationship. All client communication routes through them — never directly from you.', color: '#EF4444' },
+              { label: 'VA / Call Center', desc: 'Calls leads and books appointments. You coordinate on lead quality and call volume.', color: '#22C55E' },
+              { label: 'Tech / Automations', desc: 'GHL setup, integrations, technical blockers. Escalate tech issues here.', color: '#818CF8' },
+            ].map((dept) => (
+              <div key={dept.label} style={{
+                flex: '1 1 200px',
+                backgroundColor: C.surf,
+                border: `1px solid ${dept.color}22`,
+                borderRadius: 10,
+                padding: '12px 14px',
+                display: 'flex',
+                gap: 10,
+                alignItems: 'flex-start',
+              }}>
+                <div style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: dept.color, flexShrink: 0, marginTop: 5 }} />
+                <div>
+                  <div style={{ color: dept.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 3 }}>{dept.label}</div>
+                  <div style={{ color: '#666', fontSize: 11.5, lineHeight: 1.5 }}>{dept.desc}</div>
                 </div>
               </div>
             ))}

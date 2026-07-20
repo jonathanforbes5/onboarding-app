@@ -11,7 +11,7 @@ import {
 } from '@/lib/syncService';
 
 export type { UserProfile };
-export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'announcements' | 'feedback' | 'roadmap' | 'mb_home' | 'mb_sops' | 'mb_tools' | 'mb_training' | 'mb_worksheet' | 'mb_presentation' | 'cs_home' | 'cs_sops';
+export type ActiveTab = 'overview' | 'worksheet' | 'sections' | 'resources' | 'recordings' | 'admin' | 'announcements' | 'feedback' | 'roadmap' | 'mb_home' | 'mb_sops' | 'mb_tools' | 'mb_training' | 'mb_worksheet' | 'cs_home' | 'cs_sops';
 
 const TAB_TO_PATH: Record<ActiveTab, string> = {
   overview: '/',
@@ -28,7 +28,6 @@ const TAB_TO_PATH: Record<ActiveTab, string> = {
   mb_tools:        '/mb/tools',
   mb_training:     '/mb/training',
   mb_worksheet:    '/mb/worksheet',
-  mb_presentation: '/mb/presentation',
   cs_home:         '/creative',
   cs_sops:         '/creative/sops',
 };
@@ -50,7 +49,6 @@ function pathToTab(pathname: string): ActiveTab | null {
     'mb/tools': 'mb_tools',
     'mb/training': 'mb_training',
     'mb/worksheet': 'mb_worksheet',
-    'mb/presentation': 'mb_presentation',
     creative: 'cs_home',
     'creative/sops': 'cs_sops',
   };

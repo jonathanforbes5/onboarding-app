@@ -345,7 +345,7 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
         onClick={onBack}
         style={{ background: 'none', border: 'none', color: C.muted, fontSize: 13, cursor: 'pointer', padding: '0 0 24px', display: 'block' }}
       >
-        ← All Training Days
+        ← All Sessions
       </button>
 
       {/* Day header */}
@@ -370,7 +370,7 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-              <span style={{ color: day.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Day {day.id}</span>
+              <span style={{ color: day.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Session {day.id}</span>
               <span style={{ color: C.muted, fontSize: 11 }}>·</span>
               <span style={{ color: C.muted, fontSize: 11 }}>{day.estimatedTime}</span>
               {isDone && (
@@ -481,7 +481,7 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
             Knowledge Check — {day.quiz.length} Questions
           </div>
           <div style={{ color: C.muted, fontSize: 12.5, lineHeight: 1.5 }}>
-            Score 80% or above to mark this day complete.
+            Score 80% or above to mark this session complete.
             {prevScore !== undefined && ` Your best: ${prevScore}%.`}
           </div>
         </div>
@@ -549,11 +549,11 @@ export function MBTrainingTab() {
                 Full-Cycle Media Buyer
               </div>
               <h1 style={{ color: C.text, fontSize: 24, fontWeight: 900, margin: '0 0 10px', letterSpacing: '-0.4px' }}>
-                5-Day Training Program
+                2-Session Training Program
               </h1>
               <p style={{ color: '#888', fontSize: 13, margin: 0, lineHeight: 1.65, maxWidth: 480 }}>
-                From task execution to account ownership. 1–2 hours per day. Complete the reading,
-                then pass the quiz at 80% to mark each day done.
+                Session 1: Thu, July 23 — Session 2: Mon, July 27. Read each session, then pass
+                the quiz at 80%+ to mark it complete.
               </p>
             </div>
             <div style={{
@@ -562,7 +562,7 @@ export function MBTrainingTab() {
             }}>
               <div style={{ fontSize: 30, fontWeight: 900, color: C.acc, lineHeight: 1 }}>{pct}%</div>
               <div style={{ color: C.muted, fontSize: 11, marginTop: 4 }}>Complete</div>
-              <div style={{ color: '#444', fontSize: 10, marginTop: 5 }}>{doneDays} / {totalDays} days</div>
+              <div style={{ color: '#444', fontSize: 10, marginTop: 5 }}>{doneDays} / {totalDays} sessions</div>
               <div style={{ marginTop: 10, height: 4, backgroundColor: '#1f1f1f', borderRadius: 2, overflow: 'hidden' }}>
                 <div style={{ width: `${pct}%`, height: '100%', background: C.acc, transition: 'width 0.4s' }} />
               </div>
@@ -597,7 +597,7 @@ export function MBTrainingTab() {
                 Continue Training
               </div>
               <div style={{ color: C.text, fontSize: 13.5, fontWeight: 700 }}>
-                Day {nextIncompleteDay.id}: {nextIncompleteDay.title}
+                Session {nextIncompleteDay.id}: {nextIncompleteDay.title}
               </div>
             </div>
             <div style={{ color: nextIncompleteDay.color, fontSize: 18, flexShrink: 0 }}>→</div>
@@ -643,7 +643,7 @@ export function MBTrainingTab() {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
                     <span style={{ color: day.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                      Day {day.id}
+                      Session {day.id}
                     </span>
                     <span style={{ color: '#444', fontSize: 11 }}>·</span>
                     <span style={{ color: C.muted, fontSize: 11 }}>{day.estimatedTime}</span>
@@ -689,7 +689,7 @@ export function MBTrainingTab() {
               Training Complete
             </div>
             <div style={{ color: '#888', fontSize: 13, lineHeight: 1.6 }}>
-              You&apos;ve completed all 5 days and passed every quiz. The real learning starts on live accounts — use the SOPs and Tools tabs as your daily reference.
+              You&apos;ve completed both sessions and passed every quiz. Daily meetings start Tue, July 28 — use the SOPs and Tools tabs as your daily reference going forward.
             </div>
           </div>
         )}

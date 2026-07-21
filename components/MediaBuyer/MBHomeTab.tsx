@@ -311,9 +311,9 @@ export function MBHomeTab() {
                 <Pill color={C.acc}>Media Buyer</Pill>
               </div>
               <p style={{ color: '#999', fontSize: 13, margin: 0, lineHeight: 1.65, maxWidth: 560 }}>
-                You execute the work that keeps clients growing — with real Meta Ads + GHL experience.
-                Direction comes from your assigned Pod Managers; results come from you. Every setup you build and every change
-                you ship directly shapes how a client performs.
+                You own ad performance across your accounts — strategy, execution, and creative direction.
+                CSM owns the client relationship. You own the results. Every change you make directly
+                shapes how a client performs on their 28-day cycle.
               </p>
             </div>
           </div>
@@ -335,7 +335,7 @@ export function MBHomeTab() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
               <span style={{ fontSize: 16 }}>{allDone ? '🏆' : '📚'}</span>
               <span style={{ color: allDone ? '#22C55E' : C.acc, fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                {allDone ? 'Training Complete' : '5-Day Training Program'}
+                {allDone ? 'Training Complete' : '2-Session Training Program'}
               </span>
             </div>
             <div style={{ color: '#888', fontSize: 12.5, lineHeight: 1.5, marginBottom: 10 }}>
@@ -349,7 +349,7 @@ export function MBHomeTab() {
               <div style={{ flex: 1, maxWidth: 200, height: 4, backgroundColor: '#1f1f1f', borderRadius: 2, overflow: 'hidden' }}>
                 <div style={{ width: `${mbTrainingPercent}%`, height: '100%', background: allDone ? '#22C55E' : C.acc, transition: 'width 0.4s' }} />
               </div>
-              <span style={{ color: '#555', fontSize: 11 }}>{completedMBDays.length}/{MB_TRAINING_DAYS.length} days · {mbTrainingPercent}%</span>
+              <span style={{ color: '#555', fontSize: 11 }}>{completedMBDays.length}/{MB_TRAINING_DAYS.length} sessions · {mbTrainingPercent}%</span>
             </div>
           </div>
           <button
@@ -362,7 +362,7 @@ export function MBHomeTab() {
               fontWeight: 700, fontSize: 13, cursor: 'pointer', flexShrink: 0,
             }}
           >
-            {allDone ? 'Review Training' : completedMBDays.length === 0 ? 'Start Training →' : 'Continue Training →'}
+            {allDone ? 'Review Sessions' : completedMBDays.length === 0 ? 'Start Session 1 →' : 'Continue →'}
           </button>
         </div>
 

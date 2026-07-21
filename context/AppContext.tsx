@@ -133,7 +133,7 @@ interface AppContextType extends AppState {
 const SECTIONS_STORAGE_KEY = 'ri_onboarding_v1';
 const MB_TRAINING_STORAGE_KEY = 'ri_mb_training_v1';
 const TOTAL_SECTIONS = 20;
-const TOTAL_MB_DAYS = 5;
+const TOTAL_MB_DAYS = 2;
 const BYPASS_KEY = 'ri_bypass_profile';
 
 const defaultState: AppState = {

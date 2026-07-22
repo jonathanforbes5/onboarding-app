@@ -2,6 +2,10 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { MB_TRAINING_DAYS, MBQuizQuestion } from '@/data/mbTrainingData';
+import { MBS1_Company101 } from './sessions/MBS1_Company101';
+import { MBS2_ReportsData } from './sessions/MBS2_ReportsData';
+import { MBS3_AuditingQA } from './sessions/MBS3_AuditingQA';
+import { MBS4_ActionSteps } from './sessions/MBS4_ActionSteps';
 
 const C = {
   bg: '#0A0A0A',
@@ -331,13 +335,6 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
     );
   }
 
-  const calloutColors: Record<string, string> = {
-    warning: '#EF4444',
-    tip: '#22C55E',
-    rule: C.acc,
-  };
-  const calloutLabels: Record<string, string> = { warning: '⚠️ Warning', tip: '💡 Tip', rule: '📌 Rule' };
-
   return (
     <div style={{ maxWidth: 760, margin: '0 auto', padding: '32px 20px 80px' }}>
       {/* Back */}
@@ -405,44 +402,12 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
         </div>
       </div>
 
-      {/* Content sections */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 28 }}>
-        {day.sections.map((section, idx) => (
-          <div key={idx} style={{
-            backgroundColor: C.surf,
-            border: `1px solid ${C.border}`,
-            borderRadius: 12,
-            padding: '20px 22px',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-              <div style={{ width: 3, height: 14, backgroundColor: day.color, borderRadius: 2 }} />
-              <span style={{ color: C.text, fontSize: 14, fontWeight: 800 }}>{section.heading}</span>
-            </div>
-            <ul style={{ margin: 0, paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {section.items.map((item, i) => (
-                <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <span style={{ color: day.color, fontSize: 10, marginTop: 4, flexShrink: 0 }}>▸</span>
-                  <span style={{ color: '#bbb', fontSize: 13, lineHeight: 1.6 }}>{item}</span>
-                </li>
-              ))}
-            </ul>
-            {section.callout && (
-              <div style={{
-                marginTop: 14,
-                backgroundColor: calloutColors[section.callout.type] + '0D',
-                border: `1px solid ${calloutColors[section.callout.type]}33`,
-                borderLeft: `3px solid ${calloutColors[section.callout.type]}`,
-                borderRadius: '0 8px 8px 0',
-                padding: '10px 14px',
-              }}>
-                <div style={{ color: calloutColors[section.callout.type], fontSize: 11, fontWeight: 800, marginBottom: 4 }}>
-                  {calloutLabels[section.callout.type]}
-                </div>
-                <div style={{ color: '#aaa', fontSize: 12.5, lineHeight: 1.6 }}>{section.callout.text}</div>
-              </div>
-            )}
-          </div>
-        ))}
+      {/* Session content */}
+      <div style={{ marginBottom: 28 }}>
+        {dayId === 1 && <MBS1_Company101 />}
+        {dayId === 2 && <MBS2_ReportsData />}
+        {dayId === 3 && <MBS3_AuditingQA />}
+        {dayId === 4 && <MBS4_ActionSteps />}
       </div>
 
       {/* Key Takeaways */}
@@ -549,10 +514,10 @@ export function MBTrainingTab() {
                 Full-Cycle Media Buyer
               </div>
               <h1 style={{ color: C.text, fontSize: 24, fontWeight: 900, margin: '0 0 10px', letterSpacing: '-0.4px' }}>
-                2-Session Training Program
+                4-Session Training Program
               </h1>
               <p style={{ color: '#888', fontSize: 13, margin: 0, lineHeight: 1.65, maxWidth: 480 }}>
-                Session 1: Thu, July 23 — Session 2: Mon, July 27. Read each session, then pass
+                Thu Jul 23 · Fri Jul 24 · Mon Jul 27 · Tue Jul 28. Read each session, then pass
                 the quiz at 80%+ to mark it complete.
               </p>
             </div>
@@ -689,7 +654,7 @@ export function MBTrainingTab() {
               Training Complete
             </div>
             <div style={{ color: '#888', fontSize: 13, lineHeight: 1.6 }}>
-              You&apos;ve completed both sessions and passed every quiz. Daily meetings start Tue, July 28 — use the SOPs and Tools tabs as your daily reference going forward.
+              You&apos;ve completed all four sessions and passed every quiz. Daily accountability calls start Wed, July 29 — use the SOPs and Tools tabs as your daily reference going forward.
             </div>
           </div>
         )}

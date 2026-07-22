@@ -5,21 +5,16 @@ export interface MBQuizQuestion {
   explanation: string;
 }
 
-export interface MBContentSection {
-  heading: string;
-  items: string[];
-  callout?: { type: 'warning' | 'tip' | 'rule'; text: string };
-}
-
 export interface MBTrainingDay {
   id: number;
   title: string;
   subtitle: string;
+  date: string;
+  owner: string;
   estimatedTime: string;
   color: string;
   icon: string;
   objective: string;
-  sections: MBContentSection[];
   keyTakeaways: string[];
   quiz: MBQuizQuestion[];
 }
@@ -27,148 +22,30 @@ export interface MBTrainingDay {
 export const MB_TRAINING_DAYS: MBTrainingDay[] = [
   {
     id: 1,
-    title: 'Session 1 — Business Model, Structure & Operating Standards',
-    subtitle: 'Thu, July 23 · Why the change is happening, what you own, and how you operate.',
+    title: 'Company & Media Buying 101',
+    subtitle: 'Business model, department structure, role, standards, and KPIs.',
+    date: 'Thu, July 23',
+    owner: 'Jonathan',
     estimatedTime: '2–3 hrs',
     color: '#F5C800',
     icon: '🏗️',
-    objective: 'Leave this session knowing the business model, your exact role and accountability, the operating standards held from Day 1, the full KPI set, how reporting works, and what your week looks like.',
-    sections: [
-      {
-        heading: 'Business Model & Cycle Structure',
-        items: [
-          'RoofIgnite runs Meta ads and GHL (GoHighLevel) to generate inbound leads and booked appointments for roofing contractors across the US.',
-          'Clients run on a 28-day cycle. Every KPI conversation is framed against that cycle — not monthly, not weekly, not quarterly.',
-          'Revenue is tied to performance. Clients stay when leads and appointments come in at scalable cost. When they don\'t, they leave.',
-          'Your job is to keep cost per lead and cost per booked appointment inside the range where the economics work for the client.',
-        ],
-        callout: {
-          type: 'rule',
-          text: 'Know the current cycle dates and spend target for every account you own. If you don\'t know them, find them — do not guess.',
-        },
-      },
-      {
-        heading: 'New Department Structure',
-        items: [
-          'The pod model is retired. We now operate in specialized departments.',
-          'Media Buying: owns ad performance — strategy, execution, creative direction requests. That\'s you.',
-          'CSM (Client Success Management): owns all client communication. Performance updates, questions, concerns, escalations — all of it goes through CSM. Not you.',
-          'VA/Call Center: calls leads and books appointments. You generate the leads. They close them.',
-          'Creative: builds ad assets based on media buyer direction and performance data. The Creative Strategist within that department owns copy and creative direction on each account.',
-          'Tech/Automations: GHL setup, integrations, and technical issues. Escalate tech blockers here.',
-        ],
-        callout: {
-          type: 'warning',
-          text: 'Media buyers have zero client-facing responsibility. Do not email clients, message them, hop on calls with them, or share performance data with them directly. All of that goes through CSM. No exceptions.',
-        },
-      },
-      {
-        heading: 'Team Standards — Set on Day 1, Held Every Day After',
-        items: [
-          'Communication: clear, direct, and prompt. If something\'s unclear, ask. Don\'t guess and move forward on an assumption.',
-          'Accountability: own your accounts and your mistakes. If something is off on your accounts, it\'s your problem to catch and fix — not someone else\'s department\'s problem.',
-          'Listen to detail: instructions and account context get followed precisely, not approximated. If a direction was given, follow it as given.',
-          'Approval before action: nothing goes live, gets changed, or gets pushed out on an account without approval first. No exceptions while this model is new.',
-          'Punctuality: on time to every meeting, early if anything. Late is not acceptable.',
-        ],
-        callout: {
-          type: 'rule',
-          text: 'These standards are not a soft guideline. They are the bar. This is a new model and the team gets built around people who can meet it.',
-        },
-      },
-      {
-        heading: 'Ownership & Accountability',
-        items: [
-          'Full ownership means: if something\'s off on your accounts, it\'s your job to catch it and fix it — not wait to be told.',
-          'You don\'t react to problems. You find them first, diagnose them, and act.',
-          'Catching a problem before leadership sees it is the standard. Being told about a problem that was already in your accounts is a process failure.',
-          'Ownership applies 7 days a week. Monday through Friday is the standard schedule. Occasional Saturday involvement is expected when an account needs action that genuinely can\'t wait until Monday. Saturday work should be the exception, not routine.',
-        ],
-      },
-      {
-        heading: 'Growth & Retention on This Team',
-        items: [
-          'We\'re hiring more media buyers. That means more competition for accounts and growth opportunities on this team.',
-          'We\'re hiring for top talent. The expectation is that the team gets sharper as it grows, not diluted.',
-          'What earns growth: highest-performing accounts, doing the work correctly (not just quickly), fast response times, and real ownership.',
-          'What earns a continued spot: consistently meeting the standards above. People who don\'t will be the ones we look at first when the team gets restructured.',
-          'This isn\'t meant to create anxiety — it\'s meant to be transparent. Perform at this level and growth follows as we scale.',
-        ],
-      },
-      {
-        heading: 'Two-Layer Reporting System',
-        items: [
-          'Layer 1 — Cycle performance: full 28-day cycle metrics. This is the primary accountability window.',
-          'Layer 2 — Rolling windows: 3-day, 5-day, and 7-day views layered on top of the cycle. These catch problems early, inside the cycle, instead of only at cycle close.',
-          'Rolling windows are how you spot a CPL creep on Day 8 instead of finding out at Day 28 that the cycle was off from Week 1.',
-          'Goal: automate daily delivery of rolling window reports so buyers get these numbers pushed to them, not pulled manually.',
-          'Flag as build item: daily rolling report automation pipeline (Tech/Automations dependency — not live yet).',
-        ],
-        callout: {
-          type: 'tip',
-          text: 'Until the automation is live, pull your own rolling windows at the start of each day. The numbers don\'t care about the automation status — you still need them.',
-        },
-      },
-      {
-        heading: 'Full KPI Reference',
-        items: [
-          'Cost per link click — efficiency of the ad at driving traffic.',
-          'CTR (link click-through rate specifically — not generic engagement CTR) — how compelling the creative is to the target audience.',
-          'CPM (cost per 1,000 impressions) — indicator of audience competitiveness and ad relevance.',
-          'Frequency — how many times the same person has seen the ad. Above 3–4 on a cold audience, refresh creative.',
-          'Cost per lead — primary efficiency metric. Compare against the scalable target for the specific account, not a universal benchmark.',
-          'Cost per booked appointment — downstream metric connecting ad performance to actual business outcome.',
-          'Out-of-service-area % — percentage of leads coming from outside the client\'s actual service area. A targeting quality signal. High % means wasted spend and bad leads.',
-          'Leads generated — rolling window totals (3/5/7-day) plus cycle total.',
-          'Booked appointments generated — rolling window totals (3/5/7-day) plus cycle total.',
-          'Ad spend vs. target pacing — are you on track to spend the right amount across the cycle? Not too fast, not too slow.',
-        ],
-        callout: {
-          type: 'rule',
-          text: 'Full ownership of these KPIs means being able to explain any of them at any moment for any account — not just reacting when someone asks. Know your numbers before every meeting.',
-        },
-      },
-      {
-        heading: 'Meeting Cadence & Schedule',
-        items: [
-          'Starting Tue, July 28: daily check-ins, start of day and end of day.',
-          'AM check-in purpose: review what happened overnight, flag anything that needs action before day starts.',
-          'PM check-in purpose: report out on what you touched, what\'s changed, and what needs attention tomorrow.',
-          'Goal of daily cadence: build the habit of reporting and catching issues in real time while the model is new.',
-          'Tapering: daily meetings move to twice a week once the team is proficient. Exact trigger point is still being defined.',
-          'Separate: a broader account review session, still being defined, where accounts get reviewed across a larger group and timeframe — successor to the old pod review meeting.',
-        ],
-        callout: {
-          type: 'warning',
-          text: 'Punctuality is a Team Standard. On time means ready at the start. Not logging on at the start time — ready at the start time.',
-        },
-      },
-      {
-        heading: 'Account Distribution',
-        items: [
-          'Distribution starts immediately — it doesn\'t wait for training to finish.',
-          'Starts heavy, based on the existing pod structure, and thins out as more media buyers come on.',
-          'During the transition window, you carry these accounts alongside whatever\'s left of your current pod manager tasks. This overlap is expected to be temporary, not permanent.',
-          'The standard still applies from Day 1 — accounts are yours to own, regardless of how the transition is sequenced.',
-        ],
-      },
-    ],
+    objective: 'Leave knowing the business model, your exact role, the operating standards held from Day 1, the full KPI set, how reporting works, and what your week looks like.',
     keyTakeaways: [
       'The 28-day cycle is the primary accountability window. Know your cycle dates and pacing at all times.',
       'Media buying owns ad performance. CSM owns the client. These lines do not cross — ever.',
       'The five Team Standards are the operating floor, not a bonus. Approval before action, on time, own your accounts.',
       'Two-layer reporting: 28-day cycle + rolling 3/5/7-day windows. Rolling windows catch problems inside the cycle.',
-      'Know all 10 KPIs for every account. Out-of-service-area % is a targeting quality signal — don\'t ignore it.',
-      'Distribution starts now. Overlap with current tasks is temporary. Own your accounts from Day 1.',
+      'Know all 10 KPIs for every account — including out-of-service-area %, which is a targeting quality signal.',
+      'Account distribution starts immediately. Overlap with current tasks is temporary. Own your accounts from Day 1.',
     ],
     quiz: [
       {
         question: 'How long is a RoofIgnite client cycle, and why does it matter?',
         options: [
-          'One month calendar cycle — used for billing purposes',
+          'One calendar month — used for billing and reporting purposes',
           '28 days — the primary window against which all KPIs and performance conversations are measured',
-          '7 days — rolling weekly review window used for all account decisions',
-          '90 days — a quarterly performance period used for client retention decisions',
+          '7 days — the rolling review window used for all account decisions',
+          '90 days — a quarterly performance period used for retention decisions',
         ],
         correctIndex: 1,
         explanation: 'The 28-day cycle is the core unit of performance measurement. Every KPI conversation, reporting window, and accountability standard is framed against it — not monthly calendar periods.',
@@ -176,13 +53,13 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
       {
         question: 'A client contacts you directly on Slack to ask about their account performance. What do you do?',
         options: [
-          'Answer briefly since it\'s just a quick question and doesn\'t require a full report',
-          'Tell them you\'ll get back to them after the next scheduled review',
-          'Be professional, acknowledge them, and immediately route them to CSM — do not share any performance data',
+          'Answer briefly since it is just a quick question and does not require a full report',
+          'Tell them you will get back to them after the next scheduled review',
+          'Acknowledge them professionally and immediately route them to CSM — do not share any performance data',
           'Update them on current KPIs and flag the interaction to CSM afterward',
         ],
         correctIndex: 2,
-        explanation: 'Media buyers have zero client-facing responsibility. Any client contact — even "just a quick question" — goes through CSM. Route them immediately and don\'t share data.',
+        explanation: 'Media buyers have zero client-facing responsibility. Any client contact — even a quick question — goes through CSM. Route them immediately and do not share data.',
       },
       {
         question: 'What does "approval before action" mean, and when does it apply?',
@@ -193,7 +70,7 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
           'Approval is required during the first 30 days only, after which media buyers operate independently',
         ],
         correctIndex: 1,
-        explanation: 'Approval before action is a Team Standard that applies to everything while the model is new. Not some things — everything. This protects clients and builds the right habits on a new team.',
+        explanation: 'Approval before action is a Team Standard that applies to everything while the model is new — not some things, everything. This protects clients and builds the right habits on a new team.',
       },
       {
         question: 'Which KPI specifically measures the percentage of leads coming from outside the client\'s service area?',
@@ -204,327 +81,343 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
           'Frequency — tracks how often the ad reaches the intended local audience',
         ],
         correctIndex: 2,
-        explanation: 'Out-of-service-area % is a targeting quality signal. A high percentage means wasted ad spend on leads the client can\'t service — regardless of how cheap the CPL looks.',
+        explanation: 'Out-of-service-area % is a targeting quality signal. A high percentage means wasted ad spend on leads the client cannot service — regardless of how cheap the CPL looks.',
       },
       {
-        question: 'What are the two layers of the reporting system, and what does each do?',
+        question: 'What are the two layers of the reporting system and what does each do?',
         options: [
           'Daily reports and weekly summaries — daily for internal use, weekly for client-facing updates',
           'Full 28-day cycle performance plus rolling 3/5/7-day windows — cycle for accountability, rolling windows to catch problems early inside the cycle',
           'Account-level reports and portfolio-level rollups — account reports daily, portfolio weekly',
-          'Paid media reports and GHL pipeline reports — separate systems that get reconciled at cycle close',
+          'Paid media reports and GHL pipeline reports — separate systems reconciled at cycle close',
         ],
         correctIndex: 1,
-        explanation: 'The two-layer system exists because cycle-only reporting misses problems until it\'s too late to fix them. Rolling windows (3/5/7-day) let you catch a CPL issue on Day 8 instead of Day 28.',
+        explanation: 'The two-layer system exists because cycle-only reporting misses problems until it is too late. Rolling windows (3/5/7-day) let you catch a CPL issue on Day 8 instead of Day 28.',
       },
     ],
   },
 
   {
     id: 2,
-    title: 'Session 2 — Auditing, Diagnostics, QA & Department Integration',
-    subtitle: 'Mon, July 27 · How to read any account, solve any problem, and work with every department.',
+    title: 'Reports and Data',
+    subtitle: 'The layered read, Layer 2 drivers with benchmarks, Layer 3 levers, and live account reads.',
+    date: 'Fri, July 24',
+    owner: 'Oscar',
     estimatedTime: '2–3 hrs',
     color: '#4A90D9',
-    icon: '🔍',
-    objective: 'Leave this session able to audit any account, diagnose problems correctly, apply the right fix, run weekly QA, manage budget properly, and work effectively with VA, Creative, and the setup model.',
-    sections: [
-      {
-        heading: 'How to Audit an Account',
-        items: [
-          'Standard account audit: trace leads to outcome, review the log book, check KPIs against target, verify spend pacing.',
-          'Leads: for each lead — was it called? When? Did it answer? Was it pitched? Did it book? If not, why? Trace every lead to its final outcome before changing anything.',
-          'Log book: read the last 30 days before touching anything. Don\'t repeat what didn\'t work. Log every change you make: what, why, and expected result.',
-          'KPIs: pull CPL by ad set, check frequency on all active sets, verify CTR trend, confirm spend is on pace.',
-          'Competitive research: audit accounts in the context of what competitors are running and what the market landscape looks like. Recommendations made in a vacuum aren\'t recommendations — they\'re guesses.',
-          'Audit cadence: every account, minimum weekly. Higher-priority or at-risk accounts more frequently.',
-        ],
-        callout: {
-          type: 'rule',
-          text: 'Diagnose before acting. Every time. Never make a change to an account without being able to state the problem it solves and the analysis that led you there.',
-        },
-      },
-      {
-        heading: 'Diagnosing & Fixing: Common Scenarios',
-        items: [
-          'Low lead flow — check: is spend pacing on track? Is frequency high (audience burned)? Is CTR declining (creative fatigue)? Is the landing page or lead form broken? Is targeting geography correct?',
-          'CPL too high — diagnose whether it\'s creative (low CTR), targeting (wrong audience or geography), or post-click (LP/form not converting). Each has a different fix. Don\'t swap creative when the problem is the landing page.',
-          'Good CPL, no bookings — this is almost never an ad problem. Check VA call volume and contact rate before touching anything in the ad account. Escalate to VA team with data.',
-          'Spend off-pace — overpacing: reduce daily budgets gradually (20–30% at a time) to avoid resetting ad set learning. Underpacing: increase gradually, don\'t try to make it up in the last few days.',
-          'Seasonal and holiday adjustments: scale ad spend down around major holidays in advance, not reactively. Scale back up post-holiday. Failure to plan around holidays wastes client budget on zero-conversion days.',
-        ],
-        callout: {
-          type: 'tip',
-          text: 'For every scenario: problem → analysis → solution. Never skip the middle step. Treating a symptom without a diagnosis creates a different problem.',
-        },
-      },
-      {
-        heading: 'QA: Weekly Standing Check',
-        items: [
-          'QA is not a one-time onboarding step. It is a weekly minimum for every account you own.',
-          'Check: anything turned on that should be off (zombie creative tests, expired promos, wrong seasonal messaging).',
-          'Check: anything turned off that should be on (paused winners, missing ad sets from approved campaigns).',
-          'Check: audience overlap — multiple ad sets competing for the same audience burns budget and distorts data.',
-          'Check: pixel and tracking integrity — broken tracking means incomplete data and wrong optimization signals.',
-          'Check: geography targeting — wrong service area means unserviceable leads regardless of CPL.',
-          'Log every QA check in the log book. If you don\'t document it, it didn\'t happen.',
-        ],
-        callout: {
-          type: 'warning',
-          text: 'Zombie creative tests are one of the most common budget leaks. A test that concluded weeks ago but never got turned off is still spending money with zero chance of winning. Check every account, every week.',
-        },
-      },
-      {
-        heading: 'Budget Management',
-        items: [
-          'Protecting client ad spend is treated as seriously as generating results. These are not separate priorities.',
-          'Every dollar spent ties back to cost per lead and cost per booked appointment. There is no "learning spend" that exists outside of those metrics.',
-          'Results should show up relatively quickly. Overspending to "figure out" if something works is not the standard.',
-          'Budget change rule: increase or decrease in increments of 20–30% at a time to avoid resetting ad set learning.',
-          'Mid-cycle pacing check: at any point, expected spend = (days elapsed ÷ total cycle days) × total cycle budget. If you\'re significantly above or below, act immediately.',
-        ],
-        callout: {
-          type: 'rule',
-          text: 'You are accountable for every dollar spent on your accounts. "I was testing" is not a defense for wasted budget. Test within the economics, not outside them.',
-        },
-      },
-      {
-        heading: 'Full Funnel Responsibility',
-        items: [
-          'Your accountability does not stop at the ad. The full funnel is: ad → landing page → form/survey fill → entry into GHL.',
-          'Landing page: check conversion rate. High CTR + high CPL usually means clicks are happening but the page isn\'t converting.',
-          'Form/survey: verify completion rate. A form that\'s too long or asks the wrong questions loses leads after the click.',
-          'GHL entry: data validity matters. What enters the system needs to be accurate and usable — wrong numbers, wrong names, or blank fields create VA problems downstream.',
-          'Downstream visibility: keep tabs on leads after they enter GHL. Confirm VAs are calling them and at what rate. You own the lead quality; they own the calling. Both affect booked appointments.',
-          'Optimization target: lowest cost per lead without sacrificing quality. Lead quality is what drives cost per booked appointment down. Cheap, unserviceable leads are not a win.',
-        ],
-        callout: {
-          type: 'rule',
-          text: 'Out-of-service-area % lives in the full funnel check. If that number is climbing, the problem is upstream — targeting or landing page is attracting the wrong geography.',
-        },
-      },
-      {
-        heading: 'VA Collaboration',
-        items: [
-          'VAs call leads and book appointments. You generate the leads. Shared accountability for booked appointments during this transition phase.',
-          'Before flagging a booking issue: verify call data first. Was the lead actually called? When? How many attempts?',
-          'When flagging to VA team: bring specific data — account name, lead count, timeframe, call log evidence. Not a general complaint.',
-          'Good flag: "Account X — 18 leads in the last 5 days. Call log shows 6 called, 12 uncalled. Requesting follow-up on the 12."',
-          'Not a good flag: "The leads aren\'t booking, can you look into it?"',
-          'Long-term: full booked-appointment accountability shifts to the VA/Call Center department. For now, it\'s shared.',
-          'Route systemic VA issues through the proper channel — not to individual VAs directly unless it\'s a quick operational moment.',
-        ],
-      },
-      {
-        heading: 'Creative Collaboration & The Creative Strategist',
-        items: [
-          'The Creative Department builds ad assets. The Creative Strategist within that department owns the actual copy and creative direction on each account.',
-          'Your role: request specific creative based on performance data, give precise feedback, and retain full ownership of how that creative performs once it\'s live.',
-          'How to request: be specific. Provide the market, the angle, the format, the audience mindset, and performance context from similar creative if available.',
-          'How to give feedback: bring data. "This video got 3.2% CTR and $18 CPL in Week 1 — make more in this style" is useful. "It looked good but didn\'t really perform" is not.',
-          'The loop: request → Creative Strategist directs → Creative builds → you run it → you report results → they iterate.',
-          'You own the performance outcome even though you didn\'t build the asset. Creative quality and your direction are both in your lane.',
-        ],
-        callout: {
-          type: 'tip',
-          text: 'The Creative Strategist is a resource who owns the creative craft. The better your performance data and the more specific your direction, the better the output. Vague requests produce generic creative.',
-        },
-      },
-      {
-        heading: 'Setup Model (Directional — Still Being Finalized)',
-        items: [
-          'Current direction: one manual media buyer handles full account setup for everyone, carrying roughly half the normal book of business of an assigned buyer to make room for that work.',
-          'Once an account\'s setup is complete, it hands off to the assigned media buyer for ongoing management.',
-          'Alternate version under consideration: the manual buyer only handles GHL setup, and each assigned buyer does their own ad account setup from the start.',
-          'Either way: the Creative Strategist owns copy and creative direction regardless of who handles the technical setup.',
-          'Either way: approval before action applies to setup work just like ongoing management.',
-          'Final model is not yet decided. Present this as directional — exact structure will be confirmed before rollout.',
-        ],
-        callout: {
-          type: 'warning',
-          text: 'Open item: final setup model is pending decision. Do not make assumptions about who handles what until it\'s confirmed. Ask before acting on setup tasks that aren\'t clearly assigned.',
-        },
-      },
-      {
-        heading: 'Open Items — What\'s Still Being Finalized',
-        items: [
-          'Daily rolling report automation (3/5/7-day windows): Tech/Automations dependency — build timeline TBD.',
-          'Trigger point for moving from daily check-ins to twice-weekly cadence: not yet defined.',
-          'Format and cadence of the broader account review session (successor to pod review): still being designed.',
-          'Final setup model: manual-does-everything vs. manual-does-GHL-only-and-buyers-self-serve-ad-setup.',
-          'Compensation structure: tied to account performance, exact structure TBD before rollout.',
-          'These are open items, not missing details. Decisions will come. In the meantime, operate on what\'s confirmed.',
-        ],
-        callout: {
-          type: 'tip',
-          text: 'When something isn\'t yet decided, ask rather than assume. This is exactly what the "communication" Team Standard covers: if it\'s unclear, ask. Don\'t guess and move forward on an assumption.',
-        },
-      },
-    ],
+    icon: '📊',
+    objective: 'Leave able to read any account correctly — identify which layer is broken, which metric is the root cause, and which lever addresses it. Reads and findings stay internal and go through CSM.',
     keyTakeaways: [
-      'Audit = leads traced to outcome + log book reviewed + KPIs checked + pacing verified + competitive context.',
-      'Diagnose before acting. Every time. Problem → Analysis → Solution. Never skip the middle step.',
-      'QA is weekly, minimum. Zombie tests, wrong geography, broken tracking — check every account, every week.',
-      'Full funnel: ad, landing page, form, GHL entry, downstream VA visibility. You own all of it.',
-      'Creative Strategist owns copy and direction. You own performance. Bring data to every request and feedback.',
-      'Setup model is directional, not final. Don\'t assume — ask before acting on anything that isn\'t confirmed.',
+      'Check Layer 1 first. If it is green, stop — do not audit Layer 2. Spend energy where it moves the needle.',
+      'When Layer 1 is red, drill into Layer 2 for that specific metric only. Do not boil the ocean.',
+      'Layer 3 levers are what you actually change. Identify the exact lever before touching anything.',
+      'Link CTR benchmark: above 0.8%. Link CPC benchmark: under $6. OSA rate: under 15%. Survey conversion: above 2.5%.',
+      'Any findings from live reads stay internal. Nothing gets shared with the client directly — that is CSM\'s conversation.',
+      'The 80% margin variance rule: up to 80% above contracted CPA is still acceptable. Above that, the cycle is at risk.',
     ],
     quiz: [
       {
-        question: 'What does a full account audit include that goes beyond the ad account itself?',
+        question: 'Layer 1 is green — bookings on pace, CPA within range. Should you audit Layer 2?',
         options: [
-          'The ad account metrics and a call with the client to verify data accuracy',
-          'The ad, landing page conversion rate, form/survey completion, GHL data validity, and downstream VA call tracking',
-          'Ad account metrics and a review of the client\'s previous cycle invoice',
-          'Creative assets, audience targeting, and the competitor landscape only',
+          'Yes — always audit Layer 2 weekly for all accounts',
+          'No — Layer 1 green means stop. Save diagnostic energy for accounts where Layer 1 is red.',
+          'Yes — creative fatigue builds invisibly even when bookings are on track',
+          'Only if the client asks about ad performance',
         ],
         correctIndex: 1,
-        explanation: 'Full funnel ownership means the ad account is the starting point, not the whole picture. The funnel runs through the LP, the form fill, GHL entry, and VA follow-through — all of it is in scope.',
+        explanation: 'Core rule: if Layer 1 is healthy, do not look at Layer 2. With 15–25 accounts, your time is the bottleneck. Focus diagnostic energy exclusively on accounts where Layer 1 is failing.',
       },
       {
-        question: 'Strong lead volume, good CPL, near-zero booked appointments. What\'s the correct first step?',
+        question: 'Link CTR is 0.5% and frequency is 3.8. What is the correct diagnosis and Layer 3 lever?',
         options: [
-          'Kill the current ad sets and rebuild with more specific audience targeting to improve lead quality',
-          'Lower the daily budgets immediately since the leads clearly aren\'t converting',
-          'Verify VA call data — were leads called? How many attempts? What\'s the contact rate? Escalate with data if calling is the bottleneck',
-          'Request new creative from the Creative Department to attract higher-intent leads',
-        ],
-        correctIndex: 2,
-        explanation: 'Good leads + no bookings is almost always a VA/call issue, not an ad issue. Changing ads won\'t fix a broken calling funnel. Diagnose first — the answer is in the call log, not the ad account.',
-      },
-      {
-        question: 'What is the Creative Strategist\'s role, and how does it relate to the media buyer\'s role?',
-        options: [
-          'The Creative Strategist approves creative requests from media buyers but doesn\'t direct the actual content',
-          'The Creative Strategist owns copy and creative direction on the account; the media buyer requests based on performance data and retains ownership of how the creative performs once live',
-          'The Creative Strategist and media buyer share equal accountability for creative performance',
-          'The Creative Strategist is a client-facing role that presents creative concepts for approval before production',
+          'Audience too narrow — expand targeting to a broader geo',
+          'Creative fatigue confirmed. CTR below 0.8% and frequency above 3.5 = Post-Andromeda duplicate first; if no recovery in 48h, full creative refresh.',
+          'Normal fluctuation — wait two weeks before acting',
+          'Increase budget — more spend drives CTR back up through algorithm learning',
         ],
         correctIndex: 1,
-        explanation: 'The Creative Strategist owns the craft — copy, direction, and execution. The media buyer drives what gets made through performance data and specific requests, and retains ownership of results. It\'s a loop: request, build, run, report, iterate.',
+        explanation: 'Link CTR benchmark: above 0.8%. Frequency above 3.5 = creative fatigue. The sequence: Post-Andromeda duplicate first (50/50 shot). If no link CTR recovery in 48 hours, full creative refresh: 15 all-new ads, zero reused photos.',
       },
       {
-        question: 'According to the budget management standard, what is NOT acceptable?',
+        question: 'What is the link CPC benchmark, and what does it indicate when CPC is above that threshold?',
         options: [
-          'Making budget changes in 20–30% increments to protect ad set learning',
-          'Reducing daily budgets mid-cycle to correct an overpacing issue',
-          'Overspending to "figure out" if something works — every dollar must tie back to CPL and cost per booked appointment',
-          'Adjusting budgets gradually during a holiday period to manage spend efficiency',
-        ],
-        correctIndex: 2,
-        explanation: 'There is no "learning spend" that exists outside of CPL and cost per booked appointment. Results should show up relatively quickly. Burning client budget to test something that hasn\'t proven itself is not the standard.',
-      },
-      {
-        question: 'What does "out-of-service-area %" measure, and what does a high number indicate?',
-        options: [
-          'The percentage of ad spend that went to impressions outside business hours — indicates wrong scheduling',
-          'The percentage of leads coming from outside the client\'s actual service area — a targeting quality signal indicating wasted spend and unserviceable leads',
-          'The percentage of accounts where CPL is above the scalable target — a portfolio-level efficiency metric',
-          'The percentage of VAs calling leads outside their designated geographic zone',
+          'Benchmark is under $10. Above that indicates the wrong campaign objective.',
+          'Benchmark is under $6. Above that — combined with low CTR — indicates creative fatigue or the wrong audience.',
+          'Benchmark is under $3. Above $3 means ad spend should be reduced immediately.',
+          'There is no benchmark — CPC varies too much by market to have a standard.',
         ],
         correctIndex: 1,
-        explanation: 'Out-of-service-area % is a targeting quality signal. High % means leads are coming from areas the client can\'t service — cheap leads that never convert and waste the client\'s budget. Fix is in targeting or landing page geography.',
+        explanation: 'Link CPC benchmark: under $6. Above $6, combined with link CTR below 0.8%, indicates creative fatigue or audience mismatch. Always read CPC alongside CTR — never in isolation.',
+      },
+      {
+        question: 'Survey conversion rate is 1.2% — below the 2.5% benchmark. What is the Layer 3 lever to try first?',
+        options: [
+          'Rebuild the ad creative — the landing page conversion reflects the ad quality',
+          'Switch from 7-question survey to 4-question survey and simplify language — friction reduction is the first lever',
+          'Increase ad spend — more volume makes conversion rates look better in aggregate',
+          'Change the audience targeting — wrong people hitting the survey is the root cause',
+        ],
+        correctIndex: 1,
+        explanation: 'Survey conversion below 2.5% means too much friction. The Layer 3 lever: reduce question count (7q to 4q) and simplify language. The ad is doing its job if people are clicking — the survey is losing them.',
+      },
+      {
+        question: 'You identify a significant performance issue during a live account read session with Oscar. Who gets the findings?',
+        options: [
+          'The client — they should know what\'s happening on their account immediately',
+          'The findings stay internal. You act on the diagnosis internally. CSM handles any client communication.',
+          'Leila — she needs to brief the VA team on what to change',
+          'Jonathan and the client simultaneously, so everyone is aligned',
+        ],
+        correctIndex: 1,
+        explanation: 'Media buyers have zero client-facing responsibility. Reads and findings stay internal. CSM owns the client conversation. Your job is to diagnose and fix — not to report to the client.',
+      },
+    ],
+  },
+
+  {
+    id: 3,
+    title: 'Auditing Standard, QA, Budgeting & Setup',
+    subtitle: 'Audit cadence, competitive research, weekly QA, budget discipline, and setup model.',
+    date: 'Mon, July 27',
+    owner: 'Jonathan',
+    estimatedTime: '2–3 hrs',
+    color: '#A855F7',
+    icon: '🔍',
+    objective: 'Leave with a repeatable audit process, understanding of weekly QA, budget management principles, and the setup model — so accounts run clean and spend is never wasted.',
+    keyTakeaways: [
+      'Every account gets audited minimum weekly. Priority or at-risk accounts get audited more often.',
+      'Competitive research is part of the audit — not a separate exercise. Recommendations made in a vacuum are guesses.',
+      'QA is a standing weekly check, not a one-time onboarding step. Zombie tests and broken tracking cost money.',
+      'Budget changes are gradual — 20–30% at a time. Aggressive changes reset ad set learning and cost cycles.',
+      'The Creative Strategist owns copy and creative direction regardless of who handles technical setup.',
+      'The setup model is still being finalized. Present it as directional, not locked.',
+    ],
+    quiz: [
+      {
+        question: 'How often should every account in your book be audited at minimum?',
+        options: [
+          'Monthly — tied to the billing cycle',
+          'Weekly minimum. Priority accounts and at-risk accounts more often.',
+          'Only when a client or Jonathan flags a performance issue',
+          'Every two weeks — audits more frequent than that waste time on healthy accounts',
+        ],
+        correctIndex: 1,
+        explanation: 'Standard audit cadence: every account, minimum weekly. The word "minimum" matters — at-risk accounts get more frequent checks. Weekly audits catch problems in time to fix them within the cycle.',
+      },
+      {
+        question: 'You are auditing an account and find a creative test from 5 weeks ago that is still running with low performance. What is this, and what do you do?',
+        options: [
+          'A long-tail test that sometimes takes 6+ weeks to show results — leave it running',
+          'A zombie ad test — it concluded long ago and should be turned off. Leaving it running burns budget with zero chance of winning.',
+          'An approved ongoing experiment — check with Jonathan before pausing',
+          'Normal creative variety — multiple ad sets running simultaneously is standard practice',
+        ],
+        correctIndex: 1,
+        explanation: 'Zombie creative tests are one of the most common budget leaks. A test that concluded weeks ago but was never turned off is still spending money with zero chance of winning. Catch and kill these in your weekly QA.',
+      },
+      {
+        question: 'Beyond KPIs and lead-to-outcome tracing, what else is part of a standard account audit?',
+        options: [
+          'Client satisfaction surveys and renewal probability scores',
+          'Competitive research and market landscape — what competitors are running, how the market is behaving',
+          'Team performance metrics — VA call time, Emmanuel\'s setup speed',
+          'Nothing else — KPIs and lead tracing are sufficient for a complete audit',
+        ],
+        correctIndex: 1,
+        explanation: 'Competitive research and market landscape are part of every audit. Recommendations made without understanding what competitors are doing and how the market is behaving are guesses, not strategy.',
+      },
+      {
+        question: 'An account is overpacing on ad spend — it has burned 70% of its cycle budget by Day 15 of 28. What is the correct action?',
+        options: [
+          'Pause the campaign immediately to protect the remaining budget',
+          'Reduce daily budget gradually — 20–30% at a time — to slow spending without resetting ad set learning',
+          'Leave it — strong early spend usually recovers booking performance in the final week',
+          'Increase the total cycle budget to match the pacing — the algorithm is performing well',
+        ],
+        correctIndex: 1,
+        explanation: 'Budget changes are gradual — 20–30% at a time. Aggressive reductions or pauses reset ad set learning and cost you days of algorithm recovery time. Gradual adjustment preserves learning while correcting pace.',
+      },
+      {
+        question: 'In the setup model, who owns copy and creative direction regardless of who handles technical setup?',
+        options: [
+          'The assigned media buyer — they own all creative decisions on their accounts',
+          'The Creative Strategist within the Creative department',
+          'Jonathan — all creative direction is approved at the manager level',
+          'Emmanuel — he handles technical setup and creative direction together',
+        ],
+        correctIndex: 1,
+        explanation: 'The Creative Strategist owns copy and creative direction regardless of which setup model is used. Media buyers request creative based on performance data and retain accountability for how it performs once live.',
+      },
+    ],
+  },
+
+  {
+    id: 4,
+    title: 'Common Action Steps',
+    subtitle: 'Diagnosis to action, escalation ladders, lever library, and creative refresh protocol.',
+    date: 'Tue, July 28',
+    owner: 'Oscar',
+    estimatedTime: '2–3 hrs',
+    color: '#22C55E',
+    icon: '⚡',
+    objective: 'Leave with a repeatable playbook for the most common account problems — exact prescriptions per root cause, who to coordinate with, and how to brief creative refreshes. Bring a written read per account to Wed July 29\'s first daily call.',
+    keyTakeaways: [
+      'Problem → Root Cause → Prescription → Coordinate With. Know this sequence for every common scenario.',
+      'Billing failures and renewal conversations both go through CSM. Media buyer supplies data, not client contact.',
+      'Creative refresh protocol: context check first, then Post-Andromeda duplicate, then full refresh only if duplicate fails.',
+      'Before touching anything: check for holidays or local events. Always check if inside first 7 days of a launch.',
+      'When briefing creative: be specific. Market, angle, format, and performance context. Vague briefs produce vague ads.',
+      'Homework: written account read plus proposed action step per account, ready for Wed July 29\'s first daily call.',
+    ],
+    quiz: [
+      {
+        question: 'Survey conversion drops below 2%. What is the correct prescription and who do you coordinate with?',
+        options: [
+          'Rebuild the ad creative — low survey conversion reflects poor targeting quality',
+          'Switch from 7-question to 4-question survey, simplify language. Coordinate with Tech/Automations.',
+          'Increase daily ad spend — more traffic volume lifts the survey conversion denominator',
+          'Pause the campaign and request a client meeting to discuss the conversion issue',
+        ],
+        correctIndex: 1,
+        explanation: 'Survey conversion under 2% = survey too long or confusing. The Layer 3 lever: switch to 4-question, simplify language. Coordinate with Tech/Automations to update the form. Never escalate to the client — that is CSM\'s domain.',
+      },
+      {
+        question: 'CPL is rising and link CTR is falling. You have verified this is not a new launch (past Day 7). What is Step 1 of the creative refresh protocol?',
+        options: [
+          'Immediately brief Creative for a full 15-ad refresh with new photos and copy',
+          'First check for holidays or local events that could explain the shift. Then: Post-Andromeda duplicate — turn off top-reach ads, duplicate the ad set, launch new set, turn off old. Wait 48 hours.',
+          'Increase daily budget by 30% to generate more volume and naturally lower CPL',
+          'Contact the client to let them know performance has dipped and request more content',
+        ],
+        correctIndex: 1,
+        explanation: 'Context check first (holiday? new campaign change?). Then Post-Andromeda duplicate — 50/50 shot that it resolves. Only move to full creative refresh if no recovery after 48 hours. Never skip context check, never brief Creative before trying the duplicate.',
+      },
+      {
+        question: 'A client\'s card declines and their ads pause. What is the media buyer\'s responsibility?',
+        options: [
+          'Call the client immediately to resolve the billing issue — every paused day delays the cycle',
+          'Flag the billing failure to CSM immediately. CSM contacts the client. Media buyer does not.',
+          'Pause all other accounts temporarily until the billing is resolved to avoid wasted spend',
+          'Email the client directly with a professional note and cc Jonathan',
+        ],
+        correctIndex: 1,
+        explanation: 'Billing failures are flagged to CSM — that is the complete media buyer action. CSM contacts the client. This is one of the two places the old and new role structure explicitly differ. Media buyer has zero client contact, including billing.',
+      },
+      {
+        question: 'The Post-Andromeda duplicate did not resolve the performance drop after 48 hours. What is the next step?',
+        options: [
+          'Run a second duplicate — sometimes the algorithm needs more than one attempt',
+          'Full creative refresh: brief Creative with brand info, market, angle, reference images, and performance context. Specify format.',
+          'Pause the campaign for 72 hours to reset the algorithm before relaunching',
+          'Switch to a different campaign objective — leads objective may no longer be the right fit',
+        ],
+        correctIndex: 1,
+        explanation: 'Post-Andromeda duplicate is a 50/50 shot. If no recovery in 48 hours, the full creative refresh is the next step: brief Creative with specific direction — brand info, market, angle, format, and performance context ("previous video in this format got X% CTR"). Vague briefs produce vague ads.',
+      },
+      {
+        question: 'What homework does each buyer bring into Wednesday July 29\'s first daily call?',
+        options: [
+          'A list of questions about accounts they are still learning',
+          'A written account read plus a proposed action step per account — real material, ready to present',
+          'A one-page summary of the four training sessions to demonstrate retention',
+          'Cycle dates and current KPIs for each account, pulled from the dashboard',
+        ],
+        correctIndex: 1,
+        explanation: 'The homework going into Day 1 of daily calls: a written read plus a proposed action step per account. This is how the first call has real material from the start — not just an intro session. Do the reads the night before.',
       },
     ],
   },
 ];
 
-export const MB_WORKSHEET_SECTIONS = [
+export interface MBWorksheetSection {
+  id: string;
+  title: string;
+  description: string;
+  items: string[];
+}
+
+export const MB_WORKSHEET_SECTIONS: MBWorksheetSection[] = [
   {
     id: 'role-standards',
-    title: 'Role Clarity & Team Standards',
-    description: 'Confirm your understanding of what you own, what you don\'t, and the operating standards held from Day 1.',
+    title: 'Role & Standards Checklist',
+    description: 'Confirm understanding of the five Team Standards and role boundaries.',
     items: [
-      'I own ad performance on my accounts: strategy, execution, and creative direction. That\'s it.',
-      'I have zero client-facing responsibility. All client communication goes through CSM — not me.',
-      'I understand the distinction between my role, the VA/Call Center role, and the Creative Strategist\'s role.',
-      'I understand and accept the five Team Standards: communication, accountability, listen to detail, approval before action, and punctuality.',
-      'I understand that approval before action applies to everything while the model is new — no exceptions.',
-      'I understand the escalation path: portal/SOPs → peer media buyer → leadership. Come with context, not just a question.',
-      'I understand the growth and retention standard: performance determines opportunity as the team scales.',
-      'I have reviewed my account list and know my current assignments.',
+      'What is your primary accountability metric as a media buyer?',
+      'Name the 5 Team Standards in order.',
+      'What does "approval before action" mean in practice?',
+      'Who handles client communication and performance updates?',
+      'When is Saturday work expected?',
     ],
   },
   {
     id: 'kpi-reference',
-    title: 'KPI Reference Sheet',
-    description: 'All 10 KPIs you own. Know what each one signals and when to act on it.',
+    title: 'KPI Reference',
+    description: 'Fill in benchmarks for each KPI from memory.',
     items: [
-      'Cost per link click — efficiency of the ad at driving traffic to the landing page',
-      'CTR (link click-through rate, not engagement CTR) — how compelling the creative is to the target audience',
-      'CPM — cost per 1,000 impressions; signals audience competitiveness and ad relevance',
-      'Frequency — times the same person has seen the ad; refresh creative above 3–4 on a cold audience',
-      'Cost per lead — compare against the scalable target for the specific account, not a universal number',
-      'Cost per booked appointment — connects ad performance to actual business outcome',
-      'Out-of-service-area % — percentage of leads from outside the client\'s service area; high % = targeting or LP problem',
-      'Leads generated — rolling window (3/5/7-day) totals plus cycle total',
-      'Booked appointments generated — rolling window (3/5/7-day) totals plus cycle total',
-      'Ad spend vs. target pacing — expected spend at any point = (days elapsed / cycle days) × cycle budget',
+      'Link CTR benchmark: ___',
+      'Link CPC benchmark: ___',
+      'OSA % threshold (flag above): ___',
+      'Survey conversion benchmark: ___',
+      'Frequency threshold (act immediately above): ___',
+      'CPA margin variance band: ___',
     ],
   },
   {
     id: 'reporting-cadence',
-    title: 'Reporting & Meeting Cadence',
-    description: 'How reporting works and what the daily and weekly schedule looks like.',
+    title: 'Reporting Cadence',
+    description: 'Map out the two-layer reporting system.',
     items: [
-      'I understand the two-layer reporting system: full 28-day cycle + rolling 3/5/7-day windows.',
-      'I know why rolling windows matter: catch CPL issues on Day 8, not Day 28.',
-      'Until rolling report automation is live: I pull my own rolling windows at the start of each day.',
-      'Daily AM check-in: review overnight pacing and lead volume changes, flag anything needing action.',
-      'Daily PM check-in: report what I touched, what changed, what needs attention tomorrow.',
-      'I am on time to every check-in — ready at the start time, not logging in at the start time.',
-      'I know that daily cadence tapers to twice weekly once the team is proficient (trigger TBD).',
-      'I know that a separate broader account review session is coming — structure still being designed.',
+      'Layer 1 — what it tracks:',
+      'Layer 2 — what it tracks:',
+      'Rolling window timeframes used:',
+      'When does rolling window data get pulled?',
+      'Who automates daily report delivery (future state)?',
     ],
   },
   {
     id: 'account-audit',
-    title: 'Account Audit Protocol',
-    description: 'Run through this for every account, every week. Also use when inheriting an account for the first time.',
+    title: 'Account Audit Checklist',
+    description: 'Items to check on every weekly account audit.',
     items: [
-      'Reviewed cycle dates and current spend vs. target pacing (use the formula: days elapsed / cycle days × budget)',
-      'Read the log book from the last 30 days — understood what changed, why, and what came of it',
-      'Pulled CPL by ad set for the current cycle — identified top and bottom performers',
-      'Checked frequency on all active ad sets — flagged any above 3–4',
-      'Verified all active ad sets should be running (no zombie tests, no expired promos, no wrong seasonal creative)',
-      'Checked geography targeting on all active ad sets — verified service area is correct',
-      'Checked out-of-service-area % — flagged if above acceptable threshold',
-      'Audited last 20+ leads: were they called? When? Contact rate? Booking rate? Where did they drop?',
-      'Checked LP conversion rate and form/survey completion rate',
-      'Verified GHL data entry is clean — no blank fields, wrong numbers, or incomplete records',
-      'Reviewed competitor landscape relevant to this account — what are they running?',
-      'Identified all warning signs requiring action — documented in log book with owner and next step',
+      'Lead tracing: what to verify per lead',
+      'Log book: what to read before making changes',
+      'KPI checks: list each KPI reviewed',
+      'Competitive research: what to look for',
+      'QA items: zombie tests, broken tracking, geo targeting, pixel integrity',
+      'Spend pacing: on track vs off, how to correct',
+      'Creative health: CTR trend, frequency, fatigue signals',
+      'VA performance: booking rate, open leads in log',
+      'OSA rate: current %, action if above threshold',
+      'Anything turned on that should be off?',
+      'Anything turned off that should be on?',
+      'Audience overlap between active ad sets?',
     ],
   },
   {
-    id: 'va-creative-collab',
-    title: 'VA & Creative Collaboration Protocols',
-    description: 'How to work effectively with the VA/Call Center team and the Creative Department.',
+    id: 'escalation-ladder',
+    title: 'Escalation Ladder',
+    description: 'Map problem to prescription and coordination.',
     items: [
-      'Before flagging a booking issue to VA: pull call data first — was the lead actually called, and how many times?',
-      'VA flag format: account name + lead count + timeframe + call log evidence + specific ask',
-      'Good VA flag: "Account X — 18 leads in 5 days. Call log shows 6 called, 12 uncalled. Please follow up on the 12."',
-      'Not a good VA flag: "Leads aren\'t booking, can you look into it?"',
-      'Creative request format: market + angle + format + audience mindset + performance context from similar creative',
-      'Creative feedback format: data (CTR, CPL, spend) + what it means + what to do next',
-      'Good creative feedback: "New static — 0.9% CTR vs 1.8% previous — not a format winner for this market."',
-      'Not good creative feedback: "The creative looks good but didn\'t really perform."',
-      'Remember: the Creative Strategist owns copy and direction. I own performance. Both matter.',
+      'Survey conversion under 2%: prescription + coordinate with',
+      'Rising CPL / falling CTR: prescription + coordinate with',
+      'High OSA rate (above 20%): prescription + coordinate with',
+      'Low VA booking rate: prescription + coordinate with',
+      'Ads not spending 3+ days: prescription + coordinate with',
+      'Billing failure / card declined: prescription + coordinate with',
+      'Low show rate: prescription + coordinate with',
+      'Open leads not being called: prescription + coordinate with',
     ],
   },
   {
-    id: 'weekly-workflow',
-    title: 'Weekly Workflow Template',
-    description: 'Starting structure for managing the week. Adjust as the meeting cadence and reporting automation are confirmed.',
+    id: 'creative-refresh-protocol',
+    title: 'Creative Refresh Protocol',
+    description: 'Step-by-step protocol for addressing creative fatigue.',
     items: [
-      'Every AM: check overnight pacing and lead volume changes across all accounts before anything else.',
-      'Every PM: log book updates, VA flag review, respond to any internal escalations.',
-      'Monday: full account review — KPIs, pacing, lead audit, log book catch-up.',
-      'Tuesday: AM check-in. Present status on any flagged accounts. Action items from the call.',
-      'Wednesday: proactive deep-dives on at-risk accounts or accounts approaching cycle end.',
-      'Thursday: creative request submissions based on the week\'s data.',
-      'Friday: PM check-in. Finalize any cycle-end actions. QA check on all accounts.',
-      'Ongoing: approval before action — nothing goes live without approval, regardless of urgency.',
+      'Step 0: context check — what to verify before acting',
+      'Step 1: Post-Andromeda duplicate — exact sequence',
+      'Step 2: outcome of Step 1 if it works',
+      'Step 2: what to do if Step 1 does not resolve after 48h',
+      'When briefing Creative: what information to include',
     ],
   },
 ];

@@ -335,7 +335,7 @@ export function MBHomeTab() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
               <span style={{ fontSize: 16 }}>{allDone ? '🏆' : '📚'}</span>
               <span style={{ color: allDone ? '#22C55E' : C.acc, fontSize: 12, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                {allDone ? 'Training Complete' : '2-Session Training Program'}
+                {allDone ? 'Training Complete' : '4-Session Training Program'}
               </span>
             </div>
             <div style={{ color: '#888', fontSize: 12.5, lineHeight: 1.5, marginBottom: 10 }}>

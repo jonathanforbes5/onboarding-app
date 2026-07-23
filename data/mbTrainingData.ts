@@ -5,6 +5,14 @@ export interface MBQuizQuestion {
   explanation: string;
 }
 
+export interface MBDaySection {
+  id: string;
+  title: string;
+  subtitle: string;
+  estimatedTime: string;
+  icon: string;
+}
+
 export interface MBTrainingDay {
   id: number;
   title: string;
@@ -16,6 +24,7 @@ export interface MBTrainingDay {
   icon: string;
   objective: string;
   available: boolean;
+  sections: MBDaySection[];
   keyTakeaways: string[];
   quiz: MBQuizQuestion[];
 }
@@ -32,6 +41,18 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
     icon: '🏗️',
     objective: 'Leave understanding the business model, your exact role and standards, what broke in the old model, how your week looks, the department structure, full funnel ownership, and the basics of KPIs and layer reporting.',
     available: true,
+    sections: [
+      { id: 's1', title: 'A New Chapter', subtitle: 'What this role is, what it isn\'t, and why it starts completely fresh.', estimatedTime: '5 min', icon: '🎯' },
+      { id: 's2', title: 'Team Standards', subtitle: 'The 5 standards, the zero-tolerance policy, and what Day 1 sets in motion.', estimatedTime: '5 min', icon: '⚠️' },
+      { id: 's3', title: 'The RoofIgnite Model', subtitle: '28-day cycles, performance math, spend targets, and how billing works.', estimatedTime: '10 min', icon: '📐' },
+      { id: 's4', title: 'What Wasn\'t Working', subtitle: 'The pod manager overload problem — and why this team is the solution.', estimatedTime: '5 min', icon: '🔄' },
+      { id: 's5', title: 'Meeting Cadence', subtitle: 'Your weekly structure, update posts, deep dives, and what to bring.', estimatedTime: '5 min', icon: '📅' },
+      { id: 's6', title: 'Department Structure', subtitle: 'Who does what — updated team names and the lines you never cross.', estimatedTime: '8 min', icon: '🏢' },
+      { id: 's7', title: 'Full Funnel Ownership', subtitle: 'Ads to booked appointment — what you own even when others execute.', estimatedTime: '5 min', icon: '🔗' },
+      { id: 's8', title: 'Tools & Systems', subtitle: 'What you operate in daily and what we\'re building fast.', estimatedTime: '5 min', icon: '⚙️' },
+      { id: 's9', title: 'KPI Overview', subtitle: 'The 10 metrics across Layer 1 and Layer 2 — and why each exists.', estimatedTime: '5 min', icon: '📊' },
+      { id: 's10', title: 'Layer Reporting', subtitle: 'Cycle windows + rolling breakdowns — the two-layer read explained.', estimatedTime: '5 min', icon: '📈' },
+    ],
     keyTakeaways: [
       'This is a brand new role — not an extension of the old one. You are applying for it and held to a new standard from Day 1.',
       'No second chances. Any violation of the 5 Team Standards — even one minute late, even once — and you are out.',
@@ -220,6 +241,14 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
     icon: '📊',
     objective: 'Leave able to read any account correctly — identify which layer is broken, which metric is the root cause, and which lever addresses it. Reads and findings stay internal and go through CSM.',
     available: false,
+    sections: [
+      { id: 's1', title: 'The Two-Layer System', subtitle: 'Overview of Layer 1, Layer 2, and Layer 3 — and when to use each.', estimatedTime: '8 min', icon: '🗂️' },
+      { id: 's2', title: 'Layer 1 — Outcomes', subtitle: 'Bookings, CPA, and cycle-level metrics. Check here first.', estimatedTime: '8 min', icon: '✅' },
+      { id: 's3', title: 'Layer 2 — Drivers', subtitle: 'CTR, CPC, CPL, frequency, OSA %, and survey conversion.', estimatedTime: '10 min', icon: '📉' },
+      { id: 's4', title: 'Layer 3 — Levers', subtitle: 'What you actually change — the exact actions mapped to each driver.', estimatedTime: '8 min', icon: '🔧' },
+      { id: 's5', title: 'Benchmark Reference', subtitle: 'All key benchmarks in one place for fast account diagnosis.', estimatedTime: '5 min', icon: '📏' },
+      { id: 's6', title: 'Live Account Read', subtitle: 'Real account walkthrough applying the full layer system end-to-end.', estimatedTime: '15 min', icon: '🔍' },
+    ],
     keyTakeaways: [
       'Check Layer 1 first. If it is green, stop — do not audit Layer 2. Spend energy where it moves the needle.',
       'When Layer 1 is red, drill into Layer 2 for that specific metric only. Do not boil the ocean.',
@@ -298,6 +327,14 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
     icon: '🔍',
     objective: 'Leave with a repeatable audit process, understanding of weekly QA, budget management principles, and the setup model — so accounts run clean and spend is never wasted.',
     available: false,
+    sections: [
+      { id: 's1', title: 'Standard Audit Process', subtitle: '5-step repeatable sequence for every account, every week.', estimatedTime: '10 min', icon: '🔍' },
+      { id: 's2', title: 'Competitive Research', subtitle: 'Why market context is non-negotiable — part of every audit.', estimatedTime: '5 min', icon: '🎯' },
+      { id: 's3', title: 'QA Standing Check', subtitle: 'The weekly QA checklist — every account, every week. No exceptions.', estimatedTime: '8 min', icon: '✅' },
+      { id: 's4', title: 'Budget Management', subtitle: 'Pacing, gradual adjustments, holiday planning, and overspend corrections.', estimatedTime: '8 min', icon: '💰' },
+      { id: 's5', title: 'Setup Model', subtitle: 'Current direction and options still under consideration.', estimatedTime: '5 min', icon: '⚙️' },
+      { id: 's6', title: 'Creative Collaboration', subtitle: 'How you work with the Creative team — briefs, iteration, and accountability.', estimatedTime: '5 min', icon: '🎨' },
+    ],
     keyTakeaways: [
       'Every account gets audited minimum weekly. Priority or at-risk accounts get audited more often.',
       'Competitive research is part of the audit — not a separate exercise. Recommendations made in a vacuum are guesses.',
@@ -376,6 +413,13 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
     icon: '⚡',
     objective: 'Leave with a repeatable playbook for the most common account problems — exact prescriptions per root cause, who to coordinate with, and how to brief creative refreshes. Bring a written read per account to Wed July 29\'s first daily call.',
     available: false,
+    sections: [
+      { id: 's1', title: 'Escalation Ladder', subtitle: 'Problem → Root Cause → Prescription → Coordinate With. All 11 scenarios.', estimatedTime: '12 min', icon: '🪜' },
+      { id: 's2', title: 'Creative Refresh Protocol', subtitle: 'Context check → Post-Andromeda duplicate → full refresh sequence.', estimatedTime: '8 min', icon: '🎨' },
+      { id: 's3', title: 'Briefing Creative', subtitle: 'What goes in a brief and why specificity is the standard.', estimatedTime: '8 min', icon: '📝' },
+      { id: 's4', title: 'Operating at Scale', subtitle: 'Playbook-driven decisions and the team\'s capacity direction.', estimatedTime: '5 min', icon: '⚡' },
+      { id: 's5', title: 'Homework', subtitle: 'Written account reads + action steps due before Wed July 29, 7:00 AM.', estimatedTime: '5 min', icon: '📋' },
+    ],
     keyTakeaways: [
       'Problem → Root Cause → Prescription → Coordinate With. Know this sequence for every common scenario.',
       'Billing failures and renewal conversations both go through CSM. Media buyer supplies data, not client contact.',

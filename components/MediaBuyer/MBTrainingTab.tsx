@@ -312,7 +312,8 @@ interface DayDetailProps {
 
 function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
   const { mbQuizScores, markMBDayComplete, saveMBQuizScore, completedMBDays, currentUser } = useApp();
-  const [view, setView] = useState<'content' | 'quiz'>('content');
+  const [view, setView] = useState<'sections' | 'section-detail' | 'quiz'>('sections');
+  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [quizLinkCopied, setQuizLinkCopied] = useState(false);
   const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'user';
   const day = MB_TRAINING_DAYS.find((d) => d.id === dayId)!;
@@ -324,6 +325,12 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
     if (score >= 80) markMBDayComplete(dayId);
   }
 
+  function goToSection(sectionId: string) {
+    setActiveSectionId(sectionId);
+    setView('section-detail');
+  }
+
+  // ── Quiz view ──
   if (view === 'quiz') {
     return (
       <QuizEngine
@@ -331,12 +338,120 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
         questions={day.quiz}
         prevScore={prevScore}
         onComplete={handleQuizComplete}
-        onBack={() => setView('content')}
+        onBack={() => setView('sections')}
         onNextDay={onNextDay}
       />
     );
   }
 
+  // ── Section detail view ──
+  if (view === 'section-detail' && activeSectionId) {
+    const sectionIndex = day.sections.findIndex((s) => s.id === activeSectionId);
+    const section = day.sections[sectionIndex];
+    const prevSection = sectionIndex > 0 ? day.sections[sectionIndex - 1] : null;
+    const nextSection = sectionIndex < day.sections.length - 1 ? day.sections[sectionIndex + 1] : null;
+
+    return (
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '32px 20px 80px' }}>
+        {/* Back to sections overview */}
+        <button
+          onClick={() => setView('sections')}
+          style={{ background: 'none', border: 'none', color: C.muted, fontSize: 13, cursor: 'pointer', padding: '0 0 24px', display: 'block' }}
+        >
+          ← Session {dayId} Overview
+        </button>
+
+        {/* Section mini-header */}
+        <div style={{
+          background: `linear-gradient(135deg, ${day.color}12 0%, #111111 60%)`,
+          border: `1px solid ${day.color}33`,
+          borderRadius: 14,
+          padding: '20px 24px',
+          marginBottom: 24,
+          display: 'flex', alignItems: 'center', gap: 16,
+          position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: day.color, borderRadius: '14px 14px 0 0' }} />
+          <div style={{
+            width: 44, height: 44, borderRadius: 10,
+            background: day.color + '22', border: `1px solid ${day.color}44`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 20, flexShrink: 0,
+          }}>
+            {section.icon}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ color: day.color, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>
+              Section {sectionIndex + 1} of {day.sections.length} · {section.estimatedTime}
+            </div>
+            <div style={{ color: C.text, fontSize: 18, fontWeight: 900, marginBottom: 2, letterSpacing: '-0.2px' }}>{section.title}</div>
+            <div style={{ color: '#777', fontSize: 12.5 }}>{section.subtitle}</div>
+          </div>
+        </div>
+
+        {/* Section content */}
+        <div style={{ marginBottom: 32 }}>
+          {dayId === 1 && <MBS1_Company101 sectionId={activeSectionId} />}
+          {dayId === 2 && <MBS2_ReportsData />}
+          {dayId === 3 && <MBS3_AuditingQA />}
+          {dayId === 4 && <MBS4_ActionSteps />}
+        </div>
+
+        {/* Prev / Next navigation */}
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+          {prevSection ? (
+            <button
+              onClick={() => goToSection(prevSection.id)}
+              style={{
+                padding: '12px 20px', borderRadius: 10,
+                border: `1px solid ${C.border2}`, background: C.surf2,
+                color: C.muted, fontWeight: 700, fontSize: 13, cursor: 'pointer',
+              }}
+            >
+              ← {prevSection.title}
+            </button>
+          ) : (
+            <button
+              onClick={() => setView('sections')}
+              style={{
+                padding: '12px 20px', borderRadius: 10,
+                border: `1px solid ${C.border2}`, background: 'transparent',
+                color: C.muted, fontWeight: 700, fontSize: 13, cursor: 'pointer',
+              }}
+            >
+              ← Back to Overview
+            </button>
+          )}
+          <div style={{ flex: 1 }} />
+          {nextSection ? (
+            <button
+              onClick={() => goToSection(nextSection.id)}
+              style={{
+                padding: '12px 22px', borderRadius: 10,
+                border: 'none', background: day.color,
+                color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer',
+              }}
+            >
+              {nextSection.title} →
+            </button>
+          ) : (
+            <button
+              onClick={() => setView('quiz')}
+              style={{
+                padding: '12px 22px', borderRadius: 10,
+                border: 'none', background: C.acc,
+                color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer',
+              }}
+            >
+              Take Knowledge Check →
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Sections overview (default) ──
   return (
     <div style={{ maxWidth: 760, margin: '0 auto', padding: '32px 20px 80px' }}>
       {/* Back */}
@@ -372,6 +487,8 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
               <span style={{ color: day.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Session {day.id}</span>
               <span style={{ color: C.muted, fontSize: 11 }}>·</span>
               <span style={{ color: C.muted, fontSize: 11 }}>{day.estimatedTime}</span>
+              <span style={{ color: C.muted, fontSize: 11 }}>·</span>
+              <span style={{ color: C.muted, fontSize: 11 }}>{day.sections.length} sections</span>
               {isDone && (
                 <span style={{
                   backgroundColor: '#22C55E22', border: '1px solid #22C55E44',
@@ -404,12 +521,57 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
         </div>
       </div>
 
-      {/* Session content */}
+      {/* Sections grid */}
       <div style={{ marginBottom: 28 }}>
-        {dayId === 1 && <MBS1_Company101 />}
-        {dayId === 2 && <MBS2_ReportsData />}
-        {dayId === 3 && <MBS3_AuditingQA />}
-        {dayId === 4 && <MBS4_ActionSteps />}
+        <div style={{ color: '#555', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>
+          Sections
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 10 }}>
+          {day.sections.map((section, i) => (
+            <button
+              key={section.id}
+              onClick={() => goToSection(section.id)}
+              style={{
+                backgroundColor: C.surf,
+                border: `1px solid ${C.border}`,
+                borderRadius: 12,
+                padding: '18px 20px',
+                textAlign: 'left',
+                cursor: 'pointer',
+                transition: 'border-color 0.15s',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = day.color + '66'; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = C.border; }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: 9,
+                  background: day.color + '18', border: `1px solid ${day.color}33`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 16, flexShrink: 0,
+                }}>
+                  {section.icon}
+                </div>
+                <div style={{
+                  width: 22, height: 22, borderRadius: 6,
+                  backgroundColor: C.border2,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 10, fontWeight: 900, color: '#555',
+                }}>
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+              </div>
+              <div style={{ color: C.text, fontSize: 13.5, fontWeight: 800, marginBottom: 4, lineHeight: 1.3 }}>{section.title}</div>
+              <div style={{ color: C.muted, fontSize: 11.5, lineHeight: 1.5, flex: 1 }}>{section.subtitle}</div>
+              <div style={{ marginTop: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#444', fontSize: 10.5 }}>{section.estimatedTime}</span>
+                <span style={{ color: day.color, fontSize: 13 }}>→</span>
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Key Takeaways */}

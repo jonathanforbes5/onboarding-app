@@ -52,21 +52,20 @@ const TOOLS = [
   { name: 'GoHighLevel (GHL)', icon: '⚙️', desc: 'CRM and lead pipeline. Check daily for lead stages, VA activity, and log data. Source of truth on lead outcomes.' },
   { name: 'ClickUp', icon: '📋', desc: 'Task management for the team. Every creative request, tech escalation, and action step — account name, link, and deadline required.' },
   { name: 'Slack', icon: '💬', desc: 'Designated channels for updates, escalations, and team communication. Correct channel discipline is expected.' },
-  { name: 'Fathom', icon: '🎙️', desc: 'Call recording and note capture. All meetings are recorded. Review before sessions to stay current.' },
   { name: 'MB Command Centre (Coming)', icon: '📊', desc: 'Real-time account health dashboard — equivalent of what pod managers have. We will build this fast.' },
 ];
 
 const KPIS = [
-  { name: 'Booked Appointments', layer: 'L1', benchmark: 'Vs. cycle target', highlight: true },
-  { name: 'Cost per Booked Appt', layer: 'L1', benchmark: 'Within contracted range', highlight: true },
-  { name: 'Leads Generated', layer: 'L1', benchmark: 'Cycle + rolling windows' },
-  { name: 'Ad Spend vs Pacing', layer: 'L1', benchmark: '$2,800 by Day 28' },
-  { name: 'Link CTR', layer: 'L2', benchmark: '> 0.8%', highlight: true },
-  { name: 'Cost per Link Click', layer: 'L2', benchmark: '< $6' },
-  { name: 'CPM', layer: 'L2', benchmark: 'Market benchmark' },
-  { name: 'Cost per Lead (CPL)', layer: 'L2', benchmark: 'Market + cycle target', highlight: true },
-  { name: 'Frequency', layer: 'L2', benchmark: 'Act above 3.5', highlight: true },
-  { name: 'Out-of-Service-Area %', layer: 'L2', benchmark: 'Flag above 15%', highlight: true },
+  { name: 'Booked Appointments', layer: 'L1', track: 'GHL pipeline', importance: 'The primary deliverable — everything you do serves this number.' },
+  { name: 'Cost per Booked Appt', layer: 'L1', track: 'Total spend ÷ booked appts', importance: 'Tells you whether the model is financially viable for the client.' },
+  { name: 'Leads Generated', layer: 'L1', track: 'GHL + Meta', importance: 'Early funnel health indicator — drops before appointments do.' },
+  { name: 'Ad Spend vs Pacing', layer: 'L1', track: 'Meta Ads Manager daily', importance: 'Cycle billing depends on hitting the full budget by Day 28.' },
+  { name: 'Link CTR', layer: 'L2', track: 'Meta Ads Manager', importance: 'Reflects creative and audience relevance. Low CTR = ad-level problem.' },
+  { name: 'Cost per Link Click', layer: 'L2', track: 'Meta Ads Manager', importance: 'Isolates whether CPL issues come from the ad or the landing page.' },
+  { name: 'CPM', layer: 'L2', track: 'Meta Ads Manager', importance: 'Audience efficiency signal. Spikes indicate saturation or competition.' },
+  { name: 'Cost per Lead (CPL)', layer: 'L2', track: 'Meta + GHL', importance: 'Bridges spend to lead volume — key lever before appointments land.' },
+  { name: 'Frequency', layer: 'L2', track: 'Meta Ads Manager', importance: 'High frequency = audience overexposure. Signals need for fresh creative.' },
+  { name: 'Out-of-Service-Area %', layer: 'L2', track: 'GHL lead source data', importance: 'High rate = wasted spend on leads outside the client\'s territory.' },
 ];
 
 function SectionHeader({ num, title, time, color = C.acc }: { num: string; title: string; time: string; color?: string }) {
@@ -385,15 +384,16 @@ function S9_KPIs() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       <SectionHeader num="09" title="KPI Overview" time="5 min" />
       <div style={{ backgroundColor: C.surf, border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 22px' }}>
-        <p style={{ color: '#777', fontSize: 12, lineHeight: 1.6, margin: '0 0 14px' }}>Ten KPIs across two layers. Session 2 goes deep on each — benchmarks, failure modes, and the levers to pull. For now, know they exist and what layer they belong to.</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+        <p style={{ color: '#777', fontSize: 12, lineHeight: 1.6, margin: '0 0 14px' }}>Ten KPIs across two layers. Session 2 goes deep on each — how to read them, what failure looks like, and the levers to pull. For now, understand what they are, where they come from, and why they matter.</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {KPIS.map((k) => (
-            <div key={k.name} style={{ padding: '9px 11px', backgroundColor: k.highlight ? C.acc + '08' : C.surf2, border: `1px solid ${k.highlight ? C.acc + '25' : C.border2}`, borderRadius: 7 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                <span style={{ backgroundColor: k.layer === 'L1' ? '#22C55E22' : '#4A90D922', color: k.layer === 'L1' ? '#22C55E' : '#4A90D9', fontSize: 9, fontWeight: 800, padding: '1px 5px', borderRadius: 4 }}>{k.layer}</span>
-                <span style={{ color: k.highlight ? C.acc : C.text, fontSize: 11.5, fontWeight: 700 }}>{k.name}</span>
+            <div key={k.name} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', backgroundColor: C.surf2, border: `1px solid ${C.border2}`, borderRadius: 8 }}>
+              <span style={{ backgroundColor: k.layer === 'L1' ? '#22C55E22' : '#4A90D922', color: k.layer === 'L1' ? '#22C55E' : '#4A90D9', fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 4, flexShrink: 0, marginTop: 2 }}>{k.layer}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ color: C.text, fontSize: 12.5, fontWeight: 700, marginBottom: 3 }}>{k.name}</div>
+                <div style={{ color: '#555', fontSize: 11, marginBottom: 3 }}>Tracked via: {k.track}</div>
+                <div style={{ color: '#777', fontSize: 11, lineHeight: 1.45 }}>{k.importance}</div>
               </div>
-              <div style={{ color: '#666', fontSize: 10.5 }}>{k.benchmark}</div>
             </div>
           ))}
         </div>

@@ -51,7 +51,7 @@ export const LOCAL_USERS: Record<string, UserProfile> = {
   emmanuel:  { email: 'emmanuel@roofignite.com',  displayName: 'Emmanuel',  userKey: 'emmanuel',  role: 'media_buyer' },
   bren:      { email: 'bren@roofignite.com',      displayName: 'Bren',      userKey: 'bren',      role: 'media_buyer' },
   mervin:    { email: 'mervin@roofignite.com',    displayName: 'Mervin',    userKey: 'mervin',    role: 'media_buyer' },
-  ken:       { email: 'ken@roofignite.com',       displayName: 'Ken',       userKey: 'ken',       role: 'media_buyer' },
+  ken:       { email: 'ken@roofignite.com',       displayName: 'Ken',       userKey: 'ken',       role: 'creative_specialist' },
 };
 
 export function getUserColor(userKey: string) {

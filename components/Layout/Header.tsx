@@ -74,7 +74,6 @@ export function Header() {
     ? [
         { id: 'mb_home',      label: 'Home',      icon: '🏠' },
         { id: 'mb_training',  label: 'Training',  icon: '📚' },
-        { id: 'mb_worksheet', label: 'Worksheet', icon: '📝' },
         { id: 'mb_sops',      label: 'SOPs',      icon: '📋' },
         { id: 'mb_tools',     label: 'Tools',     icon: '🛠️' },
       ]

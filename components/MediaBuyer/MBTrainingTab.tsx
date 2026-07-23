@@ -311,8 +311,10 @@ interface DayDetailProps {
 }
 
 function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
-  const { mbQuizScores, markMBDayComplete, saveMBQuizScore, completedMBDays } = useApp();
+  const { mbQuizScores, markMBDayComplete, saveMBQuizScore, completedMBDays, currentUser } = useApp();
   const [view, setView] = useState<'content' | 'quiz'>('content');
+  const [quizLinkCopied, setQuizLinkCopied] = useState(false);
+  const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'user';
   const day = MB_TRAINING_DAYS.find((d) => d.id === dayId)!;
   const prevScore = mbQuizScores[dayId];
   const isDone = completedMBDays.includes(dayId);
@@ -430,6 +432,46 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
         ))}
       </div>
 
+      {/* Admin-only quiz link */}
+      {isAdmin && (
+        <div style={{
+          backgroundColor: '#0D0D1A',
+          border: '1px solid #4A90D933',
+          borderRadius: 12,
+          padding: '16px 20px',
+          marginBottom: 12,
+        }}>
+          <div style={{ color: '#4A90D9', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+            🔗 Admin — Shareable Quiz Link
+          </div>
+          <div style={{ color: '#888', fontSize: 12, marginBottom: 10, lineHeight: 1.5 }}>
+            Share this link with media buyers at the end of the session. They enter their name and complete the quiz — results are saved to the backend. This link is confidential to the media buying team only.
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, backgroundColor: '#111', border: '1px solid #2A2A2A', borderRadius: 8, padding: '8px 12px', fontFamily: 'monospace', fontSize: 12, color: '#aaa', minWidth: 200 }}>
+              {typeof window !== 'undefined' ? `${window.location.origin}/quiz/${dayId}` : `/quiz/${dayId}`}
+            </div>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/quiz/${dayId}`;
+                navigator.clipboard.writeText(url).then(() => {
+                  setQuizLinkCopied(true);
+                  setTimeout(() => setQuizLinkCopied(false), 2000);
+                });
+              }}
+              style={{
+                padding: '8px 16px', borderRadius: 8, border: 'none',
+                background: quizLinkCopied ? '#22C55E' : '#4A90D9',
+                color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer', flexShrink: 0,
+                transition: 'background 0.2s',
+              }}
+            >
+              {quizLinkCopied ? '✓ Copied' : 'Copy Link'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Quiz CTA */}
       <div style={{
         backgroundColor: C.surf,
@@ -468,8 +510,14 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
 // ── Overview ──────────────────────────────────────────────────────────────────
 
 export function MBTrainingTab() {
-  const { completedMBDays, mbQuizScores } = useApp();
+  const { completedMBDays, mbQuizScores, currentUser } = useApp();
   const [activeDay, setActiveDay] = useState<number | null>(null);
+  const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'user';
+
+  function handleDayClick(dayId: number, dayAvailable: boolean) {
+    if (!isAdmin && !dayAvailable) return;
+    setActiveDay(dayId);
+  }
 
   if (activeDay !== null) {
     const currentIdx = MB_TRAINING_DAYS.findIndex((d) => d.id === activeDay);
@@ -485,10 +533,11 @@ export function MBTrainingTab() {
     );
   }
 
-  const totalDays = MB_TRAINING_DAYS.length;
-  const doneDays = completedMBDays.length;
-  const pct = Math.round((doneDays / totalDays) * 100);
-  const nextIncompleteDay = MB_TRAINING_DAYS.find((d) => !completedMBDays.includes(d.id));
+  const availableDays = isAdmin ? MB_TRAINING_DAYS : MB_TRAINING_DAYS.filter((d) => d.available);
+  const totalDays = availableDays.length;
+  const doneDays = completedMBDays.filter((id) => availableDays.some((d) => d.id === id)).length;
+  const pct = totalDays > 0 ? Math.round((doneDays / totalDays) * 100) : 0;
+  const nextIncompleteDay = availableDays.find((d) => !completedMBDays.includes(d.id));
 
   return (
     <div style={{
@@ -536,7 +585,7 @@ export function MBTrainingTab() {
         </div>
 
         {/* Resume banner — shown when in progress but not done */}
-        {nextIncompleteDay && doneDays > 0 && (
+        {nextIncompleteDay && doneDays > 0 && (isAdmin || nextIncompleteDay.available) && (
           <button
             onClick={() => setActiveDay(nextIncompleteDay.id)}
             style={{
@@ -574,52 +623,74 @@ export function MBTrainingTab() {
           {MB_TRAINING_DAYS.map((day) => {
             const isDone = completedMBDays.includes(day.id);
             const quizScore = mbQuizScores[day.id];
+            const isLocked = !isAdmin && !day.available;
 
             return (
               <button
                 key={day.id}
-                onClick={() => setActiveDay(day.id)}
+                onClick={() => handleDayClick(day.id, day.available)}
+                disabled={isLocked}
                 style={{
-                  backgroundColor: C.surf,
-                  border: `1px solid ${isDone ? '#22C55E33' : C.border}`,
+                  backgroundColor: isLocked ? '#0D0D0D' : C.surf,
+                  border: `1px solid ${isDone ? '#22C55E33' : isLocked ? '#222' : C.border}`,
                   borderRadius: 12, padding: '20px 22px',
-                  textAlign: 'left', cursor: 'pointer',
+                  textAlign: 'left', cursor: isLocked ? 'default' : 'pointer',
                   display: 'flex', alignItems: 'center', gap: 16,
                   transition: 'border-color 0.15s',
                   position: 'relative', overflow: 'hidden',
+                  opacity: isLocked ? 0.55 : 1,
                 }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = day.color + '88'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = isDone ? '#22C55E33' : C.border; }}
+                onMouseEnter={(e) => {
+                  if (!isLocked) (e.currentTarget as HTMLButtonElement).style.borderColor = day.color + '88';
+                }}
+                onMouseLeave={(e) => {
+                  if (!isLocked) (e.currentTarget as HTMLButtonElement).style.borderColor = isDone ? '#22C55E33' : C.border;
+                }}
               >
-                {isDone && (
+                {isDone && !isLocked && (
                   <div style={{ position: 'absolute', top: 0, left: 0, width: 3, height: '100%', backgroundColor: '#22C55E' }} />
                 )}
 
                 {/* Day icon */}
                 <div style={{
                   width: 48, height: 48, borderRadius: 12, flexShrink: 0,
-                  backgroundColor: day.color + '18', border: `1px solid ${day.color}33`,
+                  backgroundColor: isLocked ? '#1A1A1A' : day.color + '18',
+                  border: `1px solid ${isLocked ? '#2A2A2A' : day.color + '33'}`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 22,
                 }}>
-                  {isDone ? '✅' : day.icon}
+                  {isLocked ? '🔒' : isDone ? '✅' : day.icon}
                 </div>
 
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
-                    <span style={{ color: day.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    <span style={{ color: isLocked ? '#444' : day.color, fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
                       Session {day.id}
                     </span>
-                    <span style={{ color: '#444', fontSize: 11 }}>·</span>
-                    <span style={{ color: C.muted, fontSize: 11 }}>{day.estimatedTime}</span>
-                    {isDone && (
+                    <span style={{ color: '#333', fontSize: 11 }}>·</span>
+                    <span style={{ color: '#555', fontSize: 11 }}>{day.date}</span>
+                    {isLocked && (
+                      <span style={{
+                        backgroundColor: '#1A1A1A', border: '1px solid #333',
+                        color: '#555', fontSize: 10, fontWeight: 800,
+                        padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase',
+                      }}>Coming Soon</span>
+                    )}
+                    {isAdmin && !day.available && (
+                      <span style={{
+                        backgroundColor: '#4A90D918', border: '1px solid #4A90D933',
+                        color: '#4A90D9', fontSize: 10, fontWeight: 800,
+                        padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase',
+                      }}>Admin Preview</span>
+                    )}
+                    {isDone && !isLocked && (
                       <span style={{
                         backgroundColor: '#22C55E22', border: '1px solid #22C55E44',
                         color: '#22C55E', fontSize: 10, fontWeight: 800,
                         padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase',
                       }}>Done</span>
                     )}
-                    {quizScore !== undefined && (
+                    {quizScore !== undefined && !isLocked && (
                       <span style={{
                         backgroundColor: (quizScore >= 80 ? '#22C55E' : '#EF4444') + '18',
                         border: `1px solid ${(quizScore >= 80 ? '#22C55E' : '#EF4444')}44`,
@@ -629,11 +700,11 @@ export function MBTrainingTab() {
                       }}>Quiz {quizScore}%</span>
                     )}
                   </div>
-                  <div style={{ color: C.text, fontSize: 15, fontWeight: 800, marginBottom: 3 }}>{day.title}</div>
-                  <div style={{ color: C.muted, fontSize: 12, lineHeight: 1.5 }}>{day.subtitle}</div>
+                  <div style={{ color: isLocked ? '#444' : C.text, fontSize: 15, fontWeight: 800, marginBottom: 3 }}>{day.title}</div>
+                  <div style={{ color: '#444', fontSize: 12, lineHeight: 1.5 }}>{isLocked ? 'This session will be unlocked by your trainer.' : day.subtitle}</div>
                 </div>
 
-                <div style={{ color: '#333', fontSize: 20, flexShrink: 0 }}>›</div>
+                {!isLocked && <div style={{ color: '#333', fontSize: 20, flexShrink: 0 }}>›</div>}
               </button>
             );
           })}

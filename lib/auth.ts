@@ -29,6 +29,8 @@ export const USER_COLORS: Record<string, { bg: string; text: string }> = {
   bren:      { bg: '#818CF8', text: '#fff' },
   mervin:    { bg: '#2DD4BF', text: '#000' },
   ken:       { bg: '#FB923C', text: '#fff' },
+  jc:        { bg: '#EF4444', text: '#fff' },
+  james:     { bg: '#6366F1', text: '#fff' },
 };
 
 // Static user list used for staging bypass (when Supabase is not configured).
@@ -51,6 +53,8 @@ export const LOCAL_USERS: Record<string, UserProfile> = {
   emmanuel:  { email: 'emmanuel@roofignite.com',  displayName: 'Emmanuel',  userKey: 'emmanuel',  role: 'media_buyer' },
   bren:      { email: 'bren@roofignite.com',      displayName: 'Bren',      userKey: 'bren',      role: 'media_buyer' },
   mervin:    { email: 'mervin@roofignite.com',    displayName: 'Mervin',    userKey: 'mervin',    role: 'media_buyer' },
+  jc:        { email: 'jc@roofignite.com',        displayName: 'JC',        userKey: 'jc',        role: 'media_buyer' },
+  james:     { email: 'james@roofignite.com',     displayName: 'James',     userKey: 'james',     role: 'media_buyer' },
   ken:       { email: 'ken@roofignite.com',       displayName: 'Ken',       userKey: 'ken',       role: 'creative_specialist' },
 };
 

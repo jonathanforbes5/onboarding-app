@@ -326,7 +326,7 @@ export const MB_TRAINING_DAYS: MBTrainingDay[] = [
     color: '#A855F7',
     icon: '🔍',
     objective: 'Leave with a repeatable audit process, understanding of weekly QA, budget management principles, and the setup model — so accounts run clean and spend is never wasted.',
-    available: false,
+    available: true,
     sections: [
       { id: 's1', title: 'Standard Audit Process', subtitle: '5-step repeatable sequence for every account, every week.', estimatedTime: '10 min', icon: '🔍' },
       { id: 's2', title: 'Competitive Research', subtitle: 'Why market context is non-negotiable — part of every audit.', estimatedTime: '5 min', icon: '🎯' },

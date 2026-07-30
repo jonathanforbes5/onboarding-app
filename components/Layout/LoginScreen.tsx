@@ -1,262 +1,30 @@
 'use client';
-import React, { useState, useRef } from 'react';
-import { ChevronRight } from 'lucide-react';
-import { LOCAL_USERS, UserProfile } from '@/lib/auth';
+import React, { useState } from 'react';
+import { LOCAL_USERS } from '@/lib/auth';
 
 const BYPASS_KEY = 'ri_bypass_profile';
 
-type Stage =
-  | 'name'           // enter first name
-  | 'otp'            // enter one-time passcode sent to email
-  | 'set-password'   // first time — create a password
-  | 'enter-password' // returning — enter password
-  | 'force-reset'    // admin reset — must set new password
-  | 'confirm'        // confirm identity before committing
-  | 'forgot';        // forgot password instructions
-
-interface UserStatus {
-  exists: boolean;
-  hasPassword: boolean;
-  forceReset: boolean;
-  displayName: string;
-  role: string;
-  userKey?: string;
-  email?: string;
-  bio?: string | null;
-  goal?: string | null;
-  avatarEmoji?: string | null;
-  avatarUrl?: string | null;
-  serviceKeyAvailable?: boolean;
-}
-
 export function LoginScreen() {
-  const [stage, setStage]           = useState<Stage>('name');
-  const [name, setName]             = useState('');
-  const [password, setPassword]     = useState('');
-  const [confirmPw, setConfirmPw]   = useState('');
-  const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
-  const [pendingProfile, setPendingProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading]       = useState(false);
-  const [error, setError]           = useState('');
-  const [otpToken, setOtpToken]     = useState('');
-  const [otpCode, setOtpCode]       = useState('');
-  const [otpEmail, setOtpEmail]     = useState('');
-  const [resending, setResending]   = useState(false);
-  const [track, setTrack]           = useState<'pod_manager' | 'media_buyer' | null>(null);
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
 
   const inp: React.CSSProperties = {
     width: '100%', backgroundColor: '#0A0A0A', border: '1px solid #2A2A2A',
     borderRadius: 10, padding: '11px 14px', color: '#F5F5F5', fontSize: 14,
-    outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit', transition: 'border-color 0.15s',
-  };
-  const focusY = (e: React.FocusEvent<HTMLInputElement>) => (e.currentTarget.style.borderColor = '#F5C800');
-  const blurG  = (e: React.FocusEvent<HTMLInputElement>) => (e.currentTarget.style.borderColor = '#2A2A2A');
-
-  const primaryBtn = (active: boolean): React.CSSProperties => ({
-    width: '100%', backgroundColor: active ? '#F5C800' : '#1A1A1A', border: 'none',
-    borderRadius: 10, padding: '12px', cursor: active ? 'pointer' : 'not-allowed',
-    fontSize: 14, fontWeight: 700, color: active ? '#000' : '#444',
-    fontFamily: 'inherit', letterSpacing: '0.02em', transition: 'all 0.15s',
-  });
-
-  const ghostBtn: React.CSSProperties = {
-    background: 'none', border: '1px solid #2A2A2A', borderRadius: 10, padding: '10px',
-    cursor: 'pointer', fontSize: 13, fontWeight: 600, color: '#666', fontFamily: 'inherit',
-    width: '100%',
+    outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit',
   };
 
-  const linkBtn: React.CSSProperties = {
-    background: 'none', border: 'none', color: '#555', fontSize: 12,
-    cursor: 'pointer', textDecoration: 'underline', fontFamily: 'inherit',
-  };
-
-  const profileFromStatus = (key: string, us: UserStatus): import('@/lib/auth').UserProfile => ({
-    email: us.email ?? `${key}@roofignite.com`,
-    displayName: us.displayName,
-    userKey: us.userKey ?? key,
-    role: us.role as 'super_admin' | 'user' | 'media_buyer',
-    bio: us.bio ?? undefined,
-    goal: us.goal ?? undefined,
-    avatarEmoji: us.avatarEmoji ?? undefined,
-    avatarUrl: us.avatarUrl ?? undefined,
-  });
-
-  /* ── Step 1: Check name ── */
-  const handleNameSubmit = async (e: React.FormEvent) => {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const key = name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
-    if (!key) return;
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch(`/api/auth/user-status?name=${encodeURIComponent(key)}`);
-      const data = await res.json() as UserStatus & { error?: string };
-      if (!data.exists) {
-        setError(`"${key}" not found — use your first name exactly as registered.`);
-        setLoading(false);
-        return;
-      }
-      setUserStatus(data);
-      if (!data.serviceKeyAvailable) {
-        await sendOtp(key, data);
-      } else if (data.forceReset) {
-        setStage('force-reset');
-      } else if (data.hasPassword) {
-        setStage('enter-password');
-      } else {
-        setStage('set-password');
-      }
-    } catch {
-      // Fallback: check LOCAL_USERS when API is unavailable
-      const user = LOCAL_USERS[key];
-      if (!user) {
-        setError(`"${key}" not found — use your first name exactly as registered.`);
-      } else {
-        setPendingProfile(user);
-        setStage('confirm');
-      }
-    }
-    setLoading(false);
-  };
-
-  /* ── OTP helpers ── */
-  const sendOtp = async (userKey?: string, statusOverride?: UserStatus) => {
-    const key = userKey ?? name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
-    const us = statusOverride ?? userStatus;
-    setResending(true);
-    setError('');
-    try {
-      const res = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: key }),
-      });
-      const d = await res.json();
-      if (!res.ok) {
-        const profile = (us ? profileFromStatus(key, us) : null) ?? LOCAL_USERS[key];
-        if (profile) { setPendingProfile(profile); setStage('confirm'); }
-        return;
-      }
-      setOtpToken(d.token);
-      setOtpEmail(d.email);
-      setStage('otp');
-    } catch {
-      const profile = (us ? profileFromStatus(key, us) : null) ?? LOCAL_USERS[key];
-      if (profile) { setPendingProfile(profile); setStage('confirm'); }
-    } finally {
-      setResending(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpCode.trim()) return;
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: otpToken, otp: otpCode.trim() }),
-      });
-      const d = await res.json();
-      if (!res.ok) {
-        setError(d.error ?? 'Invalid code — try again or request a new one.');
-        setLoading(false);
-        return;
-      }
-      setPendingProfile(d.profile);
-      setStage('confirm');
-    } catch {
-      setError('Could not verify code — try again.');
-    }
-    setLoading(false);
-  };
-
-  /* ── Step 2a: First-time — set a password ── */
-  const handleSetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
-    if (password !== confirmPw) { setError('Passwords do not match.'); return; }
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('/api/auth/set-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim().toLowerCase().replace(/@roofignite\.com$/i, ''), password }),
-      });
-      if (!res.ok) {
-        const d = await res.json();
-        setError(d.error ?? 'Failed to set password.');
-        setLoading(false);
-        return;
-      }
-      // Auto-login after setting password
-      await loginWithPassword();
-    } catch {
-      fallbackLogin();
-    }
-    setLoading(false);
-  };
-
-  /* ── Step 2b: Returning — verify password ── */
-  const handleEnterPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      await loginWithPassword();
-    } catch {
-      fallbackLogin();
-    }
-    setLoading(false);
-  };
-
-  const loginWithPassword = async () => {
-    const key = name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
-    const res = await fetch('/api/auth/verify-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: key, password }),
-    });
-    if (!res.ok) {
-      const d = await res.json();
-      setError(d.error ?? 'Incorrect password.');
+    const user = LOCAL_USERS[key];
+    if (!user) {
+      setError(`"${key}" not found — use your first name (e.g. jorge, emmanuel, jc).`);
       return;
     }
-    const { profile } = await res.json();
-    setPendingProfile(profile);
-    setStage('confirm');
-  };
-
-  const fallbackLogin = () => {
-    const key = name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
-    const profile = (userStatus ? profileFromStatus(key, userStatus) : null) ?? LOCAL_USERS[key];
-    if (profile) { setPendingProfile(profile); setStage('confirm'); }
-    else setError('Login failed — please try again.');
-  };
-
-  const confirmLogin = () => {
-    if (!pendingProfile) return;
-    try {
-      localStorage.setItem(BYPASS_KEY, JSON.stringify(pendingProfile));
-      window.location.reload();
-    } catch {
-      setError('Login failed — please try again.');
-    }
-  };
-
-  const reset = () => {
-    setStage('name'); setError(''); setPassword(''); setConfirmPw('');
-    setUserStatus(null); setPendingProfile(null);
-    setOtpToken(''); setOtpCode(''); setOtpEmail('');
-    setTrack(null);
-  };
-
-  /* ── Render ── */
-  const roleLabel = (role: string) => role === 'super_admin' ? 'Leadership' : role === 'media_buyer' ? 'Media Buyer' : 'Pod Manager';
-  const roleColor = (role: string) => role === 'super_admin' ? '#F5C800' : role === 'media_buyer' ? '#818CF8' : '#22C55E';
+    localStorage.setItem(BYPASS_KEY, JSON.stringify(user));
+    window.location.reload();
+  }
 
   return (
     <div style={{
@@ -268,250 +36,53 @@ export function LoginScreen() {
       <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
         <img src="/logo.png" alt="Roof Ignite" style={{ width: 260, maxWidth: '80vw', display: 'block', margin: '0 auto 12px' }} />
         <p style={{ color: '#555', fontSize: 12, margin: 0, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-          Pod Manager Onboarding &amp; Training Hub
+          Internal Training Hub
         </p>
       </div>
 
       <div style={{
         backgroundColor: '#111111', border: '1px solid #222222', borderRadius: 20,
-        padding: '2rem 2.25rem', width: '100%', maxWidth: 380,
-        boxShadow: '0 0 40px rgba(245,200,0,0.04), 0 8px 32px rgba(0,0,0,0.4)',
+        padding: '2rem 2.25rem', width: '100%', maxWidth: 360,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
       }}>
-
-        {/* ── Portal selection ── */}
-        {stage === 'name' && !track && (
-          <>
-            <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 6px', textAlign: 'center' }}>Welcome</h2>
-            <p style={{ color: '#555', fontSize: 13, margin: '0 0 1.5rem', textAlign: 'center', lineHeight: 1.6 }}>
-              Select your portal to continue.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <button
-                onClick={() => setTrack('pod_manager')}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 14,
-                  backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: 12,
-                  padding: '16px 18px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#F5C800')}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#2A2A2A')}
-              >
-                <span style={{ fontSize: 28, flexShrink: 0 }}>📋</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Pod Manager / CSM</div>
-                  <div style={{ color: '#555', fontSize: 12 }}>Onboarding &amp; training hub</div>
-                </div>
-                <ChevronRight size={16} color="#444" style={{ flexShrink: 0 }} />
-              </button>
-              <button
-                onClick={() => setTrack('media_buyer')}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 14,
-                  backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: 12,
-                  padding: '16px 18px', cursor: 'pointer', textAlign: 'left', transition: 'border-color 0.15s',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#818CF8')}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#2A2A2A')}
-              >
-                <span style={{ fontSize: 28, flexShrink: 0 }}>📱</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ color: '#F5F5F5', fontSize: 14, fontWeight: 800, marginBottom: 2 }}>Media Buyer / Designer</div>
-                  <div style={{ color: '#555', fontSize: 12 }}>Campaigns, creative &amp; tools</div>
-                </div>
-                <ChevronRight size={16} color="#444" style={{ flexShrink: 0 }} />
-              </button>
-            </div>
-          </>
-        )}
-
-        {/* ── Enter name ── */}
-        {stage === 'name' && track && (
-          <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-              <button
-                onClick={() => setTrack(null)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: 12, padding: 0, fontFamily: 'inherit' }}
-              >
-                ← Back
-              </button>
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                backgroundColor: track === 'media_buyer' ? '#1A1A2E' : '#1A1400',
-                border: `1px solid ${track === 'media_buyer' ? '#818CF844' : '#F5C80044'}`,
-                borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700,
-                color: track === 'media_buyer' ? '#818CF8' : '#F5C800',
-              }}>
-                {track === 'media_buyer' ? '📱 Media Buyer' : '📋 Pod Manager'}
-              </span>
-            </div>
-            <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 6px', textAlign: 'center' }}>Sign in</h2>
-            <p style={{ color: '#555', fontSize: 13, margin: '0 0 1.5rem', textAlign: 'center', lineHeight: 1.6 }}>
-              Enter your first name to continue.
-            </p>
-            <form onSubmit={handleNameSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <div style={{ display: 'flex' }}>
-                <input type="text" value={name}
-                  onChange={(e) => { setName(e.target.value); setError(''); }}
-                  placeholder="firstname" required autoComplete="username" autoFocus
-                  style={{ ...inp, borderRadius: '10px 0 0 10px', borderRight: 'none', flex: 1, minWidth: 0 }}
-                  onFocus={focusY} onBlur={blurG} />
-                <div style={{
-                  backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: '0 10px 10px 0',
-                  padding: '11px 12px', color: '#444', fontSize: 13, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center',
-                }}>@roofignite.com</div>
-              </div>
-              {error && <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{error}</p>}
-              <button type="submit" disabled={loading || !name.trim()} style={primaryBtn(!loading && !!name.trim())}>
-                {loading ? 'Checking…' : 'Continue →'}
-              </button>
-            </form>
-          </>
-        )}
-
-        {/* ── OTP verification ── */}
-        {stage === 'otp' && (
-          <>
-            <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>📨</div>
-              <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 4px' }}>
-                Check your email
-              </h2>
-              <p style={{ color: '#555', fontSize: 12.5, margin: 0, lineHeight: 1.6 }}>
-                We sent a 6-digit code to <strong style={{ color: '#F5C800' }}>{otpEmail}</strong>.
-                Enter it below to continue.
-              </p>
-            </div>
-            <form onSubmit={handleVerifyOtp} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={6}
-                value={otpCode}
-                onChange={(e) => { setOtpCode(e.target.value.replace(/\D/g, '')); setError(''); }}
-                placeholder="6-digit code"
-                required
-                autoFocus
-                style={{ ...inp, textAlign: 'center', fontSize: 24, fontWeight: 800, letterSpacing: '0.2em' }}
-                onFocus={focusY}
-                onBlur={blurG}
-              />
-              {error && <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{error}</p>}
-              <button type="submit" disabled={loading || otpCode.length !== 6} style={primaryBtn(!loading && otpCode.length === 6)}>
-                {loading ? 'Verifying…' : 'Verify code →'}
-              </button>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                <button type="button" onClick={reset} style={linkBtn}>← Back</button>
-                <button
-                  type="button"
-                  disabled={resending}
-                  onClick={() => sendOtp()}
-                  style={{ ...linkBtn, color: resending ? '#333' : '#555' }}
-                >
-                  {resending ? 'Sending…' : 'Resend code'}
-                </button>
-              </div>
-            </form>
-          </>
-        )}
-
-        {/* ── First time: set password ── */}
-        {(stage === 'set-password' || stage === 'force-reset') && userStatus && (
-          <>
-            <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>👋</div>
-              <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 4px' }}>
-                {stage === 'force-reset' ? 'Set a new password' : `Welcome, ${userStatus.displayName}!`}
-              </h2>
-              <p style={{ color: '#555', fontSize: 12.5, margin: 0, lineHeight: 1.6 }}>
-                {stage === 'force-reset'
-                  ? 'Your password was reset by an admin. Create a new one to continue.'
-                  : 'Create a password to secure your account. You\'ll use this every time you sign in.'}
-              </p>
-            </div>
-            <form onSubmit={handleSetPassword} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <input type="password" value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(''); }}
-                placeholder="Create a password (min 8 chars)" required autoFocus
-                style={inp} onFocus={focusY} onBlur={blurG} />
-              <input type="password" value={confirmPw}
-                onChange={(e) => { setConfirmPw(e.target.value); setError(''); }}
-                placeholder="Confirm password" required
-                style={inp} onFocus={focusY} onBlur={blurG} />
-              {error && <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{error}</p>}
-              <button type="submit" disabled={loading || !password || !confirmPw} style={primaryBtn(!loading && !!password && !!confirmPw)}>
-                {loading ? 'Setting password…' : 'Set password & sign in →'}
-              </button>
-              <button type="button" onClick={reset} style={ghostBtn}>← Back</button>
-            </form>
-          </>
-        )}
-
-        {/* ── Returning: enter password ── */}
-        {stage === 'enter-password' && userStatus && (
-          <>
-            <div style={{ textAlign: 'center', marginBottom: 20 }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>🔑</div>
-              <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 4px' }}>
-                Welcome back, {userStatus.displayName}
-              </h2>
-              <p style={{ color: '#555', fontSize: 12.5, margin: 0 }}>Enter your password to continue.</p>
-            </div>
-            <form onSubmit={handleEnterPassword} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              <input type="password" value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(''); }}
-                placeholder="Your password" required autoFocus
-                style={inp} onFocus={focusY} onBlur={blurG} />
-              {error && <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{error}</p>}
-              <button type="submit" disabled={loading || !password} style={primaryBtn(!loading && !!password)}>
-                {loading ? 'Signing in…' : 'Sign in →'}
-              </button>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                <button type="button" onClick={reset} style={linkBtn}>← Back</button>
-                <button type="button" onClick={() => setStage('forgot')} style={linkBtn}>Forgot password?</button>
-              </div>
-            </form>
-          </>
-        )}
-
-        {/* ── Confirm identity ── */}
-        {stage === 'confirm' && pendingProfile && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{
-                width: 56, height: 56, borderRadius: '50%', backgroundColor: '#1A1A00',
-                border: '2px solid #F5C80066', display: 'flex', alignItems: 'center',
-                justifyContent: 'center', margin: '0 auto 12px', fontSize: 22, fontWeight: 900, color: '#F5C800',
-              }}>{pendingProfile.displayName.charAt(0)}</div>
-              <p style={{ color: '#F5F5F5', fontSize: 15, fontWeight: 700, margin: '0 0 4px' }}>{pendingProfile.displayName}</p>
-              <p style={{ color: '#555', fontSize: 12, margin: '0 0 6px' }}>{pendingProfile.email}</p>
-              <span style={{
-                display: 'inline-block', borderRadius: 6, padding: '2px 8px', fontSize: 11, fontWeight: 700,
-                textTransform: 'uppercase', letterSpacing: '0.05em',
-                backgroundColor: pendingProfile.role === 'super_admin' ? '#1A1400' : pendingProfile.role === 'media_buyer' ? '#0D0D20' : '#0D1F14',
-                border: `1px solid ${roleColor(pendingProfile.role)}44`,
-                color: roleColor(pendingProfile.role),
-              }}>{roleLabel(pendingProfile.role)}</span>
-            </div>
-            <button onClick={confirmLogin} style={primaryBtn(true)}>Sign in →</button>
-            <button onClick={reset} style={ghostBtn}>Not me — go back</button>
+        <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 6px', textAlign: 'center' }}>Sign in</h2>
+        <p style={{ color: '#555', fontSize: 13, margin: '0 0 1.5rem', textAlign: 'center', lineHeight: 1.6 }}>
+          Enter your first name to continue.
+        </p>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: 'flex' }}>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => { setName(e.target.value); setError(''); }}
+              placeholder="firstname"
+              required
+              autoFocus
+              autoComplete="off"
+              style={{ ...inp, borderRadius: '10px 0 0 10px', borderRight: 'none', flex: 1, minWidth: 0 }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = '#F5C800')}
+              onBlur={(e) => (e.currentTarget.style.borderColor = '#2A2A2A')}
+            />
+            <div style={{
+              backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: '0 10px 10px 0',
+              padding: '11px 12px', color: '#444', fontSize: 13, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center',
+            }}>@roofignite.com</div>
           </div>
-        )}
-
-        {/* ── Forgot password ── */}
-        {stage === 'forgot' && (
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>🔒</div>
-            <h2 style={{ color: '#F5F5F5', fontSize: 16, fontWeight: 800, margin: '0 0 8px' }}>Forgot your password?</h2>
-            <p style={{ color: '#888', fontSize: 13, lineHeight: 1.7, margin: '0 0 20px' }}>
-              Message <strong style={{ color: '#F5C800' }}>Jonathan</strong> on Slack and ask him to reset your password.
-              Once he does, come back here and sign in with your name — you&apos;ll be prompted to create a new one.
-            </p>
-            <button onClick={() => { setStage('enter-password'); setError(''); }} style={primaryBtn(true)}>
-              ← Back to sign in
-            </button>
-          </div>
-        )}
+          {error && <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{error}</p>}
+          <button
+            type="submit"
+            disabled={!name.trim()}
+            style={{
+              width: '100%', border: 'none', borderRadius: 10, padding: '12px',
+              fontSize: 14, fontWeight: 700, fontFamily: 'inherit', letterSpacing: '0.02em',
+              backgroundColor: name.trim() ? '#F5C800' : '#1A1A1A',
+              color: name.trim() ? '#000' : '#444',
+              cursor: name.trim() ? 'pointer' : 'not-allowed',
+            }}
+          >
+            Sign in →
+          </button>
+        </form>
       </div>
 
       <p style={{ color: '#2A2A2A', fontSize: 11, marginTop: '1rem', letterSpacing: '0.05em' }}>

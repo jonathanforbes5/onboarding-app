@@ -31,6 +31,8 @@ export const USER_COLORS: Record<string, { bg: string; text: string }> = {
   ken:       { bg: '#FB923C', text: '#fff' },
   jc:        { bg: '#EF4444', text: '#fff' },
   james:     { bg: '#6366F1', text: '#fff' },
+  trevor:    { bg: '#D946EF', text: '#fff' },
+  jorge:     { bg: '#0EA5E9', text: '#fff' },
 };
 
 // Static user list used for staging bypass (when Supabase is not configured).
@@ -55,7 +57,9 @@ export const LOCAL_USERS: Record<string, UserProfile> = {
   mervin:    { email: 'mervin@roofignite.com',    displayName: 'Mervin',    userKey: 'mervin',    role: 'media_buyer' },
   jc:        { email: 'jc@roofignite.com',        displayName: 'JC',        userKey: 'jc',        role: 'media_buyer' },
   james:     { email: 'james@roofignite.com',     displayName: 'James',     userKey: 'james',     role: 'media_buyer' },
+  jorge:     { email: 'jorge@roofignite.com',     displayName: 'Jorge',     userKey: 'jorge',     role: 'media_buyer' },
   ken:       { email: 'ken@roofignite.com',       displayName: 'Ken',       userKey: 'ken',       role: 'creative_specialist' },
+  trevor:    { email: 'trevor@roofignite.com',    displayName: 'Trevor',    userKey: 'trevor',    role: 'creative_specialist' },
 };
 
 export function getUserColor(userKey: string) {

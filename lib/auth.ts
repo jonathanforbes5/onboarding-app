@@ -85,45 +85,52 @@ export async function signOut(): Promise<void> {
   await supabase.auth.signOut();
 }
 
-/** Look up a UserProfile by email from the allowed_users table */
+/** Look up a UserProfile by email — Supabase first, LOCAL_USERS as fallback */
 export async function getUserProfileByEmail(email: string): Promise<UserProfile | null> {
-  if (!supabase) return null;
-  try {
-    const { data, error } = await supabase
-      .from('allowed_users')
-      .select('email, display_name, role, user_key, bio, goal, avatar_emoji, avatar_url')
-      .eq('email', email.toLowerCase())
-      .maybeSingle();
+  const normalised = email.toLowerCase().trim();
 
-    if (error || !data) {
-      // Profile columns may not exist yet — fall back to base fields.
-      const fallback = await supabase
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
         .from('allowed_users')
-        .select('email, display_name, role, user_key')
-        .eq('email', email.toLowerCase())
+        .select('email, display_name, role, user_key, bio, goal, avatar_emoji, avatar_url')
+        .eq('email', normalised)
         .maybeSingle();
 
-      if (fallback.error || !fallback.data) return null;
+      if (!error && data) {
+        return {
+          email: data.email,
+          displayName: data.display_name,
+          role: data.role as 'super_admin' | 'user' | 'media_buyer' | 'creative_specialist',
+          userKey: data.user_key,
+          bio: data.bio ?? undefined,
+          goal: data.goal ?? undefined,
+          avatarEmoji: data.avatar_emoji ?? undefined,
+          avatarUrl: data.avatar_url ?? undefined,
+        };
+      }
 
-      return {
-        email: fallback.data.email,
-        displayName: fallback.data.display_name,
-        role: fallback.data.role as 'super_admin' | 'user' | 'media_buyer' | 'creative_specialist',
-        userKey: fallback.data.user_key,
-      };
+      // Profile columns may not exist yet — retry with base fields only.
+      const { data: base, error: baseErr } = await supabase
+        .from('allowed_users')
+        .select('email, display_name, role, user_key')
+        .eq('email', normalised)
+        .maybeSingle();
+
+      if (!baseErr && base) {
+        return {
+          email: base.email,
+          displayName: base.display_name,
+          role: base.role as 'super_admin' | 'user' | 'media_buyer' | 'creative_specialist',
+          userKey: base.user_key,
+        };
+      }
+    } catch {
+      // Supabase unavailable — fall through to local list
     }
-
-    return {
-      email: data.email,
-      displayName: data.display_name,
-      role: data.role as 'super_admin' | 'user' | 'media_buyer' | 'creative_specialist',
-      userKey: data.user_key,
-      bio: data.bio ?? undefined,
-      goal: data.goal ?? undefined,
-      avatarEmoji: data.avatar_emoji ?? undefined,
-      avatarUrl: data.avatar_url ?? undefined,
-    };
-  } catch {
-    return null;
   }
+
+  // Fall back to LOCAL_USERS so logins work even when the DB is missing the row.
+  const local = Object.values(LOCAL_USERS).find((u) => u.email === normalised);
+  return local ?? null;
 }

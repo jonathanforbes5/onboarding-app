@@ -7,24 +7,32 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 const USERS = [
-  { email: 'jonathan@roofignite.com',  display_name: 'Jonathan',  role: 'super_admin', user_key: 'jonathan' },
-  { email: 'oscar@roofignite.com',     display_name: 'Oscar',     role: 'super_admin', user_key: 'oscar' },
-  { email: 'mani@roofignite.com',      display_name: 'Mani',      role: 'super_admin', user_key: 'mani' },
-  { email: 'cole@roofignite.com',      display_name: 'Cole',      role: 'super_admin', user_key: 'cole' },
-  { email: 'tyler@roofignite.com',     display_name: 'Tyler',     role: 'user',        user_key: 'tyler' },
-  { email: 'sam@roofignite.com',       display_name: 'Sam',       role: 'user',        user_key: 'sam' },
-  { email: 'ksenia@roofignite.com',    display_name: 'Ksenia',    role: 'user',        user_key: 'ksenia' },
-  { email: 'adeen@roofignite.com',     display_name: 'Adeen',     role: 'user',        user_key: 'adeen' },
-  { email: 'patrick@roofignite.com',   display_name: 'Patrick',   role: 'user',        user_key: 'patrick' },
-  { email: 'li@roofignite.com',        display_name: 'Li',        role: 'user',        user_key: 'li' },
-  { email: 'dakota@roofignite.com',    display_name: 'Dakota',    role: 'user',        user_key: 'dakota' },
-  { email: 'gregory@roofignite.com',   display_name: 'Gregory',   role: 'user',        user_key: 'gregory' },
-  { email: 'kyle@roofignite.com',      display_name: 'Kyle',      role: 'user',        user_key: 'kyle' },
-  { email: 'abdullah@roofignite.com',  display_name: 'Abdullah',  role: 'user',        user_key: 'abdullah' },
-  { email: 'emmanuel@roofignite.com',  display_name: 'Emmanuel',  role: 'media_buyer', user_key: 'emmanuel' },
-  { email: 'bren@roofignite.com',      display_name: 'Bren',      role: 'media_buyer', user_key: 'bren' },
-  { email: 'mervin@roofignite.com',    display_name: 'Mervin',    role: 'media_buyer', user_key: 'mervin' },
-  { email: 'ken@roofignite.com',       display_name: 'Ken',       role: 'media_buyer', user_key: 'ken' },
+  // Super admins
+  { email: 'jonathan@roofignite.com',  display_name: 'Jonathan',  role: 'super_admin',        user_key: 'jonathan' },
+  { email: 'oscar@roofignite.com',     display_name: 'Oscar',     role: 'super_admin',        user_key: 'oscar' },
+  { email: 'mani@roofignite.com',      display_name: 'Mani',      role: 'super_admin',        user_key: 'mani' },
+  { email: 'cole@roofignite.com',      display_name: 'Cole',      role: 'super_admin',        user_key: 'cole' },
+  // Pod managers
+  { email: 'tyler@roofignite.com',     display_name: 'Tyler',     role: 'user',               user_key: 'tyler' },
+  { email: 'sam@roofignite.com',       display_name: 'Sam',       role: 'user',               user_key: 'sam' },
+  { email: 'ksenia@roofignite.com',    display_name: 'Ksenia',    role: 'user',               user_key: 'ksenia' },
+  { email: 'adeen@roofignite.com',     display_name: 'Adeen',     role: 'user',               user_key: 'adeen' },
+  { email: 'patrick@roofignite.com',   display_name: 'Patrick',   role: 'user',               user_key: 'patrick' },
+  { email: 'li@roofignite.com',        display_name: 'Li',        role: 'user',               user_key: 'li' },
+  { email: 'dakota@roofignite.com',    display_name: 'Dakota',    role: 'user',               user_key: 'dakota' },
+  { email: 'gregory@roofignite.com',   display_name: 'Gregory',   role: 'user',               user_key: 'gregory' },
+  { email: 'kyle@roofignite.com',      display_name: 'Kyle',      role: 'user',               user_key: 'kyle' },
+  { email: 'abdullah@roofignite.com',  display_name: 'Abdullah',  role: 'user',               user_key: 'abdullah' },
+  // Media buyers
+  { email: 'emmanuel@roofignite.com',  display_name: 'Emmanuel',  role: 'media_buyer',        user_key: 'emmanuel' },
+  { email: 'bren@roofignite.com',      display_name: 'Bren',      role: 'media_buyer',        user_key: 'bren' },
+  { email: 'mervin@roofignite.com',    display_name: 'Mervin',    role: 'media_buyer',        user_key: 'mervin' },
+  { email: 'jc@roofignite.com',        display_name: 'JC',        role: 'media_buyer',        user_key: 'jc' },
+  { email: 'james@roofignite.com',     display_name: 'James',     role: 'media_buyer',        user_key: 'james' },
+  { email: 'jorge@roofignite.com',     display_name: 'Jorge',     role: 'media_buyer',        user_key: 'jorge' },
+  // Creative specialists
+  { email: 'ken@roofignite.com',       display_name: 'Ken',       role: 'creative_specialist', user_key: 'ken' },
+  { email: 'trevor@roofignite.com',    display_name: 'Trevor',    role: 'creative_specialist', user_key: 'trevor' },
 ];
 
 export async function GET(req: NextRequest) {

@@ -25,6 +25,20 @@ on conflict (email) do update set
   user_key = excluded.user_key;
 `;
 
+// All users missing from the original seed + role corrections
+const NEW_USERS_SQL = `
+insert into allowed_users (email, display_name, role, user_key) values
+  ('jc@roofignite.com',      'JC',      'media_buyer',        'jc'),
+  ('james@roofignite.com',   'James',   'media_buyer',        'james'),
+  ('jorge@roofignite.com',   'Jorge',   'media_buyer',        'jorge'),
+  ('ken@roofignite.com',     'Ken',     'creative_specialist','ken'),
+  ('trevor@roofignite.com',  'Trevor',  'creative_specialist','trevor')
+on conflict (email) do update set
+  display_name = excluded.display_name,
+  role = excluded.role,
+  user_key = excluded.user_key;
+`;
+
 async function runSql(managementToken: string, sql: string) {
   const res = await fetch(`${MGMT_API}/v1/projects/${PROJECT_REF}/database/query`, {
     method: 'POST',
@@ -69,10 +83,27 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  if (preset === 'new_users') {
+    const result = await runSql(mgmtToken, NEW_USERS_SQL);
+    return NextResponse.json(
+      {
+        success: result.ok,
+        message: result.ok
+          ? '✅ Added/updated: JC, James, Jorge (media_buyer) + Ken, Trevor (creative_specialist)'
+          : '❌ Failed to add new users',
+        detail: result.ok ? undefined : result.body,
+      },
+      { status: result.ok ? 200 : 500 },
+    );
+  }
+
   return NextResponse.json(
     {
-      usage: 'GET /api/add-users?token=<SETUP_SECRET>&preset=pod5',
-      presets: { pod5: 'Add Ksenia and Adeen (Pod 5)' },
+      usage: 'GET /api/add-users?token=<SETUP_SECRET>&preset=<preset>',
+      presets: {
+        pod5: 'Add Ksenia and Adeen (Pod 5)',
+        new_users: 'Add JC, James, Jorge (media buyer) + Ken fix + Trevor (creative specialist)',
+      },
     },
     { status: 200 },
   );

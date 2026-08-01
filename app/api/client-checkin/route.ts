@@ -64,6 +64,9 @@ const EDITABLE = new Set<string>([
   // 2026-07-16 — Contract chip on the account page lets CSMs paste the
   // contract Drive link when it's missing.
   'ContractLink',
+  // 2026-08-01 — Master Creatives chip on the account page (same pattern
+  // as ContractLink; col resolved by live header-name lookup).
+  'Master Creatives Folder',
 ]);
 
 // Strip common business suffixes for fuzzy matching when an exact lookup

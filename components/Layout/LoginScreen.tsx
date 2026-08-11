@@ -8,18 +8,12 @@ export function LoginScreen() {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
-  const inp: React.CSSProperties = {
-    width: '100%', backgroundColor: '#0A0A0A', border: '1px solid #2A2A2A',
-    borderRadius: 10, padding: '11px 14px', color: '#F5F5F5', fontSize: 14,
-    outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit',
-  };
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const key = name.trim().toLowerCase().replace(/@roofignite\.com$/i, '');
     const user = LOCAL_USERS[key];
     if (!user) {
-      setError(`"${key}" not found — use your first name (e.g. jorge, emmanuel, jc).`);
+      setError(`"${key}" not found — use your first name (e.g. jorge, jc, ken).`);
       return;
     }
     localStorage.setItem(BYPASS_KEY, JSON.stringify(user));
@@ -59,13 +53,21 @@ export function LoginScreen() {
               required
               autoFocus
               autoComplete="off"
-              style={{ ...inp, borderRadius: '10px 0 0 10px', borderRight: 'none', flex: 1, minWidth: 0 }}
+              style={{
+                flex: 1, minWidth: 0, backgroundColor: '#0A0A0A',
+                border: '1px solid #2A2A2A', borderRight: 'none',
+                borderRadius: '10px 0 0 10px', padding: '11px 14px',
+                color: '#F5F5F5', fontSize: 14, outline: 'none',
+                fontFamily: 'inherit',
+              }}
               onFocus={(e) => (e.currentTarget.style.borderColor = '#F5C800')}
               onBlur={(e) => (e.currentTarget.style.borderColor = '#2A2A2A')}
             />
             <div style={{
-              backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: '0 10px 10px 0',
-              padding: '11px 12px', color: '#444', fontSize: 13, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center',
+              backgroundColor: '#161616', border: '1px solid #2A2A2A',
+              borderRadius: '0 10px 10px 0', padding: '11px 12px',
+              color: '#444', fontSize: 13, whiteSpace: 'nowrap',
+              display: 'flex', alignItems: 'center',
             }}>@roofignite.com</div>
           </div>
           {error && <p style={{ color: '#EF4444', fontSize: 12, margin: 0 }}>{error}</p>}
@@ -74,7 +76,7 @@ export function LoginScreen() {
             disabled={!name.trim()}
             style={{
               width: '100%', border: 'none', borderRadius: 10, padding: '12px',
-              fontSize: 14, fontWeight: 700, fontFamily: 'inherit', letterSpacing: '0.02em',
+              fontSize: 14, fontWeight: 700, fontFamily: 'inherit',
               backgroundColor: name.trim() ? '#F5C800' : '#1A1A1A',
               color: name.trim() ? '#000' : '#444',
               cursor: name.trim() ? 'pointer' : 'not-allowed',

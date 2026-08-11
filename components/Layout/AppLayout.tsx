@@ -23,7 +23,6 @@ import { SearchModal } from '@/components/Interactive/SearchModal';
 import { NotesPanel } from '@/components/Interactive/NotesPanel';
 import { ChatWidget } from '@/components/Chat/ChatWidget';
 import { ProfileSetupModal } from '@/components/Profile/ProfileSetupModal';
-import { IntroVideoGate } from '@/components/Layout/IntroVideoGate';
 import { ToastProvider } from '@/components/UI/Toast';
 import { BackToTop } from '@/components/UI/BackToTop';
 import { CommunityWidget } from '@/components/Community/CommunityWidget';
@@ -235,7 +234,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       )}
 
       <SearchModal />
-      <IntroVideoGate />
       <NotesPanel />
       {profileEditOpen && <ProfileSetupModal onClose={handleProfileClose} />}
       <BackToTop />

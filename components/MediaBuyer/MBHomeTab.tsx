@@ -562,9 +562,9 @@ export function MBHomeTab() {
             <PillarCard
               number="2"
               title="Ongoing Management"
-              subtitle="Continuous work directed by your assigned Pod Managers — improvements that keep clients growing."
+              subtitle="Continuous optimization — maintaining and improving performance across all active accounts."
               accent={C.blue}
-              goal="Pod Manager-directed improvements"
+              goal="Performance improvements"
               steps={[
                 'Landing page shortening (7Q → 4Q)',
                 'Creative refreshes on dying ad sets',
@@ -679,7 +679,7 @@ export function MBHomeTab() {
               {[
                 { name: '#media-buyers', desc: 'Your main channel — EOD reports, questions, blockers, wins. Tag leadership here.', highlight: true },
                 { name: '#internal-team', desc: 'Company-wide announcements.' },
-                { name: '#ops-manager-discussion', desc: 'Pod managers + media buyers + leadership.' },
+                { name: '#ops-manager-discussion', desc: 'Media buyers + leadership. Strategy and ops discussion.' },
               ].map((ch) => (
                 <div
                   key={ch.name}

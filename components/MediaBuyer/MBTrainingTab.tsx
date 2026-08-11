@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { MB_TRAINING_DAYS, MBQuizQuestion } from '@/data/mbTrainingData';
+import { MB_TRAINING_DAYS } from '@/data/mbTrainingData';
 import { MBS1_Company101 } from './sessions/MBS1_Company101';
 import { MBS2_ReportsData } from './sessions/MBS2_ReportsData';
 import { MBS3_AuditingQA } from './sessions/MBS3_AuditingQA';
@@ -19,289 +19,6 @@ const C = {
   acc: '#F5C800',
 };
 
-// ── Inline quiz engine ────────────────────────────────────────────────────────
-
-type AnswerState = 'unanswered' | 'correct' | 'incorrect';
-
-interface QuizEngineProps {
-  dayId: number;
-  questions: MBQuizQuestion[];
-  prevScore?: number;
-  onComplete: (score: number) => void;
-  onBack: () => void;
-  onNextDay?: () => void;
-}
-
-function QuizEngine({ dayId, questions, prevScore, onComplete, onBack, onNextDay }: QuizEngineProps) {
-  const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [answers, setAnswers] = useState<AnswerState[]>(Array(questions.length).fill('unanswered'));
-  const [selectedOptions, setSelectedOptions] = useState<number[]>(Array(questions.length).fill(-1));
-  const [showExplanation, setShowExplanation] = useState(false);
-  const [finished, setFinished] = useState(false);
-  const [score, setScore] = useState(0);
-
-  const q = questions[current];
-  const currentAnswer = answers[current];
-  const isAnswered = currentAnswer !== 'unanswered';
-
-  function handleSelect(idx: number) {
-    if (isAnswered) return;
-    const isCorrect = idx === q.correctIndex;
-    const newAnswers = [...answers];
-    newAnswers[current] = isCorrect ? 'correct' : 'incorrect';
-    const newOptions = [...selectedOptions];
-    newOptions[current] = idx;
-    setAnswers(newAnswers);
-    setSelectedOptions(newOptions);
-    setSelected(idx);
-    setShowExplanation(true);
-  }
-
-  function handleNext() {
-    if (current < questions.length - 1) {
-      setCurrent(current + 1);
-      setSelected(selectedOptions[current + 1] !== -1 ? selectedOptions[current + 1] : null);
-      setShowExplanation(selectedOptions[current + 1] !== -1);
-    } else {
-      // answers[current] was already set by handleSelect before this button appeared
-      const finalScore = Math.round((answers.filter((a) => a === 'correct').length / questions.length) * 100);
-      setScore(finalScore);
-      setFinished(true);
-      onComplete(finalScore);
-    }
-  }
-
-  function handleRetake() {
-    setCurrent(0);
-    setSelected(null);
-    setAnswers(Array(questions.length).fill('unanswered'));
-    setSelectedOptions(Array(questions.length).fill(-1));
-    setShowExplanation(false);
-    setFinished(false);
-    setScore(0);
-  }
-
-  if (finished) {
-    const passed = score >= 80;
-    return (
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '32px 20px' }}>
-        <div style={{
-          backgroundColor: C.surf,
-          border: `1px solid ${passed ? '#22C55E44' : '#EF444444'}`,
-          borderRadius: 16,
-          padding: '36px 32px',
-          textAlign: 'center',
-        }}>
-          <div style={{ fontSize: 52, marginBottom: 16 }}>{passed ? '🏆' : '📖'}</div>
-          <div style={{
-            color: passed ? '#22C55E' : '#EF4444',
-            fontSize: 11,
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            marginBottom: 8,
-          }}>
-            {passed ? 'Quiz Passed' : 'Try Again'}
-          </div>
-          <div style={{ color: C.text, fontSize: 36, fontWeight: 900, margin: '0 0 6px' }}>
-            {score}%
-          </div>
-          <div style={{ color: C.muted, fontSize: 13, marginBottom: 28 }}>
-            {answers.filter((a) => a === 'correct').length} of {questions.length} correct
-            {!passed && ' — you need 80% to pass'}
-          </div>
-          {prevScore !== undefined && (
-            <div style={{
-              backgroundColor: C.surf2,
-              border: `1px solid ${C.border2}`,
-              borderRadius: 8,
-              padding: '10px 16px',
-              marginBottom: 20,
-              fontSize: 12,
-              color: C.muted,
-            }}>
-              Previous best: <span style={{ color: C.acc, fontWeight: 700 }}>{prevScore}%</span>
-            </div>
-          )}
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button
-              onClick={handleRetake}
-              style={{
-                padding: '11px 22px', borderRadius: 8,
-                border: `1px solid ${C.border2}`, background: C.surf2,
-                color: C.text, fontWeight: 700, fontSize: 13, cursor: 'pointer',
-              }}
-            >
-              Retake Quiz
-            </button>
-            <button
-              onClick={onBack}
-              style={{
-                padding: '11px 22px', borderRadius: 8,
-                border: `1px solid ${C.border2}`, background: 'transparent',
-                color: C.muted, fontWeight: 700, fontSize: 13, cursor: 'pointer',
-              }}
-            >
-              ← Back to Content
-            </button>
-            {passed && onNextDay && (
-              <button
-                onClick={onNextDay}
-                style={{
-                  padding: '11px 22px', borderRadius: 8,
-                  border: 'none', background: '#22C55E',
-                  color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer',
-                }}
-              >
-                Next Day →
-              </button>
-            )}
-            {passed && !onNextDay && (
-              <button
-                onClick={onBack}
-                style={{
-                  padding: '11px 22px', borderRadius: 8,
-                  border: 'none', background: '#22C55E',
-                  color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer',
-                }}
-              >
-                ← Back to Training
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div style={{ maxWidth: 640, margin: '0 auto', padding: '32px 20px' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
-        <button onClick={onBack} style={{ background: 'none', border: 'none', color: C.muted, fontSize: 13, cursor: 'pointer', padding: 0 }}>
-          ← Back to content
-        </button>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          {prevScore !== undefined && (
-            <span style={{ fontSize: 11, color: C.muted }}>
-              Best: <span style={{ color: C.acc, fontWeight: 700 }}>{prevScore}%</span>
-            </span>
-          )}
-          <span style={{ fontSize: 12, color: C.muted }}>
-            {current + 1} / {questions.length}
-          </span>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div style={{ height: 3, backgroundColor: C.border2, borderRadius: 2, marginBottom: 28, overflow: 'hidden' }}>
-        <div style={{
-          height: '100%',
-          width: `${((current + 1) / questions.length) * 100}%`,
-          backgroundColor: C.acc,
-          transition: 'width 0.3s',
-        }} />
-      </div>
-
-      {/* Question */}
-      <div style={{
-        backgroundColor: C.surf,
-        border: `1px solid ${C.border}`,
-        borderRadius: 14,
-        padding: '24px 24px 20px',
-        marginBottom: 14,
-      }}>
-        <div style={{ color: C.text, fontSize: 16, fontWeight: 700, lineHeight: 1.5, marginBottom: 22 }}>
-          {q.question}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {q.options.map((opt, i) => {
-            const isSelected = selected === i;
-            const isCorrect = i === q.correctIndex;
-            let borderColor = C.border2;
-            let bgColor = C.surf2;
-            let textColor = '#bbb';
-
-            if (isAnswered) {
-              if (isCorrect) { borderColor = '#22C55E'; bgColor = '#22C55E12'; textColor = '#22C55E'; }
-              else if (isSelected) { borderColor = '#EF4444'; bgColor = '#EF444412'; textColor = '#EF4444'; }
-            } else if (isSelected) {
-              borderColor = C.acc;
-              bgColor = C.acc + '12';
-            }
-
-            return (
-              <button
-                key={i}
-                onClick={() => handleSelect(i)}
-                disabled={isAnswered}
-                style={{
-                  display: 'flex', alignItems: 'flex-start', gap: 12,
-                  padding: '12px 14px', borderRadius: 10,
-                  border: `1.5px solid ${borderColor}`, background: bgColor,
-                  cursor: isAnswered ? 'default' : 'pointer',
-                  textAlign: 'left', transition: 'all 0.15s',
-                }}
-              >
-                <div style={{
-                  flexShrink: 0, width: 22, height: 22, borderRadius: '50%',
-                  border: `1.5px solid ${borderColor}`,
-                  backgroundColor: isAnswered && isCorrect ? '#22C55E' : isAnswered && isSelected ? '#EF4444' : 'transparent',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 11, fontWeight: 900, color: isAnswered && (isCorrect || isSelected) ? '#fff' : borderColor,
-                  marginTop: 1,
-                }}>
-                  {isAnswered
-                    ? isCorrect ? '✓' : isSelected ? '✗' : String.fromCharCode(65 + i)
-                    : String.fromCharCode(65 + i)}
-                </div>
-                <span style={{ color: textColor, fontSize: 13.5, lineHeight: 1.5 }}>{opt}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {showExplanation && (
-          <div style={{
-            marginTop: 16,
-            backgroundColor: currentAnswer === 'correct' ? '#22C55E0E' : '#EF44440E',
-            border: `1px solid ${currentAnswer === 'correct' ? '#22C55E33' : '#EF444433'}`,
-            borderRadius: 10,
-            padding: '12px 14px',
-          }}>
-            <div style={{
-              color: currentAnswer === 'correct' ? '#22C55E' : '#EF4444',
-              fontSize: 11,
-              fontWeight: 800,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              marginBottom: 6,
-            }}>
-              {currentAnswer === 'correct' ? 'Correct' : 'Incorrect'}
-            </div>
-            <div style={{ color: '#bbb', fontSize: 12.5, lineHeight: 1.6 }}>{q.explanation}</div>
-          </div>
-        )}
-      </div>
-
-      {isAnswered && (
-        <button
-          onClick={handleNext}
-          style={{
-            width: '100%', padding: '13px', borderRadius: 10,
-            border: 'none', background: C.acc,
-            color: '#000', fontWeight: 800, fontSize: 14, cursor: 'pointer',
-          }}
-        >
-          {current < questions.length - 1 ? 'Next Question →' : 'See Results →'}
-        </button>
-      )}
-    </div>
-  );
-}
-
 // ── Day detail view ───────────────────────────────────────────────────────────
 
 interface DayDetailProps {
@@ -311,37 +28,16 @@ interface DayDetailProps {
 }
 
 function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
-  const { mbQuizScores, markMBDayComplete, saveMBQuizScore, completedMBDays, currentUser } = useApp();
-  const [view, setView] = useState<'sections' | 'section-detail' | 'quiz'>('sections');
+  const { markMBDayComplete, completedMBDays, currentUser } = useApp();
+  const [view, setView] = useState<'sections' | 'section-detail'>('sections');
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
-  const [quizLinkCopied, setQuizLinkCopied] = useState(false);
   const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'user';
   const day = MB_TRAINING_DAYS.find((d) => d.id === dayId)!;
-  const prevScore = mbQuizScores[dayId];
   const isDone = completedMBDays.includes(dayId);
-
-  function handleQuizComplete(score: number) {
-    saveMBQuizScore(dayId, score);
-    if (score >= 80) markMBDayComplete(dayId);
-  }
 
   function goToSection(sectionId: string) {
     setActiveSectionId(sectionId);
     setView('section-detail');
-  }
-
-  // ── Quiz view ──
-  if (view === 'quiz') {
-    return (
-      <QuizEngine
-        dayId={dayId}
-        questions={day.quiz}
-        prevScore={prevScore}
-        onComplete={handleQuizComplete}
-        onBack={() => setView('sections')}
-        onNextDay={onNextDay}
-      />
-    );
   }
 
   // ── Section detail view ──
@@ -436,14 +132,14 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
             </button>
           ) : (
             <button
-              onClick={() => setView('quiz')}
+              onClick={() => { markMBDayComplete(dayId); setView('sections'); }}
               style={{
                 padding: '12px 22px', borderRadius: 10,
                 border: 'none', background: C.acc,
                 color: '#000', fontWeight: 800, fontSize: 13, cursor: 'pointer',
               }}
             >
-              Take Knowledge Check →
+              Complete Session →
             </button>
           )}
         </div>
@@ -495,15 +191,6 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
                   color: '#22C55E', fontSize: 10, fontWeight: 800,
                   padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase',
                 }}>✓ Complete</span>
-              )}
-              {prevScore !== undefined && (
-                <span style={{
-                  backgroundColor: (prevScore >= 80 ? '#22C55E' : '#EF4444') + '22',
-                  border: `1px solid ${(prevScore >= 80 ? '#22C55E' : '#EF4444')}44`,
-                  color: prevScore >= 80 ? '#22C55E' : '#EF4444',
-                  fontSize: 10, fontWeight: 800,
-                  padding: '2px 8px', borderRadius: 20,
-                }}>Quiz: {prevScore}%</span>
               )}
             </div>
             <h1 style={{ color: C.text, fontSize: 22, fontWeight: 900, margin: '0 0 6px', letterSpacing: '-0.3px' }}>
@@ -594,77 +281,6 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
         ))}
       </div>
 
-      {/* Admin-only quiz link */}
-      {isAdmin && (
-        <div style={{
-          backgroundColor: '#0D0D1A',
-          border: '1px solid #4A90D933',
-          borderRadius: 12,
-          padding: '16px 20px',
-          marginBottom: 12,
-        }}>
-          <div style={{ color: '#4A90D9', fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
-            🔗 Admin — Shareable Quiz Link
-          </div>
-          <div style={{ color: '#888', fontSize: 12, marginBottom: 10, lineHeight: 1.5 }}>
-            Share this link with media buyers at the end of the session. They enter their name and complete the quiz — results are saved to the backend. This link is confidential to the media buying team only.
-          </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, backgroundColor: '#111', border: '1px solid #2A2A2A', borderRadius: 8, padding: '8px 12px', fontFamily: 'monospace', fontSize: 12, color: '#aaa', minWidth: 200 }}>
-              {typeof window !== 'undefined' ? `${window.location.origin}/quiz/${dayId}` : `/quiz/${dayId}`}
-            </div>
-            <button
-              onClick={() => {
-                const url = `${window.location.origin}/quiz/${dayId}`;
-                navigator.clipboard.writeText(url).then(() => {
-                  setQuizLinkCopied(true);
-                  setTimeout(() => setQuizLinkCopied(false), 2000);
-                });
-              }}
-              style={{
-                padding: '8px 16px', borderRadius: 8, border: 'none',
-                background: quizLinkCopied ? '#22C55E' : '#4A90D9',
-                color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer', flexShrink: 0,
-                transition: 'background 0.2s',
-              }}
-            >
-              {quizLinkCopied ? '✓ Copied' : 'Copy Link'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Quiz CTA */}
-      <div style={{
-        backgroundColor: C.surf,
-        border: `1px solid ${C.border}`,
-        borderRadius: 12,
-        padding: '20px 22px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 16,
-        flexWrap: 'wrap',
-      }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ color: C.text, fontSize: 14, fontWeight: 800, marginBottom: 4 }}>
-            Knowledge Check — {day.quiz.length} Questions
-          </div>
-          <div style={{ color: C.muted, fontSize: 12.5, lineHeight: 1.5 }}>
-            Score 80% or above to mark this session complete.
-            {prevScore !== undefined && ` Your best: ${prevScore}%.`}
-          </div>
-        </div>
-        <button
-          onClick={() => setView('quiz')}
-          style={{
-            padding: '12px 22px', borderRadius: 10,
-            border: 'none', background: C.acc,
-            color: '#000', fontWeight: 800, fontSize: 14, cursor: 'pointer', flexShrink: 0,
-          }}
-        >
-          {prevScore !== undefined ? 'Retake Quiz' : 'Take Quiz'} →
-        </button>
-      </div>
     </div>
   );
 }
@@ -672,7 +288,7 @@ function DayDetail({ dayId, onBack, onNextDay }: DayDetailProps) {
 // ── Overview ──────────────────────────────────────────────────────────────────
 
 export function MBTrainingTab() {
-  const { completedMBDays, mbQuizScores, currentUser } = useApp();
+  const { completedMBDays, currentUser } = useApp();
   const [activeDay, setActiveDay] = useState<number | null>(null);
   const isAdmin = currentUser?.role === 'super_admin' || currentUser?.role === 'user';
 
@@ -729,7 +345,7 @@ export function MBTrainingTab() {
               </h1>
               <p style={{ color: '#888', fontSize: 13, margin: 0, lineHeight: 1.65, maxWidth: 480 }}>
                 Thu Jul 23 · Fri Jul 24 · Mon Jul 27 · Tue Jul 28. Read each session, then pass
-                the quiz at 80%+ to mark it complete.
+                each session to mark it complete.
               </p>
             </div>
             <div style={{
@@ -784,7 +400,6 @@ export function MBTrainingTab() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {MB_TRAINING_DAYS.map((day) => {
             const isDone = completedMBDays.includes(day.id);
-            const quizScore = mbQuizScores[day.id];
             const isLocked = !isAdmin && !day.available;
 
             return (
@@ -852,15 +467,6 @@ export function MBTrainingTab() {
                         padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase',
                       }}>Done</span>
                     )}
-                    {quizScore !== undefined && !isLocked && (
-                      <span style={{
-                        backgroundColor: (quizScore >= 80 ? '#22C55E' : '#EF4444') + '18',
-                        border: `1px solid ${(quizScore >= 80 ? '#22C55E' : '#EF4444')}44`,
-                        color: quizScore >= 80 ? '#22C55E' : '#EF4444',
-                        fontSize: 10, fontWeight: 800,
-                        padding: '1px 7px', borderRadius: 20,
-                      }}>Quiz {quizScore}%</span>
-                    )}
                   </div>
                   <div style={{ color: isLocked ? '#444' : C.text, fontSize: 15, fontWeight: 800, marginBottom: 3 }}>{day.title}</div>
                   <div style={{ color: '#444', fontSize: 12, lineHeight: 1.5 }}>{isLocked ? 'This session will be unlocked by your trainer.' : day.subtitle}</div>
@@ -887,7 +493,7 @@ export function MBTrainingTab() {
               Training Complete
             </div>
             <div style={{ color: '#888', fontSize: 13, lineHeight: 1.6 }}>
-              You&apos;ve completed all four sessions and passed every quiz. Daily accountability calls start Wed, July 29 — use the SOPs and Tools tabs as your daily reference going forward.
+              You&apos;ve completed all four sessions. Daily accountability calls start Wed, July 29 — use the SOPs and Tools tabs as your daily reference going forward.
             </div>
           </div>
         )}

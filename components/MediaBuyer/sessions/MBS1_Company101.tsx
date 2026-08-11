@@ -213,47 +213,12 @@ function S3_BusinessModel() {
   );
 }
 
-function S4_Transition() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <SectionHeader num="04" title="What Wasn't Working" time="5 min" />
-      <div style={{ backgroundColor: C.surf, border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 22px' }}>
-        <p style={{ color: '#777', fontSize: 12, lineHeight: 1.6, margin: '0 0 14px' }}>This is not a restructure for the sake of it. The old model had a structural problem. Here is what it was and what this team is built to solve.</p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
-          <div style={{ backgroundColor: '#100008', border: '1px solid #EF444422', borderRadius: 10, padding: '14px 16px' }}>
-            <div style={{ color: '#EF4444', fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>The Old Problem</div>
-            {['Pod managers owned too many functions', 'Overloaded = overwhelmed = missed details', 'Clients not hitting targets as a result', 'Not monitoring rolling 3–5 day windows', 'Making changes reactively, not proactively', 'Waiting to be told what to do'].map((item) => (
-              <div key={item} style={{ display: 'flex', gap: 8, marginBottom: 7, alignItems: 'flex-start' }}>
-                <span style={{ color: '#EF4444', fontSize: 10, marginTop: 3, flexShrink: 0 }}>▸</span>
-                <span style={{ color: '#888', fontSize: 12, lineHeight: 1.45 }}>{item}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ backgroundColor: '#001A0A', border: '1px solid #22C55E22', borderRadius: 10, padding: '14px 16px' }}>
-            <div style={{ color: '#22C55E', fontSize: 11, fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>The New Standard</div>
-            {['One function, one owner — ad performance', 'Specialists go deep, not wide across 10 things', 'Obsess over accounts, catch small issues early', 'Rolling windows reviewed daily — no surprises', 'Proactive changes before problems become misses', 'You bring the action step — you don\'t wait'].map((item) => (
-              <div key={item} style={{ display: 'flex', gap: 8, marginBottom: 7, alignItems: 'flex-start' }}>
-                <span style={{ color: '#22C55E', fontSize: 10, marginTop: 3, flexShrink: 0 }}>▸</span>
-                <span style={{ color: '#aaa', fontSize: 12, lineHeight: 1.45 }}>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div style={{ backgroundColor: '#161616', border: '1px solid #2A2A2A', borderRadius: 8, padding: '12px 14px' }}>
-          <div style={{ color: '#ddd', fontSize: 12.5, fontWeight: 700, marginBottom: 4 }}>The goal of this transition</div>
-          <div style={{ color: '#888', fontSize: 12.5, lineHeight: 1.6 }}>We are building a team of media buyers who take complete ownership of their ad accounts — not people who need to be checked on. You are our direct eyes on what's working and what's not. You spot patterns, order fixes, and ensure CSM has results worth communicating. This is the model that lets us scale.</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function S5_MeetingCadence() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       <SectionHeader num="05" title="Meeting Cadence" time="5 min" />
       <div style={{ backgroundColor: C.surf, border: `1px solid ${C.border}`, borderRadius: 12, padding: '20px 22px' }}>
-        <p style={{ color: '#777', fontSize: 12, lineHeight: 1.6, margin: '0 0 14px' }}>We will spend a significant amount of time together — the goal is daily meetings as the team matures. Starting structure below. The pod manager update cadence stays; you replace it.</p>
+        <p style={{ color: '#777', fontSize: 12, lineHeight: 1.6, margin: '0 0 14px' }}>We will spend a significant amount of time together — the goal is daily meetings as the team matures. Starting structure below.</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 6, marginBottom: 14 }}>
           {[
             { day: 'Mon', type: 'Check-in', post: true, color: '#F5C800', desc: 'Brief check — performance, action steps, patterns' },
@@ -272,7 +237,7 @@ function S5_MeetingCadence() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {[
-            { icon: '📋', title: 'Written Update Posts — Mon & Thu', desc: 'Same cadence as pod manager updates — you replace that role for media buying. Account-by-account read: what\'s performing, what\'s not, what action is being taken.' },
+            { icon: '📋', title: 'Written Update Posts — Mon & Thu', desc: 'Account-by-account read: what\'s performing, what\'s not, what action is being taken.' },
             { icon: '🔍', title: 'Deep Dives — Tue & Fri', desc: 'Full account reviews with Jonathan. Come with a diagnosis, not just data. Know your accounts before you walk in.' },
             { icon: '💬', title: 'Brief Check-ins — Mon, Wed & Thu', desc: 'Short — how are accounts performing, what action steps are you taking, what patterns are you noticing. These are check-ins, not presentations.' },
             { icon: '👁️', title: 'You Are Our Eyes', desc: 'You are the direct signal on what\'s working and what\'s not. You order creative and copy refreshes based on what you see. You communicate it to Creative. You ensure CSM has results worth talking about.' },
@@ -428,7 +393,6 @@ const SECTION_MAP: Record<string, () => React.ReactElement> = {
   s1: S1_Opportunity,
   s2: S2_Standards,
   s3: S3_BusinessModel,
-  s4: S4_Transition,
   s5: S5_MeetingCadence,
   s6: S6_Departments,
   s7: S7_Funnel,

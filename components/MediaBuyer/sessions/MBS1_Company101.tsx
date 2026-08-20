@@ -408,7 +408,7 @@ export function MBS1_Company101({ sectionId }: { sectionId?: string }) {
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <S1_Opportunity /><S2_Standards /><S3_BusinessModel /><S4_Transition />
+      <S1_Opportunity /><S2_Standards /><S3_BusinessModel />
       <S5_MeetingCadence /><S6_Departments /><S7_Funnel /><S8_Tools />
       <S9_KPIs /><S10_LayerReporting />
     </div>

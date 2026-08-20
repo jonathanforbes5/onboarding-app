@@ -3,6 +3,14 @@
     "lat": 41.083064,
     "lng": -81.518485
   },
+  "Altoona, Pennsylvania": {
+    "lat": 40.519359,
+    "lng": -78.39683
+  },
+  "Appleton, WI": {
+    "lat": 44.261397,
+    "lng": -88.406974
+  },
   "Arizona": {
     "lat": 34.395342,
     "lng": -111.763275
@@ -11,6 +19,10 @@
     "lat": 35.2048883,
     "lng": -92.4479108
   },
+  "Arnold, MO": {
+    "lat": 38.422671,
+    "lng": -90.375829
+  },
   "Atlanta": {
     "lat": 33.7544657,
     "lng": -84.3898151
@@ -18,6 +30,10 @@
   "Atlanta, GA": {
     "lat": 33.7544657,
     "lng": -84.3898151
+  },
+  "Auburn, Indiana": {
+    "lat": 41.36699,
+    "lng": -85.058863
   },
   "Auburn, MA": {
     "lat": 42.1945465,
@@ -31,6 +47,18 @@
     "lat": 30.2711286,
     "lng": -97.7436995
   },
+  "Baton Rouge, LA": {
+    "lat": 30.449416,
+    "lng": -91.186966
+  },
+  "Battle Ground, WA": {
+    "lat": 45.781353,
+    "lng": -122.533743
+  },
+  "Bel Air, MD": {
+    "lat": 39.535929,
+    "lng": -76.348274
+  },
   "Belleville, NJ": {
     "lat": 40.7937116,
     "lng": -74.1501438
@@ -38,6 +66,10 @@
   "Bismarck, AR": {
     "lat": 34.3162035,
     "lng": -93.1707339
+  },
+  "Boca Raton": {
+    "lat": 26.358688,
+    "lng": -80.083098
   },
   "Boise, ID": {
     "lat": 43.6166163,
@@ -51,6 +83,10 @@
     "lat": 27.4989278,
     "lng": -82.5748194
   },
+  "Bradford, Connecticut": {
+    "lat": 41.279541,
+    "lng": -72.815099
+  },
   "Branford, Connecticut": {
     "lat": 41.2795414,
     "lng": -72.8150989
@@ -59,13 +95,29 @@
     "lat": 25.7889875,
     "lng": -80.2092149
   },
+  "Bucks County, Pennsylvania": {
+    "lat": 40.310045,
+    "lng": -75.130459
+  },
   "Buffalo, NY": {
     "lat": 42.8864163,
     "lng": -78.8781493
   },
+  "CA": {
+    "lat": 36.7783,
+    "lng": -119.4179
+  },
+  "Calgary, AB": {
+    "lat": 51.045606,
+    "lng": -114.057541
+  },
   "Capitola, California": {
     "lat": 36.9762927,
     "lng": -121.954057
+  },
+  "Centennial, CO": {
+    "lat": 39.579155,
+    "lng": -104.876923
   },
   "Central Alabama": {
     "lat": 32.6823521,
@@ -83,8 +135,12 @@
     "lat": 39.3024296,
     "lng": -76.6230322
   },
+  "Central Pennsylvania: Harrisburg, Lancaster, York": {
+    "lat": 40.266311,
+    "lng": -76.886112
+  },
   "Central Valley, CA": {
-    "lat": 38.0,
+    "lat": 38,
     "lng": -121.4
   },
   "Charleston, SC": {
@@ -107,6 +163,10 @@
     "lat": 41.8755506,
     "lng": -87.6244372
   },
+  "Chilliwack": {
+    "lat": 49.170979,
+    "lng": -121.95255
+  },
   "Cincinnati, OH": {
     "lat": 39.1014537,
     "lng": -84.5124602
@@ -118,6 +178,10 @@
   "Clearwater, FL": {
     "lat": 27.9658533,
     "lng": -82.8001026
+  },
+  "Collegeville, PA": {
+    "lat": 40.185471,
+    "lng": -75.451216
   },
   "Colorado Springs, CO": {
     "lat": 38.8339578,
@@ -143,6 +207,10 @@
     "lat": 32.8965195,
     "lng": -97.0465221
   },
+  "Dallas Fort Worth": {
+    "lat": 32.776272,
+    "lng": -96.796856
+  },
   "Dallas, TX": {
     "lat": 32.7762719,
     "lng": -96.7968559
@@ -159,9 +227,37 @@
     "lat": 39.7392364,
     "lng": -104.984862
   },
+  "Des Moines, Iowa": {
+    "lat": 41.586865,
+    "lng": -93.624949
+  },
   "Douglasville, GA": {
     "lat": 33.7514966,
     "lng": -84.7477136
+  },
+  "Draper, UT": {
+    "lat": 40.524778,
+    "lng": -111.862799
+  },
+  "Eagle Mountain, Utah": {
+    "lat": 40.309349,
+    "lng": -112.011983
+  },
+  "Eden Prairie, MN": {
+    "lat": 44.854686,
+    "lng": -93.470786
+  },
+  "Eden Prarie, Minnesota": {
+    "lat": 44.854686,
+    "lng": -93.470786
+  },
+  "Edmonton, Alberta": {
+    "lat": 53.546205,
+    "lng": -113.491241
+  },
+  "Eugene Oregon": {
+    "lat": 44.050505,
+    "lng": -123.095051
   },
   "Eugene, OR": {
     "lat": 44.0505054,
@@ -195,9 +291,21 @@
     "lat": 26.640628,
     "lng": -81.8723084
   },
+  "Fort Wayne, Indiana": {
+    "lat": 41.07999,
+    "lng": -85.138601
+  },
+  "Fredericksburg OH": {
+    "lat": 40.676726,
+    "lng": -81.870417
+  },
   "Fresno, CA": {
     "lat": 36.7394421,
     "lng": -119.78483
+  },
+  "Full Colorado": {
+    "lat": 39.0598,
+    "lng": -105.3111
   },
   "Georgia": {
     "lat": 32.3293809,
@@ -219,9 +327,33 @@
     "lat": 33.5386858,
     "lng": -112.185994
   },
+  "Greater Phillly, PA": {
+    "lat": 39.952724,
+    "lng": -75.163526
+  },
+  "Greenville, NC": {
+    "lat": 35.613224,
+    "lng": -77.372459
+  },
+  "Gwinnett County, Georgia": {
+    "lat": 33.956639,
+    "lng": -83.989007
+  },
+  "HR, VAB, R, Virginia": {
+    "lat": 36.849658,
+    "lng": -75.976075
+  },
   "Hemet, CA": {
     "lat": 33.7475203,
     "lng": -116.9719684
+  },
+  "Hendersonville, NC": {
+    "lat": 35.318728,
+    "lng": -82.460953
+  },
+  "Hennepin, Minnesota": {
+    "lat": 44.9773,
+    "lng": -93.265469
   },
   "Hill Country, TX": {
     "lat": 29.5824497,
@@ -231,13 +363,41 @@
     "lat": 29.7589382,
     "lng": -95.3676974
   },
+  "Illinois, Tri-State area": {
+    "lat": 41.875562,
+    "lng": -87.624421
+  },
   "Indiana": {
     "lat": 40.3270127,
     "lng": -86.1746933
   },
+  "Indianapolis": {
+    "lat": 39.768333,
+    "lng": -86.15835
+  },
+  "Jacksonville": {
+    "lat": 30.326225,
+    "lng": -81.657918
+  },
   "Jacksonville, FL": {
     "lat": 30.3262247,
     "lng": -81.6579179
+  },
+  "Jacksonville, Florida": {
+    "lat": 30.326225,
+    "lng": -81.657918
+  },
+  "Jasper, Georgia": {
+    "lat": 34.467593,
+    "lng": -84.429097
+  },
+  "Jasper, IN": {
+    "lat": 38.391441,
+    "lng": -86.93111
+  },
+  "Kansas City": {
+    "lat": 39.100105,
+    "lng": -94.578142
   },
   "Kansas City, MO": {
     "lat": 39.100105,
@@ -247,13 +407,49 @@
     "lat": 37.5726028,
     "lng": -85.1551411
   },
+  "Kittening, PEN": {
+    "lat": 40.816453,
+    "lng": -79.521989
+  },
+  "Knoxville metro": {
+    "lat": 35.960395,
+    "lng": -83.921026
+  },
+  "Knoxville, Tennessee": {
+    "lat": 35.960395,
+    "lng": -83.921026
+  },
   "LA, CA": {
     "lat": 34.0536909,
     "lng": -118.242766
   },
+  "La Crosse, WI": {
+    "lat": 43.812284,
+    "lng": -91.251435
+  },
+  "Lake Charles, LA": {
+    "lat": 30.23051,
+    "lng": -93.216981
+  },
+  "Lake Mary Florida": {
+    "lat": 28.756275,
+    "lng": -81.322093
+  },
+  "Lake Mary, Florida": {
+    "lat": 28.756275,
+    "lng": -81.322093
+  },
+  "Lakeland, FL": {
+    "lat": 28.039465,
+    "lng": -81.949804
+  },
   "Las Vegas, NV": {
     "lat": 36.1674263,
     "lng": -115.1484131
+  },
+  "Lawrence, KS": {
+    "lat": 38.971914,
+    "lng": -95.23594
   },
   "Lee Summit, MO": {
     "lat": 38.9107156,
@@ -263,9 +459,17 @@
     "lat": 25.9493192,
     "lng": -81.3630101
   },
+  "Leonardtown, MD": {
+    "lat": 38.291243,
+    "lng": -76.635795
+  },
   "Lincoln, NE": {
     "lat": 40.8088861,
     "lng": -96.7077751
+  },
+  "Little River, South Carolina": {
+    "lat": 33.872701,
+    "lng": -78.623258
   },
   "London, ON": {
     "lat": 39.625602,
@@ -291,9 +495,25 @@
     "lat": 45.709097,
     "lng": -68.8590201
   },
+  "Mandeville, Louisiana": {
+    "lat": 30.358231,
+    "lng": -90.065748
+  },
+  "Marion, IL": {
+    "lat": 37.730616,
+    "lng": -88.933144
+  },
   "Massachusetts": {
     "lat": 42.3788774,
     "lng": -72.032366
+  },
+  "Mesa, Arizona": {
+    "lat": 33.415101,
+    "lng": -111.831455
+  },
+  "Metro Atlanta": {
+    "lat": 33.754466,
+    "lng": -84.389815
   },
   "Miami, FL": {
     "lat": 25.7741566,
@@ -303,6 +523,10 @@
     "lat": 25.6364246,
     "lng": -80.4989467
   },
+  "Miami-Dade/Broward/Palm Beach Counties, FL": {
+    "lat": 26.122308,
+    "lng": -80.143379
+  },
   "Middleborough, MA": {
     "lat": 41.8931576,
     "lng": -70.9111517
@@ -310,6 +534,10 @@
   "Minneapolis, MN": {
     "lat": 44.9772995,
     "lng": -93.2654692
+  },
+  "Minnesota": {
+    "lat": 45.6945,
+    "lng": -93.9002
   },
   "Missouri": {
     "lat": 38.7604815,
@@ -347,6 +575,14 @@
     "lat": 41.7370229,
     "lng": -99.5873816
   },
+  "Nevada, Vegas": {
+    "lat": 36.167426,
+    "lng": -115.148413
+  },
+  "New Hampshire, MA": {
+    "lat": 42.765625,
+    "lng": -71.467703
+  },
   "New Jersey": {
     "lat": 40.0757384,
     "lng": -74.4041622
@@ -367,6 +603,10 @@
     "lat": 36.8493695,
     "lng": -76.2899539
   },
+  "North Atlanta/ Georgia": {
+    "lat": 34.075596,
+    "lng": -84.294596
+  },
   "North Carolina": {
     "lat": 35.6729639,
     "lng": -79.0392919
@@ -379,9 +619,17 @@
     "lat": 33.5864665,
     "lng": -112.2693947
   },
+  "North of Salt Lake": {
+    "lat": 41.223005,
+    "lng": -111.973843
+  },
   "North-west Wisconsin": {
     "lat": 43.0607114,
     "lng": -87.9368657
+  },
+  "Northern DC": {
+    "lat": 38.895098,
+    "lng": -77.036385
   },
   "Northern Virginia, VA": {
     "lat": 38.8408718,
@@ -390,6 +638,14 @@
   "OKC, Oklahoma": {
     "lat": 35.3848053,
     "lng": -97.6053443
+  },
+  "Ohio": {
+    "lat": 40.3888,
+    "lng": -82.7649
+  },
+  "Oklahoma": {
+    "lat": 35.5653,
+    "lng": -96.9289
   },
   "Oklahoma City, OK": {
     "lat": 35.4729886,
@@ -403,21 +659,53 @@
     "lat": 28.5479786,
     "lng": -81.4127842
   },
+  "Orlando Florida": {
+    "lat": 28.542122,
+    "lng": -81.379045
+  },
   "Orlando, FL": {
     "lat": 28.5421218,
     "lng": -81.379045
+  },
+  "Orlando, Florida": {
+    "lat": 28.542122,
+    "lng": -81.379045
+  },
+  "PA": {
+    "lat": 40.5908,
+    "lng": -77.2098
+  },
+  "Palm Beach County, FL": {
+    "lat": 26.715364,
+    "lng": -80.053294
+  },
+  "Palm Beach/Broward FL": {
+    "lat": 26.358688,
+    "lng": -80.083098
   },
   "Palm FL": {
     "lat": 26.6423668,
     "lng": -80.0561423
   },
+  "Panhandle, Florida": {
+    "lat": 30.421309,
+    "lng": -87.216915
+  },
   "Paramus, NJ": {
     "lat": 40.9452911,
     "lng": -74.0735899
   },
+  "Peel & Halton Ontario": {
+    "lat": 43.588473,
+    "lng": -79.643658
+  },
   "Philadelphia, PA": {
     "lat": 39.9527237,
     "lng": -75.1635262
+  },
+  "Phoenix": {
+    "lat": 33.448437,
+    "lng": -112.074141
   },
   "Phoenix, AZ": {
     "lat": 33.4484367,
@@ -431,17 +719,37 @@
     "lat": 27.8778904,
     "lng": -82.7329309
   },
+  "Pittsburgh": {
+    "lat": 40.440697,
+    "lng": -80.002567
+  },
   "Pittsburgh, PA": {
     "lat": 40.4406968,
     "lng": -80.0025666
+  },
+  "Portland OR metro": {
+    "lat": 45.520247,
+    "lng": -122.674194
   },
   "Portland, OR": {
     "lat": 45.5202471,
     "lng": -122.674194
   },
+  "Portland, Oregon": {
+    "lat": 45.520247,
+    "lng": -122.674194
+  },
   "Quad Cities": {
     "lat": 41.5139197,
     "lng": -90.492917
+  },
+  "Quakertown, PA": {
+    "lat": 40.441768,
+    "lng": -75.341567
+  },
+  "Quincy, MA": {
+    "lat": 42.250991,
+    "lng": -71.003737
   },
   "Raleigh / Triangle, NC": {
     "lat": 35.8610445,
@@ -451,8 +759,16 @@
     "lat": 35.7803977,
     "lng": -78.6390989
   },
+  "Rhode Island": {
+    "lat": 41.6809,
+    "lng": -71.5118
+  },
   "Richmond": {
     "lat": 37.5385087,
+    "lng": -77.43428
+  },
+  "Richmond Virginia": {
+    "lat": 37.538509,
     "lng": -77.43428
   },
   "Rochester, NY": {
@@ -462,6 +778,14 @@
   "Rockaway, NJ": {
     "lat": 40.9012101,
     "lng": -74.5143232
+  },
+  "Rockledge, FL": {
+    "lat": 28.330831,
+    "lng": -80.734916
+  },
+  "Ronkonkoma, NY": {
+    "lat": 40.807522,
+    "lng": -73.135992
   },
   "SE Nebraska": {
     "lat": 46.72066,
@@ -475,6 +799,14 @@
     "lat": 38.6398744,
     "lng": -90.5188128
   },
+  "SWFL(Broward)": {
+    "lat": 26.122308,
+    "lng": -80.143379
+  },
+  "Sacramento, CA": {
+    "lat": 38.581061,
+    "lng": -121.493895
+  },
   "Salem, NC": {
     "lat": 35.6996425,
     "lng": -81.6914551
@@ -483,21 +815,57 @@
     "lat": 40.7596198,
     "lng": -111.886797
   },
+  "Salt Lake City, Utah": {
+    "lat": 40.75962,
+    "lng": -111.886797
+  },
   "San Diego, CA": {
     "lat": 32.7174202,
     "lng": -117.162772
+  },
+  "San Diego, California": {
+    "lat": 32.71742,
+    "lng": -117.162772
+  },
+  "Santa Clara and San Mateo County": {
+    "lat": 37.496904,
+    "lng": -122.333057
+  },
+  "Savannah Georgia": {
+    "lat": 32.079007,
+    "lng": -81.092134
+  },
+  "Savannah, GA": {
+    "lat": 32.079007,
+    "lng": -81.092134
   },
   "Seattle, WA": {
     "lat": 47.6038321,
     "lng": -122.330062
   },
+  "Smithfield, VA": {
+    "lat": 36.982331,
+    "lng": -76.631024
+  },
   "Smithton, PA": {
     "lat": 40.1539613,
     "lng": -79.7411535
   },
+  "Socal: SAN DIEGO, ORANGE, AND RIVERSIDE COUNTIES.": {
+    "lat": 33.749495,
+    "lng": -117.873221
+  },
+  "Sonoma and Marin County": {
+    "lat": 38.232583,
+    "lng": -122.636465
+  },
   "South Carolina": {
     "lat": 33.6874388,
     "lng": -80.4363743
+  },
+  "South Dakota": {
+    "lat": 44.2998,
+    "lng": -99.4388
   },
   "South FL": {
     "lat": 26.4615,
@@ -507,9 +875,21 @@
     "lat": 26.4615,
     "lng": -80.5288
   },
+  "South NH / North MA": {
+    "lat": 42.765625,
+    "lng": -71.467703
+  },
+  "Southeast Florida": {
+    "lat": 26.122308,
+    "lng": -80.143379
+  },
   "Southern New Hampshire": {
     "lat": 43.0374605,
     "lng": -71.4478392
+  },
+  "Southern New Jersey": {
+    "lat": 39.934835,
+    "lng": -75.030726
   },
   "Southwest FL": {
     "lat": 26.0664709,
@@ -527,13 +907,37 @@
     "lat": 47.6571934,
     "lng": -117.42351
   },
+  "St Cloud, MN, USA": {
+    "lat": 45.561608,
+    "lng": -94.1642
+  },
+  "St Louis, Missouri": {
+    "lat": 38.625406,
+    "lng": -90.190009
+  },
+  "St. Louis, MO": {
+    "lat": 38.625406,
+    "lng": -90.190009
+  },
+  "Suwanee, Georgia": {
+    "lat": 34.05149,
+    "lng": -84.0713
+  },
   "Sylvester, GA": {
     "lat": 31.5261739,
     "lng": -83.8365961
   },
+  "Syracuse, New York / Central New York": {
+    "lat": 43.048122,
+    "lng": -76.147424
+  },
   "Tampa, FL": {
     "lat": 27.9449854,
     "lng": -82.4583107
+  },
+  "Tampa, Florida": {
+    "lat": 27.944985,
+    "lng": -82.458311
   },
   "Tampa/St Pete FL": {
     "lat": 27.7386758,
@@ -550,6 +954,10 @@
   "Texas Hill Country": {
     "lat": 29.4760877,
     "lng": -98.7454759
+  },
+  "Thousands Oaks, California": {
+    "lat": 34.170561,
+    "lng": -118.837594
   },
   "Tinley Park, IL": {
     "lat": 41.5733669,
@@ -570,6 +978,14 @@
   "Tulsa, OK": {
     "lat": 36.1563122,
     "lng": -95.9927516
+  },
+  "Twin Cities": {
+    "lat": 44.9773,
+    "lng": -93.265469
+  },
+  "Utah": {
+    "lat": 40.15,
+    "lng": -111.8624
   },
   "Virginia": {
     "lat": 37.1232245,
@@ -595,9 +1011,17 @@
     "lat": 34.700962,
     "lng": -92.3368343
   },
+  "Western NY": {
+    "lat": 42.886416,
+    "lng": -78.878149
+  },
   "Westport, CT": {
     "lat": 41.1414855,
     "lng": -73.3578955
+  },
+  "Whitby, ON": {
+    "lat": 43.87982,
+    "lng": -78.942175
   },
   "Wichita, KS": {
     "lat": 37.6922361,
@@ -607,9 +1031,17 @@
     "lat": 44.9086731,
     "lng": -123.0022929
   },
+  "Wilmington, NC": {
+    "lat": 34.235285,
+    "lng": -77.948728
+  },
   "Woodinville, WA": {
     "lat": 47.7545827,
     "lng": -122.1588902
+  },
+  "Zephyrhills, FL": {
+    "lat": 28.23362,
+    "lng": -82.181195
   },
   "massachusetts": {
     "lat": 42.3788774,

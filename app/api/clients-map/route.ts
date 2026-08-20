@@ -42,6 +42,49 @@ const STATE_BY_ABBR: Record<string, string> = {
 };
 const STATE_NAMES = new Set(Object.values(STATE_BY_ABBR).map(s => s.toLowerCase()));
 
+// lowercase state name -> canonical casing ("new york" -> "New York")
+const CANON_STATE: Record<string, string> = {};
+for (const name of Object.values(STATE_BY_ABBR)) CANON_STATE[name.toLowerCase()] = name;
+
+// Case-insensitive geocache lookup — case drift in Airtable location strings
+// shouldn't drop a client off the map.
+const GEOCACHE = new Map<string, { lat: number; lng: number }>(
+  Object.entries(locations as Record<string, { lat: number; lng: number }>)
+    .map(([k, v]) => [k.toLowerCase(), v]),
+);
+
+// Fallback placement for location strings the geocache doesn't know: if the
+// string at least resolves to a state, drop the client on the state centroid
+// instead of leaving it off the map entirely. scripts/geocode-locations.mjs
+// upgrades these to city-level dots when run.
+const STATE_CENTROID: Record<string, { lat: number; lng: number }> = {
+  Alabama: { lat: 32.8067, lng: -86.7911 }, Alaska: { lat: 61.3707, lng: -152.4044 },
+  Arizona: { lat: 34.2744, lng: -111.6602 }, Arkansas: { lat: 34.8938, lng: -92.4426 },
+  California: { lat: 36.7783, lng: -119.4179 }, Colorado: { lat: 39.0598, lng: -105.3111 },
+  Connecticut: { lat: 41.5978, lng: -72.7554 }, Delaware: { lat: 39.3185, lng: -75.5071 },
+  Florida: { lat: 27.7663, lng: -81.6868 }, Georgia: { lat: 33.0406, lng: -83.6431 },
+  Hawaii: { lat: 21.0943, lng: -157.4983 }, Idaho: { lat: 44.2405, lng: -114.4788 },
+  Illinois: { lat: 40.3495, lng: -88.9861 }, Indiana: { lat: 39.8494, lng: -86.2583 },
+  Iowa: { lat: 42.0115, lng: -93.2105 }, Kansas: { lat: 38.5266, lng: -96.7265 },
+  Kentucky: { lat: 37.6681, lng: -84.6701 }, Louisiana: { lat: 31.1695, lng: -91.8678 },
+  Maine: { lat: 44.6939, lng: -69.3819 }, Maryland: { lat: 39.0639, lng: -76.8021 },
+  Massachusetts: { lat: 42.2302, lng: -71.5301 }, Michigan: { lat: 43.3266, lng: -84.5361 },
+  Minnesota: { lat: 45.6945, lng: -93.9002 }, Mississippi: { lat: 32.7416, lng: -89.6787 },
+  Missouri: { lat: 38.4561, lng: -92.2884 }, Montana: { lat: 46.9219, lng: -110.4544 },
+  Nebraska: { lat: 41.1254, lng: -98.2681 }, Nevada: { lat: 38.3135, lng: -117.0554 },
+  'New Hampshire': { lat: 43.4525, lng: -71.5639 }, 'New Jersey': { lat: 40.2989, lng: -74.5210 },
+  'New Mexico': { lat: 34.8405, lng: -106.2485 }, 'New York': { lat: 42.1657, lng: -74.9481 },
+  'North Carolina': { lat: 35.6301, lng: -79.8064 }, 'North Dakota': { lat: 47.5289, lng: -99.7840 },
+  Ohio: { lat: 40.3888, lng: -82.7649 }, Oklahoma: { lat: 35.5653, lng: -96.9289 },
+  Oregon: { lat: 44.5720, lng: -122.0709 }, Pennsylvania: { lat: 40.5908, lng: -77.2098 },
+  'Rhode Island': { lat: 41.6809, lng: -71.5118 }, 'South Carolina': { lat: 33.8569, lng: -80.9450 },
+  'South Dakota': { lat: 44.2998, lng: -99.4388 }, Tennessee: { lat: 35.7478, lng: -86.6923 },
+  Texas: { lat: 31.0545, lng: -97.5635 }, Utah: { lat: 40.1500, lng: -111.8624 },
+  Vermont: { lat: 44.0459, lng: -72.7107 }, Virginia: { lat: 37.7693, lng: -78.1700 },
+  Washington: { lat: 47.4009, lng: -121.4905 }, 'West Virginia': { lat: 38.4912, lng: -80.9545 },
+  Wisconsin: { lat: 44.2685, lng: -89.6165 }, Wyoming: { lat: 42.7559, lng: -107.3025 },
+};
+
 const KNOWN_REGION_TO_STATE: Record<string, string> = {
   'bay area':            'California',
   'central valley':      'California',
@@ -74,7 +117,7 @@ function stateForLocation(raw: string): string | null {
 
   // 1) Plain state name
   if (STATE_NAMES.has(s)) {
-    return raw.charAt(0).toUpperCase() + raw.slice(1);
+    return CANON_STATE[s];
   }
 
   // 2) "City, ST" or "Region, ST"
@@ -86,7 +129,7 @@ function stateForLocation(raw: string): string | null {
   // 3) Embedded state name like "Bay Area, California"
   for (const name of Array.from(STATE_NAMES)) {
     if (s.includes(name)) {
-      return name.charAt(0).toUpperCase() + name.slice(1);
+      return CANON_STATE[name];
     }
   }
 
@@ -286,7 +329,12 @@ export async function GET() {
       const rawLoc = (f['General Location'] as string | undefined ?? '').trim();
       if (!rawLoc) continue;
       const norm = normalize(rawLoc);
-      const coords = (locations as Record<string, { lat: number; lng: number }>)[norm];
+      const state = stateForLocation(norm);
+      // Geocache first (case-insensitive), then state-centroid fallback so a
+      // string the geocoder hasn't seen yet still lands on the map at
+      // state level instead of vanishing.
+      const coords = GEOCACHE.get(norm.toLowerCase())
+        ?? (state ? STATE_CENTROID[state] : undefined);
       if (!coords) {
         unmatched++;
         unmatchedLocs.add(norm);
@@ -297,7 +345,7 @@ export async function GET() {
       if (!p) {
         p = {
           loc: norm,
-          state: stateForLocation(norm) ?? undefined,
+          state: state ?? undefined,
           lat: coords.lat, lng: coords.lng,
           active: 0, churned: 0, preLaunch: 0, paused: 0, total: 0,
           ams: [], niches: [], pods: [], clients: [],

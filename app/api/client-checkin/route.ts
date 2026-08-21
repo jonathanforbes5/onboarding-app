@@ -67,6 +67,17 @@ const EDITABLE = new Set<string>([
   // 2026-08-01 — Master Creatives chip on the account page (same pattern
   // as ContractLink; col resolved by live header-name lookup).
   'Master Creatives Folder',
+  // 2026-08-21 — Creative Brief panel (account page, Creative tab). The
+  // 17 brief columns (DJ–DZ) are inline-editable on the panel, plus the
+  // Website / Client Memory links get add-when-missing bubbles. All
+  // resolved by live header-name lookup like the chips above.
+  'Revenue Tier', 'Company Size', 'Years in Business', 'Ownership',
+  'Owner Runs Appointments', 'Financing Details', 'Warranty Details',
+  'Certifications & Trust Badges', 'Avg Ticket', 'Retail vs Insurance Mix',
+  'Discounts', 'Languages Served', 'Positioning Angle',
+  'Creative Constraints / Do-Not-Advertise', 'Angles Tested Log',
+  'Service Area (Ads)', 'Brief Verified',
+  'Website', 'Client Memory Folder',
 ]);
 
 // Strip common business suffixes for fuzzy matching when an exact lookup

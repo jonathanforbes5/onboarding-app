@@ -30,12 +30,15 @@ const MAIN_TAB = 'Main';
 
 const ACTIONS = new Set(['checked', 'unchecked', 'update', 'touch-level']);
 
-// Milestone keys the dashboard sends. Kept in lockstep with the MILESTONES
-// config in shared.js (Command Centre v2).
+// Milestone keys the dashboard sends. Kept in lockstep with the
+// COMM_MILESTONES config in shared.js (Command Centre v2). The weekly-call-*
+// keys were retired in the Aug-2026 remold to Mani's CSM Playbook but stay
+// accepted so old log rows can still be unchecked/corrected.
 const MILESTONE_KEYS = new Set([
   'closer-handoff', 'slack-channel', 'intro-call', 'onboarding-call',
-  'recap-email', 'prelaunch-expectation',
+  'billing-method', 'recap-email', 'prelaunch-expectation', 'approval-video',
   'ci-0', 'ci-1', 'ci-2', 'ci-3', 'ci-4', 'ci-5', 'ci-6',
+  'renewal-planning',
   'weekly-call-1', 'weekly-call-2', 'weekly-call-3',
 ]);
 
